@@ -1,0 +1,38 @@
+# Outputs do pipeline
+outputs/
+logs/
+
+# Checkpoints
+checkpoint.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# Conda
+.conda/
+
+# GROMACS
+*.xtc
+*.trr
+*.edr
+*.tpr
+*.cpt
+\#*
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários de PyRosetta
+*.fasc
+*.sc

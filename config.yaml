@@ -1,0 +1,98 @@
+project:
+  name: "design-inibidores-tripsina-lepidoptera"
+  description: "Design racional de inibidores peptídicos de tripsina de Lepidoptera"
+
+data:
+  receptor_pdbs:
+    - "data-trypsin/ACR157-final.pdb"
+    - "data-trypsin/QCL936-final.pdb"
+    - "data-trypsin/XP273-final.pdb"
+    - "data-trypsin/XP352-final.pdb"
+  outputs_dir: "outputs"
+
+structure:
+  pocket_detection: "fpocket"        # fpocket | manual
+  min_druggability: 0.5
+  # Tríade catalítica de serino-proteases (busca por tipo + proximidade espacial)
+  catalytic_residues: ["HIS", "ASP", "SER"]
+  # Resíduos S1-pocket determinantes de especificidade para tripsina
+  s1_specificity_residue: "ASP"      # Asp189 em numeração bovina
+  s1_pocket_depth_cutoff: 8.0        # Å
+
+rfdiffusion:
+  num_designs: 50
+  noise_scale_ca: 0.2
+  noise_scale_frame: 0.1
+  contig_lengths: [5, 7, 10, 12, 15, 20]
+  hotspot_radius: 6.0               # Å em torno do sítio S1
+  # Caminhos possíveis (detectados automaticamente)
+  install_paths:
+    - "/opt/RFdiffusion"
+    - "$HOME/RFdiffusion"
+    - "$HOME/tools/RFdiffusion"
+    - "/usr/local/RFdiffusion"
+
+proteinmpnn:
+  num_seq_per_target: 30
+  sampling_temp: 0.1
+  backbone_noise: 0.05
+  fixed_positions:
+    "1": ["ARG", "LYS"]             # P1 = Arg ou Lys (especificidade S1)
+  omit_aas: "CX"                    # Excluir Cys e aminoácido desconhecido
+  bias_aa:
+    ARG: 1.5                        # Favorece Arg no sítio P1
+    LYS: 1.0
+  install_paths:
+    - "/opt/ProteinMPNN"
+    - "$HOME/ProteinMPNN"
+    - "$HOME/tools/ProteinMPNN"
+
+rosetta:
+  flexpepdock_nstruct: 10
+  fastrelax: true
+  score_function: "ref2015"
+  install_paths:
+    - "/opt/rosetta"
+    - "$HOME/rosetta"
+    - "$HOME/tools/rosetta"
+    - "/usr/local/rosetta"
+
+docking:
+  tool: "vina"                      # vina | gnina | smina
+  exhaustiveness: 32
+  num_modes: 9
+  # Coordenadas calculadas automaticamente pela StructureAgent
+  # (sobrescritas após análise estrutural)
+  center_x: null
+  center_y: null
+  center_z: null
+  size_x: 25.0
+  size_y: 25.0
+  size_z: 25.0
+
+md:
+  tool: "gromacs"
+  simulation_ns: 10
+  temperature: 300                  # K
+  forcefield: "amber99sb-ildn"
+  water_model: "tip3p"
+  # Para produção: aumentar para 100+ ns
+
+optimization:
+  top_k: 10                         # candidatos para redesign
+  max_iterations: 3
+  mutation_rate: 0.3
+  positions_to_vary: [2, 3, 4, 5]  # P2-P5 (P1 fixo)
+
+ranking:
+  weights:
+    vina_affinity: 0.35             # kcal/mol (menor = melhor)
+    rosetta_I_sc: 0.25             # interface score (menor = melhor)
+    hbond_count: 0.20              # contatos H-bond (maior = melhor)
+    md_rmsd: 0.10                  # RMSD MD (menor = melhor)
+    hydrophobicity: 0.10           # complementaridade hidrofóbica
+  top_candidates: 20
+
+report:
+  format: ["markdown", "html"]
+  top_n: 10

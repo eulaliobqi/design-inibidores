@@ -1,0 +1,79 @@
+name: protein_design_env
+channels:
+  - conda-forge
+  - bioconda
+  - nvidia
+  - pytorch
+  - defaults
+
+dependencies:
+  - python=3.10
+  - pip
+
+  # Ciência e análise
+  - numpy>=1.24
+  - scipy>=1.11
+  - pandas>=2.0
+  - biopython>=1.81
+  - rdkit>=2023.3
+
+  # Visualização
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - plotly>=5.15
+
+  # Relatórios e terminal
+  - jinja2>=3.1
+  - pyyaml>=6.0
+  - tqdm>=4.65
+  - rich>=13.0
+
+  # Jupyter
+  - jupyter
+  - ipython
+
+  # GROMACS (MD)
+  - gromacs>=2023.1
+
+  # Detecção de bolsos de ligação
+  - fpocket
+
+  # AutoDock Vina
+  - vina
+
+  # Análise de trajetórias
+  - mdtraj>=1.9.9
+  - mdanalysis>=2.7
+
+  # PyTorch (para RFdiffusion e ProteinMPNN)
+  - pytorch>=2.0
+  - torchvision
+  - cudatoolkit=11.8
+
+  - pip:
+    # gmxapi (interface Python para GROMACS)
+    - gmxapi>=0.4
+
+    # Análise estrutural adicional
+    - biopandas>=0.4
+    - pdbfixer>=1.9
+    - openmm>=8.0
+    - PeptideBuilder>=1.1
+
+    # PLIP — Protein-Ligand Interaction Profiler (nova ferramenta)
+    - plip>=2.3
+
+    # Relatório HTML
+    - markdown>=3.4
+    - weasyprint>=60
+
+    # PyRosetta (academia: pyrosetta.org/downloads)
+    # Instalar separadamente: python -c "import pyrosetta_installer; pyrosetta_installer.install_pyrosetta()"
+    # pip install pyrosetta-installer
+
+    # RFdiffusion — clonar e instalar:
+    # git clone https://github.com/RosettaCommons/RFdiffusion
+    # pip install -e RFdiffusion/
+
+    # ProteinMPNN — clonar:
+    # git clone https://github.com/dauparas/ProteinMPNN
