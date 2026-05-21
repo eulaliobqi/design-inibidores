@@ -2,8 +2,6 @@ name: protein_design_env
 channels:
   - conda-forge
   - bioconda
-  - nvidia
-  - pytorch
   - defaults
 
 dependencies:
@@ -27,13 +25,10 @@ dependencies:
   - pyyaml>=6.0
   - tqdm>=4.65
   - rich>=13.0
+  - markdown>=3.4
 
-  # Jupyter
-  - jupyter
-  - ipython
-
-  # GROMACS (MD)
-  - gromacs>=2023.1
+  # GROMACS serial (sem MPI — garante 'gmx', não 'gmx_mpi')
+  - "gromacs=*=*serial*"
 
   # Detecção de bolsos de ligação
   - fpocket
@@ -41,39 +36,23 @@ dependencies:
   # AutoDock Vina
   - vina
 
-  # Análise de trajetórias
-  - mdtraj>=1.9.9
-  - mdanalysis>=2.7
-
-  # PyTorch (para RFdiffusion e ProteinMPNN)
-  - pytorch>=2.0
-  - torchvision
-  - cudatoolkit=11.8
+  # Análise de trajetórias (via pip — evita conflito de solver)
+  # mdtraj e mdanalysis instalados em setup.sh via pip
 
   - pip:
-    # gmxapi (interface Python para GROMACS)
-    - gmxapi>=0.4
-
-    # Análise estrutural adicional
+    - mdtraj>=1.9
+    - mdanalysis>=2.7
     - biopandas>=0.4
     - pdbfixer>=1.9
-    - openmm>=8.0
     - PeptideBuilder>=1.1
-
-    # PLIP — Protein-Ligand Interaction Profiler (nova ferramenta)
     - plip>=2.3
 
-    # Relatório HTML
-    - markdown>=3.4
-    - weasyprint>=60
-
-    # PyRosetta (academia: pyrosetta.org/downloads)
-    # Instalar separadamente: python -c "import pyrosetta_installer; pyrosetta_installer.install_pyrosetta()"
-    # pip install pyrosetta-installer
+    # PyRosetta — instalar separadamente (licença academia):
+    # python -c "import pyrosetta_installer; pyrosetta_installer.install_pyrosetta()"
 
     # RFdiffusion — clonar e instalar:
-    # git clone https://github.com/RosettaCommons/RFdiffusion
-    # pip install -e RFdiffusion/
+    # git clone https://github.com/RosettaCommons/RFdiffusion $HOME/RFdiffusion
+    # pip install -e $HOME/RFdiffusion/
 
-    # ProteinMPNN — clonar:
-    # git clone https://github.com/dauparas/ProteinMPNN
+    # ProteinMPNN — clonar (sem instalação extra):
+    # git clone https://github.com/dauparas/ProteinMPNN $HOME/ProteinMPNN

@@ -1,109 +1,93 @@
-#!/bin/bash
-# =============================================================================
-# executavel.sh — Script de instalação e execução do pipeline
+#!/usr/bin/env bash
+# ============================================================
+# executavel.sh — Execução do pipeline de design de inibidores
 # Design de Inibidores Peptídicos de Tripsina de Lepidoptera
-# =============================================================================
-set -e
+# ============================================================
+# Requer ambiente instalado: bash setup.sh
+# Não ativa o ambiente — usa 'conda run' em cada chamada.
+# ============================================================
+set -euo pipefail
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$PROJECT_DIR"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_NAME="protein_design_env"
 
-# ─────────────────────────────────────────────────────────────
-# PARTE 1: Criar e ativar ambiente
-# ─────────────────────────────────────────────────────────────
-echo ">>> Criando ambiente Mamba..."
-mamba env create -f environment.yml --yes || conda env create -f environment.yml --yes
-conda activate protein_design_env
+# ── Detecta conda/mamba ──────────────────────────────────────
+CONDA_CMD=""
+for cmd in mamba conda; do
+    if command -v "$cmd" &>/dev/null; then
+        CONDA_CMD="$cmd"
+        break
+    fi
+done
+if [ -z "${CONDA_CMD}" ]; then
+    echo "ERRO: conda/mamba não encontrado. Execute: bash setup.sh"
+    exit 1
+fi
 
-# ─────────────────────────────────────────────────────────────
-# PARTE 2: Instalar ferramentas externas (manual)
-# ─────────────────────────────────────────────────────────────
+# Verifica se o ambiente existe
+if ! $CONDA_CMD env list | grep -q "^${ENV_NAME}[[:space:]]"; then
+    echo "ERRO: ambiente '${ENV_NAME}' não encontrado."
+    echo "Execute primeiro: bash setup.sh"
+    exit 1
+fi
 
-# RFdiffusion (requer CUDA)
-# git clone https://github.com/RosettaCommons/RFdiffusion.git $HOME/RFdiffusion
-# cd $HOME/RFdiffusion && pip install -e .
+RUN="$CONDA_CMD run --no-capture-output -n $ENV_NAME"
+PY="$RUN python $SCRIPT_DIR/scripts/run_pipeline.py --config $SCRIPT_DIR/config.yaml"
 
-# ProteinMPNN
-# git clone https://github.com/dauparas/ProteinMPNN.git $HOME/ProteinMPNN
-
-# PyRosetta (licença gratuita academia: pyrosetta.org/downloads)
-# python -c "import pyrosetta_installer; pyrosetta_installer.install_pyrosetta()"
-
-# Verificar GPU
-echo ">>> Verificando GPU..."
-nvidia-smi 2>/dev/null && echo "GPU disponível" || echo "GPU não detectada (CPU mode)"
-
-# ─────────────────────────────────────────────────────────────
-# PARTE 3: Executar pipeline
-# ─────────────────────────────────────────────────────────────
-
+# ── Ações ────────────────────────────────────────────────────
 case "${1:-all}" in
 
   "check")
-    # Verifica ferramentas sem executar
-    python scripts/run_pipeline.py --config config.yaml --dry-run
+    echo ">>> Verificando GPU..."
+    $RUN nvidia-smi 2>/dev/null && echo "GPU disponível" || echo "GPU não detectada (CPU mode)"
+    echo ""
+    $PY --dry-run
     ;;
 
   "structure")
-    # Apenas mapear o sítio S1
-    python scripts/run_pipeline.py --config config.yaml --step structure
+    $PY --step structure
     ;;
 
   "design")
-    # Gerar e ranquear candidatos (sem MD)
-    python scripts/run_pipeline.py --config config.yaml --step structure
-    python scripts/run_pipeline.py --config config.yaml --step rfdiffusion --resume
-    python scripts/run_pipeline.py --config config.yaml --step mpnn --resume
-    python scripts/run_pipeline.py --config config.yaml --step rosetta --resume
-    python scripts/run_pipeline.py --config config.yaml --step docking --resume
-    python scripts/run_pipeline.py --config config.yaml --step ranking --resume
-    python scripts/run_pipeline.py --config config.yaml --step visualize --resume
-    python scripts/run_pipeline.py --config config.yaml --step report --resume
+    # Etapas 1–8 sem MD (rápido: 5–15 min)
+    $PY --step structure
+    $PY --step rfdiffusion --resume
+    $PY --step mpnn        --resume
+    $PY --step rosetta     --resume
+    $PY --step docking     --resume
+    $PY --step ranking     --resume
+    $PY --step visualize   --resume
+    $PY --step report      --resume
     ;;
 
   "all")
-    # Pipeline completo (com MD)
-    python scripts/run_pipeline.py \
-      --config config.yaml \
-      --step all
+    # Pipeline completo com MD (~horas)
+    $PY --step all
     ;;
 
   "resume")
-    # Retomar do último checkpoint
-    python scripts/run_pipeline.py \
-      --config config.yaml \
-      --step all \
-      --resume
+    $PY --step all --resume
     ;;
 
   "optimize")
-    # Redesign iterativo (após ranking concluído)
     ITER="${2:-1}"
-    python scripts/run_pipeline.py \
-      --config config.yaml \
-      --step optimize \
-      --iter "$ITER" \
-      --resume
+    $PY --step optimize --iter "$ITER" --resume
     ;;
 
   "report")
-    # Apenas gerar relatório final
-    python scripts/run_pipeline.py \
-      --config config.yaml \
-      --step report \
-      --resume
+    $PY --step report --resume
     ;;
 
   *)
-    echo "Uso: $0 [check|structure|design|all|resume|optimize|report]"
+    echo "Uso: bash executavel.sh [check|structure|design|all|resume|optimize <N>|report]"
     echo ""
-    echo "  check     — verifica ferramentas instaladas"
-    echo "  structure — apenas mapeia o sítio S1"
-    echo "  design    — gera candidatos sem MD (rápido)"
-    echo "  all       — pipeline completo com MD"
-    echo "  resume    — retoma do último checkpoint"
-    echo "  optimize  — redesign iterativo (arg: iteração)"
-    echo "  report    — gera relatório dos resultados existentes"
+    echo "  check        — verifica ferramentas e GPU"
+    echo "  structure    — mapeia o sítio S1 nos 4 PDBs"
+    echo "  design       — gera e rankeia candidatos sem MD (rápido)"
+    echo "  all          — pipeline completo com MD"
+    echo "  resume       — retoma do último checkpoint"
+    echo "  optimize <N> — redesign iterativo (N = iteração)"
+    echo "  report       — gera relatório dos resultados existentes"
     ;;
 
 esac
