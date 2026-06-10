@@ -33,16 +33,35 @@ rfdiffusion:
     - "/usr/local/RFdiffusion"
 
 proteinmpnn:
-  num_seq_per_target: 50
+  num_seq_per_target: 500            # Dataset ML/DL — máxima cobertura do espaço
   sampling_temp: 0.1
   backbone_noise: 0.05
-  fixed_positions: {}                 # Sem restrição de P1 — explorar mecanismos variados
-  omit_aas: "CX"                    # Excluir Cys e aminoácido desconhecido
-  bias_aa: {}                       # Sem bias — diversidade máxima de sequências
+  fixed_positions: {}
+  omit_aas: "CX"
+  bias_aa: {}
   install_paths:
     - "/opt/ProteinMPNN"
     - "$HOME/ProteinMPNN"
     - "$HOME/tools/ProteinMPNN"
+
+ml_dataset:
+  export_csv: true
+  output_file: "outputs/dataset/ml_training_dataset.csv"
+  top_for_docking: 200               # Rodar docking apenas nos top-200 por heurística
+  features:
+    - length
+    - mw_da
+    - net_charge
+    - isoelectric_point
+    - hydrophobicity_kd
+    - boman_index
+    - instability_index
+    - aliphatic_index
+    - frac_aromatic
+    - frac_hydrophobic
+    - frac_charged
+    - n_arg_lys
+    - has_aromatic_cterminal
 
 rosetta:
   flexpepdock_nstruct: 10

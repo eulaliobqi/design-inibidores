@@ -165,28 +165,42 @@ class DockingAgent(BaseAgent):
         }
 
     def _top_candidates(self, sequences_data: dict) -> list[dict]:
-        limit = self.config.get("optimization", {}).get("top_k", 10)
+        # top_for_docking do config ML (padrão 200) para dataset de labels
+        limit = self.config.get("ml_dataset", {}).get("top_for_docking", 200)
         candidates = []
-        seen = {}
+        # Ordenar por heurística (charge + hydrophobic) para selecionar melhores
         for stem, data in sequences_data.items():
-            length = data["length"]
-            for seq in data["sequences"]:
+            props_list = data.get("properties", [])
+            for i, seq in enumerate(data["sequences"]):
                 if not seq:
                     continue
-                if seen.get(length, 0) >= max(2, limit // 6):
-                    continue
-                candidates.append({"sequence": seq, "length": length})
-                seen[length] = seen.get(length, 0) + 1
+                p = props_list[i] if i < len(props_list) else {}
+                score = (
+                    abs(p.get("net_charge", 0)) * 1.2
+                    + p.get("frac_hydrophobic", 0) * 3.0
+                    + p.get("n_arg_lys", 0) * 0.5
+                )
+                candidates.append({
+                    "sequence": seq,
+                    "length": data["length"],
+                    "_heuristic": score,
+                })
+        candidates.sort(key=lambda x: -x["_heuristic"])
         return candidates[:limit]
 
     def _heuristic_scores(self, sequences_data: dict) -> dict:
-        """Estima afinidade heuristicamente sem Vina."""
+        """Estima afinidade heuristicamente e preenche labels no dataset ML."""
         results = {}
         for stem, data in sequences_data.items():
-            for seq in data["sequences"][:3]:
-                basic = sum(1 for aa in seq if aa in "RK")
-                hydrophobic = sum(1 for aa in seq if aa in "AILMFWV")
-                estimated = -(basic * 1.2 + hydrophobic * 0.5 + len(seq) * 0.1)
+            props_list = data.get("properties", [])
+            for i, seq in enumerate(data["sequences"]):
+                if not seq:
+                    continue
+                p = props_list[i] if i < len(props_list) else {}
+                basic = p.get("n_arg_lys", sum(1 for aa in seq if aa in "RK"))
+                hydrophobic = p.get("frac_hydrophobic",
+                                    sum(1 for aa in seq if aa in "AILMFWV") / len(seq))
+                estimated = -(basic * 1.2 + hydrophobic * len(seq) * 0.5 + len(seq) * 0.1)
                 key = f"len{data['length']}_{seq[:8]}"
                 results[key] = {
                     "sequence": seq,

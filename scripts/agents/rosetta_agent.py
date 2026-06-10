@@ -67,29 +67,29 @@ class RosettaAgent(BaseAgent):
         return sorted_results
 
     def _select_top_sequences(self, sequences_data: dict) -> list[dict]:
-        """Seleciona sequências com P1=Arg/Lys e maior diversidade de tamanho."""
-        candidates = []
-        seen_lengths = {}
+        """Seleciona top candidatos por heurística para refinamento Rosetta."""
         limit = self.config.get("optimization", {}).get("top_k", 10)
+        candidates = []
 
         for stem, data in sequences_data.items():
-            length = data["length"]
-            seqs = data["sequences"]
             props = data.get("properties", [])
-
-            for i, seq in enumerate(seqs):
+            for i, seq in enumerate(data["sequences"]):
                 if not seq:
                     continue
-                prop = props[i] if i < len(props) else {}
-                if seen_lengths.get(length, 0) >= max(2, limit // 6):
-                    continue
+                p = props[i] if i < len(props) else {}
+                score = (
+                    p.get("n_arg_lys", 0) * 1.0
+                    + p.get("frac_hydrophobic", 0) * 3.0
+                    + abs(p.get("hydrophobicity_kd", 0)) * 0.5
+                )
                 candidates.append({
                     "sequence": seq,
-                    "length": length,
-                    "n_arg_lys": prop.get("n_arg_lys", 0),
+                    "length": data["length"],
+                    "n_arg_lys": p.get("n_arg_lys", 0),
+                    "_score": score,
                 })
-                seen_lengths[length] = seen_lengths.get(length, 0) + 1
 
+        candidates.sort(key=lambda x: -x["_score"])
         return candidates[:limit]
 
     def _build_complex(self, receptor_pdb: str, sequence: str,

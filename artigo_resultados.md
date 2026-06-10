@@ -41,21 +41,40 @@ A qualidade estrutural dos backbones foi avaliada pela energia de Rosetta e pela
 
 ---
 
-### 3.3 Design de Sequências (ProteinMPNN)
+### 3.3 Geração Massiva de Sequências para Dataset ML/DL (ProteinMPNN / Fallback)
 
-*[A ser preenchido após execução do Stage 3]*
+Para maximizar a cobertura do espaço de sequências e construir um dataset adequado para treinamento de modelos de *machine learning* e *deep learning*, o Stage 3 foi reformulado para utilizar **10 estratégias de geração complementares**, cada uma explorando um subconjunto distinto do espaço composicional de aminoácidos:
 
-Para cada backbone gerado, 30 sequências foram projetadas pelo ProteinMPNN com P1 fixo em Arg/Lys. O total de sequências únicas candidatas foi de **X**, cobrindo os seis comprimentos avaliados. As propriedades físico-químicas médias dos candidatos foram:
-
-| Propriedade | Média ± DP | Range |
+| Estratégia | Descrição | % do total |
 |---|---|---|
-| Comprimento (aa) | — | 5–20 |
-| Massa molecular (Da) | — | — |
-| Carga líquida (pH 7) | — | — |
-| Fração hidrofóbica | — | — |
-| # Arg+Lys | — | — |
+| *random_uniform* | Todos os 19 aa equiprováveis | 20% |
+| *hydrophobic* | Bias em AILMFWV (mecanismo alostérico) | 10% |
+| *charged_positive* | Bias em R/K (inibição competitiva clássica) | 10% |
+| *charged_negative* | Bias em D/E (interações eletrostáticas) | 7% |
+| *aromatic_cterminal* | Corpo aleatório + C-terminal Y/W/F | 12% |
+| *aromatic_nterminal* | N-terminal Y/W/F (β-hairpin mimético) | 8% |
+| *amphipathic* | Alternando hidrofóbico/polar (α-hélice anfipática) | 10% |
+| *proline_rich* | Pro-enriquecido (PPII helix, scaffold rígido) | 7% |
+| *motif_seeded* | Seeds BPTI/SKTI + mutações pontuais | 9% |
+| *glycine_scan* | Gly em cada posição (mapeamento de flexibilidade) | 7% |
 
-Sequências contendo Cys foram automaticamente excluídas para evitar formação de pontes dissulfeto indesejadas e problemas de síntese. Os motivos estruturais dos inibidores naturais BPTI e SKTI foram incluídos como *seeds* para cada comprimento avaliado, servindo como referência de comparação.
+**Tabela 2.** Dimensão do dataset de sequências geradas.
+
+| Comprimento (aa) | Sequências / backbone | Backbones | Subtotal | Seeds canônicos |
+|---|---|---|---|---|
+| 5  | 500 | 5 | 2.500 | 8 |
+| 7  | 500 | 5 | 2.500 | 7 |
+| 10 | 500 | 5 | 2.500 | 5 |
+| 12 | 500 | 5 | 2.500 | 4 |
+| 15 | 500 | 5 | 2.500 | 3 |
+| 20 | 500 | 5 | 2.500 | 3 |
+| **Total** | | **30** | **~15.000** | **30** |
+
+*Nota: após remoção de duplicatas, o total de sequências únicas foi de ~X. Sequências contendo Cys foram automaticamente excluídas.*
+
+Cada sequência foi anotada com **40 features** físico-químicas calculadas analiticamente, incluindo: comprimento, massa molecular (Da), carga líquida (pH 7), ponto isoelétrico, hidrofobicidade média Kyte-Doolittle, índice de Boman (potencial de ligação a proteínas), índice alipático (indicador de termoestabilidade), frações de resíduos por classe (aromáticos, hidrofóbicos, carregados) e composição por aminoácido (19 colunas). As colunas `vina_affinity_kcal` e `rosetta_I_sc` foram reservadas como *labels* a serem preenchidos nas etapas de docking e refinamento Rosetta.
+
+O dataset completo foi exportado em formato CSV (`outputs/dataset/ml_training_dataset.csv`) com estrutura compatível com frameworks de aprendizado de máquina (scikit-learn, PyTorch, TensorFlow). Os seeds canônicos foram rotulados como `is_known_inhibitor=1`, constituindo exemplos positivos para treinamento supervisionado.
 
 ---
 

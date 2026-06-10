@@ -181,27 +181,121 @@ def write_fasta(sequences: list[tuple[str, str]], path: str):
 
 
 def peptide_properties(seq: str) -> dict:
-    """Calcula propriedades básicas de um peptídeo."""
-    mw_table = {
-        'A': 89.09,  'R': 174.20, 'N': 132.12, 'D': 133.10, 'C': 121.16,
-        'Q': 146.15, 'E': 147.13, 'G': 75.03,  'H': 155.16, 'I': 131.17,
-        'L': 131.17, 'K': 146.19, 'M': 149.21, 'F': 165.19, 'P': 115.13,
-        'S': 105.09, 'T': 119.12, 'W': 204.23, 'Y': 181.19, 'V': 117.15,
+    """Calcula propriedades físico-químicas completas para dataset ML/DL."""
+    if not seq:
+        return {}
+
+    # Molecular weight (residue masses, not free amino acids)
+    mw_residue = {
+        'A': 71.08,  'R': 156.19, 'N': 114.10, 'D': 115.09, 'C': 103.14,
+        'Q': 128.13, 'E': 129.12, 'G': 57.05,  'H': 137.14, 'I': 113.16,
+        'L': 113.16, 'K': 128.17, 'M': 131.20, 'F': 147.18, 'P': 97.12,
+        'S': 87.08,  'T': 101.10, 'W': 186.21, 'Y': 163.18, 'V': 99.13,
     }
-    charge_table = {'R': +1, 'K': +1, 'H': +0.1, 'D': -1, 'E': -1}
-    hydrophobic = set('AILMFWVP')
+    # Kyte-Doolittle hydrophobicity scale
+    kd_scale = {
+        'A': 1.8,  'R': -4.5, 'N': -3.5, 'D': -3.5, 'C': 2.5,
+        'Q': -3.5, 'E': -3.5, 'G': -0.4, 'H': -3.2, 'I': 4.5,
+        'L': 3.8,  'K': -3.9, 'M': 1.9,  'F': 2.8,  'P': -1.6,
+        'S': -0.8, 'T': -0.7, 'W': -0.9, 'Y': -1.3, 'V': 4.2,
+    }
+    # Boman index scale (protein-binding potential, Boman 2003)
+    boman_scale = {
+        'A': 1.15,  'R': 1.91,  'N': 1.91,  'D': -0.12, 'C': 1.36,
+        'Q': 1.22,  'E': -0.74, 'G': 1.15,  'H': 0.11,  'I': -1.12,
+        'L': -1.25, 'K': 2.02,  'M': -1.02, 'F': -1.71, 'P': 0.14,
+        'S': 1.28,  'T': 1.22,  'W': -1.85, 'Y': -1.13, 'V': -0.46,
+    }
 
-    mw = sum(mw_table.get(aa, 110) for aa in seq) - 18.02 * (len(seq) - 1)
-    charge = sum(charge_table.get(aa, 0) for aa in seq)
-    frac_hydrophobic = sum(1 for aa in seq if aa in hydrophobic) / len(seq)
+    n = len(seq)
+    mw = sum(mw_residue.get(aa, 111.1) for aa in seq) + 18.02
+    hydrophobicity_kd = sum(kd_scale.get(aa, 0) for aa in seq) / n
+    boman = sum(boman_scale.get(aa, 0) for aa in seq) / n
+
+    # Net charge at pH 7 (approximate)
+    charge = (sum(1 for aa in seq if aa in 'RK')
+              - sum(1 for aa in seq if aa in 'DE')
+              + sum(0.1 for aa in seq if aa == 'H'))
+    # Add N-term (+1) and C-term (-1) at pH 7 → net 0 contribution
+
+    # Aliphatic index: 100 × (A + 2.9×V + 3.9×(I+L)) / n
+    aliphatic = 100 * (
+        seq.count('A') / n
+        + 2.9 * seq.count('V') / n
+        + 3.9 * (seq.count('I') + seq.count('L')) / n
+    )
+
+    # Instability index (simplified Guruprasad): penalizes DGSW dipeptides
+    _instab_pairs = {('D','G'):1,('G','W'):1,('W','N'):1,('N','T'):1}
+    instab = 0.0
+    for i in range(len(seq) - 1):
+        pair = (seq[i], seq[i+1])
+        instab += _instab_pairs.get(pair, 0) * 10
+    instab_approx = (instab / n) * 10 if n > 1 else 0.0
+
+    # Isoelectric point (binary search)
+    pI = _calc_pi(seq)
+
+    # Composition fractions
+    aromatic = set('YFWH')
+    hydrophobic_set = set('AILMFWV')
+    charged_set = set('RKDE')
+
+    frac_aromatic = sum(1 for aa in seq if aa in aromatic) / n
+    frac_hydrophobic = sum(1 for aa in seq if aa in hydrophobic_set) / n
+    frac_charged = sum(1 for aa in seq if aa in charged_set) / n
     n_arg_lys = sum(1 for aa in seq if aa in 'RK')
+    n_asp_glu = sum(1 for aa in seq if aa in 'DE')
+    n_aromatic = sum(1 for aa in seq if aa in 'YWF')
 
-    return {
+    props = {
         "sequence": seq,
-        "length": len(seq),
+        "length": n,
         "mw_da": round(mw, 2),
         "net_charge": round(charge, 2),
-        "frac_hydrophobic": round(frac_hydrophobic, 3),
+        "isoelectric_point": round(pI, 2),
+        "hydrophobicity_kd": round(hydrophobicity_kd, 3),
+        "boman_index": round(boman, 3),
+        "instability_index": round(instab_approx, 2),
+        "aliphatic_index": round(aliphatic, 2),
+        "frac_aromatic": round(frac_aromatic, 4),
+        "frac_hydrophobic": round(frac_hydrophobic, 4),
+        "frac_charged": round(frac_charged, 4),
         "n_arg_lys": n_arg_lys,
-        "has_p1_basic": seq[0] in 'RK' if seq else False,
+        "n_asp_glu": n_asp_glu,
+        "n_aromatic": n_aromatic,
+        "has_aromatic_cterminal": int(seq[-1] in 'YWF') if seq else 0,
+        "has_charged_nterminal": int(seq[0] in 'RKD') if seq else 0,
+        "has_pro": int('P' in seq),
     }
+    # Per-residue fractions (feature columns for ML)
+    for aa in "ADEFGHIKLMNPQRSTVWY":
+        props[f"frac_{aa}"] = round(seq.count(aa) / n, 4)
+    return props
+
+
+def _calc_pi(seq: str) -> float:
+    """Calcula pI por busca binária na curva de titulação."""
+    pk_pos = {'R': 12.48, 'K': 10.53, 'H': 6.00}
+    pk_neg = {'D': 3.65, 'E': 4.25, 'Y': 10.07, 'C': 8.18}
+    pK_nterm = 8.0
+    pK_cterm = 3.10
+
+    def charge_at(ph):
+        q = 1.0 / (1.0 + 10 ** (ph - pK_nterm))   # N-terminus +
+        q -= 1.0 / (1.0 + 10 ** (pK_cterm - ph))   # C-terminus -
+        for aa in seq:
+            if aa in pk_pos:
+                q += 1.0 / (1.0 + 10 ** (ph - pk_pos[aa]))
+            if aa in pk_neg:
+                q -= 1.0 / (1.0 + 10 ** (pk_neg[aa] - ph))
+        return q
+
+    lo, hi = 0.0, 14.0
+    for _ in range(100):
+        mid = (lo + hi) / 2.0
+        if charge_at(mid) > 0:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2.0
