@@ -36,12 +36,9 @@ proteinmpnn:
   num_seq_per_target: 30
   sampling_temp: 0.1
   backbone_noise: 0.05
-  fixed_positions:
-    "1": ["ARG", "LYS"]             # P1 = Arg ou Lys (especificidade S1)
+  fixed_positions: {}                 # Sem restrição de P1 — explorar mecanismos variados
   omit_aas: "CX"                    # Excluir Cys e aminoácido desconhecido
-  bias_aa:
-    ARG: 1.5                        # Favorece Arg no sítio P1
-    LYS: 1.0
+  bias_aa: {}                       # Sem bias — diversidade máxima de sequências
   install_paths:
     - "/opt/ProteinMPNN"
     - "$HOME/ProteinMPNN"

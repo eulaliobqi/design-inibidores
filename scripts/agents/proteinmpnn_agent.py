@@ -113,34 +113,26 @@ class ProteinMPNNAgent(BaseAgent):
         return sequences if sequences else self._fallback_sequences(10, cfg)
 
     def _fallback_sequences(self, length: int, cfg: dict) -> list[str]:
-        """Gera sequências candidatas baseadas em conhecimento de tripsina."""
+        """Gera sequências candidatas diversas — sem restrição de P1."""
         import random
 
-        # P1 = Arg (alta afinidade S1 de tripsina)
-        # P2-P5: resíduos favoráveis a serina-proteases
-        favorable = list("RGKAILMFWY")  # básicos + hidrofóbicos
-        neutral = list("GSTANQ")
+        # Diversidade máxima: explorar inibição competitiva, alostérica e mista
+        all_aa = list("ADEFGHIKLMNPQRSTVWY")  # sem Cys
         n_seqs = cfg.get("num_seq_per_target", 30)
         seqs = []
 
         for _ in range(n_seqs):
-            # P1 sempre Arg ou Lys
-            p1 = random.choice(["R", "K"])
-            rest = "".join(
-                random.choice(favorable + neutral)
-                for _ in range(length - 1)
-            )
-            seqs.append(p1 + rest)
+            seqs.append("".join(random.choice(all_aa) for _ in range(length)))
 
-        # Adicionar sequências conhecidas de inibidores de Kunitz/BPTI
-        # adaptadas para comprimentos curtos
+        # Seeds: inibidores clássicos (P1=R/K, mecanismo competitivo S1)
+        # e peptídeos com potencial alosstérico (hidrofóbicos, anfipáticos)
         known_motifs = {
-            5:  ["RYCEI", "RLFKS", "RPDFK", "RGSIE", "RKYSP"],
-            7:  ["RRYCEIS", "RPDFCLE", "RGSKYFP", "RLYSQFP"],
-            10: ["RPDFCLEPPK", "RRYCEIFARR", "RGSKYILPQR"],
-            12: ["RPDFCLEPKKYI", "RRLFKSRGKFLE"],
-            15: ["RPDFCLEPKKYIPS", "RRYCEIFARRGKFS"],
-            20: ["RPDFCLEPKKYIPSTLQE", "RRYCEIFARRGKFSKYIPE"],
+            5:  ["RYCEI", "RPDFK", "WFIYG", "LLAIG", "MFWVY"],
+            7:  ["RRYCEIS", "RPDFCLE", "WFIYGLM", "LLAIGTV"],
+            10: ["RPDFCLEPPK", "RRYCEIFARR", "WFIYGLMAIV", "LLAIGTVRMS"],
+            12: ["RPDFCLEPKKYI", "WFIYGLMAIVTG", "LLAIGTVRMSKA"],
+            15: ["RPDFCLEPKKYIPS", "WFIYGLMAIVTGKLS", "LLAIGTVRMSKAEPQ"],
+            20: ["RPDFCLEPKKYIPSTLQE", "WFIYGLMAIVTGKLSEPQR", "LLAIGTVRMSKAEPQDFNVY"],
         }
         motifs = known_motifs.get(length, [])
         seqs = motifs + seqs[:n_seqs - len(motifs)]

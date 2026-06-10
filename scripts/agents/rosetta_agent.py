@@ -78,7 +78,7 @@ class RosettaAgent(BaseAgent):
             props = data.get("properties", [])
 
             for i, seq in enumerate(seqs):
-                if not seq or seq[0] not in "RK":
+                if not seq:
                     continue
                 prop = props[i] if i < len(props) else {}
                 if seen_lengths.get(length, 0) >= max(2, limit // 6):

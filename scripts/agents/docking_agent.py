@@ -171,7 +171,7 @@ class DockingAgent(BaseAgent):
         for stem, data in sequences_data.items():
             length = data["length"]
             for seq in data["sequences"]:
-                if not seq or seq[0] not in "RK":
+                if not seq:
                     continue
                 if seen.get(length, 0) >= max(2, limit // 6):
                     continue
