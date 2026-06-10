@@ -62,7 +62,26 @@ def find_rosetta(config: dict) -> Optional[Path]:
 
 
 def check_gromacs() -> bool:
-    return shutil.which("gmx") is not None or shutil.which("gmx_mpi") is not None
+    if shutil.which("gmx") or shutil.which("gmx_mpi"):
+        return True
+    # Buscar em caminhos padrão de instalação HPC / CUDA-MPI
+    candidates = [
+        "/usr/local/gromacs/bin/gmx_mpi",
+        "/usr/local/gromacs/bin/gmx",
+        "/opt/gromacs/bin/gmx_mpi",
+        "/opt/gromacs/bin/gmx",
+        Path.home() / "gromacs/bin/gmx_mpi",
+        Path.home() / "gromacs/bin/gmx",
+    ]
+    if any(Path(p).exists() for p in candidates):
+        return True
+    # Último recurso: tentar executar
+    try:
+        r = subprocess.run(["gmx_mpi", "--version"],
+                           capture_output=True, timeout=5)
+        return r.returncode == 0
+    except Exception:
+        return False
 
 
 def check_vina() -> bool:

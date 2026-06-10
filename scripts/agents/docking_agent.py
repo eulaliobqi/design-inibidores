@@ -24,7 +24,12 @@ class DockingAgent(BaseAgent):
                 "AutoDock Vina",
                 "Instalar: conda install -c conda-forge vina"
             )
-            return self._heuristic_scores(sequences_data)
+            results = self._heuristic_scores(sequences_data)
+            # Sempre gravar em disco para que o ranking carregue corretamente
+            (self.workdir / "docking_results.json").write_text(
+                json.dumps(results, indent=2, default=str)
+            )
+            return results
 
         center = binding_site["consensus_center_xyz"]
         cfg = self.config.get("docking", {})
@@ -189,23 +194,30 @@ class DockingAgent(BaseAgent):
         return candidates[:limit]
 
     def _heuristic_scores(self, sequences_data: dict) -> dict:
-        """Estima afinidade heuristicamente e preenche labels no dataset ML."""
+        """Estima afinidade heuristicamente para todo o dataset."""
         results = {}
         for stem, data in sequences_data.items():
             props_list = data.get("properties", [])
             for i, seq in enumerate(data["sequences"]):
                 if not seq:
                     continue
+                # Chave única por sequência completa (sem colisão)
+                key = seq
+                if key in results:
+                    continue  # já calculado (sequência duplicada entre backbones)
                 p = props_list[i] if i < len(props_list) else {}
                 basic = p.get("n_arg_lys", sum(1 for aa in seq if aa in "RK"))
-                hydrophobic = p.get("frac_hydrophobic",
-                                    sum(1 for aa in seq if aa in "AILMFWV") / len(seq))
-                estimated = -(basic * 1.2 + hydrophobic * len(seq) * 0.5 + len(seq) * 0.1)
-                key = f"len{data['length']}_{seq[:8]}"
+                frac_h = p.get("frac_hydrophobic",
+                               sum(1 for aa in seq if aa in "AILMFWV") / len(seq))
+                boman = p.get("boman_index", 0)
+                # Heurística multi-fator: carga básica + hidrofobicidade + boman
+                estimated = -(basic * 1.2 + frac_h * len(seq) * 0.5
+                               + abs(boman) * 0.3 + len(seq) * 0.1)
                 results[key] = {
                     "sequence": seq,
                     "length": data["length"],
                     "best_affinity_kcal": round(estimated, 2),
                     "method": "heuristic",
                 }
+        self.logger.info(f"Heuristic docking: {len(results)} sequências únicas pontuadas")
         return results

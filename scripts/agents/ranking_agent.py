@@ -33,16 +33,24 @@ class RankingAgent(BaseAgent):
 
         # Consolidar todas as sequências únicas
         all_seqs = self._collect_sequences(sequences_data)
+        self.logger.info(f"Sequências únicas coletadas: {len(all_seqs)}")
+
+        # Índice Rosetta por sequência (chave antiga: len{n}_{seq[:8]})
+        ros_by_seq = {}
+        for k, v in rosetta_results.items():
+            ros_by_seq[v.get("sequence", "")] = v
 
         for seq, meta in all_seqs.items():
-            stem = f"len{meta['length']}_{seq[:8]}"
-
-            # Docking
-            dock = docking_results.get(stem, {})
+            # Docking: chave = sequência completa (novo padrão)
+            dock = docking_results.get(seq, {})
+            # Fallback para chave antiga (stem) se migração incompleta
+            if not dock:
+                old_stem = f"len{meta['length']}_{seq[:8]}"
+                dock = docking_results.get(old_stem, {})
             vina_aff = dock.get("best_affinity_kcal")
 
             # Rosetta
-            ros = rosetta_results.get(stem, {})
+            ros = ros_by_seq.get(seq, {})
             i_sc = ros.get("I_sc")
 
             # MD
@@ -98,7 +106,7 @@ class RankingAgent(BaseAgent):
         df = df.sort_values("final_score", ascending=False).reset_index(drop=True)
         df.insert(0, "rank", df.index + 1)
 
-        # Salvar CSV
+        # Salvar CSV de ranking
         out_csv = self.workdir / "ranking.csv"
         df.to_csv(out_csv, index=False, float_format="%.4f")
 
@@ -109,11 +117,43 @@ class RankingAgent(BaseAgent):
             json.dumps(top_json, indent=2, default=str)
         )
 
+        # Preencher labels no dataset ML
+        self._fill_ml_labels(df)
+
         self.logger.info(
             f"Ranking gerado: {len(df)} sequências. "
             f"Top-1: {df.iloc[0]['sequence']} (score={df.iloc[0]['final_score']:.3f})"
         )
         return df
+
+    def _fill_ml_labels(self, ranking_df: pd.DataFrame):
+        """Escreve vina_affinity_kcal, rosetta_I_sc e final_score no dataset ML CSV."""
+        ml_csv = self.workdir.parent / "dataset" / "ml_training_dataset.csv"
+        if not ml_csv.exists():
+            return
+        try:
+            df_ml = pd.read_csv(ml_csv)
+            score_map = ranking_df.set_index("sequence")[
+                ["vina_affinity", "rosetta_I_sc", "final_score"]
+            ].to_dict("index")
+
+            df_ml["vina_affinity_kcal"] = df_ml["sequence"].map(
+                lambda s: score_map.get(s, {}).get("vina_affinity", "")
+            )
+            df_ml["rosetta_I_sc"] = df_ml["sequence"].map(
+                lambda s: score_map.get(s, {}).get("rosetta_I_sc", "")
+            )
+            df_ml["final_score"] = df_ml["sequence"].map(
+                lambda s: score_map.get(s, {}).get("final_score", "")
+            )
+            df_ml.to_csv(ml_csv, index=False, float_format="%.6f")
+            labeled = df_ml["vina_affinity_kcal"].notna().sum()
+            self.logger.info(
+                f"ML CSV atualizado: {labeled}/{len(df_ml)} sequências com labels "
+                f"({ml_csv})"
+            )
+        except Exception as e:
+            self.logger.error(f"Erro ao preencher labels ML: {e}")
 
     def _collect_sequences(self, sequences_data: dict) -> dict:
         """Retorna {seq: {length, backbone}} sem duplicatas."""
