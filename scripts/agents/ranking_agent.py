@@ -53,8 +53,8 @@ class RankingAgent(BaseAgent):
             ros = ros_by_seq.get(seq, {})
             i_sc = ros.get("I_sc")
 
-            # MD
-            md = md_results.get(stem, {})
+            # MD (chave = sequência completa, fallback old_stem)
+            md = md_results.get(seq, md_results.get(old_stem, {}))
             rmsd = md.get("rmsd_avg_nm")
             hb = md.get("hbond_avg")
 
