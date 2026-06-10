@@ -68,7 +68,10 @@ class ProteinMPNNAgent(BaseAgent):
                     seqs = self._generate_ml_dataset(int(length), cfg)
 
                 props = [peptide_properties(s) for s in seqs]
-                results[pdb.stem] = {
+                # Chave qualificada pelo comprimento para evitar colisão entre
+                # backbones de comprimentos diferentes com mesmo stem de arquivo
+                key = f"len{int(length)}_{pdb.stem}"
+                results[key] = {
                     "backbone_pdb": str(pdb),
                     "length": int(length),
                     "sequences": seqs,
@@ -78,7 +81,7 @@ class ProteinMPNNAgent(BaseAgent):
                 for s, p in zip(seqs, props):
                     if s not in seen_seqs:
                         seen_seqs.add(s)
-                        entry = {"backbone": pdb.stem, **p}
+                        entry = {"backbone": key, **p}
                         entry["is_known_inhibitor"] = 1 if s in seeds_for_len else 0
                         all_unique.append(entry)
 
