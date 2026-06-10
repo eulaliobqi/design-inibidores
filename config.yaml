@@ -33,7 +33,7 @@ rfdiffusion:
     - "/usr/local/RFdiffusion"
 
 proteinmpnn:
-  num_seq_per_target: 30
+  num_seq_per_target: 50
   sampling_temp: 0.1
   backbone_noise: 0.05
   fixed_positions: {}                 # Sem restrição de P1 — explorar mecanismos variados
