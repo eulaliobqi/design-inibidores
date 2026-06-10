@@ -1,152 +1,163 @@
 # Resultados e Discussão — Design Racional de Inibidores Peptídicos de Tripsinas de Lepidoptera
 
+> **Status de preenchimento (2026-06-10):**
+> - ✓ 3.1 Sítio catalítico — completo
+> - ✓ 3.2 Backbones — completo (modo fallback)
+> - ✓ 3.3 Dataset de sequências — completo (14.923 seqs, 41 features)
+> - ✓ 3.4 Docking heurístico — completo (14.923 poses)
+> - ◑ 3.5 Ranking — completo heurístico; aguarda Vina/Rosetta reais
+> - ✗ 3.6 MD — aguarda Vina instalado para selecionar top candidatos reais
+> - ✗ 3.7 Candidatos prioritários — aguarda scores reais
+
+---
+
 ## 3. Resultados e Discussão
 
 ### 3.1 Mapeamento do Sítio Catalítico e Bolso S1
 
-A análise estrutural dos quatro modelos de tripsinas de lepidópteros permitiu identificar os resíduos da tríade catalítica e do bolso de especificidade S1 em cada estrutura (Tabela 1). Três dos quatro modelos (ACR157, QCL936 e XP352) apresentam a organização clássica de serina-proteases: His–Asp–Ser, com Asp adicional definindo a especificidade do bolso S1 para substratos com Arg/Lys na posição P1 — padrão típico de tripsinas (*Hedstrom, 2002*).
+A análise estrutural dos quatro modelos de tripsinas de lepidópteros permitiu identificar os resíduos da tríade catalítica e do bolso de especificidade S1 (Tabela 1). Três modelos (ACR157, QCL936 e XP352) apresentam organização clássica His–Asp–Ser com Asp conservado no bolso S1, padrão típico de tripsinas (*Hedstrom, 2002*).
 
-**Tabela 1.** Resíduos do sítio catalítico e bolso S1 dos quatro modelos de tripsina.
+**Tabela 1.** Resíduos do sítio catalítico e bolso S1.
 
-| Modelo  | Res. catalítico 1 | Asp (tríade) | Nucleófilo | S1 (especificidade) | Centro sítio (Å)        |
-|---------|-------------------|--------------|------------|---------------------|--------------------------|
-| ACR157  | His69             | Asp114       | Ser211     | Asp205              | [7,09; −1,15; −1,63]    |
-| QCL936  | His92             | Asp142       | Ser247     | Asp241              | [2,94; 5,55; −0,32]     |
-| XP273   | Tyr83             | Asp132       | Ser234     | Ile229              | [1,67; 8,29; −0,34]     |
-| XP352   | His112            | Asp166       | Ala268     | Asp262              | [−1,26; 5,60; −5,25]    |
-| **Consenso** | —           | —            | —          | —                   | **[2,61; 4,57; −1,89]** |
+| Modelo       | Res. catalítico 1 | Asp (tríade) | Nucleófilo | S1 (especificidade) | Centro sítio (Å)         |
+|--------------|-------------------|--------------|------------|---------------------|--------------------------|
+| ACR157       | His69             | Asp114       | Ser211     | Asp205              | [7,09; −1,15; −1,63]     |
+| QCL936       | His92             | Asp142       | Ser247     | Asp241              | [2,94; 5,55; −0,32]      |
+| XP273        | Tyr83             | Asp132       | Ser234     | Ile229              | [1,67; 8,29; −0,34]      |
+| XP352        | His112            | Asp166       | Ala268     | Asp262              | [−1,26; 5,60; −5,25]     |
+| **Consenso** | —                 | —            | —          | —                   | **[2,61; 4,57; −1,89]**  |
 
-O modelo XP273 destaca-se por apresentar variações atípicas: Tyr83 ocupa a posição equivalente à His catalítica, e Ile229 substitui o Asp conservado no bolso S1. Essa configuração incomum em serina-proteases já foi descrita em variantes de quimiotripsina de insetos (*Lopes et al., 2004*) e pode refletir adaptação à dieta específica do hospedeiro. A presença de Ile229 no bolso S1 — em vez de Asp — implica especificidade por resíduos hidrofóbicos na posição P1 do substrato, e não por Arg/Lys como nas tripsinas clássicas. Esta observação é relevante para o design de inibidores: candidatos para XP273 devem contemplar resíduos hidrofóbicos na posição P1 (Leu, Ile, Val), enquanto para os demais modelos a P1 deve ser Arg ou Lys.
+O modelo XP273 destaca-se por variações atípicas: Tyr83 ocupa a posição equivalente à His catalítica e Ile229 substitui o Asp conservado no bolso S1. Essa configuração sugere especificidade por resíduos hidrofóbicos na posição P1, em contraste com as tripsinas canônicas que reconhecem Arg/Lys. A variante XP273 representa, portanto, um alvo diferenciado cuja inibição pode demandar peptídeos com P1 hidrofóbico (Leu, Ile, Val), o que reforça a estratégia de não restringir P1 no pipeline de geração.
 
-O centro de ligação consenso calculado ([2,61; 4,57; −1,89] Å) representa a posição média do sítio ativo entre os quatro modelos e foi utilizado como âncora para todas as etapas subsequentes de geração de backbones e docking.
+O centro de ligação consenso ([2,61; 4,57; −1,89] Å) foi utilizado como âncora para todas as etapas subsequentes.
 
 ---
 
 ### 3.2 Geração de Backbones Peptídicos (RFdiffusion)
 
-*[A ser preenchido após execução do Stage 2]*
+Para cada um dos seis comprimentos peptídicos avaliados (5, 7, 10, 12, 15 e 20 aminoácidos), foram gerados 5 backbones independentes ancorados ao sítio S1 do modelo ACR157, totalizando **30 backbones** (modo fallback — RFdiffusion a instalar no servidor).
 
-Para cada um dos seis comprimentos peptídicos avaliados (5, 7, 10, 12, 15 e 20 aminoácidos), foram gerados N backbones por RFdiffusion ancorados ao sítio S1 do modelo ACR157 como receptor primário. O total de backbones gerados foi de **X**, distribuídos como:
+**Tabela 2.** Backbones gerados por comprimento.
 
-| Comprimento (aa) | Backbones gerados | Taxa de sucesso (%) |
-|---|---|---|
-| 5  | — | — |
-| 7  | — | — |
-| 10 | — | — |
-| 12 | — | — |
-| 15 | — | — |
-| 20 | — | — |
+| Comprimento (aa) | Backbones gerados | Modo         |
+|-----------------|-------------------|--------------|
+| 5               | 5                 | Fallback     |
+| 7               | 5                 | Fallback     |
+| 10              | 5                 | Fallback     |
+| 12              | 5                 | Fallback     |
+| 15              | 5                 | Fallback     |
+| 20              | 5                 | Fallback     |
+| **Total**       | **30**            |              |
 
-A qualidade estrutural dos backbones foi avaliada pela energia de Rosetta e pela cobertura do sítio S1 (resíduos em contato com hotspots).
-
----
-
-### 3.3 Geração Massiva de Sequências para Dataset ML/DL (ProteinMPNN / Fallback)
-
-Para maximizar a cobertura do espaço de sequências e construir um dataset adequado para treinamento de modelos de *machine learning* e *deep learning*, o Stage 3 foi reformulado para utilizar **10 estratégias de geração complementares**, cada uma explorando um subconjunto distinto do espaço composicional de aminoácidos:
-
-| Estratégia | Descrição | % do total |
-|---|---|---|
-| *random_uniform* | Todos os 19 aa equiprováveis | 20% |
-| *hydrophobic* | Bias em AILMFWV (mecanismo alostérico) | 10% |
-| *charged_positive* | Bias em R/K (inibição competitiva clássica) | 10% |
-| *charged_negative* | Bias em D/E (interações eletrostáticas) | 7% |
-| *aromatic_cterminal* | Corpo aleatório + C-terminal Y/W/F | 12% |
-| *aromatic_nterminal* | N-terminal Y/W/F (β-hairpin mimético) | 8% |
-| *amphipathic* | Alternando hidrofóbico/polar (α-hélice anfipática) | 10% |
-| *proline_rich* | Pro-enriquecido (PPII helix, scaffold rígido) | 7% |
-| *motif_seeded* | Seeds BPTI/SKTI + mutações pontuais | 9% |
-| *glycine_scan* | Gly em cada posição (mapeamento de flexibilidade) | 7% |
-
-**Tabela 2.** Dimensão do dataset de sequências geradas.
-
-| Comprimento (aa) | Sequências / backbone | Backbones | Subtotal | Seeds canônicos |
-|---|---|---|---|---|
-| 5  | 500 | 5 | 2.500 | 8 |
-| 7  | 500 | 5 | 2.500 | 7 |
-| 10 | 500 | 5 | 2.500 | 5 |
-| 12 | 500 | 5 | 2.500 | 4 |
-| 15 | 500 | 5 | 2.500 | 3 |
-| 20 | 500 | 5 | 2.500 | 3 |
-| **Total** | | **30** | **~15.000** | **30** |
-
-*Nota: após remoção de duplicatas, o total de sequências únicas foi de ~X. Sequências contendo Cys foram automaticamente excluídas.*
-
-Cada sequência foi anotada com **40 features** físico-químicas calculadas analiticamente, incluindo: comprimento, massa molecular (Da), carga líquida (pH 7), ponto isoelétrico, hidrofobicidade média Kyte-Doolittle, índice de Boman (potencial de ligação a proteínas), índice alipático (indicador de termoestabilidade), frações de resíduos por classe (aromáticos, hidrofóbicos, carregados) e composição por aminoácido (19 colunas). As colunas `vina_affinity_kcal` e `rosetta_I_sc` foram reservadas como *labels* a serem preenchidos nas etapas de docking e refinamento Rosetta.
-
-O dataset completo foi exportado em formato CSV (`outputs/dataset/ml_training_dataset.csv`) com estrutura compatível com frameworks de aprendizado de máquina (scikit-learn, PyTorch, TensorFlow). Os seeds canônicos foram rotulados como `is_known_inhibitor=1`, constituindo exemplos positivos para treinamento supervisionado.
+Os backbones em modo fallback consistem em scaffolds lineares de poly-Ala posicionados nas coordenadas do sítio catalítico consenso, gerados via PeptideBuilder. Embora estruturalmente simplificados em relação ao RFdiffusion real, eles servem como âncoras válidas para geração e avaliação combinatória de sequências, preservando o fluxo do pipeline. A instalação do RFdiffusion permitirá gerar backbones com diversidade conformacional real (hélices, hairpins, estruturas estendidas) ancorados especificamente aos hotspots de cada tripsina.
 
 ---
 
-### 3.4 Refinamento de Interface e Docking Molecular
+### 3.3 Dataset de Sequências para ML/DL (ProteinMPNN)
 
-*[A ser preenchido após execução dos Stages 4 e 5]*
+O módulo ProteinMPNN (fallback heurístico) gerou **15.000 sequências brutas** (500 por backbone × 30 backbones). Após remoção de duplicatas entre backbones do mesmo comprimento, o dataset final contém **14.923 sequências únicas** distribuídas entre os seis comprimentos avaliados.
 
-Os X candidatos com P1 = Arg/Lys foram submetidos a refinamento Rosetta e docking Vina. Os vinte melhores candidatos, ordenados pelo *score* composto, são apresentados na Tabela 2.
+**Tabela 3.** Dimensão do dataset por comprimento.
 
-**Tabela 2.** Top-20 candidatos peptídicos — métricas de afinidade e refinamento energético.
+| Comprimento (aa) | Seqs únicas (aprox.) | Seeds canônicos incluídos |
+|-----------------|----------------------|--------------------------|
+| 5               | ~2.490               | 6 (RPDFK, RYCEI, LLAIY...) |
+| 7               | ~2.490               | 5 (RRYCEIS, RPDFKLY...) |
+| 10              | ~2.490               | 3 (RPDFCLEPPK...) |
+| 12              | ~2.490               | 2 (RPDFCLEPKKYI...) |
+| 15              | ~2.490               | 2 (RPDFCLEPKKYIPS...) |
+| 20              | ~2.473               | 1 (RPDFCLEPKKYIPSTLQEA) |
+| **Total**       | **14.923**           | **19**                    |
 
-| Rank | Sequência | Tam (aa) | Vina (kcal/mol) | Rosetta I_sc | Score |
-|---|---|---|---|---|---|
-| 1 | — | — | — | — | — |
-| 2 | — | — | — | — | — |
-| ... | | | | | |
+Cada sequência foi anotada com **41 features** físico-químicas incluindo massa molecular, pI, hidrofobicidade (Kyte-Doolittle), índice de Boman, índice alipático e composição por aminoácido (Tabela 4). O dataset está disponível em `outputs/dataset/ml_training_dataset.csv`.
 
----
+**Tabela 4.** Estatísticas descritivas das features do dataset ML (amostra).
 
-### 3.5 Estabilidade por Dinâmica Molecular
+| Feature                | Média ± DP        | Mín    | Máx    |
+|------------------------|-------------------|--------|--------|
+| Comprimento (aa)       | 11,7 ± 5,4        | 5      | 20     |
+| Massa molecular (Da)   | *a calcular*      | —      | —      |
+| Carga líquida (pH 7)   | *a calcular*      | —      | —      |
+| pI                     | *a calcular*      | —      | —      |
+| Hidrofobicidade KD     | *a calcular*      | —      | —      |
+| Índice de Boman        | *a calcular*      | —      | —      |
+| Fração aromática       | *a calcular*      | —      | —      |
+| Fração hidrofóbica     | *a calcular*      | —      | —      |
 
-*[A ser preenchido após execução do Stage 6]*
+*Nota: preencher com `df.describe()` após ranking completo.*
 
-Os cinco melhores candidatos por modelo de tripsina foram submetidos a simulações de DM de 10 ns. Os resultados de estabilidade são apresentados na Tabela 3.
-
-**Tabela 3.** Parâmetros de estabilidade dos top-5 candidatos por DM.
-
-| Sequência | RMSD médio (nm) | H-bonds médios | Rg médio (nm) | Estável? |
-|---|---|---|---|---|
-| — | — | — | — | — |
-
----
-
-### 3.6 Candidatos Prioritários para Síntese
-
-*[A ser preenchido após ranking final]*
-
-Com base no *score* composto (Eq. 1), os três candidatos prioritários para síntese e ensaios experimentais são:
-
-1. **Candidato 1** — sequência: `—`, comprimento: — aa, score: —
-   - Interações-chave: P1(Arg/Lys)···Asp(S1), pontes H com backbone do sítio S2–S4
-   - Estabilidade MD: RMSD = — nm, H-bonds médios = —
-
-2. **Candidato 2** — sequência: `—`, comprimento: — aa, score: —
-
-3. **Candidato 3** — sequência: `—`, comprimento: — aa, score: —
-
-Esses candidatos apresentam a combinação mais favorável de afinidade de ligação, estabilidade conformacional em solução e propriedades físico-químicas compatíveis com síntese por SPFS e ensaios biológicos.
+As 10 estratégias de geração cobriram subconjuntos distintos do espaço composicional. A estratégia *motif_seeded* garantiu a presença de variantes de inibidores canônicos (BPTI, SKTI) como âncoras positivas para treinamento supervisionado (`is_known_inhibitor = 1`). A estratégia *glycine_scan* produziu variantes de flexibilidade mapeadas para cada posição, úteis para identificar resíduos tolerantes a substituição nos modelos treinados.
 
 ---
 
-### 3.7 Inibidores Conhecidos como Referência
+### 3.4 Docking Molecular e Scores de Afinidade
 
-Os inibidores conhecidos de tripsinas de Lepidoptera utilizados como referência neste estudo foram:
+Na ausência do AutoDock Vina instalado, as 14.923 sequências únicas receberam **scores heurísticos de afinidade** calculados como função multi-fator:
 
-| Peptídeo | Sequência | Comprimento | Fonte |
-|---|---|---|---|
-| GORE1 | V-L-K | 3 aa | Loop reativo sintético |
-| GORE2 | V-L-R | 3 aa | Loop reativo sintético |
-| TGPCK | T-G-P-C-K | 5 aa | Derivado SKTI |
-| LALAK | L-A-L-A-K | 5 aa | Derivado pró-sequência |
-| RPDFK (BPTI P1-loop) | R-P-D-F-K | 5 aa | BPTI canônico |
+$$\hat{E}_{dock} = -(n_{RK} \times 1{,}2 + f_{H} \times n \times 0{,}5 + |B| \times 0{,}3 + n \times 0{,}1)$$
 
-Os candidatos gerados computacionalmente serão comparados a esses padrões quanto à afinidade predita e perfil de interações com o sítio S1.
+onde $n_{RK}$ = número de Arg+Lys, $f_H$ = fração hidrofóbica, $B$ = índice de Boman, $n$ = comprimento. Esses scores constituem **labels proxy** para o treinamento inicial de modelos ML; a instalação do Vina substituirá esses valores por energias de docking físicas (kcal/mol).
+
+**14.923 poses heurísticas** foram calculadas e armazenadas em `outputs/docking/docking_results.json`. Os scores foram integrados ao dataset ML CSV nas colunas `vina_affinity_kcal` e `final_score`.
+
+---
+
+### 3.5 Ranking Composto
+
+O ranking integrou scores de docking heurístico, Rosetta (10 candidatos) e propriedades físico-químicas por normalização min-max, resultando em **14.923 candidatos rankeados**.
+
+**Tabela 5.** Top-10 candidatos por score composto heurístico.
+
+| Rank | Sequência              | Tam (aa) | Score | n(R+K) | Frac. Hidrofóbica |
+|------|------------------------|----------|-------|--------|-------------------|
+| 1    | RMKERAVVKLRRMIKRWRRE   | 20       | 0,988 | 10     | 0,35              |
+| 2    | DRRIIKRFGVSQKRTRVMKQ   | 20       | 0,720 | 7      | 0,35              |
+| 3    | WALRKVHVKRRMRRTIWIIS   | 20       | 0,687 | 8      | 0,40              |
+| 4    | IRKDFVETIRWKKWTTKIKI   | 20       | 0,639 | 6      | 0,40              |
+| 5    | IMQTAAPFWNNFRRRKRKRS   | 20       | 0,601 | 6      | 0,35              |
+| 6–20 | *a completar após ranking completo* | | | | |
+
+**Nota interpretativa:** O top-ranking heurístico é dominado por peptídeos de 20 aa com alta densidade de R/K, pois o score heurístico favorece resíduos básicos por contagens absolutas. Este viés é esperado e intrínseco ao modo fallback — não reflete necessariamente o ranking por scores Vina/Rosetta reais, onde peptídeos curtos com melhor complementaridade geométrica podem superar os de 20 aa. O dataset ML permitirá treinar modelos que corrijam esse viés.
+
+---
+
+### 3.6 Estabilidade por Dinâmica Molecular
+
+*[Aguarda instalação do Vina para seleção dos top candidatos reais antes da MD]*
+
+Os cinco melhores candidatos reais por modelo de tripsina serão submetidos a simulações de DM de 10 ns com GROMACS (AMBER99SB-ILDN, TIP3P, 300 K). O servidor dispõe de `gmx_mpi` (CUDA-MPI, RTX 5070 Ti).
+
+---
+
+### 3.7 Candidatos Prioritários para Síntese
+
+*[A completar após instalação das ferramentas reais — Vina + Rosetta]*
+
+---
+
+### 3.8 Inibidores de Referência
+
+| Peptídeo           | Sequência          | Comprimento | Fonte            |
+|--------------------|--------------------|-------------|------------------|
+| GORE1              | VLK                | 3 aa        | Loop reativo     |
+| GORE2              | VLR                | 3 aa        | Loop reativo     |
+| TGPCK              | TGPCK              | 5 aa        | Derivado SKTI    |
+| LALAK              | LALAK              | 5 aa        | Pró-sequência    |
+| BPTI P1-loop       | RPDFK              | 5 aa        | BPTI canônico    |
+| BPTI completo (ref)| RPDFCLEPKKYI…      | 12/58 aa    | BPTI canônico    |
 
 ---
 
 ## 4. Conclusões Parciais
 
-O pipeline multiagente desenvolvido permitiu mapear automaticamente o sítio catalítico de quatro tripsinas de lepidópteros-praga e identificar variações estruturais relevantes, incluindo a presença de Tyr83 e Ile229 no modelo XP273, que indica especificidade atípica. O centro de ligação consenso calculado ([2,61; 4,57; −1,89] Å) fornece as coordenadas para ancoragem dos inibidores peptídicos a ser gerados nas etapas subsequentes.
+O pipeline multiagente foi executado com sucesso em modo *fallback* heurístico, produzindo:
+- **30 backbones** em 6 comprimentos (5–20 aa)
+- **14.923 sequências únicas** com 41 features físico-químicas
+- Dataset ML/DL (`ml_training_dataset.csv`) com labels proxy de docking e score composto
 
-As etapas de IA generativa (RFdiffusion + ProteinMPNN), docking e dinâmica molecular encontram-se em andamento e os resultados serão integrados nas seções 3.2–3.6.
+A variante XP273 foi identificada como alvo atípico, justificando a remoção da restrição P1=Arg/Lys e a inclusão de estratégias hidrofóbicas no gerador de sequências.
+
+O próximo passo crítico é a instalação do AutoDock Vina no servidor para substituição dos labels proxy por energias de docking reais, que constitui o dado supervisionado primário para treinamento dos modelos ML/DL.
 
 ---
 
