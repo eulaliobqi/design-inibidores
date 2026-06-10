@@ -41,12 +41,10 @@ class RankingAgent(BaseAgent):
             ros_by_seq[v.get("sequence", "")] = v
 
         for seq, meta in all_seqs.items():
-            # Docking: chave = sequência completa (novo padrão)
-            dock = docking_results.get(seq, {})
-            # Fallback para chave antiga (stem) se migração incompleta
-            if not dock:
-                old_stem = f"len{meta['length']}_{seq[:8]}"
-                dock = docking_results.get(old_stem, {})
+            # Chave legada para compatibilidade com outputs anteriores
+            old_stem = f"len{meta['length']}_{seq[:8]}"
+            # Docking: chave = sequência completa (novo padrão), fallback legado
+            dock = docking_results.get(seq) or docking_results.get(old_stem, {})
             vina_aff = dock.get("best_affinity_kcal")
 
             # Rosetta
