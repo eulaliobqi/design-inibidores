@@ -62,10 +62,9 @@ class DockingAgent(BaseAgent):
         (self.workdir / "docking_results.json").write_text(
             json.dumps(results, indent=2, default=str)
         )
-        self.logger.info(
-            f"Docking concluído. Melhor: "
-            f"{min(results.values(), key=lambda x: x.get('best_affinity_kcal', 0), default={}).get('sequence', '-')}"
-        )
+        valid = [v for v in results.values() if v.get("best_affinity_kcal") is not None]
+        best_seq = min(valid, key=lambda x: x["best_affinity_kcal"], default={}).get("sequence", "-")
+        self.logger.info(f"Docking concluído. Melhor: {best_seq} ({len(valid)}/{len(results)} poses válidas)")
         return results
 
     def _prepare_receptor_pdbqt(self, receptor_pdb: str) -> Path:
@@ -73,58 +72,81 @@ class DockingAgent(BaseAgent):
         if pdbqt.exists():
             return pdbqt
 
-        # Tentar com obabel ou meeko
+        # Preferência: obabel → prepare_receptor4.py → conversão mínima manual
         if subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
-            subprocess.run(
+            proc = subprocess.run(
                 ["obabel", receptor_pdb, "-O", str(pdbqt), "-xr"],
                 capture_output=True
             )
-        elif subprocess.run(["which", "prepare_receptor4.py"], capture_output=True).returncode == 0:
-            subprocess.run(
+            if proc.returncode == 0 and pdbqt.exists():
+                return pdbqt
+        if subprocess.run(["which", "prepare_receptor4.py"], capture_output=True).returncode == 0:
+            proc = subprocess.run(
                 ["prepare_receptor4.py", "-r", receptor_pdb, "-o", str(pdbqt)],
                 capture_output=True
             )
-        else:
-            # Fallback: renomear .pdb → .pdbqt (funcional para Vina moderno)
-            import shutil
-            shutil.copy(receptor_pdb, str(pdbqt))
+            if proc.returncode == 0 and pdbqt.exists():
+                return pdbqt
 
+        # Fallback manual: adicionar colunas de carga e tipo AD4 ao PDB
+        self._pdb_to_pdbqt_minimal(receptor_pdb, str(pdbqt))
         return pdbqt
 
-    def _build_peptide_pdbqt(self, sequence: str, center: list, out_dir: Path) -> Path | None:
-        pdb_path = out_dir / "peptide.pdb"
-        pdbqt_path = out_dir / "peptide.pdbqt"
+    def _pdb_to_pdbqt_minimal(self, pdb_in: str, pdbqt_out: str):
+        """Converte PDB para PDBQT adicionando charge=0 e tipo AD4 baseado no elemento."""
+        element_to_ad4 = {
+            "C": "C", "N": "NA", "O": "OA", "S": "SA",
+            "H": "HD", "P": "P", "F": "F", "CL": "CL", "BR": "BR",
+        }
+        with open(pdb_in) as fi, open(pdbqt_out, "w") as fo:
+            for line in fi:
+                if line.startswith(("ATOM", "HETATM")):
+                    element = line[76:78].strip().upper() if len(line) > 76 else ""
+                    if not element:
+                        element = line[12:16].strip().lstrip("0123456789")[0].upper()
+                    atype = element_to_ad4.get(element, "C")
+                    fo.write(line[:66].ljust(66) + f"    0.000 {atype}\n")
+                elif line.startswith("END"):
+                    fo.write(line)
+                else:
+                    fo.write(line)
 
-        # Construir peptídeo linear simples
+    def _build_peptide_pdbqt(self, sequence: str, center: list, out_dir: Path) -> Path | None:
+        """Constrói PDBQT mínimo válido para Vina sem necessidade de obabel."""
+        pdbqt_path = out_dir / "peptide.pdbqt"
         cx, cy, cz = center
-        with open(pdb_path, "w") as f:
+
+        # Mapeamento de tipo AD4 por aminoácido (carbono por padrão)
+        ad4_type = {"R": "N", "K": "N", "H": "N", "D": "OA", "E": "OA",
+                    "S": "OA", "T": "OA", "Y": "OA", "N": "NA", "Q": "NA",
+                    "W": "A", "F": "A", "P": "A"}
+
+        with open(pdbqt_path, "w") as f:
+            f.write("ROOT\n")
             for i, aa in enumerate(sequence):
                 resname = AA_1TO3.get(aa, "ALA")
+                atype = ad4_type.get(aa, "C")
+                x = cx + i * 3.8
                 f.write(
                     f"ATOM  {i+1:5d}  CA  {resname} B{i+1:4d}    "
-                    f"{cx + i*3.8:8.3f}{cy:8.3f}{cz:8.3f}  1.00  0.00           C\n"
+                    f"{x:8.3f}{cy:8.3f}{cz:8.3f}  1.00  0.00    "
+                    f"  0.000 {atype}\n"
                 )
-            f.write("END\n")
+            f.write("ENDROOT\n")
+            f.write("TORSDOF 0\n")
 
-        # Converter para PDBQT
+        # Preferir obabel se disponível (mais preciso)
         if subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
+            pdb_path = out_dir / "peptide.pdb"
+            pdb_path.write_text(pdbqt_path.read_text())
             proc = subprocess.run(
                 ["obabel", str(pdb_path), "-O", str(pdbqt_path)],
                 capture_output=True
             )
-            if proc.returncode == 0 and pdbqt_path.exists():
-                return pdbqt_path
-        elif subprocess.run(["which", "prepare_ligand4.py"], capture_output=True).returncode == 0:
-            subprocess.run(
-                ["prepare_ligand4.py", "-l", str(pdb_path), "-o", str(pdbqt_path)],
-                capture_output=True
-            )
-            if pdbqt_path.exists():
+            if proc.returncode != 0:
+                self._build_peptide_pdbqt.__wrapped__ = True  # sem loop recursivo
                 return pdbqt_path
 
-        # Último recurso: copiar pdb como pdbqt
-        import shutil
-        shutil.copy(str(pdb_path), str(pdbqt_path))
         return pdbqt_path
 
     def _run_vina(self, receptor_pdbqt: Path, ligand_pdbqt: Path,
