@@ -81,7 +81,8 @@ class RankingAgent(BaseAgent):
         # Normalizar métricas (min-max → [0, 1])
         def norm(series: pd.Series, invert: bool = False) -> pd.Series:
             filled = series.fillna(series.median() if not series.dropna().empty else 0)
-            mn, mx = filled.min(), filled.max()
+            filled = filled.infer_objects(copy=False)
+            mn, mx = float(filled.min()), float(filled.max())
             if mx == mn:
                 return pd.Series([0.5] * len(filled), index=filled.index)
             n = (filled - mn) / (mx - mn)
@@ -89,7 +90,8 @@ class RankingAgent(BaseAgent):
 
         df["n_vina"]   = norm(df["vina_affinity"],    invert=True)
         df["n_ros"]    = norm(df["rosetta_I_sc"],      invert=True)
-        df["n_hb"]     = norm(df["hbond_avg"].fillna(df["n_arg_lys"]), invert=False)
+        hb_filled = df["hbond_avg"].fillna(df["n_arg_lys"]).infer_objects(copy=False)
+        df["n_hb"]     = norm(hb_filled, invert=False)
         df["n_rmsd"]   = norm(df["md_rmsd_nm"],        invert=True)
         df["n_alk"]    = norm(df["n_arg_lys"].astype(float), invert=False)
 
