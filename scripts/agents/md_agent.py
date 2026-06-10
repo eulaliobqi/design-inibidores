@@ -158,7 +158,7 @@ class MDAgent(BaseAgent):
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
-        gmx = "gmx"
+        gmx = "gmx_mpi"
         ff = self.config.get("md", {}).get("forcefield", "amber99sb-ildn")
         water = self.config.get("md", {}).get("water_model", "tip3p")
 
@@ -170,7 +170,10 @@ class MDAgent(BaseAgent):
         (out / "npt.mdp").write_text(_NPT_MDP.format(temp=temp))
 
         def gmx_run(args, **kw):
-            cmd = [gmx] + args
+            if args[0] == "mdrun":
+                cmd = ["mpirun", "-np", "1", gmx] + args
+            else:
+                cmd = [gmx] + args
             return subprocess.run(cmd, cwd=str(out), capture_output=True,
                                   text=True, **kw)
 
@@ -212,7 +215,7 @@ class MDAgent(BaseAgent):
                       "-c", "minim.gro", "-r", "minim.gro",
                       "-p", "topol.top", "-o", "nvt.tpr", "-maxwarn", "2"],
                      timeout=60)
-            gmx_run(["mdrun", "-deffnm", "nvt", "-ntmpi", "1", "-ntomp", "4"],
+            gmx_run(["mdrun", "-deffnm", "nvt", "-ntomp", "4"],
                      timeout=600)
 
             # NPT
@@ -220,7 +223,7 @@ class MDAgent(BaseAgent):
                       "-c", "nvt.gro", "-r", "nvt.gro", "-t", "nvt.cpt",
                       "-p", "topol.top", "-o", "npt.tpr", "-maxwarn", "2"],
                      timeout=60)
-            gmx_run(["mdrun", "-deffnm", "npt", "-ntmpi", "1", "-ntomp", "4"],
+            gmx_run(["mdrun", "-deffnm", "npt", "-ntomp", "4"],
                      timeout=600)
 
             # MD produção
@@ -229,13 +232,13 @@ class MDAgent(BaseAgent):
                       "-p", "topol.top", "-o", "md.tpr", "-maxwarn", "2"],
                      timeout=60)
             p = gmx_run(["mdrun", "-deffnm", "md",
-                          "-ntmpi", "1", "-ntomp", "4",
+                          "-ntomp", "4",
                           "-nb", "gpu", "-pme", "gpu"],
                          timeout=ns * 3600)
             if p.returncode != 0:
                 # Fallback CPU
                 gmx_run(["mdrun", "-deffnm", "md",
-                          "-ntmpi", "1", "-ntomp", "4"], timeout=ns * 7200)
+                          "-ntomp", "4"], timeout=ns * 7200)
 
             # Análise
             return self._analyze_trajectory(out, gmx)
