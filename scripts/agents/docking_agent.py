@@ -112,41 +112,76 @@ class DockingAgent(BaseAgent):
                     fo.write(line)
 
     def _build_peptide_pdbqt(self, sequence: str, center: list, out_dir: Path) -> Path | None:
-        """Constrói PDBQT mínimo válido para Vina sem necessidade de obabel."""
+        """Constrói PDBQT all-atom do peptídeo para Vina."""
+        pdb_path = out_dir / "peptide.pdb"
         pdbqt_path = out_dir / "peptide.pdbqt"
+
+        # Tentar gerar estrutura all-atom via PeptideBuilder
+        built = self._build_allatom_pdb(sequence, center, pdb_path)
+
+        if built and subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
+            proc = subprocess.run(
+                ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h"],
+                capture_output=True, timeout=60
+            )
+            if proc.returncode == 0 and pdbqt_path.exists() and pdbqt_path.stat().st_size > 100:
+                return pdbqt_path
+
+        # Fallback: PDBQT mínimo com tipos AD4 (CA-only — Vina pode rejeitar)
+        self.logger.warning(f"Peptide PDBQT fallback (CA-only): {sequence[:8]}")
+        return self._write_ca_pdbqt(sequence, center, pdbqt_path)
+
+    def _build_allatom_pdb(self, sequence: str, center: list, pdb_path: Path) -> bool:
+        """Gera PDB all-atom via PeptideBuilder (Ala como fallback por resíduo)."""
+        try:
+            import PeptideBuilder
+            from PeptideBuilder import Geometry
+            import Bio.PDB
+            import numpy as np
+
+            first_aa = sequence[0] if sequence[0] != "B" else "A"
+            try:
+                geo = Geometry.geometry(first_aa)
+            except Exception:
+                geo = Geometry.geometry("A")
+            structure = PeptideBuilder.initialize_res(geo)
+
+            for aa in sequence[1:]:
+                try:
+                    g = Geometry.geometry(aa)
+                except Exception:
+                    g = Geometry.geometry("A")
+                PeptideBuilder.add_residue(structure, g)
+
+            # Transladar para o centro do sítio
+            cx, cy, cz = center
+            for atom in structure.get_atoms():
+                atom.set_vector(
+                    atom.get_vector() + Bio.PDB.Vector(cx, cy, cz)
+                )
+
+            io = Bio.PDB.PDBIO()
+            io.set_structure(structure)
+            io.save(str(pdb_path))
+            return True
+        except Exception as e:
+            self.logger.debug(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
+            return False
+
+    def _write_ca_pdbqt(self, sequence: str, center: list, pdbqt_path: Path) -> Path:
+        """PDBQT CA-only como último recurso."""
         cx, cy, cz = center
-
-        # Mapeamento de tipo AD4 por aminoácido (carbono por padrão)
-        ad4_type = {"R": "N", "K": "N", "H": "N", "D": "OA", "E": "OA",
-                    "S": "OA", "T": "OA", "Y": "OA", "N": "NA", "Q": "NA",
-                    "W": "A", "F": "A", "P": "A"}
-
+        ad4 = {"R":"N","K":"N","H":"N","D":"OA","E":"OA","S":"OA","T":"OA",
+               "Y":"OA","N":"NA","Q":"NA","W":"A","F":"A","P":"A"}
         with open(pdbqt_path, "w") as f:
             f.write("ROOT\n")
             for i, aa in enumerate(sequence):
                 resname = AA_1TO3.get(aa, "ALA")
-                atype = ad4_type.get(aa, "C")
-                x = cx + i * 3.8
-                f.write(
-                    f"ATOM  {i+1:5d}  CA  {resname} B{i+1:4d}    "
-                    f"{x:8.3f}{cy:8.3f}{cz:8.3f}  1.00  0.00    "
-                    f"  0.000 {atype}\n"
-                )
-            f.write("ENDROOT\n")
-            f.write("TORSDOF 0\n")
-
-        # Preferir obabel se disponível (mais preciso)
-        if subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
-            pdb_path = out_dir / "peptide.pdb"
-            pdb_path.write_text(pdbqt_path.read_text())
-            proc = subprocess.run(
-                ["obabel", str(pdb_path), "-O", str(pdbqt_path)],
-                capture_output=True
-            )
-            if proc.returncode != 0:
-                self._build_peptide_pdbqt.__wrapped__ = True  # sem loop recursivo
-                return pdbqt_path
-
+                atype = ad4.get(aa, "C")
+                f.write(f"ATOM  {i+1:5d}  CA  {resname} B{i+1:4d}    "
+                        f"{cx+i*3.8:8.3f}{cy:8.3f}{cz:8.3f}  1.00  0.00"
+                        f"    0.000 {atype}\n")
+            f.write("ENDROOT\nTORSDOF 0\n")
         return pdbqt_path
 
     def _run_vina(self, receptor_pdbqt: Path, ligand_pdbqt: Path,

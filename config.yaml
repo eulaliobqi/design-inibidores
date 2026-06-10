@@ -75,7 +75,7 @@ rosetta:
 
 docking:
   tool: "vina"                      # vina | gnina | smina
-  exhaustiveness: 32
+  exhaustiveness: 8
   num_modes: 9
   # Coordenadas calculadas automaticamente pela StructureAgent
   # (sobrescritas após análise estrutural)
