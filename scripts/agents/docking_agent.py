@@ -154,18 +154,16 @@ class DockingAgent(BaseAgent):
                 PeptideBuilder.add_residue(structure, g)
 
             # Transladar para o centro do sítio
-            cx, cy, cz = center
+            offset = np.array([float(v) for v in center])
             for atom in structure.get_atoms():
-                atom.set_vector(
-                    atom.get_vector() + Bio.PDB.Vector(cx, cy, cz)
-                )
+                atom.coord += offset
 
             io = Bio.PDB.PDBIO()
             io.set_structure(structure)
             io.save(str(pdb_path))
             return True
         except Exception as e:
-            self.logger.debug(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
+            self.logger.warning(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
             return False
 
     def _write_ca_pdbqt(self, sequence: str, center: list, pdbqt_path: Path) -> Path:
