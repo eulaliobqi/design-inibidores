@@ -118,7 +118,12 @@ class DockingAgent(BaseAgent):
                     fo.write(line)
 
     def _build_peptide_pdbqt(self, sequence: str, center: list, out_dir: Path) -> Path | None:
-        """Constrói PDBQT all-atom do peptídeo para Vina."""
+        """Constrói PDBQT rígido do peptídeo para Vina.
+
+        Docking rígido (-xr) porque peptídeos > 8 aa têm > 32 ligações
+        torsionais (phi+psi+chi), acima do limite do Vina. Para triagem
+        de ML labels, docking rígido ainda dá scores relativos úteis.
+        """
         pdb_path = out_dir / "peptide.pdb"
         pdbqt_path = out_dir / "peptide.pdbqt"
 
@@ -126,14 +131,17 @@ class DockingAgent(BaseAgent):
         built = self._build_allatom_pdb(sequence, center, pdb_path)
 
         if built and subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
+            # -xr: ligante rígido (TORSDOF 0) — evita erro "too many torsional bonds"
+            # -h:  adicionar H polares (necessário para tipos AD4 corretos)
             proc = subprocess.run(
-                ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h"],
+                ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h", "-xr"],
                 capture_output=True, timeout=60
             )
             if proc.returncode == 0 and pdbqt_path.exists() and pdbqt_path.stat().st_size > 100:
                 return pdbqt_path
+            self.logger.warning(f"obabel peptide falhou ({sequence[:8]}): {proc.stderr[:80]}")
 
-        # Fallback: PDBQT mínimo com tipos AD4 (CA-only — Vina pode rejeitar)
+        # Fallback: PDBQT mínimo CA-only
         self.logger.warning(f"Peptide PDBQT fallback (CA-only): {sequence[:8]}")
         return self._write_ca_pdbqt(sequence, center, pdbqt_path)
 
@@ -224,8 +232,11 @@ class DockingAgent(BaseAgent):
                 affinities.append(float(m.group(1)))
 
         if proc.returncode != 0 or not affinities:
-            err = (proc.stderr or proc.stdout or "").strip()[:300]
-            self.logger.debug(f"Vina rc={proc.returncode} lig={ligand_pdbqt.name}: {err}")
+            err = (proc.stderr or proc.stdout or "").strip()[:400]
+            # WARNING nos primeiros 3 erros para diagnóstico; depois DEBUG
+            level = self.logger.warning if getattr(self, "_vina_warn_count", 0) < 3 else self.logger.debug
+            self._vina_warn_count = getattr(self, "_vina_warn_count", 0) + 1
+            level(f"Vina rc={proc.returncode} lig={ligand_pdbqt.name}: {err}")
 
         return {
             "best_affinity_kcal": affinities[0] if affinities else None,
