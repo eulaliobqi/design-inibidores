@@ -138,6 +138,9 @@ class DockingAgent(BaseAgent):
                 capture_output=True, timeout=60
             )
             if proc.returncode == 0 and pdbqt_path.exists() and pdbqt_path.stat().st_size > 100:
+                # obabel -xr em fragmento proteico gera PDBQT sem ROOT/ENDROOT/TORSDOF
+                # (formato receptor, não ligante) — Vina rejeita; adicionar wrapper
+                self._ensure_ligand_pdbqt_format(pdbqt_path)
                 return pdbqt_path
             self.logger.warning(f"obabel peptide falhou ({sequence[:8]}): {proc.stderr[:80]}")
 
@@ -179,6 +182,27 @@ class DockingAgent(BaseAgent):
         except Exception as e:
             self.logger.warning(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
             return False
+
+    def _ensure_ligand_pdbqt_format(self, pdbqt_path: Path):
+        """Wraps bare ATOM records with ROOT/ENDROOT/TORSDOF 0 (ligand format).
+
+        obabel -xr on a protein-residue PDB outputs protein-format PDBQT: bare
+        ATOM records with no ROOT/ENDROOT/TORSDOF blocks.  Vina interprets this
+        as a malformed flex-residue entry and raises a parsing error.  The fix is
+        to add the ligand wrapper when it is absent.
+        """
+        content = pdbqt_path.read_text()
+        if "ROOT" in content:
+            return
+        atom_lines = [l for l in content.splitlines() if l.startswith(("ATOM", "HETATM"))]
+        if not atom_lines:
+            return
+        with open(pdbqt_path, "w") as f:
+            f.write("ROOT\n")
+            for line in atom_lines:
+                f.write(line.rstrip() + "\n")
+            f.write("ENDROOT\n")
+            f.write("TORSDOF 0\n")
 
     def _write_ca_pdbqt(self, sequence: str, center: list, pdbqt_path: Path) -> Path:
         """PDBQT CA-only como último recurso."""

@@ -27,8 +27,9 @@ rfdiffusion:
   hotspot_radius: 6.0               # Å em torno do sítio S1
   # Caminhos possíveis (detectados automaticamente)
   install_paths:
-    - "/opt/RFdiffusion"
+    - "~/RFdiffusion"
     - "$HOME/RFdiffusion"
+    - "/opt/RFdiffusion"
     - "$HOME/tools/RFdiffusion"
     - "/usr/local/RFdiffusion"
 
@@ -40,8 +41,9 @@ proteinmpnn:
   omit_aas: "CX"
   bias_aa: {}
   install_paths:
-    - "/opt/ProteinMPNN"
+    - "~/ProteinMPNN"
     - "$HOME/ProteinMPNN"
+    - "/opt/ProteinMPNN"
     - "$HOME/tools/ProteinMPNN"
 
 ml_dataset:
