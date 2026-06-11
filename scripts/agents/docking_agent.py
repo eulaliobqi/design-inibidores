@@ -69,17 +69,22 @@ class DockingAgent(BaseAgent):
 
     def _prepare_receptor_pdbqt(self, receptor_pdb: str) -> Path:
         pdbqt = self.workdir / "receptor.pdbqt"
-        if pdbqt.exists():
+        # Só reutiliza cache se gerado com obabel (> 5 kB); ignora versão mínima antiga
+        if pdbqt.exists() and pdbqt.stat().st_size > 5000:
             return pdbqt
 
-        # Preferência: obabel → prepare_receptor4.py → conversão mínima manual
-        if subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
+        ob = subprocess.run(["which", "obabel"], capture_output=True)
+        if ob.returncode == 0:
+            # -h: adicionar hidrogênios polares; -xr: receptor rígido sem torsdof
             proc = subprocess.run(
-                ["obabel", receptor_pdb, "-O", str(pdbqt), "-xr"],
-                capture_output=True
+                ["obabel", receptor_pdb, "-O", str(pdbqt), "-h", "-xr"],
+                capture_output=True, text=True, timeout=120
             )
-            if proc.returncode == 0 and pdbqt.exists():
+            if proc.returncode == 0 and pdbqt.exists() and pdbqt.stat().st_size > 5000:
+                self.logger.info(f"Receptor PDBQT gerado via obabel ({pdbqt.stat().st_size} bytes)")
                 return pdbqt
+            self.logger.warning(f"obabel receptor falhou: {proc.stderr[:200]}")
+
         if subprocess.run(["which", "prepare_receptor4.py"], capture_output=True).returncode == 0:
             proc = subprocess.run(
                 ["prepare_receptor4.py", "-r", receptor_pdb, "-o", str(pdbqt)],
@@ -89,6 +94,7 @@ class DockingAgent(BaseAgent):
                 return pdbqt
 
         # Fallback manual: adicionar colunas de carga e tipo AD4 ao PDB
+        self.logger.warning("Receptor PDBQT: usando conversão mínima (sem H) — Vina pode falhar")
         self._pdb_to_pdbqt_minimal(receptor_pdb, str(pdbqt))
         return pdbqt
 
@@ -216,6 +222,10 @@ class DockingAgent(BaseAgent):
             m = re.search(r"^\s+\d+\s+([-\d.]+)\s+", line)
             if m:
                 affinities.append(float(m.group(1)))
+
+        if proc.returncode != 0 or not affinities:
+            err = (proc.stderr or proc.stdout or "").strip()[:300]
+            self.logger.debug(f"Vina rc={proc.returncode} lig={ligand_pdbqt.name}: {err}")
 
         return {
             "best_affinity_kcal": affinities[0] if affinities else None,
