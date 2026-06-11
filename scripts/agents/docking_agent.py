@@ -202,12 +202,12 @@ class DockingAgent(BaseAgent):
         out_pdbqt = out_dir / "docked.pdbqt"
         log_file = out_dir / "vina.log"
 
+        # Nota: versão f458505-mod não suporta --log; stdout/stderr capturados diretamente
         cmd = [
             "vina",
             "--receptor", str(receptor_pdbqt),
             "--ligand", str(ligand_pdbqt),
             "--out", str(out_pdbqt),
-            "--log", str(log_file),
             "--center_x", str(round(center[0], 3)),
             "--center_y", str(round(center[1], 3)),
             "--center_z", str(round(center[2], 3)),
@@ -220,12 +220,12 @@ class DockingAgent(BaseAgent):
 
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
 
-        # Parsear log
-        affinities = []
+        # Salvar log manualmente (--log não disponível nesta build do Vina)
         log_text = proc.stdout + proc.stderr
-        if log_file.exists():
-            log_text += log_file.read_text()
+        log_file.write_text(log_text)
 
+        # Parsear affinidades do stdout/stderr
+        affinities = []
         for line in log_text.splitlines():
             m = re.search(r"^\s+\d+\s+([-\d.]+)\s+", line)
             if m:
