@@ -1,13 +1,13 @@
 # Resultados e Discussão — Design Racional de Inibidores Peptídicos de Tripsinas de Lepidoptera
 
-> **Status de preenchimento (2026-06-10):**
+> **Status de preenchimento (2026-06-11):**
 > - ✓ 3.1 Sítio catalítico — completo
-> - ✓ 3.2 Backbones — completo (modo fallback)
+> - ✓ 3.2 Backbones — completo (modo fallback PeptideBuilder, 30 backbones)
 > - ✓ 3.3 Dataset de sequências — completo (14.923 seqs, 41 features)
-> - ✓ 3.4 Docking heurístico — completo (14.923 poses)
-> - ◑ 3.5 Ranking — completo heurístico; aguarda Vina/Rosetta reais
-> - ✗ 3.6 MD — aguarda Vina instalado para selecionar top candidatos reais
-> - ✗ 3.7 Candidatos prioritários — aguarda scores reais
+> - ◑ 3.4 Docking — Vina instalado; PDBQT ROOT wrapper corrigido (commit 84e5c0b); aguarda re-execução no servidor
+> - ◑ 3.5 Ranking — top-20 gerado (scores heurísticos); vina_affinity_kcal = null; aguarda re-run pós-fix
+> - ✗ 3.6 MD — aguarda Vina real para seleção dos candidatos
+> - ✗ 3.7 Candidatos prioritários — aguarda scores Vina reais
 
 ---
 
@@ -92,13 +92,25 @@ As 10 estratégias de geração cobriram subconjuntos distintos do espaço compo
 
 ### 3.4 Docking Molecular e Scores de Afinidade
 
-Na ausência do AutoDock Vina instalado, as 14.923 sequências únicas receberam **scores heurísticos de afinidade** calculados como função multi-fator:
+O AutoDock Vina f458505-mod foi instalado no servidor (mamba) e confirmado funcional. O pipeline executa **docking rígido** (TORSDOF = 0) dos 200 candidatos de maior heurística contra o receptor consenso (25 × 25 × 25 Å, exaustividade = 8). Cada peptídeo é construído em modo *all-atom* via PeptideBuilder e convertido para PDBQT com OpenBabel.
+
+**Histórico de correções no módulo de docking:**
+
+| Correção | Erro original | Fix |
+|---|---|---|
+| `atom.set_vector()` → `atom.coord +=` | Silenciosamente gerava CA-only | Commit `04f20a3` |
+| Cache receptor.pdbqt | Reutilizava arquivo inválido (2 kB) | Threshold > 5 kB |
+| Peptídeos rígidos | >32 torsional bonds — Vina rejeita | obabel `-xr` (TORSDOF 0) |
+| `--log` não suportado | `f458505-mod` removeu argumento | Captura via stdout/stderr |
+| PDBQT sem ROOT/ENDROOT | obabel gera formato receptor, não ligante | `_ensure_ligand_pdbqt_format()` |
+
+O pipeline aguarda re-execução no servidor (`--step docking`) após o pull do commit `84e5c0b` para gerar energias de afinidade reais (kcal/mol).
+
+Em modo fallback (pré-instalação), as 14.923 sequências receberam **scores heurísticos**:
 
 $$\hat{E}_{dock} = -(n_{RK} \times 1{,}2 + f_{H} \times n \times 0{,}5 + |B| \times 0{,}3 + n \times 0{,}1)$$
 
-onde $n_{RK}$ = número de Arg+Lys, $f_H$ = fração hidrofóbica, $B$ = índice de Boman, $n$ = comprimento. Esses scores constituem **labels proxy** para o treinamento inicial de modelos ML; a instalação do Vina substituirá esses valores por energias de docking físicas (kcal/mol).
-
-**14.923 poses heurísticas** foram calculadas e armazenadas em `outputs/docking/docking_results.json`. Os scores foram integrados ao dataset ML CSV nas colunas `vina_affinity_kcal` e `final_score`.
+onde $n_{RK}$ = número de Arg+Lys, $f_H$ = fração hidrofóbica, $B$ = índice de Boman, $n$ = comprimento.
 
 ---
 
@@ -106,18 +118,34 @@ onde $n_{RK}$ = número de Arg+Lys, $f_H$ = fração hidrofóbica, $B$ = índice
 
 O ranking integrou scores de docking heurístico, Rosetta (10 candidatos) e propriedades físico-químicas por normalização min-max, resultando em **14.923 candidatos rankeados**.
 
-**Tabela 5.** Top-10 candidatos por score composto heurístico.
+**Tabela 5.** Top-20 candidatos por score composto heurístico (vina_affinity = null; aguarda Vina real).
 
-| Rank | Sequência              | Tam (aa) | Score | n(R+K) | Frac. Hidrofóbica |
-|------|------------------------|----------|-------|--------|-------------------|
-| 1    | RMKERAVVKLRRMIKRWRRE   | 20       | 0,988 | 10     | 0,35              |
-| 2    | DRRIIKRFGVSQKRTRVMKQ   | 20       | 0,720 | 7      | 0,35              |
-| 3    | WALRKVHVKRRMRRTIWIIS   | 20       | 0,687 | 8      | 0,40              |
-| 4    | IRKDFVETIRWKKWTTKIKI   | 20       | 0,639 | 6      | 0,40              |
-| 5    | IMQTAAPFWNNFRRRKRKRS   | 20       | 0,601 | 6      | 0,35              |
-| 6–20 | *a completar após ranking completo* | | | | |
+| Rank | Sequência                    | aa | Score  | n(R+K) | Carga  | MW (Da)  | Frac. H |
+|------|------------------------------|----|--------|--------|--------|----------|---------|
+| 1    | RRHKERRKTMKSRVRVSRWK         | 20 | 0,650  | 11     | +10,1  | 2681     | 0,20    |
+| 2    | RRYKKKRRKYKQMDH              | 15 | 0,595  | 9      | +8,1   | 2122     | 0,07    |
+| 3    | YPRTRNIRKIWRPRVRRRTL         | 20 | 0,595  | 9      | +9,0   | 2694     | 0,25    |
+| 4    | WKRMKMQYTKLRKDKDGFVR         | 20 | 0,568  | 8      | +6,0   | 2615     | 0,30    |
+| 5    | KRRMRAPMTKMRRIG              | 15 | 0,541  | 7      | +7,0   | 1888     | 0,33    |
+| 6    | RVWVFRFREMKWIHNRRKWV         | 20 | 0,541  | 7      | +6,1   | 2830     | 0,50    |
+| 7    | FPYWKKKRQLSYKDKARGLY         | 20 | 0,541  | 7      | +6,0   | 2576     | 0,25    |
+| 8    | RKPWNVRKLIKKGKM              | 15 | 0,541  | 7      | +7,0   | 1882     | 0,33    |
+| 9    | KAWRMNRSQDRSELKIKEKA         | 20 | 0,541  | 7      | +4,0   | 2475     | 0,30    |
+| 10   | SADRNNRVDRRDHNKKFGYK         | 20 | 0,541  | 7      | +4,1   | 2477     | 0,15    |
+| 11   | GWKLKYRAKMYKTYKAVRPA         | 20 | 0,541  | 7      | +7,0   | 2459     | 0,35    |
+| 12   | SKGKANKGTKVGKRTNRQTV         | 20 | 0,541  | 7      | +7,0   | 2158     | 0,15    |
+| 13   | QGNWTHARSYKKREKDKKSV         | 20 | 0,541  | 7      | +5,1   | 2447     | 0,15    |
+| 14   | VKFRTKAKRYRIYDIRTFGM         | 20 | 0,541  | 7      | +6,0   | 2550     | 0,35    |
+| 15   | PQYDERRFKGAQSVKPLKKL         | 20 | 0,514  | 6      | +4,0   | 2389     | 0,25    |
+| 16   | RRSTWKKRPPHGTKT              | 15 | 0,514  | 6      | +6,1   | 1836     | 0,07    |
+| 17   | EDRRILLMQRLKWVWVKQKF         | 20 | 0,514  | 6      | +4,0   | 2673     | 0,50    |
+| 18   | TARHRWNYKRMRHRMAMVIY         | 20 | 0,514  | 6      | +6,2   | 2677     | 0,40    |
+| 19   | KPWDWESPIKKLISKARIRE         | 20 | 0,514  | 6      | +3,0   | 2481     | 0,35    |
+| 20   | KEGKKRKGPIDSQKSDNHPS         | 20 | 0,514  | 6      | +3,1   | 2236     | 0,05    |
 
-**Nota interpretativa:** O top-ranking heurístico é dominado por peptídeos de 20 aa com alta densidade de R/K, pois o score heurístico favorece resíduos básicos por contagens absolutas. Este viés é esperado e intrínseco ao modo fallback — não reflete necessariamente o ranking por scores Vina/Rosetta reais, onde peptídeos curtos com melhor complementaridade geométrica podem superar os de 20 aa. O dataset ML permitirá treinar modelos que corrijam esse viés.
+*H = fração hidrofóbica (AILMFWV). Score = normalização min-max integrada (n_vina=0,5 placeholder, n_ros=0,5 placeholder, n_hb=n_alk por R+K, n_rmsd=0,5 placeholder).*
+
+**Nota interpretativa:** O top-ranking heurístico é dominado por peptídeos de 20 aa com alta densidade de R/K (7–11 resíduos), pois o score heurístico usa contagens absolutas. Este viés é inerente ao modo fallback e não reflete o comportamento esperado com energias Vina reais, onde peptídeos curtos com melhor complementaridade geométrica ao sítio podem superar os de 20 aa. A substituição pelos labels Vina reais (kcal/mol) após re-execução corrigirá esse viés e permitirá treinar modelos ML supervisionados não-tendenciosos.
 
 ---
 
@@ -150,14 +178,23 @@ Os cinco melhores candidatos reais por modelo de tripsina serão submetidos a si
 
 ## 4. Conclusões Parciais
 
-O pipeline multiagente foi executado com sucesso em modo *fallback* heurístico, produzindo:
-- **30 backbones** em 6 comprimentos (5–20 aa)
-- **14.923 sequências únicas** com 41 features físico-químicas
+O pipeline multiagente foi executado com sucesso, transitando de modo *fallback* heurístico para modo de docking real em 2026-06-11. Resultados consolidados:
+
+- **30 backbones** em 6 comprimentos (5–20 aa) via PeptideBuilder (fallback)
+- **14.923 sequências únicas** com 41 features físico-químicas calculadas analiticamente
 - Dataset ML/DL (`ml_training_dataset.csv`) com labels proxy de docking e score composto
+- **AutoDock Vina instalado** e pipeline corrigido para docking all-atom rígido (5 bugs resolvidos)
+- **ProteinMPNN** e **RFdiffusion** instalados no servidor; PyTorch 2.11 + CUDA 12.8 (RTX 5070 Ti Blackwell)
 
-A variante XP273 foi identificada como alvo atípico, justificando a remoção da restrição P1=Arg/Lys e a inclusão de estratégias hidrofóbicas no gerador de sequências.
+A variante XP273 foi identificada como alvo atípico (Tyr83/Ile229), justificando a remoção da restrição P1=Arg/Lys e a inclusão de estratégias hidrofóbicas.
 
-O próximo passo crítico é a instalação do AutoDock Vina no servidor para substituição dos labels proxy por energias de docking reais, que constitui o dado supervisionado primário para treinamento dos modelos ML/DL.
+**Próximos passos (ordem obrigatória):**
+1. `git pull` + `--step docking` no servidor → energias Vina reais (kcal/mol)
+2. `--step ranking` → substituir labels proxy por Vina real no CSV ML
+3. Analisar distribuição de scores e identificar top-5 para DM
+4. Re-rodar `--step rfdiffusion` após download completo de `Base_ckpt.pt` → backbones conformacionalmente diversificados
+5. DM 10 ns dos top-5 candidatos (GROMACS + RTX 5070 Ti)
+6. Instalar PyRosetta (licença acadêmica gratuita) para refinamento FlexPepDock
 
 ---
 

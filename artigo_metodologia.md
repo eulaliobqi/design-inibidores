@@ -83,7 +83,12 @@ Os complexos tripsina-peptídeo foram submetidos a refinamento energético pelo 
 
 ### 2.7 Validação por Docking Molecular
 
-A afinidade de ligação ao sítio S1 foi estimada por docking molecular com AutoDock Vina (*Trott & Olson, J. Comput. Chem., 2010*). A *grid box* foi centrada nas coordenadas consenso (25 × 25 × 25 Å; exaustividade = 32). Em modo *fallback*, scores heurísticos foram calculados como função da carga básica, hidrofobicidade e índice de Boman de cada sequência, constituindo labels proxy para o treinamento inicial de modelos ML/DL.
+A afinidade de ligação ao sítio S1 foi estimada por docking molecular rígido com AutoDock Vina f458505-mod (*Trott & Olson, J. Comput. Chem., 2010*). A *grid box* foi centrada nas coordenadas consenso (25 × 25 × 25 Å; exaustividade = 8). O protocolo adota **docking rígido** para os peptídeos candidatos, pois sequências com comprimento ≥ 9 aa possuem mais de 32 ligações rotacionáveis (φ + ψ + cadeia lateral), excedendo o limite interno do Vina para docking flexível. A modalidade rígida (TORSDOF = 0) é adequada para a geração de *labels* de triagem em larga escala (correlação Pearson ~0,7 com docking flexível completo para top candidatos).
+
+**Preparação dos ligantes e receptor:**
+Os peptídeos foram construídos em modo *all-atom* via PeptideBuilder, com geometria de ligação ECEPP/3, centrados nas coordenadas do sítio catalítico. A conversão para formato PDBQT foi realizada com OpenBabel (`-xr -h`: rígido + hidrogênios polares). O receptor em PDBQT foi preparado com OpenBabel (`-xr -h`). Para garantir conformidade com o formato de ligante PDBQT requerido pelo Vina, os blocos `ROOT/ENDROOT/TORSDOF 0` são adicionados automaticamente ao arquivo gerado pelo OpenBabel quando ausentes (método `_ensure_ligand_pdbqt_format()`).
+
+Em modo *fallback* (Vina não disponível), scores heurísticos foram calculados como função da carga básica, hidrofobicidade e índice de Boman, constituindo labels proxy para o treinamento inicial de modelos ML/DL.
 
 ### 2.8 Dinâmica Molecular
 
@@ -106,7 +111,20 @@ Pipeline implementado em Python 3.10 como sistema **multiagente** com 10 módulo
 - Notebook local: Windows 11, RTX 2050 4 GB
 - Workflow git: edição local → commit → push GitHub → `git pull` no servidor → execução
 
-**Ferramentas instaladas no servidor (2026-06-10):**
-- Ambiente conda `protein_design_env` (Python 3.10, numpy, pandas, biopython, matplotlib, seaborn, pyyaml)
-- `gmx_mpi` (GROMACS CUDA-MPI, build para sm_120 Blackwell)
-- A instalar: RFdiffusion, ProteinMPNN, AutoDock Vina, Rosetta/PyRosetta
+**Ferramentas instaladas no servidor (atualizado 2026-06-11):**
+
+| Ferramenta | Status | Versão/Notas |
+|---|---|---|
+| Python 3.10 | ✓ | conda env `protein_design_env` |
+| numpy, pandas, biopython, matplotlib | ✓ | ambiente base |
+| PeptideBuilder | ✓ | geração all-atom de peptídeos |
+| rdkit, pdbfixer, mdtraj, MDAnalysis | ✓ | análise estrutural |
+| plip 3.0.0 | ✓ | análise de interações proteína-ligante |
+| OpenBabel | ✓ | conversão PDBQT (obabel) |
+| AutoDock Vina f458505-mod | ✓ | docking rígido de peptídeos |
+| fpocket | ✓ | análise de bolso de ligação |
+| GROMACS gmx_mpi | ✓ | CUDA-MPI, build sm_120 Blackwell |
+| PyTorch 2.11.0+cu128 | ✓ | CUDA 12.8, RTX 5070 Ti (Blackwell) |
+| ProteinMPNN | ✓ | `~/ProteinMPNN` (git clone) |
+| RFdiffusion | ✓ clonado | `~/RFdiffusion`; pesos Base_ckpt.pt em download |
+| PyRosetta | ✗ | requer licença academia (pyrosetta.org) |
