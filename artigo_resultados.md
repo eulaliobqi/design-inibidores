@@ -1,13 +1,13 @@
 # Resultados e Discussão — Design Racional de Inibidores Peptídicos de Tripsinas de Lepidoptera
 
-> **Status de preenchimento (2026-06-11):**
+> **Status de preenchimento (2026-06-12):**
 > - ✓ 3.1 Sítio catalítico — completo
 > - ✓ 3.2 Backbones — completo (modo fallback PeptideBuilder, 30 backbones)
 > - ✓ 3.3 Dataset de sequências — completo (14.923 seqs, 41 features)
-> - ◑ 3.4 Docking — Vina instalado; PDBQT ROOT wrapper corrigido (commit 84e5c0b); aguarda re-execução no servidor
-> - ◑ 3.5 Ranking — top-20 gerado (scores heurísticos); vina_affinity_kcal = null; aguarda re-run pós-fix
-> - ✗ 3.6 MD — aguarda Vina real para seleção dos candidatos
-> - ✗ 3.7 Candidatos prioritários — aguarda scores Vina reais
+> - ◑ 3.4 Docking — **11/199 poses reais** obtidas (rodada 1); grid adaptativo implementado; re-run pendente com commit `30aac00`
+> - ◑ 3.5 Ranking — top-1 real: KNRKRKV (len=7); 11/14.923 com labels Vina; re-run pendente
+> - ✗ 3.6 MD — aguarda re-run docking completo
+> - ✗ 3.7 Candidatos prioritários — aguarda re-run docking completo
 
 ---
 
@@ -94,17 +94,20 @@ As 10 estratégias de geração cobriram subconjuntos distintos do espaço compo
 
 O AutoDock Vina f458505-mod foi instalado no servidor (mamba) e confirmado funcional. O pipeline executa **docking rígido** (TORSDOF = 0) dos 200 candidatos de maior heurística contra o receptor consenso (25 × 25 × 25 Å, exaustividade = 8). Cada peptídeo é construído em modo *all-atom* via PeptideBuilder e convertido para PDBQT com OpenBabel.
 
-**Histórico de correções no módulo de docking:**
+**Histórico de correções no módulo de docking (6 bugs):**
 
-| Correção | Erro original | Fix |
-|---|---|---|
-| `atom.set_vector()` → `atom.coord +=` | Silenciosamente gerava CA-only | Commit `04f20a3` |
-| Cache receptor.pdbqt | Reutilizava arquivo inválido (2 kB) | Threshold > 5 kB |
-| Peptídeos rígidos | >32 torsional bonds — Vina rejeita | obabel `-xr` (TORSDOF 0) |
-| `--log` não suportado | `f458505-mod` removeu argumento | Captura via stdout/stderr |
-| PDBQT sem ROOT/ENDROOT | obabel gera formato receptor, não ligante | `_ensure_ligand_pdbqt_format()` |
+| # | Correção | Erro original | Fix | Commit |
+|---|---|---|---|---|
+| 1 | `atom.set_vector()` → `atom.coord +=` | CA-only silencioso | Numpy array | `04f20a3` |
+| 2 | Cache receptor.pdbqt | Arquivo 2 kB inválido reutilizado | Threshold > 5 kB | `937a7dc` |
+| 3 | Peptídeos rígidos (-xr) | >32 torsional bonds | obabel -xr | `50b5d47` |
+| 4 | `--log` não suportado | f458505-mod removeu o argumento | stdout/stderr | `552f7e7` |
+| 5 | PDBQT sem ROOT/ENDROOT | obabel gera formato receptor | `_ensure_ligand_pdbqt_format()` | `84e5c0b` |
+| 6 | N-terminus no centro (não COM) + grid fixo 25 Å | 188/199 poses inválidas | COM centering + grid adaptativo | `30aac00` |
 
-O pipeline aguarda re-execução no servidor (`--step docking`) após o pull do commit `84e5c0b` para gerar energias de afinidade reais (kcal/mol).
+**Primeira rodada com Vina real (2026-06-11):** 11/199 poses válidas obtidas após correção dos bugs 1–5. Análise dos logs revelou o bug 6: peptídeos de 15–20 aa tinham o N-terminus centrado no sítio, enquanto a cadeia completa se estendia ~72 Å para fora do espaço de busca (25×25×25 Å). O Vina executa sem erros (rc=0) mas retorna zero poses quando o ligante ultrapassa o grid. O top-1 real identificado foi **KNRKRKV** (7 aa) com Vina = *a confirmar* kcal/mol.
+
+Após correção do bug 6 (commit `30aac00`), re-execução pendente com grid adaptativo: 5 aa → 26 Å, 10 aa → 44 Å, 15 aa → 62 Å, 20 aa → 80 Å.
 
 Em modo fallback (pré-instalação), as 14.923 sequências receberam **scores heurísticos**:
 

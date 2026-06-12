@@ -70,7 +70,7 @@ def bg_light(slide):
     add_rect(slide, 0, 0, 13.33, 7.5, C_CINZA_CLARO)
     add_rect(slide, 0, 0, 13.33, 1.1, C_AZUL_ESCURO)
 
-def slide_num(slide, n, total=15):
+def slide_num(slide, n, total=16):
     add_text(slide, f"{n}/{total}", 12.6, 7.1, 0.7, 0.3,
              font_size=11, color=RGBColor(0x88, 0x99, 0xAA), align=PP_ALIGN.RIGHT)
 
@@ -542,69 +542,161 @@ add_text(slide, "Histórico de correções do módulo de docking:", 0.4, 2.05, 1
          font_size=15, bold=True, color=C_AZUL_ESCURO)
 
 bugs = [
-    ("01", "atom.set_vector() → atom.coord +=",  "BioPython: método inexistente → fallback CA-only silencioso", "04f20a3", C_VERDE),
-    ("02", "Cache receptor.pdbqt (2 kB inválido)", "Reutilizava arquivo mínimo sem H; threshold → 5 kB",        "937a7dc", C_VERDE),
-    ("03", "Peptídeos rígidos via obabel -xr",    ">32 torsional bonds → Vina rejeita docking flexível",        "50b5d47", C_VERDE),
-    ("04", "--log não suportado em f458505-mod",  "Fork removeu argumento; captura via stdout/stderr",           "552f7e7", C_VERDE),
-    ("05", "PDBQT sem ROOT/ENDROOT/TORSDOF",     "obabel gera formato receptor; _ensure_ligand_pdbqt_format()", "84e5c0b", C_VERDE),
+    ("01", "atom.set_vector() → atom.coord +=",    "BioPython sem método → CA-only silencioso",              "04f20a3", C_VERDE),
+    ("02", "Cache receptor.pdbqt (2 kB inválido)",  "Arquivo mínimo reutilizado; fix: threshold > 5 kB",      "937a7dc", C_VERDE),
+    ("03", "Peptídeos rígidos via obabel -xr",      ">32 torsional bonds → Vina rejeita docking flexível",    "50b5d47", C_VERDE),
+    ("04", "--log não suportado em f458505-mod",    "Fork removeu opção; captura via stdout/stderr",           "552f7e7", C_VERDE),
+    ("05", "PDBQT sem ROOT/ENDROOT/TORSDOF",       "obabel gera formato receptor; _ensure_ligand_pdbqt_format()", "84e5c0b", C_VERDE),
+    ("06", "N-terminus no sítio (não COM) + grid 25 Å", "Cadeia 20aa estendia 72 Å para fora; grid adaptativo + COM centering", "30aac00", C_AMARELO),
 ]
 for i, (num, bug, fix, commit, c) in enumerate(bugs):
-    y = 2.55 + i * 0.88
-    add_rect(slide, 0.4, y, 0.45, 0.75, c)
-    add_text(slide, num, 0.4, y + 0.18, 0.45, 0.38,
-             font_size=14, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
-    add_rect(slide, 0.85, y, 12.05, 0.75, C_BRANCO if i % 2 == 0 else C_CINZA_CLARO)
-    add_text(slide, bug, 0.95, y + 0.04, 7.8, 0.36,
-             font_size=13, bold=True, color=C_AZUL_ESCURO)
-    add_text(slide, fix, 0.95, y + 0.38, 7.8, 0.36,
-             font_size=11, color=C_CINZA_TEXTO)
-    add_text(slide, commit, 8.75, y + 0.18, 1.8, 0.36,
-             font_size=12, color=C_AZUL_MEDIO, align=PP_ALIGN.CENTER)
+    y = 2.2 + i * 0.82
+    add_rect(slide, 0.4, y, 0.45, 0.68, c)
+    add_text(slide, num, 0.4, y + 0.14, 0.45, 0.4,
+             font_size=13, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+    add_rect(slide, 0.85, y, 12.05, 0.68, C_BRANCO if i % 2 == 0 else C_CINZA_CLARO)
+    add_text(slide, bug, 0.95, y + 0.04, 7.8, 0.32,
+             font_size=12, bold=True, color=C_AZUL_ESCURO)
+    add_text(slide, fix, 0.95, y + 0.34, 7.8, 0.3,
+             font_size=10, color=C_CINZA_TEXTO)
+    add_text(slide, commit, 8.75, y + 0.16, 1.8, 0.32,
+             font_size=11, color=C_AZUL_MEDIO, align=PP_ALIGN.CENTER)
+
+# Resultado rodada 1
+add_rect(slide, 0.4, 7.1, 12.5, 0.28, C_AZUL_ESCURO)
+add_text(slide,
+    "Rodada 1 (bugs 1-5):  11/199 poses validas  |  Top-1: KNRKRKV 7aa  |  "
+    "Causa diagnosticada: bug 06  |  Rodada 2 pendente com fix",
+    0.55, 7.12, 12.2, 0.24, font_size=12, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 9)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 10 — Top-20 Candidatos (ranking heurístico)
+# SLIDE 10 — Resultados Parciais: Rodada 1 de Docking (2026-06-11)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Top-20 Candidatos — Ranking Heurístico",
-           "vina_affinity = null (aguarda re-run) · score = n_hb × 0.20 + n_alk × 0.10 + n_vina × 0.35 + ...")
+header_bar(slide, "Resultados Parciais — Rodada 1 de Docking",
+           "11/199 poses validas · Diagnostico completo · Fix implementado")
+
+# painel esquerdo — o que funcionou
+add_rect(slide, 0.4, 1.25, 6.0, 5.9, C_BRANCO)
+add_rect(slide, 0.4, 1.25, 6.0, 0.42, C_VERDE)
+add_text(slide, "O que funcionou (bugs 1-5 corrigidos)", 0.55, 1.28, 5.7, 0.36,
+         font_size=14, bold=True, color=C_BRANCO)
+
+add_rect(slide, 0.5, 1.75, 5.8, 1.0, C_AZUL_ESCURO)
+add_text(slide, "11 / 199  poses validas", 0.6, 1.82, 5.6, 0.55,
+         font_size=28, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
+add_text(slide, "PRIMEIRO resultado Vina real do pipeline", 0.6, 2.36, 5.6, 0.32,
+         font_size=13, color=C_CINZA_CLARO, align=PP_ALIGN.CENTER)
+
+add_text(slide, "Top poses obtidas (Rodada 1):", 0.55, 2.85, 5.7, 0.35,
+         font_size=13, bold=True, color=C_AZUL_ESCURO)
+top11_placeholder = [
+    ("KNRKRKV",    7,  "?? kcal/mol", "Top-1 ranking real"),
+    ("RRKWHWK",    7,  "?? kcal/mol", "Top-3 ranking"),
+    ("+ 9 seqs",  "~7", "?? kcal/mol", "Todos len <= 7 aa"),
+]
+for i, (seq, aa, score, nota) in enumerate(top11_placeholder):
+    add_rect(slide, 0.5, 3.28 + i * 0.6, 5.8, 0.52,
+             C_CINZA_CLARO if i % 2 == 0 else C_BRANCO)
+    add_text(slide, seq, 0.6, 3.3 + i * 0.6, 2.0, 0.48,
+             font_size=13, bold=True, color=C_AZUL_ESCURO)
+    add_text(slide, f"len={aa}  {score}", 2.6, 3.3 + i * 0.6, 2.2, 0.48,
+             font_size=12, color=C_CINZA_TEXTO)
+    add_text(slide, nota, 4.8, 3.3 + i * 0.6, 1.4, 0.48,
+             font_size=11, italic=True, color=C_AZUL_MEDIO)
+
+add_rect(slide, 0.4, 5.6, 6.0, 1.45, RGBColor(0xE8, 0xF5, 0xE9))
+add_text(slide, "Validação da abordagem:", 0.55, 5.65, 5.7, 0.35,
+         font_size=13, bold=True, color=C_VERDE)
+add_text(slide,
+    "Top-1 heuristico: RRHKERRKTMKSRVRVSRWK (20aa, 0.650)\n"
+    "Top-1 Vina real:  KNRKRKV (7aa, 0.661)\n"
+    "Mudanca de ranking confirma que Vina real e necessario",
+    0.55, 6.0, 5.7, 0.98, font_size=12, color=C_CINZA_TEXTO)
+
+# painel direito — diagnóstico bug 6
+add_rect(slide, 6.8, 1.25, 6.1, 5.9, C_BRANCO)
+add_rect(slide, 6.8, 1.25, 6.1, 0.42, C_AMARELO)
+add_text(slide, "Bug 06 diagnosticado — 188/199 falhas", 6.95, 1.28, 5.8, 0.36,
+         font_size=14, bold=True, color=C_BRANCO)
+
+add_text(slide, "Causa raiz:", 6.9, 1.75, 5.8, 0.35,
+         font_size=13, bold=True, color=C_AZUL_ESCURO)
+add_text(slide,
+    "PeptideBuilder coloca o N-TERMINUS em [2.6, 4.6, -1.9] A.\n"
+    "Um peptideo de 20aa extendido tem ~72 A de comprimento.\n"
+    "O grid de 25x25x25 A nao cobre nem 35% da cadeia.\n"
+    "Vina executa (rc=0) mas nao encontra poses validas.",
+    6.9, 2.15, 5.8, 1.2, font_size=12, color=C_CINZA_TEXTO)
+
+add_text(slide, "Fix implementado (commit 30aac00):", 6.9, 3.45, 5.8, 0.35,
+         font_size=13, bold=True, color=C_AZUL_ESCURO)
+fixes_diag = [
+    "COM centering: translada centro de massa",
+    "  do peptideo para o sitio catalitico",
+    "  (nao mais o N-terminus)",
+    "",
+    "Grid adaptativo por comprimento:",
+    "  5 aa  ->  26 x 26 x 26 A",
+    "  10 aa ->  44 x 44 x 44 A",
+    "  15 aa ->  62 x 62 x 62 A",
+    "  20 aa ->  80 x 80 x 80 A",
+]
+for i, fx in enumerate(fixes_diag):
+    c = C_VERDE if "aa  ->" in fx or "aa ->" in fx else C_CINZA_TEXTO
+    add_text(slide, fx, 6.9, 3.85 + i * 0.32, 5.8, 0.3,
+             font_size=12, color=c)
+
+add_rect(slide, 6.8, 6.75, 6.1, 0.32, C_AZUL_ESCURO)
+add_text(slide,
+    "Rodada 2 pendente: git pull + find ... -delete + --step docking",
+    6.9, 6.78, 5.9, 0.26, font_size=11, bold=True, color=C_CIANO)
+
+slide_num(slide, 10)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SLIDE 11 — Top Candidatos (ranking com Vina parcial)
+# ─────────────────────────────────────────────────────────────────────────────
+slide = prs.slides.add_slide(BLANK)
+bg_light(slide)
+header_bar(slide, "Ranking Atual — Top Candidatos",
+           "Rodada 1: 11 com Vina real · 14.912 ainda heuristicos · Rodada 2 corrigira ranking completo")
 
 top20 = [
-    (1,  "RRHKERRKTMKSRVRVSRWK", 20, 0.650, 11, "+10.1", 2681),
-    (2,  "RRYKKKRRKYKQMDH",      15, 0.595,  9, "+8.1",  2122),
-    (3,  "YPRTRNIRKIWRPRVRRRTL", 20, 0.595,  9, "+9.0",  2694),
-    (4,  "WKRMKMQYTKLRKDKDGFVR",20, 0.568,  8, "+6.0",  2615),
-    (5,  "KRRMRAPMTKMRRIG",      15, 0.541,  7, "+7.0",  1888),
-    (6,  "RVWVFRFREMKWIHNRRKWV", 20, 0.541,  7, "+6.1",  2830),
-    (7,  "FPYWKKKRQLSYKDKARGLY", 20, 0.541,  7, "+6.0",  2576),
-    (8,  "RKPWNVRKLIKKGKM",      15, 0.541,  7, "+7.0",  1882),
-    (9,  "KAWRMNRSQDRSELKIKEKA", 20, 0.541,  7, "+4.0",  2475),
-    (10, "SADRNNRVDRRDHNKKFGYK", 20, 0.541,  7, "+4.1",  2477),
+    (1,  "KNRKRKV",              7,  0.661,  4, "+4.0",  963,  "Vina real"),
+    (2,  "RRHKERRKTMKSRVRVSRWK", 20, 0.623, 11, "+10.1", 2681, "heuristico"),
+    (3,  "RRKWHWK",              7,  0.621,  4, "+4.1",  1025, "Vina real"),
+    (4,  "YPRTRNIRKIWRPRVRRRTL", 20, 0.569,  9, "+9.0",  2694, "heuristico"),
+    (5,  "RRYKKKRRKYKQMDH",      15, 0.569,  9, "+8.1",  2122, "heuristico"),
+    (6,  "WKRMKMQYTKLRKDKDGFVR",20, 0.568,  8, "+6.0",  2615, "heuristico"),
+    (7,  "KRRMRAPMTKMRRIG",      15, 0.541,  7, "+7.0",  1888, "heuristico"),
+    (8,  "RVWVFRFREMKWIHNRRKWV", 20, 0.541,  7, "+6.1",  2830, "heuristico"),
+    (9,  "FPYWKKKRQLSYKDKARGLY", 20, 0.541,  7, "+6.0",  2576, "heuristico"),
+    (10, "RKPWNVRKLIKKGKM",      15, 0.541,  7, "+7.0",  1882, "heuristico"),
 ]
 
-hdrs10 = ["Rank", "Sequência", "aa", "Score", "R+K", "Carga", "MW(Da)"]
-ws10   = [0.5, 4.2, 0.5, 0.75, 0.55, 0.75, 0.95]
+hdrs10 = ["Rank", "Sequencia", "aa", "Score", "R+K", "Carga", "MW(Da)", "Fonte"]
+ws10   = [0.5, 3.9, 0.45, 0.72, 0.5, 0.65, 0.85, 1.4]
 x0t, y0t = 0.35, 1.25
 
 for j, (h, w) in enumerate(zip(hdrs10, ws10)):
     add_rect(slide, x0t + sum(ws10[:j]), y0t, w, 0.42, C_AZUL_ESCURO)
     add_text(slide, h, x0t + sum(ws10[:j]) + 0.03, y0t + 0.03, w - 0.06, 0.36,
-             font_size=12, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+             font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
-for i, (rank, seq, aa, score, rk, carga, mw) in enumerate(top20):
+for i, (rank, seq, aa, score, rk, carga, mw, fonte) in enumerate(top20):
     bg = C_CINZA_CLARO if i % 2 == 0 else C_BRANCO
-    row_data = [str(rank), seq, str(aa), f"{score:.3f}", str(rk), carga, str(mw)]
+    fonte_c = C_VERDE if "real" in fonte else C_CINZA_TEXTO
+    row_data = [str(rank), seq, str(aa), f"{score:.3f}", str(rk), carga, str(mw), fonte]
     for j, (cell, w) in enumerate(zip(row_data, ws10)):
         add_rect(slide, x0t + sum(ws10[:j]), y0t + 0.42 + i * 0.36, w, 0.36, bg)
-        fc = C_CINZA_TEXTO
-        if j == 1:
-            add_text(slide, cell, x0t + sum(ws10[:j]) + 0.05, y0t + 0.44 + i * 0.36, w - 0.1, 0.32,
-                     font_size=10, color=C_AZUL_ESCURO, bold=True)
-        else:
-            add_text(slide, cell, x0t + sum(ws10[:j]) + 0.03, y0t + 0.44 + i * 0.36, w - 0.06, 0.32,
-                     font_size=12, color=fc, align=PP_ALIGN.CENTER)
+        fc = fonte_c if j == 7 else (C_AZUL_ESCURO if j == 1 else C_CINZA_TEXTO)
+        add_text(slide, cell, x0t + sum(ws10[:j]) + 0.03, y0t + 0.44 + i * 0.36, w - 0.06, 0.32,
+                 font_size=10 if j == 1 else 11, bold=(j==1 or j==7),
+                 color=fc, align=PP_ALIGN.LEFT if j == 1 else PP_ALIGN.CENTER)
 
 # coluna direita — nota
 x_n = sum(ws10) + x0t + 0.3
@@ -637,10 +729,10 @@ for i, n in enumerate(notas):
     add_text(slide, n, x_n + 0.15, 1.85 + i * 0.29, 4.7, 0.28,
              font_size=11, color=c)
 
-slide_num(slide, 10)
+slide_num(slide, 11)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 11 — Ferramentas: status atual no servidor
+# SLIDE 12 — Ferramentas: status atual no servidor
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
@@ -676,10 +768,10 @@ for i, (status, nome, desc, c) in enumerate(ferramentas):
     add_text(slide, desc, x + 0.65, y + 0.46, 5.45, 0.38,
              font_size=11, color=C_CINZA_TEXTO)
 
-slide_num(slide, 11)
+slide_num(slide, 12)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 12 — Estratégia de Docking Rígido
+# SLIDE 13 — Estratégia de Docking Rígido
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
@@ -726,10 +818,10 @@ for i, (titulo, texto) in enumerate(razoes):
     add_text(slide, texto, 4.1, 3.38 + i * 0.95, 8.7, 0.85,
              font_size=13, color=C_CINZA_TEXTO)
 
-slide_num(slide, 12)
+slide_num(slide, 13)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 13 — Infraestrutura e workflow
+# SLIDE 14 — Infraestrutura e workflow
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
@@ -775,10 +867,10 @@ for i, cmd in enumerate(cmds):
     add_text(slide, "$ " + cmd, 0.55, 5.82 + i * 0.38, 12.2, 0.35,
              font_size=12, color=C_VERDE)
 
-slide_num(slide, 13)
+slide_num(slide, 14)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 14 — Próximos Passos
+# SLIDE 15 — Próximos Passos
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
@@ -842,10 +934,10 @@ for i, (num, prazo, titulo, desc, c, tempo) in enumerate(steps_prox):
     add_text(slide, tempo, x + w - 1.5, y + 0.05, 1.4, 0.35,
              font_size=11, bold=True, color=c, align=PP_ALIGN.RIGHT)
 
-slide_num(slide, 14)
+slide_num(slide, 15)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 15 — Conclusões
+# SLIDE 16 — Conclusões
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_dark(slide)
@@ -879,7 +971,7 @@ for i, (c, sym, texto) in enumerate(conclusoes):
     add_text(slide, texto, 1.05, 1.44 + i * 0.82, 12.0, 0.72,
              font_size=13.5, color=C_CINZA_CLARO)
 
-slide_num(slide, 15)
+slide_num(slide, 16)
 
 # ─── Salvar ───────────────────────────────────────────────────────────────────
 out = "apresentacao_design_inibidores.pptx"

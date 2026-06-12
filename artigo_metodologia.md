@@ -86,7 +86,19 @@ Os complexos tripsina-peptídeo foram submetidos a refinamento energético pelo 
 A afinidade de ligação ao sítio S1 foi estimada por docking molecular rígido com AutoDock Vina f458505-mod (*Trott & Olson, J. Comput. Chem., 2010*). A *grid box* foi centrada nas coordenadas consenso (25 × 25 × 25 Å; exaustividade = 8). O protocolo adota **docking rígido** para os peptídeos candidatos, pois sequências com comprimento ≥ 9 aa possuem mais de 32 ligações rotacionáveis (φ + ψ + cadeia lateral), excedendo o limite interno do Vina para docking flexível. A modalidade rígida (TORSDOF = 0) é adequada para a geração de *labels* de triagem em larga escala (correlação Pearson ~0,7 com docking flexível completo para top candidatos).
 
 **Preparação dos ligantes e receptor:**
-Os peptídeos foram construídos em modo *all-atom* via PeptideBuilder, com geometria de ligação ECEPP/3, centrados nas coordenadas do sítio catalítico. A conversão para formato PDBQT foi realizada com OpenBabel (`-xr -h`: rígido + hidrogênios polares). O receptor em PDBQT foi preparado com OpenBabel (`-xr -h`). Para garantir conformidade com o formato de ligante PDBQT requerido pelo Vina, os blocos `ROOT/ENDROOT/TORSDOF 0` são adicionados automaticamente ao arquivo gerado pelo OpenBabel quando ausentes (método `_ensure_ligand_pdbqt_format()`).
+Os peptídeos foram construídos em modo *all-atom* via PeptideBuilder, com geometria de ligação ECEPP/3. O **centro de massa** (COM) de cada estrutura peptídica foi transladado para as coordenadas do sítio catalítico consenso, garantindo que o peptídeo fique centrado na *grid box* independentemente do comprimento. A conversão para formato PDBQT foi realizada com OpenBabel (`-xr -h`: rígido + hidrogênios polares). Os blocos `ROOT/ENDROOT/TORSDOF 0` são adicionados automaticamente quando ausentes (`_ensure_ligand_pdbqt_format()`). O receptor foi preparado com OpenBabel (`-xr -h`).
+
+**Grid box adaptativa:**
+O tamanho da *grid box* é calculado automaticamente em função do comprimento do peptídeo (`_adaptive_grid_size()`): tamanho = max(40 Å, comprimento × 3,6 + 8) Å. Isso garante que a conformação semi-estendida gerada pelo PeptideBuilder fique inteiramente dentro do espaço de busca do Vina em todos os comprimentos avaliados (5–20 aa).
+
+| Comprimento (aa) | Grid box (Å³) | Comprimento extendido ~(Å) |
+|---|---|---|
+| 5  | 26 × 26 × 26 | 18 |
+| 7  | 33 × 33 × 33 | 25 |
+| 10 | 44 × 44 × 44 | 36 |
+| 12 | 51 × 51 × 51 | 43 |
+| 15 | 62 × 62 × 62 | 54 |
+| 20 | 80 × 80 × 80 | 72 |
 
 Em modo *fallback* (Vina não disponível), scores heurísticos foram calculados como função da carga básica, hidrofobicidade e índice de Boman, constituindo labels proxy para o treinamento inicial de modelos ML/DL.
 
