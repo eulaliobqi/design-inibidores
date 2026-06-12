@@ -33,7 +33,8 @@ class DockingAgent(BaseAgent):
 
         center = binding_site["consensus_center_xyz"]
         cfg = self.config.get("docking", {})
-        size = [cfg.get("size_x", 25), cfg.get("size_y", 25), cfg.get("size_z", 25)]
+        # Tamanho base do grid; _adaptive_grid_size() expande para peptídeos longos
+        base_size = [cfg.get("size_x", 40), cfg.get("size_y", 40), cfg.get("size_z", 40)]
 
         # Preparar receptor PDBQT (apenas uma vez)
         rec_pdbqt = self._prepare_receptor_pdbqt(receptor_pdb)
@@ -52,8 +53,9 @@ class DockingAgent(BaseAgent):
             if lig_pdbqt is None:
                 continue
 
+            size = self._adaptive_grid_size(item["length"], base_size)
             result = self._run_vina(rec_pdbqt, lig_pdbqt, center, size,
-                                    cfg.get("exhaustiveness", 32), out_dir)
+                                    cfg.get("exhaustiveness", 8), out_dir)
             result["sequence"] = seq
             result["length"] = item["length"]
             results[stem] = result
@@ -170,8 +172,14 @@ class DockingAgent(BaseAgent):
                     g = Geometry.geometry("A")
                 PeptideBuilder.add_residue(structure, g)
 
-            # Transladar para o centro do sítio
-            offset = np.array([float(v) for v in center])
+            # Centralizar o centro de massa do peptídeo no sítio catalítico.
+            # Bug anterior: somava offset ao N-terminus (primeiro átomo) em vez
+            # do COM → peptídeos longos começavam no sítio e se estendiam para fora
+            # do grid box, impedindo qualquer pose válida.
+            target = np.array([float(v) for v in center])
+            coords = np.array([a.coord for a in structure.get_atoms()])
+            com = coords.mean(axis=0)
+            offset = target - com
             for atom in structure.get_atoms():
                 atom.coord += offset
 
@@ -182,6 +190,27 @@ class DockingAgent(BaseAgent):
         except Exception as e:
             self.logger.warning(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
             return False
+
+    def _adaptive_grid_size(self, length: int, base: list) -> list:
+        """Retorna grid box adaptado ao comprimento do peptídeo.
+
+        PeptideBuilder gera geometria próxima à beta-strand estendida
+        (~3.6 Å/resíduo).  Com centralização pelo COM, o peptídeo ocupa
+        ±(length/2 × 3.6 Å) em cada direção → o grid precisa de pelo
+        menos length × 3.6 Å no eixo principal.
+
+        Tabela orientativa (com COM centrado no sítio):
+          5 aa → ~18 Å → 25 Å cobre
+          7 aa → ~25 Å → 30 Å cobre
+         10 aa → ~36 Å → 40 Å cobre
+         12 aa → ~43 Å → 50 Å cobre
+         15 aa → ~54 Å → 60 Å cobre
+         20 aa → ~72 Å → 80 Å cobre
+        """
+        # Estimativa conservadora: comprimento extendido ÷ 2 + margem de 4 Å
+        needed = int(length * 3.6) + 8
+        s = max(base[0], needed)
+        return [s, s, s]
 
     def _ensure_ligand_pdbqt_format(self, pdbqt_path: Path):
         """Wraps bare ATOM records with ROOT/ENDROOT/TORSDOF 0 (ligand format).

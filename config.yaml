@@ -84,9 +84,9 @@ docking:
   center_x: null
   center_y: null
   center_z: null
-  size_x: 25.0
-  size_y: 25.0
-  size_z: 25.0
+  size_x: 40.0    # base; _adaptive_grid_size() expande automaticamente por comprimento
+  size_y: 40.0
+  size_z: 40.0
 
 md:
   tool: "gromacs"
