@@ -364,13 +364,23 @@ class MDAgent(BaseAgent):
                                   text=True, **kw)
 
         try:
+            # Pré-processar PDB: remover HETATM (HOH, ions, ligandos) que pdb2gmx rejeita
+            clean_pdb = out / "complex_clean.pdb"
+            src = Path(complex_pdb).read_text(errors="replace")
+            lines_clean = [l for l in src.splitlines(keepends=True)
+                           if l.startswith(("ATOM", "TER", "END", "REMARK", "SSBOND", "CONECT"))]
+            clean_pdb.write_text("".join(lines_clean) + "\nEND\n")
+            self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
+
             # pdb2gmx
-            p = gmx_run(["pdb2gmx", "-f", complex_pdb, "-o", "processed.gro",
+            p = gmx_run(["pdb2gmx", "-f", str(clean_pdb), "-o", "processed.gro",
                           "-p", "topol.top", "-i", "posre.itp",
                           "-ff", ff, "-water", water, "-ignh"],
                          input="1\n", timeout=120)
             if p.returncode != 0:
-                raise RuntimeError(f"pdb2gmx: {p.stderr[-200:]}")
+                # Salvar log completo para diagnóstico
+                (out / "pdb2gmx_stderr.log").write_text(p.stderr)
+                raise RuntimeError(f"pdb2gmx: {p.stderr[-1000:]}")
 
             # editconf
             gmx_run(["editconf", "-f", "processed.gro", "-o", "box.gro",
