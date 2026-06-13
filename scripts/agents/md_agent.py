@@ -138,18 +138,24 @@ class MDAgent(BaseAgent):
 
         results = {}
         for stem, rdata in top5:
+            seq = rdata.get("sequence", "?")
             complex_pdb = rdata.get("complex_pdb") or rdata.get("refined_pdb")
+            # Construir complex PDB quando o Rosetta não gerou um para este candidato
             if not complex_pdb or not Path(complex_pdb).exists():
-                self.logger.warning(f"  Pulando {stem}: PDB não encontrado")
+                self.logger.info(f"  Construindo complex PDB para {seq[:12]}...")
+                built = self._build_complex_for_md(seq, receptor_pdb)
+                complex_pdb = str(built) if built else None
+
+            if not complex_pdb or not Path(str(complex_pdb)).exists():
+                self.logger.warning(f"  Pulando {stem}: impossível construir PDB")
                 continue
 
             out_dir = self.workdir / stem
             out_dir.mkdir(exist_ok=True)
             md_result = self._run_gromacs(
-                str(complex_pdb), out_dir, ns, temp,
-                rdata.get("sequence", "?")
+                str(complex_pdb), out_dir, ns, temp, seq
             )
-            results[stem] = {**md_result, "sequence": rdata["sequence"],
+            results[stem] = {**md_result, "sequence": seq,
                              "vina_kcal": rdata.get("vina_kcal")}
 
         (self.workdir / "md_results.json").write_text(
@@ -159,36 +165,124 @@ class MDAgent(BaseAgent):
 
     def _select_top5_vina(self, rosetta_results: dict) -> list:
         """Seleciona top-5 por Vina kcal/mol do docking_results.json.
-        Fallback para I_sc heurístico se arquivo não existir."""
+        Cria entradas mínimas para sequências que não passaram pelo Rosetta.
+        Fallback para I_sc heurístico se docking_results.json não existir."""
         docking_json = self.workdir.parent / "docking" / "docking_results.json"
         if docking_json.exists():
             try:
                 dock = json.loads(docking_json.read_text())
-                # Mapeia sequência → dados rosetta
-                seq_ros = {v["sequence"]: (k, v)
-                           for k, v in rosetta_results.items() if "sequence" in v}
-                scored = []
-                for v in dock.values():
-                    seq = v.get("sequence", "")
-                    vina = v.get("best_affinity_kcal")
-                    if vina is not None and seq in seq_ros:
+                # Mapeia sequência → dados rosetta (se existir)
+                seq_ros = {v.get("sequence"): (k, v)
+                           for k, v in rosetta_results.items() if v.get("sequence")}
+                # Ordenar por Vina (mais negativo = melhor)
+                valid = [(k, v) for k, v in dock.items()
+                         if v.get("best_affinity_kcal") is not None]
+                valid.sort(key=lambda x: x[1]["best_affinity_kcal"])
+                result = []
+                for dk, dv in valid[:5]:
+                    seq = dv["sequence"]
+                    vina = dv["best_affinity_kcal"]
+                    if seq in seq_ros:
                         rk, rv = seq_ros[seq]
                         rv["vina_kcal"] = vina
-                        scored.append((rk, rv, vina))
-                if scored:
-                    scored.sort(key=lambda x: x[2])  # mais negativo = melhor
+                        result.append((rk, rv))
+                    else:
+                        # Entrada mínima — complex PDB será construído em run()
+                        result.append((f"vina_{dk}", {
+                            "sequence": seq,
+                            "length": dv.get("length", len(seq)),
+                            "vina_kcal": vina,
+                        }))
+                if result:
                     self.logger.info(
-                        f"Top-5 por Vina: " +
-                        ", ".join(f"{rv['sequence'][:8]}({vina:.2f})"
-                                  for _, rv, vina in scored[:5])
+                        "Top-5 por Vina: " +
+                        ", ".join(f"{v['sequence'][:8]}({v.get('vina_kcal',0):.2f})"
+                                  for _, v in result)
                     )
-                    return [(k, v) for k, v, _ in scored[:5]]
+                    return result
             except Exception as e:
                 self.logger.warning(f"Leitura docking_results.json falhou: {e}")
         # Fallback: I_sc heurístico
         self.logger.warning("Selecionando por I_sc heurístico (docking_results.json indisponível)")
         return sorted(rosetta_results.items(),
                       key=lambda x: x[1].get("I_sc", 0))[:5]
+
+    def _get_binding_center(self) -> list:
+        """Lê centro de ligação do checkpoint; fallback para consenso padrão."""
+        try:
+            ckpt_file = Path(self.workdir).parent / "checkpoint.json"
+            if ckpt_file.exists():
+                ckpt = json.loads(ckpt_file.read_text())
+                c = ckpt.get("structure", {}).get("consensus_center_xyz")
+                if c and len(c) == 3:
+                    return [float(x) for x in c]
+        except Exception:
+            pass
+        return [2.607, 4.572, -1.885]  # consenso calculado na etapa structure
+
+    def _build_complex_for_md(self, sequence: str, receptor_pdb: str) -> Path | None:
+        """Constrói complex PDB (receptor + peptídeo all-atom) via PeptideBuilder."""
+        try:
+            import numpy as np
+            from PeptideBuilder import Geometry, PeptideBuilder as PB
+            import Bio.PDB
+
+            center = self._get_binding_center()
+
+            # Construir peptídeo all-atom
+            geo = Geometry.geometry(sequence[0])
+            structure = PB.initialize_res(geo)
+            for aa in sequence[1:]:
+                try:
+                    PB.add_residue(structure, aa)
+                except Exception:
+                    PB.add_residue(structure, "A")
+
+            # COM centering
+            atoms = list(structure.get_atoms())
+            com = np.mean([a.coord for a in atoms], axis=0)
+            offset = np.array(center) - com
+            for a in atoms:
+                a.coord += offset
+
+            # Escrever receptor
+            safe_name = sequence[:10].replace("/", "_")
+            out_pdb = self.workdir / f"complex_md_{safe_name}.pdb"
+            parser = Bio.PDB.PDBParser(QUIET=True)
+            rec = parser.get_structure("REC", receptor_pdb)
+            io = Bio.PDB.PDBIO()
+            io.set_structure(rec)
+            io.save(str(out_pdb))
+
+            # Append peptídeo como cadeia P
+            AA3 = {
+                "A":"ALA","R":"ARG","N":"ASN","D":"ASP","C":"CYS","Q":"GLN",
+                "E":"GLU","G":"GLY","H":"HIS","I":"ILE","L":"LEU","K":"LYS",
+                "M":"MET","F":"PHE","P":"PRO","S":"SER","T":"THR","W":"TRP",
+                "Y":"TYR","V":"VAL",
+            }
+            with open(out_pdb, "a") as f:
+                f.write("TER\n")
+                n = 1
+                for res in structure.get_residues():
+                    idx = res.id[1] - 1
+                    aa1 = sequence[idx] if idx < len(sequence) else "A"
+                    res3 = AA3.get(aa1, "ALA")
+                    for atom in res.get_atoms():
+                        x, y, z = atom.coord
+                        elem = (atom.element or atom.name[0]).strip()
+                        f.write(
+                            f"ATOM  {n:5d}  {atom.name:<4s}{res3:3s} P"
+                            f"{res.id[1]:4d}    {x:8.3f}{y:8.3f}{z:8.3f}"
+                            f"  1.00  0.00          {elem:>2s}\n"
+                        )
+                        n += 1
+                f.write("END\n")
+
+            return out_pdb
+        except Exception as e:
+            self.logger.error(f"_build_complex_for_md ({sequence[:8]}): {e}")
+            return None
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
