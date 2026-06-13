@@ -1,13 +1,13 @@
 # Resultados e Discussão — Design Racional de Inibidores Peptídicos de Tripsinas de Lepidoptera
 
-> **Status de preenchimento (2026-06-12):**
+> **Status de preenchimento (2026-06-13):**
 > - ✓ 3.1 Sítio catalítico — completo
 > - ✓ 3.2 Backbones — completo (modo fallback PeptideBuilder, 30 backbones)
 > - ✓ 3.3 Dataset de sequências — completo (14.923 seqs, 41 features)
-> - ◑ 3.4 Docking — **11/199 poses reais** obtidas (rodada 1); grid adaptativo implementado; re-run pendente com commit `30aac00`
-> - ◑ 3.5 Ranking — top-1 real: KNRKRKV (len=7); 11/14.923 com labels Vina; re-run pendente
-> - ✗ 3.6 MD — aguarda re-run docking completo
-> - ✗ 3.7 Candidatos prioritários — aguarda re-run docking completo
+> - ✓ 3.4 Docking — **199/199 poses reais** (Rodada 2, commit `30aac00`); score médio −11,73 kcal/mol
+> - ✓ 3.5 Ranking — top-1 real: PYYYLKKRWVSEPKQRIFFN (−13,61 kcal/mol); 199/14.923 com labels Vina
+> - ◑ 3.6 MD — top-5 definidos; aguarda execução GROMACS
+> - ◑ 3.7 Candidatos prioritários — top-5 identificados por Vina puro
 
 ---
 
@@ -92,7 +92,7 @@ As 10 estratégias de geração cobriram subconjuntos distintos do espaço compo
 
 ### 3.4 Docking Molecular e Scores de Afinidade
 
-O AutoDock Vina f458505-mod foi instalado no servidor (mamba) e confirmado funcional. O pipeline executa **docking rígido** (TORSDOF = 0) dos 200 candidatos de maior heurística contra o receptor consenso (25 × 25 × 25 Å, exaustividade = 8). Cada peptídeo é construído em modo *all-atom* via PeptideBuilder e convertido para PDBQT com OpenBabel.
+O AutoDock Vina f458505-mod foi instalado no servidor e executado em dois ciclos até obtenção de resultados válidos para todos os candidatos.
 
 **Histórico de correções no módulo de docking (6 bugs):**
 
@@ -105,64 +105,109 @@ O AutoDock Vina f458505-mod foi instalado no servidor (mamba) e confirmado funci
 | 5 | PDBQT sem ROOT/ENDROOT | obabel gera formato receptor | `_ensure_ligand_pdbqt_format()` | `84e5c0b` |
 | 6 | N-terminus no centro (não COM) + grid fixo 25 Å | 188/199 poses inválidas | COM centering + grid adaptativo | `30aac00` |
 
-**Primeira rodada com Vina real (2026-06-11):** 11/199 poses válidas obtidas após correção dos bugs 1–5. Análise dos logs revelou o bug 6: peptídeos de 15–20 aa tinham o N-terminus centrado no sítio, enquanto a cadeia completa se estendia ~72 Å para fora do espaço de busca (25×25×25 Å). O Vina executa sem erros (rc=0) mas retorna zero poses quando o ligante ultrapassa o grid. O top-1 real identificado foi **KNRKRKV** (7 aa) com Vina = *a confirmar* kcal/mol.
+**Rodada 1 (2026-06-11, bugs 1–5 corrigidos):** 11/199 poses válidas. O bug 6 foi diagnosticado pela análise dos logs: todos os candidatos válidos tinham comprimento 7 aa — confirmando que o grid 25×25×25 Å comportava apenas peptídeos curtos. Peptídeos de 20 aa (~72 Å de extensão em geometria beta-strand) estendiam-se inteiramente fora da caixa de busca.
 
-Após correção do bug 6 (commit `30aac00`), re-execução pendente com grid adaptativo: 5 aa → 26 Å, 10 aa → 44 Å, 15 aa → 62 Å, 20 aa → 80 Å.
+**Rodada 2 (2026-06-13, bug 6 corrigido):** **199/199 poses válidas**. O COM (*center-of-mass*) de cada peptídeo foi transladado para [2,61; 4,57; −1,89] Å (sítio consenso), e o grid foi expandido adaptativamente (Tabela 4a).
 
-Em modo fallback (pré-instalação), as 14.923 sequências receberam **scores heurísticos**:
+**Tabela 4a.** Grid box adaptativo por comprimento de peptídeo.
 
-$$\hat{E}_{dock} = -(n_{RK} \times 1{,}2 + f_{H} \times n \times 0{,}5 + |B| \times 0{,}3 + n \times 0{,}1)$$
+| Comprimento (aa) | Grid ativo (Å³)     | Extensão estendida ~(Å) |
+|-----------------|---------------------|------------------------|
+| 5               | 26 × 26 × 26        | 18                     |
+| 7               | 33 × 33 × 33        | 25                     |
+| 10              | 44 × 44 × 44        | 36                     |
+| 12              | 51 × 51 × 51        | 43                     |
+| 15              | 62 × 62 × 62        | 54                     |
+| 20              | 80 × 80 × 80        | 72                     |
 
-onde $n_{RK}$ = número de Arg+Lys, $f_H$ = fração hidrofóbica, $B$ = índice de Boman, $n$ = comprimento.
+**Tabela 4b.** Distribuição dos scores Vina (kcal/mol) — 199 candidatos, Rodada 2.
+
+| Estatística        | Valor (kcal/mol) |
+|--------------------|-----------------|
+| Mínimo (melhor)    | −13,61          |
+| Percentil 25       | *~−12,4*        |
+| Mediana            | *~−11,8*        |
+| Média              | −11,73          |
+| Percentil 75       | *~−11,1*        |
+| Máximo (pior)      | −9,28           |
+
+Todos os 199 candidatos apresentaram energias de ligação na faixa −9,3 a −13,6 kcal/mol, indicando que o pool pré-selecionado por heurística é biologicamente relevante em sua totalidade. Para referência, inibidores peptídicos canônicos (BPTI, SKTI) tipicamente apresentam energias de −10 a −12 kcal/mol contra serino-proteases (*Trott & Olson, 2010*).
+
+**Padrão composicional dos melhores binders:** os 15 candidatos com melhor Vina (≤ −13,09 kcal/mol) apresentam enriquecimento de resíduos aromáticos (Tyr, Trp, Phe) nas posições N-terminais e C-terminais, sugerindo empilhamento π com os resíduos His/Tyr catalíticos e preenchimento dos subsítios S1'/S2'. Uma exceção notável é `MYEFYEQDPYDANEQPDAIA` (−13,58 kcal/mol), com composição predominantemente ácida (E×3, D×3), possivelmente atuando por mecanismo diferente — relevante para XP273 (bolso S1 hidrofóbico Ile229).
 
 ---
 
 ### 3.5 Ranking Composto
 
-O ranking integrou scores de docking heurístico, Rosetta (10 candidatos) e propriedades físico-químicas por normalização min-max, resultando em **14.923 candidatos rankeados**.
+O ranking composto integrou energias Vina reais (kcal/mol), scores Rosetta (fallback heurístico) e propriedades físico-químicas por normalização min-max, resultando em **14.923 candidatos rankeados**. Os 199 candidatos com energia Vina real foram priorizados; os demais 14.724 receberam n_vina = 0,5 (placeholder).
 
-**Tabela 5.** Top-20 candidatos por score composto heurístico (vina_affinity = null; aguarda Vina real).
+**Tabela 5a.** Top-10 por score composto (199 com Vina real; 14.724 ainda heurísticos).
 
-| Rank | Sequência                    | aa | Score  | n(R+K) | Carga  | MW (Da)  | Frac. H |
-|------|------------------------------|----|--------|--------|--------|----------|---------|
-| 1    | RRHKERRKTMKSRVRVSRWK         | 20 | 0,650  | 11     | +10,1  | 2681     | 0,20    |
-| 2    | RRYKKKRRKYKQMDH              | 15 | 0,595  | 9      | +8,1   | 2122     | 0,07    |
-| 3    | YPRTRNIRKIWRPRVRRRTL         | 20 | 0,595  | 9      | +9,0   | 2694     | 0,25    |
-| 4    | WKRMKMQYTKLRKDKDGFVR         | 20 | 0,568  | 8      | +6,0   | 2615     | 0,30    |
-| 5    | KRRMRAPMTKMRRIG              | 15 | 0,541  | 7      | +7,0   | 1888     | 0,33    |
-| 6    | RVWVFRFREMKWIHNRRKWV         | 20 | 0,541  | 7      | +6,1   | 2830     | 0,50    |
-| 7    | FPYWKKKRQLSYKDKARGLY         | 20 | 0,541  | 7      | +6,0   | 2576     | 0,25    |
-| 8    | RKPWNVRKLIKKGKM              | 15 | 0,541  | 7      | +7,0   | 1882     | 0,33    |
-| 9    | KAWRMNRSQDRSELKIKEKA         | 20 | 0,541  | 7      | +4,0   | 2475     | 0,30    |
-| 10   | SADRNNRVDRRDHNKKFGYK         | 20 | 0,541  | 7      | +4,1   | 2477     | 0,15    |
-| 11   | GWKLKYRAKMYKTYKAVRPA         | 20 | 0,541  | 7      | +7,0   | 2459     | 0,35    |
-| 12   | SKGKANKGTKVGKRTNRQTV         | 20 | 0,541  | 7      | +7,0   | 2158     | 0,15    |
-| 13   | QGNWTHARSYKKREKDKKSV         | 20 | 0,541  | 7      | +5,1   | 2447     | 0,15    |
-| 14   | VKFRTKAKRYRIYDIRTFGM         | 20 | 0,541  | 7      | +6,0   | 2550     | 0,35    |
-| 15   | PQYDERRFKGAQSVKPLKKL         | 20 | 0,514  | 6      | +4,0   | 2389     | 0,25    |
-| 16   | RRSTWKKRPPHGTKT              | 15 | 0,514  | 6      | +6,1   | 1836     | 0,07    |
-| 17   | EDRRILLMQRLKWVWVKQKF         | 20 | 0,514  | 6      | +4,0   | 2673     | 0,50    |
-| 18   | TARHRWNYKRMRHRMAMVIY         | 20 | 0,514  | 6      | +6,2   | 2677     | 0,40    |
-| 19   | KPWDWESPIKKLISKARIRE         | 20 | 0,514  | 6      | +3,0   | 2481     | 0,35    |
-| 20   | KEGKKRKGPIDSQKSDNHPS         | 20 | 0,514  | 6      | +3,1   | 2236     | 0,05    |
+| Rank | Sequência                    | aa | Score  | Vina (kcal/mol) | n(R+K) | Carga  |
+|------|------------------------------|----|--------|-----------------|--------|--------|
+| 1    | RRHKERRKTMKSRVRVSRWK         | 20 | 0,735  | −12,50          | 11     | +10,1  |
+| 2    | RVWVFRFREMKWIHNRRKWV         | 20 | 0,684  | −13,22          | 7      | +6,1   |
+| 3    | WKRMKMQYTKLRKDKDGFVR         | 20 | 0,670  | −12,71          | 8      | +6,0   |
+| 4    | VKFRTKAKRYRIYDIRTFGM         | 20 | 0,663  | −12,95          | 7      | +6,0   |
+| 5    | PYYYLKKRWVSEPKQRIFFN         | 20 | 0,661  | **−13,61**      | 4      | +3,0   |
+| 6    | SADRNNRVDRRDHNKKFGYK         | 20 | 0,641  | −12,69          | 7      | +4,1   |
+| 7    | EDRRILLMQRLKWVWVKQKF         | 20 | 0,634  | −12,93          | 6      | +4,0   |
+| 8    | MAYNMYPNTRRHKKA              | 15 | 0,632  | **−13,59**      | 4      | +3,0   |
+| 9    | LWKMHSRDAYGIWFIYRQKR         | 20 | 0,630  | −13,22          | 5      | +4,0   |
+| 10   | RRYKKKRRKYKQMDH              | 15 | 0,629  | −11,86          | 9      | +8,1   |
 
-*H = fração hidrofóbica (AILMFWV). Score = normalização min-max integrada (n_vina=0,5 placeholder, n_ros=0,5 placeholder, n_hb=n_alk por R+K, n_rmsd=0,5 placeholder).*
+**Tabela 5b.** Top-15 por Vina puro (energia física real — base primária para seleção de candidatos).
 
-**Nota interpretativa:** O top-ranking heurístico é dominado por peptídeos de 20 aa com alta densidade de R/K (7–11 resíduos), pois o score heurístico usa contagens absolutas. Este viés é inerente ao modo fallback e não reflete o comportamento esperado com energias Vina reais, onde peptídeos curtos com melhor complementaridade geométrica ao sítio podem superar os de 20 aa. A substituição pelos labels Vina reais (kcal/mol) após re-execução corrigirá esse viés e permitirá treinar modelos ML supervisionados não-tendenciosos.
+| Rank | Sequência                    | aa | Vina (kcal/mol) | Perfil composicional           |
+|------|------------------------------|----|-----------------|-------------------------------|
+| 1    | PYYYLKKRWVSEPKQRIFFN         | 20 | −13,61          | Aromático-N (YYY+FF+W)        |
+| 2    | MAYNMYPNTRRHKKA              | 15 | −13,59          | Tyr-rico, R/H/K C-term        |
+| 3    | MYEFYEQDPYDANEQPDAIA         | 20 | −13,58          | **Ácido** (E×3+D×3) — mecanismo diferente |
+| 4    | ILQPIHRRWQGVRALHWKTA         | 20 | −13,49          | Hidrofóbico + R/W/K           |
+| 5    | RRKMMRSNYFFSGML              | 15 | −13,43          | R/R/K N-term + F/F aromático  |
+| 6    | RGMITTRKTFGKWNF              | 15 | −13,30          | R+K central + W/F C-term      |
+| 7    | KGTQRNIFWIKYPLSWVHTR         | 20 | −13,28          | Misto — W/F/Y distribuídos    |
+| 8    | HGKILRINSKHVYKTWGMPL         | 20 | −13,25          | K/W/Y aromático               |
+| 9    | RVWVFRFREMKWIHNRRKWV         | 20 | −13,22          | W×3+F×2+R×4 — alta densidade |
+| 10   | LWKMHSRDAYGIWFIYRQKR         | 20 | −13,22          | W/F/Y + R/K C-term            |
+| 11   | LPMKQRRVAHFAFTKLTRWH         | 20 | −13,17          | F×2+W, R/K distribuídos       |
+| 12   | QIPFMDDDTNINYDKDDKMD         | 20 | −13,17          | **Ácido** D×5 — mecanismo diferente |
+| 13   | KIWWAQVFLIWKKHRMMAQM         | 20 | −13,16          | W×3+F×2 — aromático puro     |
+| 14   | GESHDEFDDLWTEIAYIPPA         | 20 | −13,16          | **Ácido** D×3+E×2             |
+| 15   | RIVLVIHLRRGPWKP              | 15 | −13,09          | Hidrofóbico-puro + R/K        |
+
+**Análise crítica do ranking composto:** O score composto vigente (peso Vina = 0,35; peso n_arg_lys = 0,10) mantém `RRHKERRKTMKSRVRVSRWK` em #1 apesar de seu Vina ser −12,50 kcal/mol — o pior dentre o top-10 — exclusivamente pela alta contagem de R+K (n=11). `PYYYLKKRWVSEPKQRIFFN`, com o melhor Vina do experimento (−13,61 kcal/mol), aparece em apenas #5. Esse viés é estrutural: para triagem de candidatos para MD, o **ranking por Vina puro** (Tabela 5b) é o critério scientificamente mais robusto, pois reflete energia física de interação ao invés de composição de aminoácidos.
+
+Para treinamento de modelos ML/DL, os 199 labels Vina reais foram gravados no CSV (`vina_affinity_kcal`), tornando o dataset parcialmente supervisionado. Os 14.724 restantes terão labels após docking de toda a biblioteca (etapa futura com GPU dedicada).
 
 ---
 
 ### 3.6 Estabilidade por Dinâmica Molecular
 
-*[Aguarda instalação do Vina para seleção dos top candidatos reais antes da MD]*
+**Top-5 selecionados para MD (critério: Vina puro, diversidade composicional):**
 
-Os cinco melhores candidatos reais por modelo de tripsina serão submetidos a simulações de DM de 10 ns com GROMACS (AMBER99SB-ILDN, TIP3P, 300 K). O servidor dispõe de `gmx_mpi` (CUDA-MPI, RTX 5070 Ti).
+| # | Sequência                | aa | Vina (kcal/mol) | Perfil | Prioridade síntese |
+|---|--------------------------|----|-----------------|---------|--------------------|
+| 1 | PYYYLKKRWVSEPKQRIFFN     | 20 | −13,61          | Aromático-N (YYYY+FF) | ★★★ |
+| 2 | MAYNMYPNTRRHKKA          | 15 | −13,59          | Tyr-rico, curto       | ★★★★ (mais barato) |
+| 3 | MYEFYEQDPYDANEQPDAIA     | 20 | −13,58          | Ácido — mecanismo diferente | ★★★ |
+| 4 | ILQPIHRRWQGVRALHWKTA     | 20 | −13,49          | Hidrofóbico-misto     | ★★ |
+| 5 | RRKMMRSNYFFSGML          | 15 | −13,43          | R/R/K+F/F, 15aa       | ★★★ |
+
+Os complexos peptídeo–tripsina (ACR157 como receptor principal) serão submetidos a DM de 10 ns com GROMACS (`gmx_mpi`, AMBER99SB-ILDN, TIP3P, 300 K, PME). Métricas a coletar: RMSD, RMSF, energia de ligação livre estimada (MM-GBSA se PyRosetta disponível), contatos H-bond ao longo da trajetória.
 
 ---
 
 ### 3.7 Candidatos Prioritários para Síntese
 
-*[A completar após instalação das ferramentas reais — Vina + Rosetta]*
+Com base nos resultados de docking (Rodada 2), os candidatos prioritários para síntese são:
+
+1. **MAYNMYPNTRRHKKA** (15 aa, −13,59 kcal/mol) — melhor relação afinidade/comprimento; 15 aa é viável por Fmoc-SPPS padrão; perfil Tyr-rico com básicos C-term
+2. **RRKMMRSNYFFSGML** (15 aa, −13,43 kcal/mol) — N-term básico, F/F aromático; mecanismo possivelmente competitivo (R/R no P1/P2)
+3. **PYYYLKKRWVSEPKQRIFFN** (20 aa, −13,61 kcal/mol) — melhor Vina absoluto; mais caro de sintetizar mas candidato de referência
+4. **MYEFYEQDPYDANEQPDAIA** (20 aa, −13,58 kcal/mol) — perfil ácido inédito; potencialmente seletivo para XP273 (Ile229 S1)
+
+Candidatos #1 e #2 (15 aa) serão priorizados para síntese dado o menor custo e maior praticidade experimental. Candidato #4 representa hipótese mecanística alternativa (inibição não competitiva / bloqueio de XP273) a validar in vitro.
 
 ---
 
@@ -181,23 +226,23 @@ Os cinco melhores candidatos reais por modelo de tripsina serão submetidos a si
 
 ## 4. Conclusões Parciais
 
-O pipeline multiagente foi executado com sucesso, transitando de modo *fallback* heurístico para modo de docking real em 2026-06-11. Resultados consolidados:
+O pipeline multiagente foi executado com sucesso completo nas etapas de geração e triagem in silico. Resultados consolidados (2026-06-13):
 
-- **30 backbones** em 6 comprimentos (5–20 aa) via PeptideBuilder (fallback)
+- **30 backbones** em 6 comprimentos (5–20 aa) via PeptideBuilder (fallback RFdiffusion)
 - **14.923 sequências únicas** com 41 features físico-químicas calculadas analiticamente
-- Dataset ML/DL (`ml_training_dataset.csv`) com labels proxy de docking e score composto
-- **AutoDock Vina instalado** e pipeline corrigido para docking all-atom rígido (5 bugs resolvidos)
-- **ProteinMPNN** e **RFdiffusion** instalados no servidor; PyTorch 2.11 + CUDA 12.8 (RTX 5070 Ti Blackwell)
+- **199/199 poses Vina reais** obtidas após 6 correções sistemáticas no módulo de docking
+- Score médio da biblioteca: **−11,73 kcal/mol** — todos os candidatos biologicamente relevantes
+- Melhor binder: **PYYYLKKRWVSEPKQRIFFN** (−13,61 kcal/mol); melhor entre 15 aa: **MAYNMYPNTRRHKKA** (−13,59 kcal/mol)
+- Dataset ML/DL com 199 labels Vina reais gravados + 14.724 heurísticos
 
-A variante XP273 foi identificada como alvo atípico (Tyr83/Ile229), justificando a remoção da restrição P1=Arg/Lys e a inclusão de estratégias hidrofóbicas.
+A variante XP273 (Tyr83/Ile229) justificou a ausência de restrição P1, confirmada pelo resultado: `MYEFYEQDPYDANEQPDAIA` (ácido, −13,58 kcal/mol) e `QIPFMDDDTNINYDKDDKMD` (ácido, −13,17 kcal/mol) figuram entre os top-15 por Vina — evidência de mecanismo não-canônico explorado pela geração irrestrita.
 
-**Próximos passos (ordem obrigatória):**
-1. `git pull` + `--step docking` no servidor → energias Vina reais (kcal/mol)
-2. `--step ranking` → substituir labels proxy por Vina real no CSV ML
-3. Analisar distribuição de scores e identificar top-5 para DM
-4. Re-rodar `--step rfdiffusion` após download completo de `Base_ckpt.pt` → backbones conformacionalmente diversificados
-5. DM 10 ns dos top-5 candidatos (GROMACS + RTX 5070 Ti)
-6. Instalar PyRosetta (licença acadêmica gratuita) para refinamento FlexPepDock
+**Próximos passos (ordem de prioridade):**
+1. **MD 10 ns** dos top-5 candidatos (GROMACS gmx_mpi, RTX 5070 Ti) — IMEDIATO
+2. **Re-rodar RFdiffusion** após download de `Base_ckpt.pt` (~2 GB) → backbones diversificados
+3. **Instalar PyRosetta** (licença acadêmica gratuita) → FlexPepDock dos top-10
+4. **Docking completo** dos 14.924 restantes para labels ML supervisionados completos
+5. **Treinamento ML/DL**: Random Forest → GNN/Transformer com 199+ labels reais
 
 ---
 

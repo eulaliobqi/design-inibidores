@@ -104,11 +104,11 @@ optimization:
 
 ranking:
   weights:
-    vina_affinity: 0.35             # kcal/mol (menor = melhor)
-    rosetta_I_sc: 0.25             # interface score (menor = melhor)
-    hbond_count: 0.20              # contatos H-bond (maior = melhor)
+    vina_affinity: 0.50             # kcal/mol (menor = melhor) — energia física real, peso dominante
+    rosetta_I_sc: 0.20             # interface score (menor = melhor)
+    hbond_count: 0.15              # contatos H-bond (maior = melhor)
     md_rmsd: 0.10                  # RMSD MD (menor = melhor)
-    hydrophobicity: 0.10           # complementaridade hidrofóbica
+    hydrophobicity: 0.05           # complementaridade hidrofóbica (reduzido: evita viés n_arg_lys)
   top_candidates: 20
 
 report:

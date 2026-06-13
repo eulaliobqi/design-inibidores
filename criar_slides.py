@@ -527,15 +527,15 @@ slide_num(slide, 8)
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
 header_bar(slide, "Docking Molecular — AutoDock Vina",
-           "Triagem de 200 candidatos rígidos · 5 bugs corrigidos · aguarda re-run")
+           "199/199 poses validas (Rodada 2) · 6 bugs corrigidos · Score medio -11.73 kcal/mol")
 
 # status central
 add_rect(slide, 0.4, 1.25, 12.5, 0.65, RGBColor(0xE8, 0xF5, 0xE9))
 add_rect(slide, 0.4, 1.25, 0.1, 0.65, C_VERDE)
 add_text(slide,
-    "✓  AutoDock Vina f458505-mod instalado  |  ✓ obabel (PDBQT all-atom)  |  "
-    "◑  Re-execução pendente após commit 84e5c0b",
-    0.6, 1.32, 12.1, 0.5, font_size=14, bold=True, color=C_CINZA_TEXTO)
+    "✓  Rodada 2 concluida (2026-06-13)  |  199/199 poses validas  |  "
+    "Score medio: -11.73 kcal/mol  |  Melhor: PYYYLKKRWVSEPKQRIFFN (-13.61 kcal/mol)",
+    0.6, 1.32, 12.1, 0.5, font_size=13, bold=True, color=C_CINZA_TEXTO)
 
 # tabela de bugs
 add_text(slide, "Histórico de correções do módulo de docking:", 0.4, 2.05, 12.0, 0.38,
@@ -547,7 +547,7 @@ bugs = [
     ("03", "Peptídeos rígidos via obabel -xr",      ">32 torsional bonds → Vina rejeita docking flexível",    "50b5d47", C_VERDE),
     ("04", "--log não suportado em f458505-mod",    "Fork removeu opção; captura via stdout/stderr",           "552f7e7", C_VERDE),
     ("05", "PDBQT sem ROOT/ENDROOT/TORSDOF",       "obabel gera formato receptor; _ensure_ligand_pdbqt_format()", "84e5c0b", C_VERDE),
-    ("06", "N-terminus no sítio (não COM) + grid 25 Å", "Cadeia 20aa estendia 72 Å para fora; grid adaptativo + COM centering", "30aac00", C_AMARELO),
+    ("06", "N-terminus no sítio (não COM) + grid 25 Å", "Cadeia 20aa estendia 72 Å para fora; grid adaptativo + COM centering", "30aac00", C_VERDE),
 ]
 for i, (num, bug, fix, commit, c) in enumerate(bugs):
     y = 2.2 + i * 0.82
@@ -563,171 +563,129 @@ for i, (num, bug, fix, commit, c) in enumerate(bugs):
              font_size=11, color=C_AZUL_MEDIO, align=PP_ALIGN.CENTER)
 
 # Resultado rodada 1
-add_rect(slide, 0.4, 7.1, 12.5, 0.28, C_AZUL_ESCURO)
+add_rect(slide, 0.4, 7.1, 12.5, 0.28, C_VERDE)
 add_text(slide,
-    "Rodada 1 (bugs 1-5):  11/199 poses validas  |  Top-1: KNRKRKV 7aa  |  "
-    "Causa diagnosticada: bug 06  |  Rodada 2 pendente com fix",
-    0.55, 7.12, 12.2, 0.24, font_size=12, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
+    "Rodada 1: 11/199  →  Rodada 2: 199/199  |  Score medio -11.73 kcal/mol  |  "
+    "Top-1: PYYYLKKRWVSEPKQRIFFN (-13.61)  |  Top-1 em 15aa: MAYNMYPNTRRHKKA (-13.59)",
+    0.55, 7.12, 12.2, 0.24, font_size=12, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 9)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 10 — Resultados Parciais: Rodada 1 de Docking (2026-06-11)
+# SLIDE 10 — Resultados Docking Rodada 2 (2026-06-13): 199/199
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Resultados Parciais — Rodada 1 de Docking",
-           "11/199 poses validas · Diagnostico completo · Fix implementado")
+header_bar(slide, "Resultados Docking — Rodada 2 (2026-06-13)",
+           "199/199 poses validas · Score medio -11.73 kcal/mol · Todos candidatos relevantes")
 
-# painel esquerdo — o que funcionou
-add_rect(slide, 0.4, 1.25, 6.0, 5.9, C_BRANCO)
-add_rect(slide, 0.4, 1.25, 6.0, 0.42, C_VERDE)
-add_text(slide, "O que funcionou (bugs 1-5 corrigidos)", 0.55, 1.28, 5.7, 0.36,
-         font_size=14, bold=True, color=C_BRANCO)
-
-add_rect(slide, 0.5, 1.75, 5.8, 1.0, C_AZUL_ESCURO)
-add_text(slide, "11 / 199  poses validas", 0.6, 1.82, 5.6, 0.55,
-         font_size=28, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
-add_text(slide, "PRIMEIRO resultado Vina real do pipeline", 0.6, 2.36, 5.6, 0.32,
+# painel central de destaque
+add_rect(slide, 0.4, 1.25, 12.5, 1.1, C_AZUL_ESCURO)
+add_text(slide, "199 / 199", 0.5, 1.28, 4.5, 0.65,
+         font_size=44, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
+add_text(slide, "poses Vina reais (kcal/mol)", 0.5, 1.88, 4.5, 0.35,
          font_size=13, color=C_CINZA_CLARO, align=PP_ALIGN.CENTER)
-
-add_text(slide, "Top poses obtidas (Rodada 1):", 0.55, 2.85, 5.7, 0.35,
-         font_size=13, bold=True, color=C_AZUL_ESCURO)
-top11_placeholder = [
-    ("KNRKRKV",    7,  "?? kcal/mol", "Top-1 ranking real"),
-    ("RRKWHWK",    7,  "?? kcal/mol", "Top-3 ranking"),
-    ("+ 9 seqs",  "~7", "?? kcal/mol", "Todos len <= 7 aa"),
+stats_r2 = [
+    ("Melhor:", "-13.61 kcal/mol", C_VERDE),
+    ("Media:", "-11.73 kcal/mol", C_CIANO),
+    ("Pior:", "-9.28 kcal/mol", C_AMARELO),
 ]
-for i, (seq, aa, score, nota) in enumerate(top11_placeholder):
-    add_rect(slide, 0.5, 3.28 + i * 0.6, 5.8, 0.52,
-             C_CINZA_CLARO if i % 2 == 0 else C_BRANCO)
-    add_text(slide, seq, 0.6, 3.3 + i * 0.6, 2.0, 0.48,
-             font_size=13, bold=True, color=C_AZUL_ESCURO)
-    add_text(slide, f"len={aa}  {score}", 2.6, 3.3 + i * 0.6, 2.2, 0.48,
-             font_size=12, color=C_CINZA_TEXTO)
-    add_text(slide, nota, 4.8, 3.3 + i * 0.6, 1.4, 0.48,
-             font_size=11, italic=True, color=C_AZUL_MEDIO)
+for k, (lbl, val, c) in enumerate(stats_r2):
+    add_text(slide, lbl, 5.2 + k * 2.5, 1.35, 1.1, 0.35,
+             font_size=12, color=C_CINZA_CLARO)
+    add_text(slide, val, 5.2 + k * 2.5, 1.68, 2.2, 0.48,
+             font_size=18, bold=True, color=c)
 
-add_rect(slide, 0.4, 5.6, 6.0, 1.45, RGBColor(0xE8, 0xF5, 0xE9))
-add_text(slide, "Validação da abordagem:", 0.55, 5.65, 5.7, 0.35,
-         font_size=13, bold=True, color=C_VERDE)
-add_text(slide,
-    "Top-1 heuristico: RRHKERRKTMKSRVRVSRWK (20aa, 0.650)\n"
-    "Top-1 Vina real:  KNRKRKV (7aa, 0.661)\n"
-    "Mudanca de ranking confirma que Vina real e necessario",
-    0.55, 6.0, 5.7, 0.98, font_size=12, color=C_CINZA_TEXTO)
+# tabela top-10 por Vina puro
+add_text(slide, "Top-10 por Vina puro (energia fisica real):", 0.4, 2.5, 8.0, 0.38,
+         font_size=14, bold=True, color=C_AZUL_ESCURO)
 
-# painel direito — diagnóstico bug 6
-add_rect(slide, 6.8, 1.25, 6.1, 5.9, C_BRANCO)
-add_rect(slide, 6.8, 1.25, 6.1, 0.42, C_AMARELO)
-add_text(slide, "Bug 06 diagnosticado — 188/199 falhas", 6.95, 1.28, 5.8, 0.36,
-         font_size=14, bold=True, color=C_BRANCO)
-
-add_text(slide, "Causa raiz:", 6.9, 1.75, 5.8, 0.35,
-         font_size=13, bold=True, color=C_AZUL_ESCURO)
-add_text(slide,
-    "PeptideBuilder coloca o N-TERMINUS em [2.6, 4.6, -1.9] A.\n"
-    "Um peptideo de 20aa extendido tem ~72 A de comprimento.\n"
-    "O grid de 25x25x25 A nao cobre nem 35% da cadeia.\n"
-    "Vina executa (rc=0) mas nao encontra poses validas.",
-    6.9, 2.15, 5.8, 1.2, font_size=12, color=C_CINZA_TEXTO)
-
-add_text(slide, "Fix implementado (commit 30aac00):", 6.9, 3.45, 5.8, 0.35,
-         font_size=13, bold=True, color=C_AZUL_ESCURO)
-fixes_diag = [
-    "COM centering: translada centro de massa",
-    "  do peptideo para o sitio catalitico",
-    "  (nao mais o N-terminus)",
-    "",
-    "Grid adaptativo por comprimento:",
-    "  5 aa  ->  26 x 26 x 26 A",
-    "  10 aa ->  44 x 44 x 44 A",
-    "  15 aa ->  62 x 62 x 62 A",
-    "  20 aa ->  80 x 80 x 80 A",
+top_r2 = [
+    (1,  "PYYYLKKRWVSEPKQRIFFN",    20, -13.61, "Aromatico-N (YYY+FF+W)"),
+    (2,  "MAYNMYPNTRRHKKA",         15, -13.59, "Tyr-rico, R/H/K C-term — 15aa"),
+    (3,  "MYEFYEQDPYDANEQPDAIA",    20, -13.58, "ACIDO (E3+D3) mecanismo diferente"),
+    (4,  "ILQPIHRRWQGVRALHWKTA",    20, -13.49, "Hidrofobico + R/W/K"),
+    (5,  "RRKMMRSNYFFSGML",         15, -13.43, "R/R/K N-term + F/F aromatico"),
+    (6,  "RGMITTRKTFGKWNF",         15, -13.30, "R/K central + W/F C-term"),
+    (7,  "KGTQRNIFWIKYPLSWVHTR",    20, -13.28, "Misto W/F/Y distribuidos"),
+    (8,  "HGKILRINSKHVYKTWGMPL",    20, -13.25, "K/W/Y + hidrofobico"),
+    (9,  "RVWVFRFREMKWIHNRRKWV",    20, -13.22, "W×3+F×2+R×4 alta densidade"),
+    (10, "LWKMHSRDAYGIWFIYRQKR",    20, -13.22, "W/F/Y + R/K C-term"),
 ]
-for i, fx in enumerate(fixes_diag):
-    c = C_VERDE if "aa  ->" in fx or "aa ->" in fx else C_CINZA_TEXTO
-    add_text(slide, fx, 6.9, 3.85 + i * 0.32, 5.8, 0.3,
-             font_size=12, color=c)
+hdrs_r2 = ["#", "Sequencia", "aa", "Vina (kcal/mol)", "Perfil"]
+ws_r2   = [0.4, 4.1, 0.5, 1.5, 5.8]
+x0r, y0r = 0.4, 2.95
 
-add_rect(slide, 6.8, 6.75, 6.1, 0.32, C_AZUL_ESCURO)
+for j, (h, w) in enumerate(zip(hdrs_r2, ws_r2)):
+    add_rect(slide, x0r + sum(ws_r2[:j]), y0r, w, 0.38, C_AZUL_ESCURO)
+    add_text(slide, h, x0r + sum(ws_r2[:j]) + 0.04, y0r + 0.02, w - 0.08, 0.34,
+             font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+
+for i, (rank, seq, aa, vina, perfil) in enumerate(top_r2):
+    bg = C_CINZA_CLARO if i % 2 == 0 else C_BRANCO
+    # highlight top-5 para MD
+    if rank <= 5:
+        add_rect(slide, x0r, y0r + 0.38 + i * 0.33, 0.08, 0.33, C_VERDE)
+    row_vals = [str(rank), seq, str(aa), f"{vina:.2f}", perfil]
+    for j, (cell, w) in enumerate(zip(row_vals, ws_r2)):
+        add_rect(slide, x0r + sum(ws_r2[:j]), y0r + 0.38 + i * 0.33, w, 0.33, bg)
+        c_cell = C_VERDE if j == 3 and rank <= 5 else (C_AZUL_ESCURO if j == 1 else C_CINZA_TEXTO)
+        add_text(slide, cell, x0r + sum(ws_r2[:j]) + 0.04, y0r + 0.4 + i * 0.33, w - 0.08, 0.29,
+                 font_size=9 if j in (1,4) else 10, bold=(j==1 and rank<=5),
+                 color=c_cell, align=PP_ALIGN.LEFT if j in (1,4) else PP_ALIGN.CENTER)
+
+# legenda MD
+add_rect(slide, 0.4, 7.1, 12.5, 0.28, C_VERDE)
 add_text(slide,
-    "Rodada 2 pendente: git pull + find ... -delete + --step docking",
-    6.9, 6.78, 5.9, 0.26, font_size=11, bold=True, color=C_CIANO)
+    "Barra verde = Top-5 selecionados para MD  |  Aromaticos dominam  |  "
+    "Acidos (#3,#12) = mecanismo alternativo XP273  |  15aa (#2,#5,#6) = prioridade sintese",
+    0.55, 7.12, 12.2, 0.24, font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 10)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 11 — Top Candidatos (ranking com Vina parcial)
+# SLIDE 11 — Top-5 Candidatos para MD e Síntese
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Ranking Atual — Top Candidatos",
-           "Rodada 1: 11 com Vina real · 14.912 ainda heuristicos · Rodada 2 corrigira ranking completo")
+header_bar(slide, "Candidatos Prioritarios — Top-5 para MD e Sintese",
+           "Selecao por Vina puro · Diversidade composicional · Mecanismos distintos")
 
-top20 = [
-    (1,  "KNRKRKV",              7,  0.661,  4, "+4.0",  963,  "Vina real"),
-    (2,  "RRHKERRKTMKSRVRVSRWK", 20, 0.623, 11, "+10.1", 2681, "heuristico"),
-    (3,  "RRKWHWK",              7,  0.621,  4, "+4.1",  1025, "Vina real"),
-    (4,  "YPRTRNIRKIWRPRVRRRTL", 20, 0.569,  9, "+9.0",  2694, "heuristico"),
-    (5,  "RRYKKKRRKYKQMDH",      15, 0.569,  9, "+8.1",  2122, "heuristico"),
-    (6,  "WKRMKMQYTKLRKDKDGFVR",20, 0.568,  8, "+6.0",  2615, "heuristico"),
-    (7,  "KRRMRAPMTKMRRIG",      15, 0.541,  7, "+7.0",  1888, "heuristico"),
-    (8,  "RVWVFRFREMKWIHNRRKWV", 20, 0.541,  7, "+6.1",  2830, "heuristico"),
-    (9,  "FPYWKKKRQLSYKDKARGLY", 20, 0.541,  7, "+6.0",  2576, "heuristico"),
-    (10, "RKPWNVRKLIKKGKM",      15, 0.541,  7, "+7.0",  1882, "heuristico"),
+top5_md = [
+    ("PYYYLKKRWVSEPKQRIFFN", 20, -13.61, "Aromatico-N", "PYYYY cluster → empilhamento pi com His/Tyr catalitico",     "★★★",   C_VERDE),
+    ("MAYNMYPNTRRHKKA",      15, -13.59, "Tyr-rico",    "15aa — melhor relacao afinidade/comprimento; prioridade sintese", "★★★★",  C_VERDE),
+    ("MYEFYEQDPYDANEQPDAIA", 20, -13.58, "Acido",       "E3+D3 — inibicao nao-competitiva? especifico XP273 Ile229",  "★★★",   C_AMARELO),
+    ("ILQPIHRRWQGVRALHWKTA", 20, -13.49, "Hidrofobico", "Mistura hidrofobica + R/W/K — potencial anfipatico",         "★★",    C_AZUL_MEDIO),
+    ("RRKMMRSNYFFSGML",      15, -13.43, "Anfipático",  "15aa; R/R/K N-term + F/F — competitivo classico (P1=Arg)",   "★★★",   C_VERDE),
 ]
 
-hdrs10 = ["Rank", "Sequencia", "aa", "Score", "R+K", "Carga", "MW(Da)", "Fonte"]
-ws10   = [0.5, 3.9, 0.45, 0.72, 0.5, 0.65, 0.85, 1.4]
-x0t, y0t = 0.35, 1.25
-
-for j, (h, w) in enumerate(zip(hdrs10, ws10)):
-    add_rect(slide, x0t + sum(ws10[:j]), y0t, w, 0.42, C_AZUL_ESCURO)
-    add_text(slide, h, x0t + sum(ws10[:j]) + 0.03, y0t + 0.03, w - 0.06, 0.36,
+for i, (seq, aa, vina, tipo, desc, prio, c) in enumerate(top5_md):
+    y = 1.28 + i * 1.2
+    add_rect(slide, 0.4, y, 12.5, 1.1, C_BRANCO)
+    add_rect(slide, 0.4, y, 0.45, 1.1, c)
+    add_text(slide, str(i+1), 0.4, y + 0.28, 0.45, 0.5,
+             font_size=22, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+    # tipo chip
+    add_rect(slide, 0.95, y + 0.08, 1.4, 0.32, c)
+    add_text(slide, tipo, 0.95, y + 0.08, 1.4, 0.32,
              font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+    # sequência
+    add_text(slide, seq, 2.45, y + 0.05, 5.5, 0.4,
+             font_size=14, bold=True, color=C_AZUL_ESCURO)
+    add_text(slide, f"len={aa} aa  |  Vina = {vina:.2f} kcal/mol  |  Prioridade sintese: {prio}", 2.45, y + 0.44, 5.5, 0.3,
+             font_size=11, color=C_AZUL_MEDIO)
+    add_text(slide, desc, 2.45, y + 0.72, 5.5, 0.32,
+             font_size=11, italic=True, color=C_CINZA_TEXTO)
+    # barra de afinidade visual
+    barra = abs(vina - 9.0) / 5.0  # normaliza -9 a -14 → 0 a 1
+    add_rect(slide, 8.05, y + 0.35, barra * 4.7, 0.38, c)
+    add_text(slide, f"{vina:.2f}", 8.05 + barra * 4.7 + 0.05, y + 0.38, 0.9, 0.32,
+             font_size=12, bold=True, color=c)
 
-for i, (rank, seq, aa, score, rk, carga, mw, fonte) in enumerate(top20):
-    bg = C_CINZA_CLARO if i % 2 == 0 else C_BRANCO
-    fonte_c = C_VERDE if "real" in fonte else C_CINZA_TEXTO
-    row_data = [str(rank), seq, str(aa), f"{score:.3f}", str(rk), carga, str(mw), fonte]
-    for j, (cell, w) in enumerate(zip(row_data, ws10)):
-        add_rect(slide, x0t + sum(ws10[:j]), y0t + 0.42 + i * 0.36, w, 0.36, bg)
-        fc = fonte_c if j == 7 else (C_AZUL_ESCURO if j == 1 else C_CINZA_TEXTO)
-        add_text(slide, cell, x0t + sum(ws10[:j]) + 0.03, y0t + 0.44 + i * 0.36, w - 0.06, 0.32,
-                 font_size=10 if j == 1 else 11, bold=(j==1 or j==7),
-                 color=fc, align=PP_ALIGN.LEFT if j == 1 else PP_ALIGN.CENTER)
-
-# coluna direita — nota
-x_n = sum(ws10) + x0t + 0.3
-add_rect(slide, x_n, 1.25, 5.1, 5.5, C_AZUL_ESCURO)
-add_text(slide, "Interpretação", x_n + 0.15, 1.35, 4.8, 0.4,
-         font_size=15, bold=True, color=C_CIANO)
-notas = [
-    "Ranking atual usa score heurístico:",
-    "n_vina = 0.5 (placeholder)",
-    "n_ros = 0.5 (placeholder)",
-    "n_hb = n_alk = f(R+K count)",
-    "",
-    "→ Viés para peptídeos 20 aa",
-    "  com alta densidade R/K",
-    "",
-    "Após Vina real:",
-    "→ vina_affinity_kcal (kcal/mol)",
-    "→ score recalculado sem viés",
-    "→ peptídeos curtos podem subir",
-    "",
-    "Score composto:",
-    "0.35 × Vina  (energia física)",
-    "0.25 × Rosetta  (I_sc)",
-    "0.20 × H-bond",
-    "0.10 × RMSD-MD",
-    "0.10 × n(R+K)",
-]
-for i, n in enumerate(notas):
-    c = C_VERDE if "→" in n else (C_CIANO if "×" in n else C_CINZA_CLARO)
-    add_text(slide, n, x_n + 0.15, 1.85 + i * 0.29, 4.7, 0.28,
-             font_size=11, color=c)
+add_rect(slide, 0.4, 7.22, 12.5, 0.18, C_AZUL_ESCURO)
+add_text(slide,
+    "MD: GROMACS gmx_mpi · AMBER99SB-ILDN · TIP3P 300K · 10 ns · RTX 5070 Ti",
+    0.55, 7.23, 12.2, 0.16, font_size=11, color=C_CIANO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 11)
 
@@ -951,18 +909,18 @@ add_text(slide, "Design racional de inibidores peptídicos por IA generativa —
 conclusoes = [
     (C_VERDE,   "✓", "Pipeline multiagente de 10 módulos implementado em Python 3.10 — executa em modo "
                      "fallback heurístico ou real dependendo das ferramentas disponíveis"),
-    (C_VERDE,   "✓", "4 tripsinas de Lepidoptera mapeadas: resíduos catalíticos, bolso S1, hotspots "
-                     "e centro de ligação consenso [2.61, 4.57, −1.89] Å identificados"),
-    (C_VERDE,   "✓", "14.923 sequências únicas geradas por 10 estratégias complementares, "
-                     "anotadas com 41 features físico-químicas — dataset ML/DL estruturado"),
-    (C_VERDE,   "✓", "Infraestrutura completa instalada: Vina, obabel, fpocket, GROMACS gmx_mpi, "
-                     "PyTorch 2.11+CUDA 12.8, ProteinMPNN e RFdiffusion (pesos em download)"),
-    (C_VERDE,   "✓", "5 bugs críticos no módulo de docking corrigidos sistematicamente; "
-                     "PDBQT ROOT wrapper resolve o último obstáculo para scores Vina reais"),
-    (C_AMARELO, "◑", "Docking real pendente de re-execução (commit 84e5c0b); "
-                     "top-20 atual ainda baseado em heurística (n_arg_lys)"),
-    (C_CIANO,   "→", "XP273 identificada como alvo atípico (Tyr83/Ile229): justifica exploração "
-                     "de P1 hidrofóbico — não restringir P1=Arg/Lys é decisão de design validada"),
+    (C_VERDE,   "✓", "14.923 sequências únicas × 41 features físico-químicas; 199 labels Vina reais (kcal/mol) "
+                     "integrados ao dataset ML/DL para treinamento supervisionado"),
+    (C_VERDE,   "✓", "199/199 poses Vina reais obtidas (Rodada 2, 2026-06-13); score médio −11,73 kcal/mol; "
+                     "melhor binder: PYYYLKKRWVSEPKQRIFFN (−13,61 kcal/mol)"),
+    (C_VERDE,   "✓", "6 bugs sistemáticos corrigidos; COM centering + grid adaptativo (max(40, L×3.6+8) Å) "
+                     "elevou taxa de sucesso de 11/199 → 199/199 (Rodada 1 → Rodada 2)"),
+    (C_CIANO,   "→", "Aromáticos (Tyr/Trp/Phe) dominam o top-15 por Vina; candidato ácido MYEFYEQDPYDANEQPDAIA "
+                     "(−13,58 kcal/mol) sugere mecanismo alternativo específico para XP273"),
+    (C_AMARELO, "◑", "Top-5 definidos para MD (GROMACS, 10 ns); MAYNMYPNTRRHKKA e RRKMMRSNYFFSGML "
+                     "(15aa) priorizados para síntese — custo e praticidade experimental"),
+    (C_AMARELO, "◑", "Próximos passos: MD top-5 · RFdiffusion (Base_ckpt.pt) · PyRosetta · "
+                     "Docking completo 14.924 restantes · Treinamento ML/DL"),
 ]
 for i, (c, sym, texto) in enumerate(conclusoes):
     add_rect(slide, 0.4, 1.4 + i * 0.82, 0.55, 0.7, c)
