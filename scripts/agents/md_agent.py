@@ -130,9 +130,9 @@ class MDAgent(BaseAgent):
         ns = cfg.get("simulation_ns", 10)
         temp = cfg.get("temperature", 300)
 
-        # Selecionar top-5 por I_sc para MD (custo computacional)
-        top5 = sorted(rosetta_results.items(),
-                      key=lambda x: x[1].get("I_sc", 0))[:5]
+        # Selecionar top-5 por Vina kcal/mol (energia física real)
+        # Fallback para I_sc heurístico se docking_results.json não existir
+        top5 = self._select_top5_vina(rosetta_results)
 
         self.logger.info(f"MD GROMACS: {len(top5)} complexos, {ns} ns cada...")
 
@@ -149,12 +149,46 @@ class MDAgent(BaseAgent):
                 str(complex_pdb), out_dir, ns, temp,
                 rdata.get("sequence", "?")
             )
-            results[stem] = {**md_result, "sequence": rdata["sequence"]}
+            results[stem] = {**md_result, "sequence": rdata["sequence"],
+                             "vina_kcal": rdata.get("vina_kcal")}
 
         (self.workdir / "md_results.json").write_text(
             json.dumps(results, indent=2, default=str)
         )
         return results
+
+    def _select_top5_vina(self, rosetta_results: dict) -> list:
+        """Seleciona top-5 por Vina kcal/mol do docking_results.json.
+        Fallback para I_sc heurístico se arquivo não existir."""
+        docking_json = self.workdir.parent / "docking" / "docking_results.json"
+        if docking_json.exists():
+            try:
+                dock = json.loads(docking_json.read_text())
+                # Mapeia sequência → dados rosetta
+                seq_ros = {v["sequence"]: (k, v)
+                           for k, v in rosetta_results.items() if "sequence" in v}
+                scored = []
+                for v in dock.values():
+                    seq = v.get("sequence", "")
+                    vina = v.get("best_affinity_kcal")
+                    if vina is not None and seq in seq_ros:
+                        rk, rv = seq_ros[seq]
+                        rv["vina_kcal"] = vina
+                        scored.append((rk, rv, vina))
+                if scored:
+                    scored.sort(key=lambda x: x[2])  # mais negativo = melhor
+                    self.logger.info(
+                        f"Top-5 por Vina: " +
+                        ", ".join(f"{rv['sequence'][:8]}({vina:.2f})"
+                                  for _, rv, vina in scored[:5])
+                    )
+                    return [(k, v) for k, v, _ in scored[:5]]
+            except Exception as e:
+                self.logger.warning(f"Leitura docking_results.json falhou: {e}")
+        # Fallback: I_sc heurístico
+        self.logger.warning("Selecionando por I_sc heurístico (docking_results.json indisponível)")
+        return sorted(rosetta_results.items(),
+                      key=lambda x: x[1].get("I_sc", 0))[:5]
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
@@ -207,7 +241,7 @@ class MDAgent(BaseAgent):
             gmx_run(["grompp", "-f", str(out / "minim.mdp"),
                       "-c", "solv_ions.gro", "-p", "topol.top",
                       "-o", "minim.tpr", "-maxwarn", "2"], timeout=60)
-            gmx_run(["mdrun", "-deffnm", "minim", "-ntmpi", "1",
+            gmx_run(["mdrun", "-deffnm", "minim",
                       "-ntomp", "4"], timeout=600)
 
             # NVT
