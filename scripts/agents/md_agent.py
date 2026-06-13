@@ -285,12 +285,30 @@ class MDAgent(BaseAgent):
             return None
 
     def _find_gmx(self) -> str:
-        """Retorna o path completo para gmx_mpi ou gmx, em PATH ou nos paths padrão."""
-        import shutil
+        """Retorna o path completo para gmx_mpi ou gmx.
+        Usa shell PATH (via bash -c which) para encontrar mesmo fora do conda env."""
+        import shutil, glob
+
+        # 1. PATH do processo atual
         for cmd in ("gmx_mpi", "gmx"):
             p = shutil.which(cmd)
             if p:
                 return p
+
+        # 2. Shell PATH (captura mesmo quando conda run redefine PATH)
+        try:
+            r = subprocess.run(
+                ["bash", "-c", "which gmx_mpi 2>/dev/null || which gmx 2>/dev/null"],
+                capture_output=True, text=True, timeout=5
+            )
+            p = r.stdout.strip()
+            if p and Path(p).exists():
+                self.logger.info(f"gmx encontrado via shell PATH: {p}")
+                return p
+        except Exception:
+            pass
+
+        # 3. Paths padrão HPC e conda
         candidates = [
             "/usr/local/gromacs/bin/gmx_mpi",
             "/usr/local/gromacs/bin/gmx",
@@ -302,6 +320,19 @@ class MDAgent(BaseAgent):
         for c in candidates:
             if Path(c).exists():
                 return c
+
+        # 4. Busca glob em miniforge/conda pkgs e work dirs
+        patterns = [
+            str(Path.home() / "miniforge3/pkgs/gromacs*/bin/gmx_mpi"),
+            str(Path.home() / "mambaforge/pkgs/gromacs*/bin/gmx_mpi"),
+            str(Path.home() / "gromacs/**/bin/gmx_mpi"),
+        ]
+        for pat in patterns:
+            matches = sorted(glob.glob(pat, recursive=True))
+            if matches:
+                self.logger.info(f"gmx encontrado via glob: {matches[0]}")
+                return matches[0]
+
         return "gmx_mpi"  # fallback — vai falhar com mensagem clara
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
