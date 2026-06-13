@@ -284,9 +284,30 @@ class MDAgent(BaseAgent):
             self.logger.error(f"_build_complex_for_md ({sequence[:8]}): {e}")
             return None
 
+    def _find_gmx(self) -> str:
+        """Retorna o path completo para gmx_mpi ou gmx, em PATH ou nos paths padrão."""
+        import shutil
+        for cmd in ("gmx_mpi", "gmx"):
+            p = shutil.which(cmd)
+            if p:
+                return p
+        candidates = [
+            "/usr/local/gromacs/bin/gmx_mpi",
+            "/usr/local/gromacs/bin/gmx",
+            "/opt/gromacs/bin/gmx_mpi",
+            "/opt/gromacs/bin/gmx",
+            str(Path.home() / "gromacs/bin/gmx_mpi"),
+            str(Path.home() / "gromacs/bin/gmx"),
+        ]
+        for c in candidates:
+            if Path(c).exists():
+                return c
+        return "gmx_mpi"  # fallback — vai falhar com mensagem clara
+
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
-        gmx = "gmx_mpi"
+        gmx = self._find_gmx()
+        self.logger.info(f"  gmx executável: {gmx}")
         ff = self.config.get("md", {}).get("forcefield", "amber99sb-ildn")
         water = self.config.get("md", {}).get("water_model", "tip3p")
 
@@ -297,8 +318,10 @@ class MDAgent(BaseAgent):
         (out / "nvt.mdp").write_text(_NVT_MDP.format(temp=temp))
         (out / "npt.mdp").write_text(_NPT_MDP.format(temp=temp))
 
+        use_mpirun = "mpi" in Path(gmx).name
+
         def gmx_run(args, **kw):
-            if args[0] == "mdrun":
+            if args[0] == "mdrun" and use_mpirun:
                 cmd = ["mpirun", "-np", "1", gmx] + args
             else:
                 cmd = [gmx] + args
