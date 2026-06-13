@@ -286,27 +286,28 @@ class MDAgent(BaseAgent):
 
     def _find_gmx(self) -> str:
         """Retorna o path completo para gmx_mpi ou gmx.
-        Usa shell PATH (via bash -c which) para encontrar mesmo fora do conda env."""
+        Estratégias em cascata: PATH do processo → bash --login → glob específico → fallback."""
         import shutil, glob
 
-        # 1. PATH do processo atual
+        # 1. PATH do processo atual (funciona quando o usuário ativa o env manualmente)
         for cmd in ("gmx_mpi", "gmx"):
             p = shutil.which(cmd)
             if p:
                 return p
 
-        # 2. Shell PATH (captura mesmo quando conda run redefine PATH)
-        try:
-            r = subprocess.run(
-                ["bash", "-c", "which gmx_mpi 2>/dev/null || which gmx 2>/dev/null"],
-                capture_output=True, text=True, timeout=5
-            )
-            p = r.stdout.strip()
-            if p and Path(p).exists():
-                self.logger.info(f"gmx encontrado via shell PATH: {p}")
-                return p
-        except Exception:
-            pass
+        # 2. Shell de login (carrega ~/.bashrc e conda init — PATH completo)
+        for shell_cmd in (
+            "bash --login -c 'which gmx_mpi 2>/dev/null'",
+            "bash --login -c 'which gmx 2>/dev/null'",
+        ):
+            try:
+                r = subprocess.run(shell_cmd, shell=True, capture_output=True, text=True, timeout=8)
+                p = r.stdout.strip()
+                if p and Path(p).exists():
+                    self.logger.info(f"gmx encontrado via bash --login: {p}")
+                    return p
+            except Exception:
+                pass
 
         # 3. Paths padrão HPC e conda
         candidates = [
@@ -321,14 +322,17 @@ class MDAgent(BaseAgent):
             if Path(c).exists():
                 return c
 
-        # 4. Busca glob em miniforge/conda pkgs e work dirs
+        # 4. Glob não-recursivo — padrões específicos do servidor (rápido, sem **):
+        #    - Nextflow work conda: ~/gromacs/MD-gromacs/work/conda/env-*/bin/gmx_mpi
+        #    - miniforge pkgs:      ~/miniforge3/pkgs/gromacs*/bin/gmx_mpi
         patterns = [
+            str(Path.home() / "gromacs/MD-gromacs/work/conda/env-*/bin/gmx_mpi"),
             str(Path.home() / "miniforge3/pkgs/gromacs*/bin/gmx_mpi"),
             str(Path.home() / "mambaforge/pkgs/gromacs*/bin/gmx_mpi"),
-            str(Path.home() / "gromacs/**/bin/gmx_mpi"),
+            str(Path.home() / "miniforge3/envs/*/bin/gmx_mpi"),
         ]
         for pat in patterns:
-            matches = sorted(glob.glob(pat, recursive=True))
+            matches = sorted(glob.glob(pat, recursive=False))
             if matches:
                 self.logger.info(f"gmx encontrado via glob: {matches[0]}")
                 return matches[0]
