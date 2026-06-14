@@ -61,13 +61,13 @@ coulombtype = PME
 pbc         = xyz
 """
 
-_NVT_MDP = """; nvt.mdp
+_NVT_MDP = """; nvt.mdp — 200 ps (validado em MD-gromacs prod)
 define      = -DPOSRES
 integrator  = md
-nsteps      = 25000
+nsteps      = 100000
 dt          = 0.002
-nstlog      = 1000
-nstenergy   = 1000
+nstlog      = 5000
+nstenergy   = 5000
 continuation = no
 constraint_algorithm = lincs
 constraints = h-bonds
@@ -87,13 +87,13 @@ gen_temp    = {temp}
 gen_seed    = -1
 """
 
-_NPT_MDP = """; npt.mdp
+_NPT_MDP = """; npt.mdp — 500 ps Berendsen (validado em MD-gromacs prod)
 define      = -DPOSRES
 integrator  = md
-nsteps      = 25000
+nsteps      = 250000
 dt          = 0.002
-nstlog      = 1000
-nstenergy   = 1000
+nstlog      = 5000
+nstenergy   = 5000
 continuation = yes
 constraint_algorithm = lincs
 constraints = h-bonds
@@ -285,59 +285,47 @@ class MDAgent(BaseAgent):
             return None
 
     def _find_gmx(self) -> str:
-        """Retorna o path completo para gmx_mpi ou gmx.
-        Estratégias em cascata: PATH do processo → bash --login → glob específico → fallback."""
+        """Retorna o path completo para gmx_mpi (CUDA+MPI) ou gmx.
+        Prioriza ~/miniforge3/envs/md-gromacs/bin/gmx_mpi — ambiente validado em produção."""
         import shutil, glob
 
-        # 1. PATH do processo atual (funciona quando o usuário ativa o env manualmente)
-        for cmd in ("gmx_mpi", "gmx"):
-            p = shutil.which(cmd)
-            if p:
-                return p
-
-        # 2. Shell de login (carrega ~/.bashrc e conda init — PATH completo)
-        for shell_cmd in (
-            "bash --login -c 'which gmx_mpi 2>/dev/null'",
-            "bash --login -c 'which gmx 2>/dev/null'",
-        ):
-            try:
-                r = subprocess.run(shell_cmd, shell=True, capture_output=True, text=True, timeout=8)
-                p = r.stdout.strip()
-                if p and Path(p).exists():
-                    self.logger.info(f"gmx encontrado via bash --login: {p}")
-                    return p
-            except Exception:
-                pass
-
-        # 3. Paths padrão HPC e conda
-        candidates = [
-            "/usr/local/gromacs/bin/gmx_mpi",
-            "/usr/local/gromacs/bin/gmx",
-            "/opt/gromacs/bin/gmx_mpi",
-            "/opt/gromacs/bin/gmx",
-            str(Path.home() / "gromacs/bin/gmx_mpi"),
-            str(Path.home() / "gromacs/bin/gmx"),
+        # 1. Ambiente md-gromacs (validado em produção — CUDA sm_120, MPI)
+        priority = [
+            str(Path.home() / "miniforge3/envs/md-gromacs/bin/gmx_mpi"),
+            str(Path.home() / "miniforge3/envs/md-gromacs/bin/gmx"),
+            str(Path.home() / "mambaforge/envs/md-gromacs/bin/gmx_mpi"),
         ]
-        for c in candidates:
+        for c in priority:
             if Path(c).exists():
+                self.logger.info(f"gmx: {c} (env md-gromacs)")
                 return c
 
-        # 4. Glob não-recursivo — padrões específicos do servidor (rápido, sem **):
-        #    - Nextflow work conda: ~/gromacs/MD-gromacs/work/conda/env-*/bin/gmx_mpi
-        #    - miniforge pkgs:      ~/miniforge3/pkgs/gromacs*/bin/gmx_mpi
+        # 2. PATH do processo atual
+        for cmd in ("gmx_mpi", "gmx"):
+            p = shutil.which(cmd)
+            if p and "protein_design_env" not in p:  # evita gmx sem CUDA
+                return p
+
+        # 3. Glob não-recursivo — Nextflow work dir e pkgs
         patterns = [
             str(Path.home() / "gromacs/MD-gromacs/work/conda/env-*/bin/gmx_mpi"),
             str(Path.home() / "miniforge3/pkgs/gromacs*/bin/gmx_mpi"),
             str(Path.home() / "mambaforge/pkgs/gromacs*/bin/gmx_mpi"),
-            str(Path.home() / "miniforge3/envs/*/bin/gmx_mpi"),
         ]
         for pat in patterns:
             matches = sorted(glob.glob(pat, recursive=False))
             if matches:
-                self.logger.info(f"gmx encontrado via glob: {matches[0]}")
+                self.logger.info(f"gmx via glob: {matches[0]}")
                 return matches[0]
 
-        return "gmx_mpi"  # fallback — vai falhar com mensagem clara
+        # 4. Qualquer gmx disponível no PATH (inclusive protein_design_env)
+        for cmd in ("gmx_mpi", "gmx"):
+            p = shutil.which(cmd)
+            if p:
+                self.logger.warning(f"gmx fallback (sem CUDA): {p}")
+                return p
+
+        return "gmx_mpi"  # vai falhar com mensagem clara
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
@@ -354,10 +342,13 @@ class MDAgent(BaseAgent):
         (out / "npt.mdp").write_text(_NPT_MDP.format(temp=temp))
 
         use_mpirun = "mpi" in Path(gmx).name
+        # mpirun do mesmo env do gmx (garante versão OpenMPI compatível)
+        gmx_dir = Path(gmx).parent
+        mpirun = str(gmx_dir / "mpirun") if (gmx_dir / "mpirun").exists() else "mpirun"
 
         def gmx_run(args, **kw):
             if args[0] == "mdrun" and use_mpirun:
-                cmd = ["mpirun", "-np", "1", gmx] + args
+                cmd = [mpirun, "-np", "1", gmx] + args
             else:
                 cmd = [gmx] + args
             return subprocess.run(cmd, cwd=str(out), capture_output=True,
@@ -411,32 +402,32 @@ class MDAgent(BaseAgent):
             check(gmx_run(["grompp", "-f", "minim.mdp", "-c", "solv_ions.gro",
                             "-p", "topol.top", "-o", "minim.tpr", "-maxwarn", "2"], timeout=60),
                   "grompp_minim")
-            check(gmx_run(["mdrun", "-deffnm", "minim", "-ntomp", "4"], timeout=600), "mdrun_minim")
+            check(gmx_run(["mdrun", "-deffnm", "minim", "-ntomp", "16"], timeout=600), "mdrun_minim")
 
-            # NVT
-            self.logger.info("  NVT equilíbrio (50 ps)...")
+            # NVT 200 ps (validado em produção MD-gromacs)
+            self.logger.info("  NVT equilíbrio (200 ps)...")
             check(gmx_run(["grompp", "-f", "nvt.mdp", "-c", "minim.gro", "-r", "minim.gro",
                             "-p", "topol.top", "-o", "nvt.tpr", "-maxwarn", "2"], timeout=60),
                   "grompp_nvt")
-            check(gmx_run(["mdrun", "-deffnm", "nvt", "-ntomp", "4"], timeout=600), "mdrun_nvt")
+            check(gmx_run(["mdrun", "-deffnm", "nvt", "-ntomp", "16"], timeout=1200), "mdrun_nvt")
 
-            # NPT
-            self.logger.info("  NPT equilíbrio (50 ps)...")
+            # NPT 500 ps Berendsen (validado em produção MD-gromacs)
+            self.logger.info("  NPT equilíbrio (500 ps)...")
             check(gmx_run(["grompp", "-f", "npt.mdp", "-c", "nvt.gro", "-r", "nvt.gro",
                             "-t", "nvt.cpt", "-p", "topol.top", "-o", "npt.tpr", "-maxwarn", "2"],
                            timeout=60), "grompp_npt")
-            check(gmx_run(["mdrun", "-deffnm", "npt", "-ntomp", "4"], timeout=600), "mdrun_npt")
+            check(gmx_run(["mdrun", "-deffnm", "npt", "-ntomp", "16"], timeout=1800), "mdrun_npt")
 
-            # MD produção
+            # MD produção com GPU offload completo (nb + pme + bonded)
             self.logger.info(f"  MD produção ({ns} ns)...")
             check(gmx_run(["grompp", "-f", "md.mdp", "-c", "npt.gro", "-t", "npt.cpt",
                             "-p", "topol.top", "-o", "md.tpr", "-maxwarn", "2"], timeout=60),
                   "grompp_md")
-            p = gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "4",
-                          "-nb", "gpu", "-pme", "gpu"], timeout=ns * 3600)
+            p = gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "16",
+                          "-nb", "gpu", "-pme", "gpu", "-bonded", "gpu"], timeout=ns * 3600)
             if p.returncode != 0:
                 self.logger.info("  GPU indisponível — fallback CPU...")
-                check(gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "4"],
+                check(gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "16"],
                                timeout=ns * 7200), "mdrun_md_cpu")
 
             # Análise
