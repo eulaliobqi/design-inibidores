@@ -372,8 +372,8 @@ class MDAgent(BaseAgent):
             clean_pdb.write_text("".join(lines_clean) + "\nEND\n")
             self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
 
-            # pdb2gmx
-            p = gmx_run(["pdb2gmx", "-f", str(clean_pdb), "-o", "processed.gro",
+            # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
+            p = gmx_run(["pdb2gmx", "-f", "complex_clean.pdb", "-o", "processed.gro",
                           "-p", "topol.top", "-i", "posre.itp",
                           "-ff", ff, "-water", water, "-ignh"],
                          input="1\n", timeout=120)
