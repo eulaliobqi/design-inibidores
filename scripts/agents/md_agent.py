@@ -363,6 +363,12 @@ class MDAgent(BaseAgent):
             return subprocess.run(cmd, cwd=str(out), capture_output=True,
                                   text=True, **kw)
 
+        def check(p, step):
+            if p.returncode != 0:
+                log = out / f"{step}_stderr.log"
+                log.write_text(p.stderr)
+                raise RuntimeError(f"{step} rc={p.returncode}: {p.stderr[-800:]}")
+
         try:
             # Pré-processar PDB: remover HETATM (HOH, ions, ligandos) que pdb2gmx rejeita
             clean_pdb = out / "complex_clean.pdb"
@@ -373,68 +379,65 @@ class MDAgent(BaseAgent):
             self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
 
             # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
+            self.logger.info("  pdb2gmx...")
             p = gmx_run(["pdb2gmx", "-f", "complex_clean.pdb", "-o", "processed.gro",
                           "-p", "topol.top", "-i", "posre.itp",
                           "-ff", ff, "-water", water, "-ignh"],
                          input="1\n", timeout=120)
-            if p.returncode != 0:
-                # Salvar log completo para diagnóstico
-                (out / "pdb2gmx_stderr.log").write_text(p.stderr)
-                raise RuntimeError(f"pdb2gmx: {p.stderr[-1000:]}")
+            check(p, "pdb2gmx")
 
             # editconf
-            gmx_run(["editconf", "-f", "processed.gro", "-o", "box.gro",
-                      "-bt", "dodecahedron", "-d", "1.2"], timeout=60)
+            self.logger.info("  editconf...")
+            check(gmx_run(["editconf", "-f", "processed.gro", "-o", "box.gro",
+                            "-bt", "dodecahedron", "-d", "1.2"], timeout=60), "editconf")
 
             # solvate
-            gmx_run(["solvate", "-cp", "box.gro", "-cs", "spc216.gro",
-                      "-o", "solv.gro", "-p", "topol.top"], timeout=60)
+            self.logger.info("  solvate...")
+            check(gmx_run(["solvate", "-cp", "box.gro", "-cs", "spc216.gro",
+                            "-o", "solv.gro", "-p", "topol.top"], timeout=60), "solvate")
 
             # genion
-            gmx_run(["grompp", "-f", str(out / "minim.mdp"),
-                      "-c", "solv.gro", "-p", "topol.top",
-                      "-o", "ions.tpr", "-maxwarn", "2"], timeout=60)
-            gmx_run(["genion", "-s", "ions.tpr", "-o", "solv_ions.gro",
-                      "-p", "topol.top", "-pname", "NA", "-nname", "CL",
-                      "-neutral", "-conc", "0.15"],
-                     input="SOL\n", timeout=60)
+            self.logger.info("  genion...")
+            check(gmx_run(["grompp", "-f", "minim.mdp", "-c", "solv.gro",
+                            "-p", "topol.top", "-o", "ions.tpr", "-maxwarn", "2"], timeout=60),
+                  "grompp_ions")
+            check(gmx_run(["genion", "-s", "ions.tpr", "-o", "solv_ions.gro",
+                            "-p", "topol.top", "-pname", "NA", "-nname", "CL",
+                            "-neutral", "-conc", "0.15"],
+                           input="SOL\n", timeout=60), "genion")
 
             # Minimização
-            gmx_run(["grompp", "-f", str(out / "minim.mdp"),
-                      "-c", "solv_ions.gro", "-p", "topol.top",
-                      "-o", "minim.tpr", "-maxwarn", "2"], timeout=60)
-            gmx_run(["mdrun", "-deffnm", "minim",
-                      "-ntomp", "4"], timeout=600)
+            self.logger.info("  minimização...")
+            check(gmx_run(["grompp", "-f", "minim.mdp", "-c", "solv_ions.gro",
+                            "-p", "topol.top", "-o", "minim.tpr", "-maxwarn", "2"], timeout=60),
+                  "grompp_minim")
+            check(gmx_run(["mdrun", "-deffnm", "minim", "-ntomp", "4"], timeout=600), "mdrun_minim")
 
             # NVT
-            gmx_run(["grompp", "-f", str(out / "nvt.mdp"),
-                      "-c", "minim.gro", "-r", "minim.gro",
-                      "-p", "topol.top", "-o", "nvt.tpr", "-maxwarn", "2"],
-                     timeout=60)
-            gmx_run(["mdrun", "-deffnm", "nvt", "-ntomp", "4"],
-                     timeout=600)
+            self.logger.info("  NVT equilíbrio (50 ps)...")
+            check(gmx_run(["grompp", "-f", "nvt.mdp", "-c", "minim.gro", "-r", "minim.gro",
+                            "-p", "topol.top", "-o", "nvt.tpr", "-maxwarn", "2"], timeout=60),
+                  "grompp_nvt")
+            check(gmx_run(["mdrun", "-deffnm", "nvt", "-ntomp", "4"], timeout=600), "mdrun_nvt")
 
             # NPT
-            gmx_run(["grompp", "-f", str(out / "npt.mdp"),
-                      "-c", "nvt.gro", "-r", "nvt.gro", "-t", "nvt.cpt",
-                      "-p", "topol.top", "-o", "npt.tpr", "-maxwarn", "2"],
-                     timeout=60)
-            gmx_run(["mdrun", "-deffnm", "npt", "-ntomp", "4"],
-                     timeout=600)
+            self.logger.info("  NPT equilíbrio (50 ps)...")
+            check(gmx_run(["grompp", "-f", "npt.mdp", "-c", "nvt.gro", "-r", "nvt.gro",
+                            "-t", "nvt.cpt", "-p", "topol.top", "-o", "npt.tpr", "-maxwarn", "2"],
+                           timeout=60), "grompp_npt")
+            check(gmx_run(["mdrun", "-deffnm", "npt", "-ntomp", "4"], timeout=600), "mdrun_npt")
 
             # MD produção
-            gmx_run(["grompp", "-f", str(out / "md.mdp"),
-                      "-c", "npt.gro", "-t", "npt.cpt",
-                      "-p", "topol.top", "-o", "md.tpr", "-maxwarn", "2"],
-                     timeout=60)
-            p = gmx_run(["mdrun", "-deffnm", "md",
-                          "-ntomp", "4",
-                          "-nb", "gpu", "-pme", "gpu"],
-                         timeout=ns * 3600)
+            self.logger.info(f"  MD produção ({ns} ns)...")
+            check(gmx_run(["grompp", "-f", "md.mdp", "-c", "npt.gro", "-t", "npt.cpt",
+                            "-p", "topol.top", "-o", "md.tpr", "-maxwarn", "2"], timeout=60),
+                  "grompp_md")
+            p = gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "4",
+                          "-nb", "gpu", "-pme", "gpu"], timeout=ns * 3600)
             if p.returncode != 0:
-                # Fallback CPU
-                gmx_run(["mdrun", "-deffnm", "md",
-                          "-ntomp", "4"], timeout=ns * 7200)
+                self.logger.info("  GPU indisponível — fallback CPU...")
+                check(gmx_run(["mdrun", "-deffnm", "md", "-ntomp", "4"],
+                               timeout=ns * 7200), "mdrun_md_cpu")
 
             # Análise
             return self._analyze_trajectory(out, gmx)
