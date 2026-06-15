@@ -4,10 +4,10 @@ project:
 
 data:
   receptor_pdbs:
-    - "data-trypsin/ACR157-final.pdb"
-    - "data-trypsin/QCL936-final.pdb"
-    - "data-trypsin/XP273-final.pdb"
-    - "data-trypsin/XP352-final.pdb"
+    - "data-trypsin/ACR157-A.pdb"    # chain A, resíduos 1-231 (original 24-254)
+    - "data-trypsin/QCL936-A.pdb"    # chain A, resíduos 1-247 (original 52-298)
+    - "data-trypsin/XP273-A.pdb"     # chain A, resíduos 1-240 (original 40-279)
+    - "data-trypsin/XP352-A.pdb"     # chain A, resíduos 1-247 (original 68-314)
   outputs_dir: "outputs"
 
 structure:

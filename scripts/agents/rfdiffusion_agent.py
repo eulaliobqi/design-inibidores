@@ -153,12 +153,27 @@ class RFdiffusionAgent(BaseAgent):
         return results
 
     def _count_receptor_residues(self, pdb_path: str) -> int:
+        """Retorna o último número de resíduo (para o contig A1-N).
+
+        Após prep_pdbs.py, PDBs têm chain A e resíduos 1-N sem offset.
+        max(seqs) == N é correto; len(seqs) seria menor se houver gaps.
+        """
         seqs = set()
+        chain_ok = True
         with open(pdb_path) as f:
             for line in f:
                 if line.startswith("ATOM"):
+                    chain = line[21]
+                    if chain not in (" ", "A"):
+                        chain_ok = False
                     try:
                         seqs.add(int(line[22:26]))
                     except ValueError:
                         pass
-        return max(seqs) if seqs else 240
+        if not seqs:
+            return 240
+        if not chain_ok:
+            self.logger.warning(
+                f"PDB {pdb_path} tem chain ID inesperado — rode scripts/prep_pdbs.py primeiro"
+            )
+        return max(seqs)
