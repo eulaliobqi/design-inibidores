@@ -67,27 +67,43 @@ class RFdiffusionAgent(BaseAgent):
             inference_script = rfd_path / "run_inference.py"
         self.logger.info(f"Script de inferência: {inference_script}")
 
+        # Modelo: Complex_base_ckpt.pt (binder design) na raiz do repo clonado.
+        # Necessário porque o pacote instalado via pip aponta para site-packages/models/
+        # e não encontra o checkpoint. ckpt_override_path contorna isso.
+        ckpt = rfd_path / "models" / "Complex_base_ckpt.pt"
+        if not ckpt.exists():
+            # fallback: Base_ckpt.pt (sem PPI conditioning)
+            ckpt = rfd_path / "models" / "Base_ckpt.pt"
+        self.logger.info(f"Checkpoint: {ckpt}")
+
+        # target_pdb pode ser relativo; converter para absoluto para o subprocess
+        target_pdb_abs = str(Path(target_pdb).resolve())
+
+        n_res = self._count_receptor_residues(target_pdb)
+
         for length in lengths:
             out_dir = self.workdir / f"len_{length}"
             out_dir.mkdir(exist_ok=True)
 
-            contig = f"A1-{self._count_receptor_residues(target_pdb)}/0 {length}-{length}"
+            contig = f"A1-{n_res}/0 {length}-{length}"
 
             cmd = [
                 "python", str(inference_script),
-                f"inference.input_pdb={target_pdb}",
+                f"inference.input_pdb={target_pdb_abs}",
+                f"inference.ckpt_override_path={ckpt}",
                 f"contigmap.contigs=[{contig}]",
                 f"ppi.hotspot_res=[{hotspot_str}]",
                 f"inference.num_designs={num_designs}",
                 f"denoiser.noise_scale_ca={cfg.get('noise_scale_ca', 0.2)}",
                 f"denoiser.noise_scale_frame={cfg.get('noise_scale_frame', 0.1)}",
-                f"inference.output_prefix={out_dir}/design",
+                f"inference.output_prefix={out_dir.resolve()}/design",
             ]
 
-            self.logger.info(f"RFdiffusion — comprimento {length} aa...")
-            proc = subprocess.run(cmd, capture_output=True, text=True)
+            self.logger.info(f"RFdiffusion — comprimento {length} aa | contig={contig}")
+            # cwd=rfd_path: Hydra encontra config/inference/ no repo clonado
+            proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(rfd_path))
             if proc.returncode != 0:
-                self.logger.error(f"RFdiffusion falhou (len={length}): {proc.stderr[-500:]}")
+                self.logger.error(f"RFdiffusion falhou (len={length}): {proc.stderr[-800:]}")
             else:
                 results[length] = list(out_dir.glob("*.pdb"))
 
