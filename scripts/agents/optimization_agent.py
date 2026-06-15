@@ -64,6 +64,7 @@ class OptimizationAgent(BaseAgent):
                     "parent": seq,
                     "operation": "point_mutation",
                     "iteration": iteration,
+                    "has_p1_basic": int(mutated[0] in "RK") if mutated else 0,
                     **peptide_properties(mutated),
                 })
 
@@ -76,6 +77,7 @@ class OptimizationAgent(BaseAgent):
                     "parent": seq,
                     "operation": "conservative_swap",
                     "iteration": iteration,
+                    "has_p1_basic": int(conservative[0] in "RK") if conservative else 0,
                     **peptide_properties(conservative),
                 })
 
@@ -88,6 +90,7 @@ class OptimizationAgent(BaseAgent):
                     "parent": seq,
                     "operation": "terminal_extension",
                     "iteration": iteration,
+                    "has_p1_basic": int(extended[0] in "RK") if extended else 0,
                     **peptide_properties(extended),
                 })
 
@@ -102,7 +105,7 @@ class OptimizationAgent(BaseAgent):
             filtered.append(c)
 
         # Ordenar por n_arg_lys + has_p1_basic
-        filtered.sort(key=lambda x: -(x["n_arg_lys"] + x["has_p1_basic"] * 2))
+        filtered.sort(key=lambda x: -(x.get("n_arg_lys", 0) + x.get("has_p1_basic", 0) * 2))
 
         # Salvar
         (self.workdir / f"iter{iteration}_candidates.json").write_text(
