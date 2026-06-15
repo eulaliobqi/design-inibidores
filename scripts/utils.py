@@ -27,9 +27,10 @@ def find_rfdiffusion(config: dict) -> Optional[Path]:
     paths = config.get("rfdiffusion", {}).get("install_paths", [])
     for p in paths:
         expanded = Path(os.path.expandvars(os.path.expanduser(str(p))))
-        script = expanded / "run_inference.py"
-        if script.exists():
-            return expanded
+        # repo v1 (2023): scripts/run_inference.py; older: run_inference.py at root
+        for rel in ("scripts/run_inference.py", "run_inference.py"):
+            if (expanded / rel).exists():
+                return expanded
     return None
 
 

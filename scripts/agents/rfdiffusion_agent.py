@@ -61,6 +61,12 @@ class RFdiffusionAgent(BaseAgent):
         # Formatar hotspots para RFdiffusion: "A5,A10,A20"
         hotspot_str = ",".join(f"A{h}" for h in hotspots[:8])
 
+        # Localizar run_inference.py (v1: scripts/; legacy: raiz)
+        inference_script = rfd_path / "scripts" / "run_inference.py"
+        if not inference_script.exists():
+            inference_script = rfd_path / "run_inference.py"
+        self.logger.info(f"Script de inferência: {inference_script}")
+
         for length in lengths:
             out_dir = self.workdir / f"len_{length}"
             out_dir.mkdir(exist_ok=True)
@@ -68,7 +74,7 @@ class RFdiffusionAgent(BaseAgent):
             contig = f"A1-{self._count_receptor_residues(target_pdb)}/0 {length}-{length}"
 
             cmd = [
-                "python", str(rfd_path / "run_inference.py"),
+                "python", str(inference_script),
                 f"inference.input_pdb={target_pdb}",
                 f"contigmap.contigs=[{contig}]",
                 f"ppi.hotspot_res=[{hotspot_str}]",
