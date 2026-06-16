@@ -103,7 +103,7 @@ class DockingAgent(BaseAgent):
     def _pdb_to_pdbqt_minimal(self, pdb_in: str, pdbqt_out: str):
         """Converte PDB para PDBQT adicionando charge=0 e tipo AD4 baseado no elemento."""
         element_to_ad4 = {
-            "C": "C", "N": "NA", "O": "OA", "S": "SA",
+            "C": "C", "N": "N", "O": "OA", "S": "SA",
             "H": "HD", "P": "P", "F": "F", "CL": "CL", "BR": "BR",
         }
         with open(pdb_in) as fi, open(pdbqt_out, "w") as fo:
@@ -133,10 +133,11 @@ class DockingAgent(BaseAgent):
         built = self._build_allatom_pdb(sequence, center, pdb_path)
 
         if built and subprocess.run(["which", "obabel"], capture_output=True).returncode == 0:
-            # -xr: ligante rígido (TORSDOF 0) — evita erro "too many torsional bonds"
-            # -h:  adicionar H polares (necessário para tipos AD4 corretos)
+            # Sem -xr: obabel em modo ligante gera tipos AD4 corretos (N, OA, SA).
+            # -xr (receptor rígido) atribui NA ao backbone N → Vina rejeita como ligante.
+            # _ensure_ligand_pdbqt_format converte para formato rígido (ROOT/ENDROOT/TORSDOF 0).
             proc = subprocess.run(
-                ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h", "-xr"],
+                ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h"],
                 capture_output=True, timeout=60
             )
             if proc.returncode == 0 and pdbqt_path.exists() and pdbqt_path.stat().st_size > 100:
@@ -213,16 +214,12 @@ class DockingAgent(BaseAgent):
         return [s, s, s]
 
     def _ensure_ligand_pdbqt_format(self, pdbqt_path: Path):
-        """Wraps bare ATOM records with ROOT/ENDROOT/TORSDOF 0 (ligand format).
+        """Força formato ligante rígido: apenas ATOM/HETATM dentro de ROOT/ENDROOT/TORSDOF 0.
 
-        obabel -xr on a protein-residue PDB outputs protein-format PDBQT: bare
-        ATOM records with no ROOT/ENDROOT/TORSDOF blocks.  Vina interprets this
-        as a malformed flex-residue entry and raises a parsing error.  The fix is
-        to add the ligand wrapper when it is absent.
+        Remove BRANCH/ENDBRANCH gerados pelo obabel em modo flexível e garante
+        que não sobrem linhas ROOT duplicadas do obabel modo receptor.
         """
         content = pdbqt_path.read_text()
-        if "ROOT" in content:
-            return
         atom_lines = [l for l in content.splitlines() if l.startswith(("ATOM", "HETATM"))]
         if not atom_lines:
             return
@@ -305,9 +302,14 @@ class DockingAgent(BaseAgent):
         # Ordenar por heurística (charge + hydrophobic) para selecionar melhores
         for stem, data in sequences_data.items():
             props_list = data.get("properties", [])
+            L = int(data["length"])
             for i, seq in enumerate(data["sequences"]):
                 if not seq:
                     continue
+                # ProteinMPNN real redesenha o complexo inteiro (receptor+binder);
+                # o binder são os últimos L resíduos após remoção do separador "/".
+                if len(seq) > L * 2:
+                    seq = seq[-L:]
                 p = props_list[i] if i < len(props_list) else {}
                 score = (
                     abs(p.get("net_charge", 0)) * 1.2
