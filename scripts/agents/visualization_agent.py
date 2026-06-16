@@ -53,6 +53,7 @@ class VisualizationAgent(BaseAgent):
                    "hbond_avg", "n_arg_lys", "net_charge", "final_score"]
         avail = [c for c in metrics if c in top.columns]
         sub = top[avail].set_index(top["sequence"].str[:10])
+        sub = sub.apply(pd.to_numeric, errors="coerce")
         sub_norm = (sub - sub.min()) / (sub.max() - sub.min() + 1e-9)
 
         fig, ax = plt.subplots(figsize=(10, max(6, len(top) * 0.3)))
