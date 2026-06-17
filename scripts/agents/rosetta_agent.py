@@ -67,10 +67,44 @@ class RosettaAgent(BaseAgent):
         return sorted_results
 
     def _select_top_sequences(self, sequences_data: dict) -> list[dict]:
-        """Seleciona top candidatos por heurística para refinamento Rosetta."""
+        """Seleciona top candidatos por Vina (docking_results.json) ou heurística."""
         limit = self.config.get("optimization", {}).get("top_k", 10)
-        candidates = []
 
+        # Prioridade: usar Vina real quando disponível
+        docking_json = self.workdir.parent / "docking" / "docking_results.json"
+        if docking_json.exists():
+            try:
+                docking = json.loads(docking_json.read_text())
+                vina_cands = []
+                for item in docking.values():
+                    seq = item.get("sequence", "")
+                    aff = item.get("vina_affinity")
+                    if seq and aff is not None:
+                        vina_cands.append({
+                            "sequence": seq,
+                            "length": len(seq),
+                            "n_arg_lys": sum(1 for aa in seq if aa in "RK"),
+                            "_score": float(aff),
+                        })
+                if vina_cands:
+                    vina_cands.sort(key=lambda x: x["_score"])  # mais negativo = melhor
+                    seen: set[str] = set()
+                    unique = []
+                    for c in vina_cands:
+                        if c["sequence"] not in seen:
+                            seen.add(c["sequence"])
+                            unique.append(c)
+                    self.logger.info(
+                        f"Rosetta: selecionando top-{limit} por Vina real "
+                        f"({len(unique)} únicos disponíveis)"
+                    )
+                    return unique[:limit]
+            except Exception as e:
+                self.logger.warning(f"docking_results.json ilegível ({e}); usando heurística")
+
+        # Fallback: heurística por composição de aminoácidos
+        self.logger.info("Rosetta: selecionando top candidatos por heurística (sem docking)")
+        candidates = []
         for stem, data in sequences_data.items():
             props = data.get("properties", [])
             for i, seq in enumerate(data["sequences"]):
@@ -90,7 +124,13 @@ class RosettaAgent(BaseAgent):
                 })
 
         candidates.sort(key=lambda x: -x["_score"])
-        return candidates[:limit]
+        seen_h: set[str] = set()
+        unique_h = []
+        for c in candidates:
+            if c["sequence"] not in seen_h:
+                seen_h.add(c["sequence"])
+                unique_h.append(c)
+        return unique_h[:limit]
 
     def _build_complex(self, receptor_pdb: str, sequence: str,
                         center: list, out_path: Path):
