@@ -94,25 +94,31 @@ class RosettaAgent(BaseAgent):
 
     def _build_complex(self, receptor_pdb: str, sequence: str,
                         center: list, out_path: Path):
-        """Constrói PDB do complexo posicionando peptídeo no sítio ativo."""
+        """Constrói PDB do complexo posicionando peptídeo no sítio ativo.
+
+        Tenta PeptideBuilder (all-atom) para scoring PyRosetta correto;
+        cai para CA-only se PeptideBuilder não disponível.
+        """
         rec_atoms = load_pdb_atoms(receptor_pdb)
-        # Renomear cadeia receptor → A
         for a in rec_atoms:
             a["chain"] = "A"
 
-        # Gerar peptídeo linear simples (extended) na posição do sítio
-        pep_atoms = self._build_linear_pdb_atoms(sequence, center)
+        pep_pdb = out_path.parent / "peptide_b.pdb"
+        if self._build_allatom_pdb(sequence, center, pep_pdb):
+            # Combinar receptor (atoms) + peptídeo all-atom (PDB)
+            pep_atoms = load_pdb_atoms(str(pep_pdb))
+            for a in pep_atoms:
+                a["chain"] = "B"
+        else:
+            pep_atoms = self._build_linear_pdb_atoms(sequence, center)
 
         all_atoms = rec_atoms + pep_atoms
-        # Renumerar serials
         for i, a in enumerate(all_atoms):
             a["serial"] = i + 1
-
         write_pdb_atoms(all_atoms, str(out_path))
 
     def _build_linear_pdb_atoms(self, sequence: str, center: list) -> list[dict]:
-        """Cria átomos CA para representar peptídeo linear."""
-        import numpy as np
+        """Cria átomos CA para representar peptídeo linear (fallback CA-only)."""
         cx, cy, cz = center
         atoms = []
         for i, aa in enumerate(sequence):
@@ -129,34 +135,83 @@ class RosettaAgent(BaseAgent):
             })
         return atoms
 
+    def _build_allatom_pdb(self, sequence: str, center: list, pdb_path: Path) -> bool:
+        """Gera PDB all-atom via PeptideBuilder, centralizado no sítio.
+
+        Necessário para PyRosetta: FastRelax e InterfaceAnalyzerMover
+        requerem backbone completo (N, CA, C, O) para scoring significativo.
+        """
+        try:
+            import numpy as np
+            import PeptideBuilder
+            from PeptideBuilder import Geometry
+            import Bio.PDB
+
+            first_aa = sequence[0] if sequence[0] not in ("B", "X") else "A"
+            try:
+                geo = Geometry.geometry(first_aa)
+            except Exception:
+                geo = Geometry.geometry("A")
+            structure = PeptideBuilder.initialize_res(geo)
+
+            for aa in sequence[1:]:
+                try:
+                    g = Geometry.geometry(aa)
+                except Exception:
+                    g = Geometry.geometry("A")
+                PeptideBuilder.add_residue(structure, g)
+
+            target = np.array([float(v) for v in center])
+            coords = np.array([a.coord for a in structure.get_atoms()])
+            com = coords.mean(axis=0)
+            offset = target - com
+            for atom in structure.get_atoms():
+                atom.coord += offset
+
+            # Renomear para cadeia B
+            for chain in structure.get_chains():
+                chain.id = "B"
+
+            io = Bio.PDB.PDBIO()
+            io.set_structure(structure)
+            io.save(str(pdb_path))
+            return True
+        except Exception as e:
+            self.logger.warning(f"PeptideBuilder all-atom falhou ({sequence[:6]}): {e}")
+            return False
+
     def _run_pyrosetta(self, complex_pdb: Path, seq: str,
                        out_dir: Path, nstruct: int) -> dict:
         try:
-            import pyrosetta
             from pyrosetta import pose_from_pdb, init
-            from pyrosetta.rosetta.protocols.flexpep_docking import FlexPepDockingProtocol
+            from pyrosetta.rosetta.protocols.relax import FastRelax
+            from pyrosetta.rosetta.core.scoring import get_score_function
+            from pyrosetta.rosetta.protocols.analysis import InterfaceAnalyzerMover
 
             init("-mute all -ignore_unrecognized_res")
             pose = pose_from_pdb(str(complex_pdb))
 
-            # FastRelax rápido
-            from pyrosetta.rosetta.protocols.relax import FastRelax
+            # FastRelax para minimização da interface
+            sfxn = get_score_function()
             relax = FastRelax()
+            relax.set_scorefxn(sfxn)
             relax.apply(pose)
 
-            # Interface score
-            from pyrosetta.rosetta.core.scoring import ScoreFunction, get_score_function
-            sfxn = get_score_function()
-            score = sfxn(pose)
+            total = sfxn(pose)
+
+            # Interface score real: ΔΔG de binding cadeia A (receptor) vs B (peptídeo)
+            ia = InterfaceAnalyzerMover("A_B")
+            ia.apply(pose)
+            i_sc = ia.get_interface_dG()
 
             best_pdb = out_dir / "refined_best.pdb"
             pose.dump_pdb(str(best_pdb))
 
             return {
-                "I_sc": round(float(score), 3),
-                "total_score": round(float(score), 3),
+                "I_sc": round(float(i_sc), 3),
+                "total_score": round(float(total), 3),
                 "refined_pdb": str(best_pdb),
-                "method": "pyrosetta_fastrelax",
+                "method": "pyrosetta_fastrelax_interface",
             }
         except Exception as e:
             self.logger.error(f"PyRosetta erro: {e}")
