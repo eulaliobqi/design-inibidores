@@ -53,7 +53,7 @@ class DockingAgent(BaseAgent):
             if lig_pdbqt is None:
                 continue
 
-            size = self._adaptive_grid_size(item["length"], base_size)
+            size = self._adaptive_grid_size(len(item["sequence"]), base_size)
             result = self._run_vina(rec_pdbqt, lig_pdbqt, center, size,
                                     cfg.get("exhaustiveness", 8), out_dir)
             result["sequence"] = seq
@@ -302,14 +302,9 @@ class DockingAgent(BaseAgent):
         # Ordenar por heurística (charge + hydrophobic) para selecionar melhores
         for stem, data in sequences_data.items():
             props_list = data.get("properties", [])
-            L = int(data["length"])
             for i, seq in enumerate(data["sequences"]):
                 if not seq:
                     continue
-                # ProteinMPNN real redesenha o complexo inteiro (receptor+binder);
-                # o binder são os últimos L resíduos após remoção do separador "/".
-                if len(seq) > L * 2:
-                    seq = seq[-L:]
                 p = props_list[i] if i < len(props_list) else {}
                 score = (
                     abs(p.get("net_charge", 0)) * 1.2
