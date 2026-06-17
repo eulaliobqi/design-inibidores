@@ -297,30 +297,40 @@ class ProteinMPNNAgent(BaseAgent):
         out_dir = self.workdir / "mpnn_out" / pdb.stem
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        cmd = [
-            "python", str(mpnn_path / "protein_mpnn_run.py"),
-            "--pdb_path", str(pdb),
-            "--out_folder", str(out_dir),
-            "--num_seq_per_target", str(cfg.get("num_seq_per_target", 500)),
-            "--sampling_temp", str(cfg.get("sampling_temp", 0.1)),
-            "--backbone_noise", str(cfg.get("backbone_noise", 0.05)),
-            "--omit_AAs", cfg.get("omit_aas", "CX"),
-            "--batch_size", "1",
-        ]
-
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-        if proc.returncode != 0:
-            self.logger.error(f"ProteinMPNN falhou ({pdb.stem}): {proc.stderr[-300:]}")
-            return self._generate_ml_dataset(10, cfg)
-
         fasta_files = (
             list((out_dir / "seqs").glob("*.fa")) +
             list((out_dir / "seqs").glob("*.fasta"))
         )
+
+        # Só roda ProteinMPNN se os FASTAs ainda não existem (evita re-execução demorada)
+        if not fasta_files:
+            cmd = [
+                "python", str(mpnn_path / "protein_mpnn_run.py"),
+                "--pdb_path", str(pdb),
+                "--out_folder", str(out_dir),
+                "--num_seq_per_target", str(cfg.get("num_seq_per_target", 500)),
+                "--sampling_temp", str(cfg.get("sampling_temp", 0.1)),
+                "--backbone_noise", str(cfg.get("backbone_noise", 0.05)),
+                "--omit_AAs", cfg.get("omit_aas", "CX"),
+                "--batch_size", "1",
+            ]
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            if proc.returncode != 0:
+                self.logger.error(f"ProteinMPNN falhou ({pdb.stem}): {proc.stderr[-300:]}")
+                return self._generate_ml_dataset(10, cfg)
+            fasta_files = (
+                list((out_dir / "seqs").glob("*.fa")) +
+                list((out_dir / "seqs").glob("*.fasta"))
+            )
+
         sequences = []
         for fa in fasta_files:
             for _, seq in parse_fasta(str(fa)):
-                clean = seq.replace("-", "").replace("/", "")
-                if clean:
-                    sequences.append(clean)
+                clean = seq.replace("-", "")
+                # ProteinMPNN separa cadeias com "/": RECEPTOR_SEQ/BINDER_SEQ
+                # Extrair apenas a cadeia binder (última parte após "/")
+                parts = clean.split("/")
+                binder = parts[-1] if len(parts) > 1 else parts[0]
+                if binder:
+                    sequences.append(binder)
         return sequences if sequences else self._generate_ml_dataset(10, cfg)
