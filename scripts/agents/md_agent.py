@@ -164,7 +164,7 @@ class MDAgent(BaseAgent):
         return results
 
     def _select_top5_vina(self, rosetta_results: dict) -> list:
-        """Seleciona top-5 por Vina kcal/mol do docking_results.json.
+        """Seleciona top-5 ÚNICOS por Vina kcal/mol do docking_results.json.
         Cria entradas mínimas para sequências que não passaram pelo Rosetta.
         Fallback para I_sc heurístico se docking_results.json não existir."""
         docking_json = self.workdir.parent / "docking" / "docking_results.json"
@@ -178,9 +178,14 @@ class MDAgent(BaseAgent):
                 valid = [(k, v) for k, v in dock.items()
                          if v.get("best_affinity_kcal") is not None]
                 valid.sort(key=lambda x: x[1]["best_affinity_kcal"])
+                # Bug 40 fix: deduplicar por sequência antes de selecionar top-5
                 result = []
-                for dk, dv in valid[:5]:
+                seen_seqs: set = set()
+                for dk, dv in valid:
                     seq = dv["sequence"]
+                    if seq in seen_seqs:
+                        continue
+                    seen_seqs.add(seq)
                     vina = dv["best_affinity_kcal"]
                     if seq in seq_ros:
                         rk, rv = seq_ros[seq]
@@ -193,19 +198,29 @@ class MDAgent(BaseAgent):
                             "length": dv.get("length", len(seq)),
                             "vina_kcal": vina,
                         }))
+                    if len(result) == 5:
+                        break
                 if result:
                     self.logger.info(
-                        "Top-5 por Vina: " +
+                        "Top-5 únicos por Vina: " +
                         ", ".join(f"{v['sequence'][:8]}({v.get('vina_kcal',0):.2f})"
                                   for _, v in result)
                     )
                     return result
             except Exception as e:
                 self.logger.warning(f"Leitura docking_results.json falhou: {e}")
-        # Fallback: I_sc heurístico
+        # Fallback: I_sc heurístico (deduplicar por sequência também)
         self.logger.warning("Selecionando por I_sc heurístico (docking_results.json indisponível)")
-        return sorted(rosetta_results.items(),
-                      key=lambda x: x[1].get("I_sc", 0))[:5]
+        seen: set = set()
+        deduped = []
+        for k, v in sorted(rosetta_results.items(), key=lambda x: x[1].get("I_sc", 0)):
+            seq = v.get("sequence", "")
+            if seq not in seen:
+                seen.add(seq)
+                deduped.append((k, v))
+            if len(deduped) == 5:
+                break
+        return deduped
 
     def _get_binding_center(self) -> list:
         """Lê centro de ligação do checkpoint; fallback para consenso padrão."""
@@ -286,8 +301,19 @@ class MDAgent(BaseAgent):
 
     def _find_gmx(self) -> str:
         """Retorna o path completo para gmx_mpi (CUDA+MPI) ou gmx.
-        Prioriza ~/miniforge3/envs/md-gromacs/bin/gmx_mpi — ambiente validado em produção."""
+        Prioriza ~/miniforge3/envs/md-gromacs/bin/gmx_mpi — ambiente validado em produção.
+        Bug 41 fix: verifica se o binário executa antes de retornar; usa conda run como fallback."""
         import shutil, glob
+
+        def _test_binary(path: str) -> bool:
+            """Retorna True se o binário existe E executa sem erro."""
+            if not Path(path).exists():
+                return False
+            try:
+                r = subprocess.run([path, "--version"], capture_output=True, timeout=10)
+                return r.returncode == 0
+            except Exception:
+                return False
 
         # 1. Ambiente md-gromacs (validado em produção — CUDA sm_120, MPI)
         priority = [
@@ -296,17 +322,33 @@ class MDAgent(BaseAgent):
             str(Path.home() / "mambaforge/envs/md-gromacs/bin/gmx_mpi"),
         ]
         for c in priority:
-            if Path(c).exists():
+            if _test_binary(c):
                 self.logger.info(f"gmx: {c} (env md-gromacs)")
                 return c
 
-        # 2. PATH do processo atual
+        # 2. Bug 41 fix: descobrir via conda run (garante env ativado com LD_LIBRARY_PATH)
+        for binary in ("gmx_mpi", "gmx"):
+            try:
+                r = subprocess.run(
+                    ["conda", "run", "-n", "md-gromacs", "which", binary],
+                    capture_output=True, text=True, timeout=15
+                )
+                if r.returncode == 0:
+                    path = r.stdout.strip()
+                    if path and _test_binary(path):
+                        self.logger.info(f"gmx via conda run: {path}")
+                        return path
+            except Exception:
+                pass
+
+        # 3. PATH do processo atual
         for cmd in ("gmx_mpi", "gmx"):
             p = shutil.which(cmd)
             if p and "protein_design_env" not in p:  # evita gmx sem CUDA
-                return p
+                if _test_binary(p):
+                    return p
 
-        # 3. Glob não-recursivo — Nextflow work dir e pkgs
+        # 4. Glob não-recursivo — Nextflow work dir e pkgs
         patterns = [
             str(Path.home() / "gromacs/MD-gromacs/work/conda/env-*/bin/gmx_mpi"),
             str(Path.home() / "miniforge3/pkgs/gromacs*/bin/gmx_mpi"),
@@ -314,15 +356,15 @@ class MDAgent(BaseAgent):
         ]
         for pat in patterns:
             matches = sorted(glob.glob(pat, recursive=False))
-            if matches:
+            if matches and _test_binary(matches[0]):
                 self.logger.info(f"gmx via glob: {matches[0]}")
                 return matches[0]
 
-        # 4. Qualquer gmx disponível no PATH (inclusive protein_design_env)
+        # 5. Qualquer gmx disponível no PATH (inclusive protein_design_env)
         for cmd in ("gmx_mpi", "gmx"):
             p = shutil.which(cmd)
             if p:
-                self.logger.warning(f"gmx fallback (sem CUDA): {p}")
+                self.logger.warning(f"gmx fallback (sem CUDA garantida): {p}")
                 return p
 
         return "gmx_mpi"  # vai falhar com mensagem clara
@@ -345,6 +387,16 @@ class MDAgent(BaseAgent):
         # mpirun do mesmo env do gmx (garante versão OpenMPI compatível)
         gmx_dir = Path(gmx).parent
         mpirun = str(gmx_dir / "mpirun") if (gmx_dir / "mpirun").exists() else "mpirun"
+        # Bug 41 fix: verificar se mpirun está disponível; se não, desativar wrapper MPI
+        if use_mpirun:
+            try:
+                mr = subprocess.run([mpirun, "--version"], capture_output=True, timeout=10)
+                if mr.returncode != 0:
+                    self.logger.warning(f"mpirun não funciona em {mpirun}; desativando wrapper MPI")
+                    use_mpirun = False
+            except Exception:
+                self.logger.warning(f"mpirun não encontrado ({mpirun}); desativando wrapper MPI")
+                use_mpirun = False
 
         def gmx_run(args, **kw):
             if args[0] == "mdrun" and use_mpirun:
