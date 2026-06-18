@@ -1,0 +1,10 @@
+TÍTULO: A Natural Variant of MYC2 in Soybean Contributes to Resistance Against the Common Cutworm
+AUTORES: Li X, Hu D, Yang Z et al. (2025) Proc Natl Acad Sci USA 122:e2424956122
+DOI: 10.1073/pnas.2424956122
+PMID: 41452982
+PMC: N/A
+CATEGORIA: T4_defesa_vegetal
+RELEVÂNCIA: MÉDIA — contexto de resistência de plantas a Spodoptera; justifica design de inibidores
+
+ABSTRACT:
+Variante natural de MYC2 em soja ativa cascade de defesa contra Spodoptera (cutworm). Inibidores de protease são componentes da resposta defensiva.

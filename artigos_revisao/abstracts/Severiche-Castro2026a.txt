@@ -1,0 +1,10 @@
+TÍTULO: Structure-Guided Design of an Interface-Derived Inhibitor Peptide Against Spodoptera frugiperda Digestive Trypsins
+AUTORES: Severiche-Castro J et al. (2026) Arch Insect Biochem Physiol 122:e70164
+DOI: 10.1002/arch.70164
+PMID: 42138598
+PMC: PMC13178409
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — design in silico de peptídeo inibidor de tripsina de S. frugiperda; usa mesmo alvo do projeto
+
+ABSTRACT:
+Rational computational strategy identified PEP-11 (11-mer) targeting S. frugiperda digestive trypsin. MM/GBSA showed negative binding free energy in all replicas. Docking+MD revealed stable complex via polar and hydrophobic interactions.

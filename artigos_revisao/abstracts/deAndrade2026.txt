@@ -1,0 +1,10 @@
+TÍTULO: Expression of a Recombinant Peptide with Bioinsecticidal Potential for the Control of Agricultural Pests
+AUTORES: de Andrade RJ, Meriño-Cabrera Y, Castro JS et al. (2026) Int J Biol Macromol 359:151886
+DOI: 10.1016/j.ijbiomac.2026.151886
+PMID: 41956187
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — abordagem recombinante do mesmo peptídeo GORE; prova de conceito de expressão
+
+ABSTRACT:
+GORE1-2T quimérico expresso em E. coli BL21. Inibição competitiva Ki≈100 µM. MD mostra backbone RMSD estável, ligações H persistentes. Seletividade para serinas de Lepidoptera.

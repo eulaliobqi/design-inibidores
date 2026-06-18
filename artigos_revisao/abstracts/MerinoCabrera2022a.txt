@@ -1,0 +1,10 @@
+TÍTULO: Arginine-Containing Dipeptides Decrease Affinity of Gut Trypsins and Compromise Soybean Pest Development
+AUTORES: Meriño-Cabrera Y, Castro JS, de Almeida Barros R et al. (2022) Pestic Biochem Physiol 184:105107
+DOI: 10.1016/j.pestbp.2022.105107
+PMID: 35715046
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: MUITO ALTA — justifica seleção de Arg/Lys em top candidatos (padrão observado nos 10 resultados Vina+Rosetta)
+
+ABSTRACT:
+Dipeptídeos contendo Arg > Lys em afinidade pelo subsítio S1 de tripsina de A. gemmatalis (guanidínio+). Inibição competitiva in vitro; redução de trypsin, sobrevivência e peso larval in vivo.

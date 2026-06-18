@@ -1,0 +1,10 @@
+TÍTULO: Structural Analysis and Inhibition Capacity of Dioscorin Protein Yam: Molecular Docking and Dynamics
+AUTORES: Severiche-Castro J, Wilches Diaz G, Combariza Montañez AF et al. (2023) Arch Insect Biochem Physiol 113:e22025
+DOI: 10.1002/arch.22025
+PMID: 37199037
+PMC: N/A
+CATEGORIA: T2_biologia_alvo
+RELEVÂNCIA: ALTA — template estrutural usado no PMID 42138598; serve de referência para comparar nossos candidatos
+
+ABSTRACT:
+Dioscorina se liga a tripsinas de S. frugiperda com energia de ligação -57.3 a -66.9 kcal/mol (MM/GBSA). Dois sítios reativos; interações via ligações H, hidrofóbicas e VdW. Template estrutural para design PEP-11.

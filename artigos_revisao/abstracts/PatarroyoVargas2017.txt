@@ -1,0 +1,10 @@
+TÍTULO: Kinetic Characterization of Anticarsia gemmatalis Digestive Serine-Proteases and Inhibitory Effect of Synthetic Peptides
+AUTORES: Patarroyo-Vargas AM, Merino-Cabrera YB, Zanuncio JC et al. (2017) Protein Pept Lett 24:1040-1047
+DOI: 10.2174/0929866524666170918103146
+PMID: 28925864
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: FUNDADORA — primeiro trabalho do grupo em peptídeos inibitórios de A. gemmatalis; base do pipeline
+
+ABSTRACT:
+Tripsina de A. gemmatalis: maior afinidade para substratos com Arg na P1. Gor3/4/5 — inibidores lineares competitivos. Gor5 (menor Ki) interage com resíduos hidrofóbicos do subsítio S2'.

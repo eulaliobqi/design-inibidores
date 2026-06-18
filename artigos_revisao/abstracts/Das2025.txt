@@ -1,0 +1,10 @@
+TÍTULO: Divergent Functions of Three Kunitz Trypsin Inhibitor (KTI) Proteins in Herbivore Defense in Poplar
+AUTORES: Das IS, Shi Q, Dreischhoff S et al. (2025) BMC Plant Biol 25:e07955
+DOI: 10.1186/s12870-025-07955-z
+PMID: 41419797
+PMC: N/A
+CATEGORIA: T4_defesa_vegetal
+RELEVÂNCIA: MÉDIA — diversidade funcional de KTIs; suporta necessidade de design específico por espécie-alvo
+
+ABSTRACT:
+KTIs em Populus com funções divergentes na defesa contra herbívoros Lepidoptera. Especificidade de inibição depende de diferenças no RCL e bolso S1.

@@ -1,0 +1,10 @@
+TÍTULO: Induced Bowman-Birk Trypsin Inhibitor TaBBTI-1 in Wheat During Poor-Host Interactions with Aphids
+AUTORES: Liu X, Zhang Y, Francis F et al. (2026) Int J Biol Macromol:150204
+DOI: 10.1016/j.ijbiomac.2026.150204
+PMID: 41539518
+PMC: N/A
+CATEGORIA: T4_defesa_vegetal
+RELEVÂNCIA: MÉDIA — BBTIs como proteínas de referência; mecanismo análogo ao objetivo do projeto
+
+ABSTRACT:
+Bowman-Birk trypsin inhibitor TaBBTI-1 em trigo — induzido por herbivoría; resistência de amplo espectro a insetos. Mecanismo via inibição de serinas digestivas.

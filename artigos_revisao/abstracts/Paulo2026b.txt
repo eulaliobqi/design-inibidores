@@ -1,0 +1,10 @@
+TÍTULO: Peptides Derived From Reactive Center Loops Inhibit Digestive Trypsin-Like Enzymes in Lepidopteran Pests
+AUTORES: Paulo DGS, Schneider JR, Meriño-Cabrera Y et al. (2026) Arch Insect Biochem Physiol 121:e70123
+DOI: 10.1002/arch.70123
+PMID: 41510779
+PMC: PMC12784448
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — estratégia RCL-derived peptide análoga ao nosso pipeline IA generativa
+
+ABSTRACT:
+TGPCK, TGPCR, AVIMK, AVIMR (derivados de RCL de BPTI/SKTI) inibem tripsina de A. gemmatalis competitivamente. Interações pi-sigma correlacionam com maior afinidade.

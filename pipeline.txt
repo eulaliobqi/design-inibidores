@@ -1,0 +1,74 @@
+
+---
+
+## 4. Orquestrador Principal (`run_pipeline.py`)
+
+```python
+#!/usr/bin/env python
+import argparse
+import yaml
+from pathlib import Path
+import sys
+import logging
+import json
+
+# Adiciona scripts/agents ao path
+sys.path.append(str(Path(__file__).parent / "agents"))
+from structure_agent import StructureAgent
+from rfdiffusion_agent import RFdiffusionAgent
+from proteinmpnn_agent import ProteinMPNNAgent
+from rosetta_agent import RosettaAgent
+from docking_agent import DockingAgent
+from md_agent import MDAgent
+from optimization_agent import OptimizationAgent
+from ranking_agent import RankingAgent
+from visualization_agent import VisualizationAgent
+from report_agent import ReportAgent
+from checkpoint import CheckpointManager
+
+def main():
+    parser = argparse.ArgumentParser(description="Pipeline de inibidores peptídicos")
+    parser.add_argument("--config", default="config/config.yaml")
+    parser.add_argument("--step", choices=["all","structure","rfdiffusion","mpnn","rosetta","docking","md","ranking","visualize","report"], default="all")
+    parser.add_argument("--resume", action="store_true")
+    args = parser.parse_args()
+
+    with open(args.config) as f:
+        config = yaml.safe_load(f)
+
+    # Definir diretórios de trabalho
+    base_dir = Path.cwd()
+    outputs = base_dir / "outputs"
+    outputs.mkdir(exist_ok=True)
+
+    ckpt = CheckpointManager(outputs / "checkpoint.json")
+
+    # Inicializar agentes sob demanda
+    if args.step in ["all","structure"] and (not args.resume or not ckpt.is_completed("structure")):
+        struct = StructureAgent("StructureAgent", config, outputs / "structure")
+        hotspots = struct.run(config["data"]["trypsin_pdb"])
+        ckpt.save("structure", {"hotspots": hotspots})
+        print("Structure analysis done.")
+
+    if args.step in ["all","rfdiffusion"] and (not args.resume or not ckpt.is_completed("rfdiffusion")):
+        rfd = RFdiffusionAgent("RFdiffusionAgent", config, outputs / "rfdiffusion")
+        backbones = rfd.run(config["data"]["trypsin_pdb"], outputs / "structure/hotspots.json",
+                            contig_lengths=config["rfdiffusion"]["contig_lengths"])
+        ckpt.save("rfdiffusion", {"backbone_dirs": [str(p) for p in backbones]})
+
+    if args.step in ["all","mpnn"] and (not args.resume or not ckpt.is_completed("mpnn")):
+        mpnn = ProteinMPNNAgent("ProteinMPNNAgent", config, outputs / "proteinmpnn")
+        # coletar todos os backbones do step anterior
+        backbone_files = []
+        for item in ckpt.load("rfdiffusion")["backbone_dirs"]:
+            backbone_files.extend(Path(item).glob("*.pdb"))
+        seq_files = mpnn.run(backbone_files, fixed_positions=config["proteinmpnn"].get("fixed_positions"))
+        ckpt.save("mpnn", {"sequence_files": [str(f) for f in seq_files]})
+
+    # Etapas seguintes (Rosetta, docking, MD, ranking, viz, report) seguem mesmo padrão
+    # ... (implementação análoga às anteriores)
+
+    print("Pipeline concluído com sucesso.")
+
+if __name__ == "__main__":
+    main()

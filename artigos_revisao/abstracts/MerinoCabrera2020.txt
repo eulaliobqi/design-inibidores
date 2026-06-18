@@ -1,0 +1,10 @@
+TÍTULO: Rational Design of Mimetic Peptides Based on the Interaction Between Inga laurina Inhibitor and Trypsins for Spodoptera cosmioides Pest Control
+AUTORES: Meriño-Cabrera Y, Severiche Castro JG, Rios Diez JD et al. (2020) Insect Biochem Mol Biol 122:103390
+DOI: 10.1016/j.ibmb.2020.103390
+PMID: 32360954
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — artigo fundador do conceito de design racional de mimético de Kunitz para Spodoptera
+
+ABSTRACT:
+Dois peptídeos lineares derivados da interface ILTI-tripsina. Estabilidade estrutural e propensão à conformação de ligação. Atividade inibitória sobre tripsinas digestivas e efeito tóxico em S. cosmioides.

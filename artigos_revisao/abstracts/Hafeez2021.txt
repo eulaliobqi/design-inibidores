@@ -1,0 +1,10 @@
+TÍTULO: Role of Digestive Protease Enzymes in Host Plant Adaptation of Spodoptera frugiperda
+AUTORES: Hafeez M, Li XW, Zhang JM et al. (2021) Insect Sci 28:1639-1655
+DOI: 10.1111/1744-7917.12906
+PMID: 33629522
+PMC: N/A
+CATEGORIA: T2_biologia_alvo
+RELEVÂNCIA: ALTA — explica plasticidade das tripsinas de S. frugiperda; fundamenta necessidade de múltiplos candidatos
+
+ABSTRACT:
+Perfil de atividade de proteases digestivas no intestino de S. frugiperda durante adaptação a diferentes hospedeiros. Modulação de tripsinas e quimiotripsinas em resposta a inibidores.

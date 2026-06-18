@@ -1,0 +1,242 @@
+[
+  {
+    "ref": "Severiche-Castro2026a",
+    "pmid": "42138598",
+    "pmc": "PMC13178409",
+    "year": 2026,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/arch.70164",
+    "pdf": false,
+    "title": "Structure-Guided Design of an Interface-Derived Inhibitor Peptide Against Spodop"
+  },
+  {
+    "ref": "Schultz2026",
+    "pmid": "41849700",
+    "pmc": "PMC12999070",
+    "year": 2026,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/arch.70145",
+    "pdf": false,
+    "title": "Synthetic Peptide Inhibition of Trypsin-Like Proteases in Spodoptera frugiperda:"
+  },
+  {
+    "ref": "Paulo2026a",
+    "pmid": "41572648",
+    "pmc": "PMC13071266",
+    "year": 2026,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/ps.70579",
+    "pdf": false,
+    "title": "Peptidic Product Derived from Trypsin Autolysis Modulates Insect Digestive Prote"
+  },
+  {
+    "ref": "Paulo2026b",
+    "pmid": "41510779",
+    "pmc": "PMC12784448",
+    "year": 2026,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/arch.70123",
+    "pdf": false,
+    "title": "Peptides Derived From Reactive Center Loops Inhibit Digestive Trypsin-Like Enzym"
+  },
+  {
+    "ref": "deAndrade2026",
+    "pmid": "41956187",
+    "pmc": null,
+    "year": 2026,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1016/j.ijbiomac.2026.151886",
+    "pdf": false,
+    "title": "Expression of a Recombinant Peptide with Bioinsecticidal Potential for the Contr"
+  },
+  {
+    "ref": "MerinoCabrera2020",
+    "pmid": "32360954",
+    "pmc": null,
+    "year": 2020,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1016/j.ibmb.2020.103390",
+    "pdf": false,
+    "title": "Rational Design of Mimetic Peptides Based on the Interaction Between Inga laurin"
+  },
+  {
+    "ref": "deAlmeidaBarros2021",
+    "pmid": "33200876",
+    "pmc": null,
+    "year": 2021,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/ps.6191",
+    "pdf": false,
+    "title": "Small Peptides Inhibit Gut Trypsin-Like Proteases and Impair Anticarsia gemmatal"
+  },
+  {
+    "ref": "MerinoCabrera2022a",
+    "pmid": "35715046",
+    "pmc": null,
+    "year": 2022,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1016/j.pestbp.2022.105107",
+    "pdf": false,
+    "title": "Arginine-Containing Dipeptides Decrease Affinity of Gut Trypsins and Compromise "
+  },
+  {
+    "ref": "deAlmeidaBarros2022",
+    "pmid": "35315942",
+    "pmc": null,
+    "year": 2022,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1002/arch.21887",
+    "pdf": false,
+    "title": "Inhibition Constant and Stability of Tripeptide Inhibitors of Gut Trypsin-Like E"
+  },
+  {
+    "ref": "deAlmeidaBarros2022b",
+    "pmid": "36127063",
+    "pmc": null,
+    "year": 2022,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.1016/j.pestbp.2022.105188",
+    "pdf": false,
+    "title": "BPTI and SKTI: Differential Effects on Proteases and Larval Development of Antic"
+  },
+  {
+    "ref": "PatarroyoVargas2017",
+    "pmid": "28925864",
+    "pmc": null,
+    "year": 2017,
+    "cat": "T1_alvo_peptideo",
+    "doi": "10.2174/0929866524666170918103146",
+    "pdf": false,
+    "title": "Kinetic Characterization of Anticarsia gemmatalis Digestive Serine-Proteases and"
+  },
+  {
+    "ref": "Fuzita2022",
+    "pmid": "34438074",
+    "pmc": null,
+    "year": 2022,
+    "cat": "T2_biologia_alvo",
+    "doi": "10.1016/j.cbpb.2021.110670",
+    "pdf": false,
+    "title": "Proteomic Approach to Identify Digestive Enzymes and Their Secretory Routes in t"
+  },
+  {
+    "ref": "Hafeez2021",
+    "pmid": "33629522",
+    "pmc": null,
+    "year": 2021,
+    "cat": "T2_biologia_alvo",
+    "doi": "10.1111/1744-7917.12906",
+    "pdf": false,
+    "title": "Role of Digestive Protease Enzymes in Host Plant Adaptation of Spodoptera frugip"
+  },
+  {
+    "ref": "Severiche-Castro2023",
+    "pmid": "37199037",
+    "pmc": null,
+    "year": 2023,
+    "cat": "T2_biologia_alvo",
+    "doi": "10.1002/arch.22025",
+    "pdf": false,
+    "title": "Structural Analysis and Inhibition Capacity of Dioscorin Protein Yam: Molecular "
+  },
+  {
+    "ref": "Fonseca2023",
+    "pmid": "37816687",
+    "pmc": null,
+    "year": 2023,
+    "cat": "T2_biologia_alvo",
+    "doi": "10.1093/jee/toad188",
+    "pdf": false,
+    "title": "A Soybean Trypsin Inhibitor Reduces the Resistance to Transgenic Maize in Spodop"
+  },
+  {
+    "ref": "Watson2023",
+    "pmid": "37433327",
+    "pmc": "PMC10468394",
+    "year": 2023,
+    "cat": "T3_metodos_IA",
+    "doi": "10.1038/s41586-023-06415-8",
+    "pdf": false,
+    "title": "De Novo Design of Protein Structure and Function with RFdiffusion"
+  },
+  {
+    "ref": "Dauparas2022",
+    "pmid": "36108050",
+    "pmc": "PMC9997061",
+    "year": 2022,
+    "cat": "T3_metodos_IA",
+    "doi": "10.1126/science.add2187",
+    "pdf": false,
+    "title": "Robust Deep Learning-Based Protein Sequence Design Using ProteinMPNN"
+  },
+  {
+    "ref": "VazquezTorres2024",
+    "pmid": "38109936",
+    "pmc": "PMC10849960",
+    "year": 2024,
+    "cat": "T3_metodos_IA",
+    "doi": "10.1038/s41586-023-06953-1",
+    "pdf": false,
+    "title": "De Novo Design of High-Affinity Binders of Bioactive Helical Peptides"
+  },
+  {
+    "ref": "Liu2026",
+    "pmid": "41539518",
+    "pmc": null,
+    "year": 2026,
+    "cat": "T4_defesa_vegetal",
+    "doi": "10.1016/j.ijbiomac.2026.150204",
+    "pdf": false,
+    "title": "Induced Bowman-Birk Trypsin Inhibitor TaBBTI-1 in Wheat During Poor-Host Interac"
+  },
+  {
+    "ref": "Das2025",
+    "pmid": "41419797",
+    "pmc": null,
+    "year": 2025,
+    "cat": "T4_defesa_vegetal",
+    "doi": "10.1186/s12870-025-07955-z",
+    "pdf": false,
+    "title": "Divergent Functions of Three Kunitz Trypsin Inhibitor (KTI) Proteins in Herbivor"
+  },
+  {
+    "ref": "Li2025",
+    "pmid": "41452982",
+    "pmc": null,
+    "year": 2025,
+    "cat": "T4_defesa_vegetal",
+    "doi": "10.1073/pnas.2424956122",
+    "pdf": false,
+    "title": "A Natural Variant of MYC2 in Soybean Contributes to Resistance Against the Commo"
+  },
+  {
+    "ref": "GarciaMunguia2025",
+    "pmid": "40872791",
+    "pmc": null,
+    "year": 2025,
+    "cat": "T5_biocontrole",
+    "doi": "10.3390/v17081077",
+    "pdf": false,
+    "title": "Baculovirus-Based Biocontrol: Synergistic and Antagonistic Interactions of PxGV,"
+  },
+  {
+    "ref": "ElSaid2025",
+    "pmid": "41169723",
+    "pmc": null,
+    "year": 2025,
+    "cat": "T5_biocontrole",
+    "doi": "10.3389/fpls.2025.1694032",
+    "pdf": false,
+    "title": "Lethal and Sublethal Effects of Chemical and Bio-Insecticides on Spodoptera frug"
+  },
+  {
+    "ref": "VandenBerg2022",
+    "pmid": "36515103",
+    "pmc": null,
+    "year": 2022,
+    "cat": "T5_biocontrole",
+    "doi": "10.1093/jee/toac143",
+    "pdf": false,
+    "title": "A Special Collection: Spodoptera frugiperda (Fall Armyworm): Ecology and Managem"
+  }
+]

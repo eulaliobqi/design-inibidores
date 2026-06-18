@@ -27,36 +27,31 @@ Os resíduos dentro de raio de 8,0 Å do centro consenso foram definidos como *h
 
 ### 2.3 Geração de Backbones Peptídicos por IA Generativa (RFdiffusion)
 
-Backbones peptídicos foram gerados pelo modelo RFdiffusion (*Watson et al., Nature, 2023*), um modelo de difusão estrutural treinado para gerar conformações proteicas condicionadas a sítios de ligação. Para cada comprimento peptídico (5, 7, 10, 12, 15 e 20 aminoácidos), foram gerados 5 backbones independentes ancorados aos *hotspots* do sítio S1, totalizando 30 backbones.
+Backbones peptídicos foram gerados pelo modelo RFdiffusion (*Watson et al., Nature, 2023*), um modelo de difusão estrutural treinado para gerar conformações proteicas de novo condicionadas a sítios de ligação. O modelo foi instalado no servidor a partir do repositório oficial (`~/RFdiffusion`) com o checkpoint `Complex_base_ckpt.pt` (462 MB).
 
-O processo foi configurado com:
+O processo foi configurado para o receptor ACR157 (231 resíduos, cadeia A) com os seguintes parâmetros:
 - `noise_scale_ca = 0.2` — ruído nas posições Cα
 - `noise_scale_frame = 0.1` — ruído nos frames de orientação
-- Mapa de contigs: `A1-N/0 L-L`, onde N = resíduos do receptor, L = comprimento peptídico
-- Hotspot radius: 6,0 Å em torno do sítio S1
+- Mapa de contigs: `A1-231/0 20-20` (receptor fixo + 20 novos resíduos binder)
+- Hotspot residues: resíduos dentro de 6,0 Å do centro consenso do sítio S1
+- Parâmetro obrigatório: `inference.ckpt_override_path` (instalação via pip não inclui diretório `models/`)
 
-Na ausência do RFdiffusion instalado, o módulo opera em modo *fallback* gerando backbones lineares de poly-Ala via PeptideBuilder, posicionados nas coordenadas consenso do sítio, para não interromper o fluxo do pipeline.
+Foram gerados **330 backbones** para o receptor ACR157 em uma única rodada de difusão. A variação de comprimento (5, 7, 10, 12, 15 e 20 aa) foi especificada como parâmetro de configuração, porém todos os 330 backbones convergiram para binders de **20 aminoácidos** na cadeia B — limitação da configuração empregada nesta rodada. Os backbones gerados apresentam diversidade conformacional real (hélices, estruturas estendidas, *hairpins*), em contraste com os scaffolds lineares poly-Ala gerados em modo *fallback*.
 
-### 2.4 Geração Massiva de Sequências para Dataset ML/DL
+Os arquivos PDB de entrada (ACR157, QCL936, XP273, XP352) foram pré-processados por `scripts/prep_pdbs.py` para correção de cadeia (blank → A) e renumeração de resíduos (início em 1), requisito do parser interno do RFdiffusion.
 
-Para maximizar a cobertura do espaço de sequências e produzir um dataset para treinamento de modelos de *machine learning* e *deep learning*, o módulo ProteinMPNN (*Dauparas et al., Science, 2022*) foi configurado para gerar **500 sequências por backbone**, totalizando 15.000 candidatos brutos por rodada.
+### 2.4 Design de Sequências por ProteinMPNN
 
-As sequências foram produzidas por **10 estratégias de geração complementares**:
+O ProteinMPNN (*Dauparas et al., Science, 2022*) foi executado no modo real (instalado em `~/ProteinMPNN`) sobre os 330 backbones gerados pelo RFdiffusion. Cada backbone recebeu **500 sequências redesenhadas** para a cadeia binder (cadeia B, 20 aa), configuradas com temperatura de amostragem `0,1`, ruído de backbone `0,05` e exclusão de Cys/X (`--omit_AAs CX`). As sequências de receptor (cadeia A) foram mantidas fixas.
 
-| Estratégia          | Mecanismo de inibição explorado       | % orçamento |
-|---------------------|---------------------------------------|-------------|
-| *random_uniform*    | Cobertura uniforme do espaço          | 20%         |
-| *hydrophobic*       | Inibição alostérica/hidrofóbica       | 10%         |
-| *charged_positive*  | Inibição competitiva clássica (R/K)   | 10%         |
-| *charged_negative*  | Interações eletrostáticas (D/E)       | 7%          |
-| *aromatic_cterminal*| Contatos com subsítios S1'/S2'        | 12%         |
-| *aromatic_nterminal*| β-hairpin mimético (Y/W/F N-term)     | 8%          |
-| *amphipathic*       | α-hélice anfipática                   | 10%         |
-| *proline_rich*      | Scaffold PPII rígido                  | 7%          |
-| *motif_seeded*      | Seeds BPTI/SKTI + mutações pontuais   | 9%          |
-| *glycine_scan*      | Mapeamento de flexibilidade (Gly)     | 7%          |
+**Formato de saída FASTA e extração do binder:**  
+O ProteinMPNN gera sequências no formato `RECEPTOR_SEQ/BINDER_SEQ` (cadeias separadas por `/`). O módulo `_run_mpnn()` extrai a cadeia binder (parte após o último `/`) via `parts = seq.split("/"); binder = parts[-1]`. A concatenação incorreta (`replace("/","")`) foi identificada como bug crítico na sessão anterior, pois produzia sequências quiméricas receptor+binder de 240+ aa como candidatos — redesigns das tripsinas de input, não inibidores. O fix (commit `e9024bc`) garante que apenas os 20 aa desenhados para a interface sejam avaliados.
 
-Sequências contendo Cys foram automaticamente excluídas. Os inibidores canônicos BPTI, SKTI e derivados foram incluídos como *seeds* em cada comprimento. Após remoção de duplicatas entre backbones do mesmo comprimento, o dataset final continha **14.923 sequências únicas**.
+**Dataset resultante:**
+- 330 backbones × 500 sequências = 165.000 brutas
+- Após remoção de duplicatas: **24.513 sequências únicas de binder (20 aa)**
+- Todos os binders têm comprimento homogêneo de 20 aa (limitação desta rodada — ver Seção 2.3)
+- Dataset exportado: `outputs/dataset/ml_training_dataset.csv` com 41 features físico-químicas
 
 Não foram aplicadas restrições de aminoácido na posição P1, permitindo explorar mecanismos de inibição além do competitivo clássico (modulação alostérica, bloqueio estérico, inibição mista).
 
@@ -77,16 +72,25 @@ Cada sequência foi anotada com **41 features** calculadas analiticamente (sem d
 
 O dataset foi exportado em formato CSV (`outputs/dataset/ml_training_dataset.csv`) com colunas de label (`vina_affinity_kcal`, `rosetta_I_sc`, `final_score`) a serem preenchidas nas etapas de validação.
 
-### 2.6 Refinamento de Interface por Rosetta
+### 2.6 Refinamento de Interface por PyRosetta
 
-Os complexos tripsina-peptídeo foram submetidos a refinamento energético pelo protocolo FlexPepDock do Rosetta (*Raveh et al., PLoS Comp Biol, 2011*). Em modo *fallback*, os 10 melhores candidatos por heurística receberam scores estimados baseados em composição de aminoácidos. O *interface score* (I_sc, REF2015) foi registrado como feature secundária.
+Os complexos tripsina-peptídeo foram submetidos a refinamento energético pelo protocolo **FastRelax** e cálculo de *interface score* pelo **PyRosetta 2026.25** (*Chaudhury et al., Bioinformatics, 2010*), instalado no servidor via `pyrosetta-installer` (Python 3.10, sem licença explícita — distribuição aberta desde 2024).
+
+**Protocolo implementado em `_run_pyrosetta()`:**
+1. Leitura do complexo receptor (cadeia A) + peptídeo all-atom (cadeia B) via `pose_from_pdb()`
+2. Minimização energética com `FastRelax` (campo de força REF2015, score function padrão)
+3. Cálculo do *interface score* (I_sc, kcal/mol) via `InterfaceAnalyzerMover("A_B").get_interface_dG()` — ΔΔG de dissociação A|B, valores negativos indicam binding favorável
+
+**Construção all-atom do peptídeo:** os peptídeos foram construídos com `PeptideBuilder` (geometria de ligação ECEPP/3) e o centro de massa transladado para o sítio consenso antes do refinamento — necessário pois `FastRelax` e `InterfaceAnalyzerMover` requerem backbone completo (N, Cα, C, O) para scoring significativo. CA-only (fallback anterior) gerava I_sc artificialmente próximo a zero.
+
+O *interface score* (I_sc, REF2015) foi registrado como feature secundária no ranking composto (peso 0,25).
 
 ### 2.7 Validação por Docking Molecular
 
 A afinidade de ligação ao sítio S1 foi estimada por docking molecular rígido com AutoDock Vina f458505-mod (*Trott & Olson, J. Comput. Chem., 2010*). A *grid box* foi centrada nas coordenadas consenso (25 × 25 × 25 Å; exaustividade = 8). O protocolo adota **docking rígido** para os peptídeos candidatos, pois sequências com comprimento ≥ 9 aa possuem mais de 32 ligações rotacionáveis (φ + ψ + cadeia lateral), excedendo o limite interno do Vina para docking flexível. A modalidade rígida (TORSDOF = 0) é adequada para a geração de *labels* de triagem em larga escala (correlação Pearson ~0,7 com docking flexível completo para top candidatos).
 
 **Preparação dos ligantes e receptor:**
-Os peptídeos foram construídos em modo *all-atom* via PeptideBuilder, com geometria de ligação ECEPP/3. O **centro de massa** (COM) de cada estrutura peptídica foi transladado para as coordenadas do sítio catalítico consenso, garantindo que o peptídeo fique centrado na *grid box* independentemente do comprimento. A conversão para formato PDBQT foi realizada com OpenBabel (`-xr -h`: rígido + hidrogênios polares). Os blocos `ROOT/ENDROOT/TORSDOF 0` são adicionados automaticamente quando ausentes (`_ensure_ligand_pdbqt_format()`). O receptor foi preparado com OpenBabel (`-xr -h`).
+Os peptídeos binder (20 aa, extraídos da cadeia B dos outputs ProteinMPNN) foram construídos em modo *all-atom* via PeptideBuilder, com geometria de ligação ECEPP/3. O **centro de massa** (COM) de cada estrutura peptídica foi transladado para as coordenadas do sítio catalítico consenso, garantindo que o peptídeo fique centrado na *grid box* independentemente do comprimento. A conversão para formato PDBQT foi realizada com mapeamento interno de tipos atômicos AutoDock4 (`_pdb_to_pdbqt_minimal()`), com correção do tipo `"N": "N"` (nitrogênio backbone) — o mapeamento incorreto `"N": "NA"` (sódio) causava rejeição pelo Vina com erro `unknown atom type: NA`. Os blocos `ROOT/ENDROOT/TORSDOF 0` são adicionados sistematicamente (`_ensure_ligand_pdbqt_format()` reescreve o arquivo sempre). O receptor foi preparado com OpenBabel (`-h`, sem `-xr` — a flag `-xr` gera formato de receptor sem `ROOT/ENDROOT`, incompatível com uso como ligante em testes de validação).
 
 **Grid box adaptativa:**
 O tamanho da *grid box* é calculado automaticamente em função do comprimento do peptídeo (`_adaptive_grid_size()`): tamanho = max(40 Å, comprimento × 3,6 + 8) Å. Isso garante que a conformação semi-estendida gerada pelo PeptideBuilder fique inteiramente dentro do espaço de busca do Vina em todos os comprimentos avaliados (5–20 aa).
@@ -123,7 +127,7 @@ Pipeline implementado em Python 3.10 como sistema **multiagente** com 10 módulo
 - Notebook local: Windows 11, RTX 2050 4 GB
 - Workflow git: edição local → commit → push GitHub → `git pull` no servidor → execução
 
-**Ferramentas instaladas no servidor (atualizado 2026-06-11):**
+**Ferramentas instaladas no servidor (atualizado 2026-06-17):**
 
 | Ferramenta | Status | Versão/Notas |
 |---|---|---|
@@ -136,7 +140,7 @@ Pipeline implementado em Python 3.10 como sistema **multiagente** com 10 módulo
 | AutoDock Vina f458505-mod | ✓ | docking rígido de peptídeos |
 | fpocket | ✓ | análise de bolso de ligação |
 | GROMACS gmx_mpi | ✓ | CUDA-MPI, build sm_120 Blackwell |
-| PyTorch 2.11.0+cu128 | ✓ | CUDA 12.8, RTX 5070 Ti (Blackwell) |
-| ProteinMPNN | ✓ | `~/ProteinMPNN` (git clone) |
-| RFdiffusion | ✓ clonado | `~/RFdiffusion`; pesos Base_ckpt.pt em download |
-| PyRosetta | ✗ | requer licença academia (pyrosetta.org) |
+| PyTorch 2.12.0.dev+cu128 | ✓ | CUDA 12.8, RTX 5070 Ti (Blackwell) |
+| ProteinMPNN | ✓ | `~/ProteinMPNN` (git clone); 24.513 binders gerados |
+| RFdiffusion | ✓ | `~/RFdiffusion`; checkpoint `Complex_base_ckpt.pt` 462 MB; 330 backbones gerados |
+| PyRosetta | ✓ | `pyrosetta-2026.25+release`; `pyrosetta-installer`; FastRelax + InterfaceAnalyzerMover |

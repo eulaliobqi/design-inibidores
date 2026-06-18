@@ -1,0 +1,10 @@
+TÍTULO: Proteomic Approach to Identify Digestive Enzymes and Their Secretory Routes in the Midgut of Spodoptera frugiperda
+AUTORES: Fuzita FJ, Palmisano G, Pimenta DC et al. (2022) Comp Biochem Physiol B 259:110670
+DOI: 10.1016/j.cbpb.2021.110670
+PMID: 34438074
+PMC: N/A
+CATEGORIA: T2_biologia_alvo
+RELEVÂNCIA: ALTA — confirma importância das tripsinas no intestino de S. frugiperda; fundamenta escolha do alvo
+
+ABSTRACT:
+Identificação proteômica de enzimas digestivas no intestino médio de S. frugiperda. Tripsinas como componentes majoritários do suco intestinal. Secretadas por rota microapocrína.

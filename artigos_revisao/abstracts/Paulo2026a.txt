@@ -1,0 +1,10 @@
+TÍTULO: Peptidic Product Derived from Trypsin Autolysis Modulates Insect Digestive Proteases and Supports Plant Biochemical Defense
+AUTORES: Paulo DGS, Schultz H, Meriño Cabrera YB et al. (2026) Pest Manag Sci 82:4632-4647
+DOI: 10.1002/ps.70579
+PMID: 41572648
+PMC: PMC13071266
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — GORE3 ocupa mesmo sítio S1 alvo do pipeline; validação in vivo incluída
+
+ABSTRACT:
+GORE3 — inibidor competitivo (Ki=4.0 mM) de tripsina de S. frugiperda. Docking: ocupa subsítios S1/S1'. Reduz massa larval, prolonga período larval, mortalidade até 46.66%.

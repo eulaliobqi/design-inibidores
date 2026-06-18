@@ -1,0 +1,10 @@
+TÍTULO: A Special Collection: Spodoptera frugiperda (Fall Armyworm): Ecology and Management
+AUTORES: Van den Berg J, Brewer MJ, Reisig DD et al. (2022) J Econ Entomol 116:1-5
+DOI: 10.1093/jee/toac143
+PMID: 36515103
+PMC: N/A
+CATEGORIA: T5_biocontrole
+RELEVÂNCIA: MÉDIA — revisão abrangente de manejo; contexto geral para justificativa do projeto
+
+ABSTRACT:
+Revisão compilada de ecologia e manejo de S. frugiperda (fall armyworm). Coleção especial do J Econ Entomol.

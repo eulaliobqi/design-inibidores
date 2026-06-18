@@ -1,0 +1,10 @@
+TÍTULO: De Novo Design of High-Affinity Binders of Bioactive Helical Peptides
+AUTORES: Vázquez Torres S, Leung PJY, Venkatesh P et al. (2024) Nature 626:435-442
+DOI: 10.1038/s41586-023-06953-1
+PMID: 38109936
+PMC: PMC10849960
+CATEGORIA: T3_metodos_IA
+RELEVÂNCIA: ALTA — exemplo de aplicação combinada RFdiffusion+ProteinMPNN para peptídeos binders (análogo ao projeto)
+
+ABSTRACT:
+Design de binders de alta afinidade para peptídeos helicoidais bioativos usando RFdiffusion+ProteinMPNN. Validado experimentalmente por cristalografia e ensaios de ligação.

@@ -1,0 +1,10 @@
+TÍTULO: BPTI and SKTI: Differential Effects on Proteases and Larval Development of Anticarsia gemmatalis
+AUTORES: de Almeida Barros R, Meriño-Cabrera Y, Castro JS et al. (2022) Pestic Biochem Physiol 187:105188
+DOI: 10.1016/j.pestbp.2022.105188
+PMID: 36127063
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — BPTI/SKTI são as seeds positivas do dataset ML; artigo explica mecanismo diferencial
+
+ABSTRACT:
+BPTI evita adaptação (não há overproduction de protease). SKTI é digerido e induz overproduction. BPTI reduz trypsin, sobrevivência e peso pupal. Modelo paradigmático de inibição de referência.

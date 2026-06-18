@@ -1,0 +1,10 @@
+TÍTULO: Robust Deep Learning-Based Protein Sequence Design Using ProteinMPNN
+AUTORES: Dauparas J, Anishchenko I, Bennett N et al. (2022) Science 378:49-56
+DOI: 10.1126/science.add2187
+PMID: 36108050
+PMC: PMC9997061
+CATEGORIA: T3_metodos_IA
+RELEVÂNCIA: METODOLÓGICA CRÍTICA — artigo fundador do ProteinMPNN usado no pipeline (etapa 3)
+
+ABSTRACT:
+ProteinMPNN: deep learning para design de sequências dado backbone. 52.4% de sequence recovery (vs 32.9% Rosetta). Validado por cristalografia, cryo-EM e estudos funcionais.

@@ -1,0 +1,10 @@
+TÍTULO: A Soybean Trypsin Inhibitor Reduces the Resistance to Transgenic Maize in Spodoptera frugiperda
+AUTORES: Fonseca SS, Santos ALZ, Pinto CPG et al. (2023) J Econ Entomol 116:2087-2094
+DOI: 10.1093/jee/toad188
+PMID: 37816687
+PMC: N/A
+CATEGORIA: T2_biologia_alvo
+RELEVÂNCIA: MÉDIA — demonstra aplicabilidade de inibidores de tripsina em contexto de praga de campo
+
+ABSTRACT:
+Inibidor de tripsina de soja (STI) reduz resistência de S. frugiperda ao milho Bt-transgênico. Sinergia entre inibidores endógenos de plantas e toxinas Bt para controle de praga.

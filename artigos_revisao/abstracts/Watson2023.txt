@@ -1,0 +1,10 @@
+TÍTULO: De Novo Design of Protein Structure and Function with RFdiffusion
+AUTORES: Watson JL, Juergens D, Bennett NR et al. (2023) Nature 620:1089-1100
+DOI: 10.1038/s41586-023-06415-8
+PMID: 37433327
+PMC: PMC10468394
+CATEGORIA: T3_metodos_IA
+RELEVÂNCIA: METODOLÓGICA CRÍTICA — artigo fundador do RFdiffusion usado no pipeline (etapa 2)
+
+ABSTRACT:
+RFdiffusion: fine-tuning de RoseTTAFold em denoising de backbones. Gera binders de novo com alta especificidade. Confirmado por cryo-EM. Suporta design de oligômeros, proteínas de simetria, binders peptídicos.

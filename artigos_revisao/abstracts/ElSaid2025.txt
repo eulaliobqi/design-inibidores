@@ -1,0 +1,10 @@
+TÍTULO: Lethal and Sublethal Effects of Chemical and Bio-Insecticides on Spodoptera frugiperda Adults
+AUTORES: El-Said NA, Alfuhaid NA, Chellappan BV et al. (2025) Front Plant Sci 16:1694032
+DOI: 10.3389/fpls.2025.1694032
+PMID: 41169723
+PMC: N/A
+CATEGORIA: T5_biocontrole
+RELEVÂNCIA: MÉDIA — panorama de estratégias de controle; posiciona inibidores de protease como alternativa
+
+ABSTRACT:
+Efeitos letais e subletais de inseticidas químicos e biológicos em S. frugiperda adultos. Bio-inseticidas reduzem fecundidade e fertilidade.

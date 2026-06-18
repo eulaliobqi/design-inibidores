@@ -1,0 +1,10 @@
+TÍTULO: Baculovirus-Based Biocontrol: Synergistic and Antagonistic Interactions of PxGV, PxNPV, SeMNPV, SfMNPV
+AUTORES: García-Munguía AM, García-Munguía CA, Guerra-Ávila PL et al. (2025) Viruses 17:1077
+DOI: 10.3390/v17081077
+PMID: 40872791
+PMC: N/A
+CATEGORIA: T5_biocontrole
+RELEVÂNCIA: MÉDIA — contexto de biocontrole; alternativa biológica ao controle químico (manejo integrado)
+
+ABSTRACT:
+Baculovírus como agentes de biocontrole de lepidópteros. SfMNPV específico para S. frugiperda. Interações sinérgicas e antagônicas com outros vírus.

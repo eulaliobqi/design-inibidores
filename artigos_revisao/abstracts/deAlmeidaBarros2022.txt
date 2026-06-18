@@ -1,0 +1,10 @@
+TÍTULO: Inhibition Constant and Stability of Tripeptide Inhibitors of Gut Trypsin-Like Enzyme
+AUTORES: de Almeida Barros R, Meriño-Cabrera Y, Severiche Castro JG et al. (2022) Arch Insect Biochem Physiol 109:e21887
+DOI: 10.1002/arch.21887
+PMID: 35315942
+PMC: N/A
+CATEGORIA: T1_alvo_peptideo
+RELEVÂNCIA: ALTA — Ki de tripeptídeos estabelece referência para comparação com candidatos do pipeline
+
+ABSTRACT:
+Constantes de inibição de tripeptídeos GORE vs tripsinas de lepidópteros. Estabilidade estrutural dos peptídeos no sítio ativo.
