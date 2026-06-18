@@ -78,7 +78,7 @@ class RosettaAgent(BaseAgent):
                 vina_cands = []
                 for item in docking.values():
                     seq = item.get("sequence", "")
-                    aff = item.get("vina_affinity")
+                    aff = item.get("best_affinity_kcal")
                     if seq and aff is not None:
                         vina_cands.append({
                             "sequence": seq,
