@@ -4,11 +4,12 @@
 > - ✓ 3.1 Sítio catalítico — completo
 > - ✓ 3.2 Backbones RFdiffusion — **330 backbones reais** (substituiu fallback PeptideBuilder)
 > - ✓ 3.3 Dataset de sequências — **24.513 binders 20 aa** (ProteinMPNN real, bug FASTA corrigido)
-> - ✓ 3.4 Docking — **194/194 poses reais** com binders RFdiffusion genuínos; top-1 −13,62 kcal/mol
-> - ✓ 3.5 Ranking — novo top-10 com sequências RFdiffusion+ProteinMPNN reais
-> - ✓ 3.6 PyRosetta — **10/10 complexos refinados**; top I_sc: GARKSIREYQKRVLERLKKK (−86,28); concordância Vina×Rosetta documentada
+> - ⏳ 3.4 Docking — **expandindo 194→1000** (rodando no servidor, config 4065084); top-1 −13,62 kcal/mol (atual)
+> - ⏳ 3.5 Ranking — será atualizado após docking expandido + Rosetta top-50
+> - ⏳ 3.6 PyRosetta — **expandindo 10→50** complexos refinados (após docking); atual top: GARKSIREYQKRVLERLKKK (−86,28)
 > - ✓ 3.7 Candidatos prioritários — **reclassificados pós-MD**: MKKQRENAKKVAEITLKKAK #1, GSRASARAYAARVRARRAAL #2
 > - ✓ 3.8 MD — **5/5 candidatos concluídos** (10 ns cada); 2 estáveis (RMSD < 0,5 nm), 1 marginal, 2 instáveis; reclassificação completa
+> - ⏳ 3.9 ML/DL — script `scripts/train_ml.py` pronto; aguarda 1000 labels Vina para treinar
 
 ---
 
@@ -243,14 +244,14 @@ O critério de estabilidade dinâmica (RMSD < 0,5 nm como limiar para pose está
 
 ## 4. Conclusões Parciais
 
-O pipeline multiagente completou todas as etapas planejadas: design estrutural (RFdiffusion), design de sequências (ProteinMPNN), triagem de afinidade (Vina), validação de interface (PyRosetta) e avaliação dinâmica completa (MD 10 ns, 5 candidatos). Estado consolidado (2026-06-25):
+O pipeline multiagente completou as etapas de design (RFdiffusion), sequenciamento (ProteinMPNN), triagem de afinidade (Vina), validação de interface (PyRosetta) e avaliação dinâmica (MD 10 ns, 5 candidatos), com expansão em curso. Estado consolidado (2026-06-25):
 
 - **330 backbones reais** gerados pelo RFdiffusion para ACR157
 - **24.513 sequências únicas** de binder 20 aa via ProteinMPNN real
-- **194/194 poses Vina reais**; top-1: GSRASARAYAARVRARRAAL (−13,62 kcal/mol)
-- **10/10 complexos refinados por PyRosetta** (I_sc REF2015 real); top-1: GARKSIREYQKRVLERLKKK (−86,28 kcal/mol)
+- **1.000 poses Vina** em execução (expandido de 194; config `top_for_docking: 1000`, commit `4065084`)
+- **50 complexos por PyRosetta** em execução (expandido de 10; `optimization.top_k: 50`)
 - **MD 10 ns concluído para 5/5 candidatos**; 2 estáveis (RMSD < 0,5 nm), 1 marginal, 2 instáveis
-- Dataset ML/DL: 194 labels Vina reais + 10 labels I_sc Rosetta + 5 labels estabilidade MD
+- Dataset ML/DL: 1.000 labels Vina (em execução) + 50 labels I_sc + 5 labels MD → `scripts/train_ml.py` pronto
 
 O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é biologicamente coerente com o bolso S1 de tripsina (Asp205 âncora eletrostática). A avaliação dinâmica revela que o melhor I_sc por PyRosetta (GARKSIREYQKRVLERLKKK, −86,28 kcal/mol) não se traduz em estabilidade em solvente explícito, evidenciando a necessidade da etapa MD para filtrar candidatos — resultado consistente com literatura recente sobre divergência entre estimativas estáticas e dinâmicas de afinidade peptídeo–proteína (*de Oliveira et al., 2020*).
 
@@ -258,11 +259,11 @@ O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é 
 1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm, Vina −12,72, I_sc −80,49
 2. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm, Vina −13,62, I_sc −78,44
 
-**Próximos passos (ordem de prioridade):**
-1. **Re-rodar RFdiffusion** com comprimentos variáveis independentes (5–15 aa) para candidatos de comprimento otimizado
-2. **Docking completo** dos 24.513 candidatos para labels ML supervisionados
-3. **Treinamento ML/DL**: Random Forest → GNN com 194+ labels Vina + 10 labels Rosetta + 5 labels MD
-4. **Síntese Fmoc-SPPS**: MKKQRENAKKVAEITLKKAK e GSRASARAYAARVRARRAAL → ensaios IC50 in vitro contra ACR157
+**Próximas etapas (Plano 2026-06-25, 4 fases):**
+1. **Fase 2** *(rodando)* — Docking 1000 seqs → Rosetta top-50 → ranking atualizado (~8h GPU)
+2. **Fase 3** *(após Fase 2)* — `python scripts/train_ml.py` → Random Forest/XGBoost → predições para 24.513 seqs
+3. **Fase 1** *(após ranking)* — OptimizationAgent: variantes de MKKQRENAKKVAEITLKKAK e GSRASARAYAARVRARRAAL (~2h GPU)
+4. **Fase 4** *(paralela)* — RFdiffusion 5–15 aa reais (250 backbones novos) → candidatos para síntese Fmoc-SPPS
 
 ---
 

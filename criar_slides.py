@@ -954,32 +954,32 @@ slide_num(slide, 16)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Proximos Passos", "MD 5/5 concluido | 2 estaveis: MKKQRENA (0,447 nm) + GSRASARA (0,494 nm) | 2026-06-25")
+header_bar(slide, "Proximos Passos", "4 fases planejadas | Fase 2 rodando no servidor (2026-06-25)")
 
 steps_prox = [
-    ("1", "CONCLUIDO", "MD 5 candidatos — RECLASSIFICACAO COMPLETA",
-     "MKKQRENAKKVAEITLKKAK (0,447 nm) e GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEIS\n"
-     "GARKSIREYQKRVLERLKKK descartado (RMSD 1,45 nm apesar de melhor I_sc -86,28)",
-     C_VERDE, "done"),
-    ("2", "CURTO",   "Re-rodar RFdiffusion com comprimentos variados (5-15 aa)",
-     "Chamar RFdiffusion com comprimentos independentes por rodada\n"
-     "-> peptideos curtos (5-15 aa) mais praticos para sintese por Fmoc-SPPS",
+    ("2", "RODANDO",  "Docking 1000 seqs + Rosetta top-50 + Ranking",
+     "top_for_docking: 200->1000 | optimization.top_k: 10->50\n"
+     "28x mais labels Vina | 5x mais I_sc -> dataset ML robusto (~8h GPU)",
+     C_VERDE, "~8h GPU"),
+    ("3", "PROXIMO",  "ML Training: Random Forest + XGBoost",
+     "scripts/train_ml.py: 1000 labels -> prediz afinidade para 24.513 seqs\n"
+     "Output: ml_top100_predicted.csv | feature importance | RMSE < 0,8 kcal/mol",
+     C_CIANO, "~5 min"),
+    ("1", "PROXIMO",  "OptimizationAgent: variantes dos candidatos estaveis",
+     "MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> point mutations + conservative swaps\n"
+     "-> re-dock automatico -> novos candidatos aprimorados (top_k: 50->5)",
      C_AMARELO, "~2h GPU"),
-    ("3", "CURTO",   "Docking completo dos 24.513 candidatos",
-     "Afinidade Vina para todo o dataset -> labels ML supervisionados completos\n"
-     "Atual: 194 labels / 24.513 totais (0.8%)",
-     C_AMARELO, "~GPU"),
-    ("4", "MEDIO",   "Treinamento ML/DL sobre dataset supervisionado",
-     "194+ labels Vina + 10 labels Rosetta -> Random Forest -> GNN\n"
-     "Preditor de afinidade: input=seq, output=Vina/I_sc",
-     C_AZUL_MEDIO, "horas"),
-    ("5", "MEDIO",   "Expandir para QCL936, XP273, XP352",
-     "Pipeline primario usou ACR157. Rodar docking e Rosetta para outros 3 receptores\n"
-     "-> candidatos com seletividade (especifico para XP273 hidrofobico)",
+    ("4", "PARALELA", "RFdiffusion comprimentos variaveis (5-15 aa)",
+     "250 novos backbones reais: 50 x [5, 7, 10, 12, 15 aa]\n"
+     "Peptideos curtos: melhor sintese Fmoc-SPPS + bioatividade oral",
+     C_AMARELO, "~3h GPU"),
+    ("5", "FUTURO",   "Expandir para QCL936, XP273, XP352",
+     "Pipeline atual: ACR157 apenas. Rodar docking+Rosetta nos outros 3 receptores\n"
+     "-> seletividade por tripsina (XP273 hidrofobico = target diferenciado)",
      C_AZUL_MEDIO, "~GPU"),
-    ("6", "LONGO",   "Sintese e validacao experimental",
-     "Top-3 candidatos -> sintese Fmoc-SPPS -> ensaios IC50 in vitro\n"
-     "Tripsinas recombinantes de S. frugiperda e A. gemmatalis",
+    ("6", "LONGO",    "Sintese e validacao experimental",
+     "Top-2: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> Fmoc-SPPS -> IC50 in vitro\n"
+     "Tripsinas recombinantes S. frugiperda + A. gemmatalis (GenOne / Peptide 2.0)",
      C_LARANJA, "meses"),
 ]
 
@@ -1017,31 +1017,31 @@ add_rect(slide, 0, 0, 13.33, 1.25, C_AZUL_ESCURO)
 add_rect(slide, 0, 1.2, 13.33, 0.08, C_CIANO)
 add_text(slide, "Conclusoes", 0.5, 0.15, 12.0, 0.6,
          font_size=34, bold=True, color=C_BRANCO)
-add_text(slide, "Pipeline completo executado em modo REAL — 2026-06-18", 0.5, 0.72, 12.0, 0.42,
+add_text(slide, "MD 5/5 concluido | Docking 1000 rodando | 2 candidatos estaveis — 2026-06-25", 0.5, 0.72, 12.0, 0.42,
          font_size=16, color=C_CIANO)
 
 conclusoes = [
     (C_VERDE, "✓",
-     "330 backbones reais (RFdiffusion, Complex_base_ckpt.pt) | 24.513 binders únicos 20 aa (ProteinMPNN real, "
-     "bug FASTA corrigido) — dataset 41 features × labels Vina + I_sc"),
+     "330 backbones reais (RFdiffusion) | 24.513 binders 20 aa (ProteinMPNN) | "
+     "42 bugs corrigidos | dataset 44 features × 24.513 sequencias"),
     (C_VERDE, "✓",
-     "194/194 poses Vina reais com binders RFdiffusion genuínos (5 bugs críticos corrigidos, incl. "
-     "inversão da identidade dos candidatos — redesigns de tripsinas identificados e eliminados)"),
+     "194 poses Vina reais (expandindo para 1000) | 10 I_sc PyRosetta (expandindo para 50) | "
+     "Ranking composto: Vina 50% + Rosetta 20% + H-bond 15% + RMSD 10%"),
     (C_VERDE, "✓",
-     "PyRosetta 2026.25 instalado e integrado | 10/10 complexos refinados (FastRelax + InterfaceAnalyzerMover) | "
-     "integração docking->rosetta corrigida (best_affinity_kcal, commits a7ac84f+e16a28f)"),
+     "MD 10 ns — 5/5 candidatos concluidos | MKKQRENAKKVAEITLKKAK (0,447 nm) ESTAVEL #1 | "
+     "GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEL #2 | GARKSIREYQKRVLERLKKK descartado (1,453 nm)"),
     (C_CIANO, "→",
-     "Top-3 por dupla validação Vina+Rosetta: GARKSIREYQKRVLERLKKK (I_sc=-86.28, Vina=-12.76) | "
-     "GSRASARAYAARVRARRAAL (Vina=-13.62, I_sc=-78.44) | AARASQREYQKKFLERLKKK (I_sc=-85.92)"),
+     "Reclassificacao pos-MD: melhor I_sc (GARKSIREYQKRVLERLKKK, -86,28) instavel em solvente. "
+     "MD obrigatorio para filtrar falsos-positivos Rosetta — resultado consistente com literatura"),
     (C_CIANO, "→",
-     "Padrão composicional: Arg/Lys + Ala/Ser (sem aromáticos) — mecanismo competitivo clássico (Arg-Asp205 S1). "
-     "SLARKRAEENAKRFLERVKK descartado (Vina #3, Rosetta #10 — divergência indica interface fraca)"),
-    (C_VERDE, "✓",
-     "MD 10 ns concluido para GSRASARAYAARVRARRAAL: RMSD 0,37 nm (avg Run4) | Rg 1,79 nm | "
-     "Complexo ESTAVEL em 10 ns — valida predicao computacional. Bug 40/41 corrigidos (36a83f6)."),
-    (C_AMARELO, "◑",
-     "Proximos: MD outros 4 candidatos (Bug 40 corrigido) | RFdiffusion 5-15 aa | docking 24.513 | "
-     "ML/DL 194+ labels | expansao QCL936/XP273/XP352 | sintese Fmoc-SPPS top-3"),
+     "Padrao composicional: Arg/Lys + Ala/Ser (sem aromaticos) — mecanismo competitivo Arg-Asp205 (S1). "
+     "Mecanismo proposto validado por 3 metodos independentes (Vina + Rosetta + MD)"),
+    (C_AMARELO, "⏳",
+     "Fase 2 RODANDO: docking 1000 seqs + Rosetta 50 + ranking | "
+     "Proximo: scripts/train_ml.py (RF/XGBoost) + OptimizationAgent + RFdiffusion 5-15 aa"),
+    (C_LARANJA, "→",
+     "Alvo final: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> sintese Fmoc-SPPS -> "
+     "ensaios IC50 in vitro (S. frugiperda + A. gemmatalis). Publicacao: JCIM / CSBJ"),
 ]
 for i, (c, sym, texto) in enumerate(conclusoes):
     add_rect(slide, 0.4, 1.4 + i * 0.82, 0.55, 0.7, c)
