@@ -10,6 +10,8 @@
 > - ✓ 3.7 Candidatos prioritários — **reclassificados pós-MD**: MKKQRENAKKVAEITLKKAK #1, GSRASARAYAARVRARRAAL #2
 > - ✓ 3.8 MD — **5/5 candidatos concluídos** (10 ns cada); 2 estáveis (RMSD < 0,5 nm), 1 marginal, 2 instáveis; reclassificação completa
 > - ⏳ 3.9 ML/DL — script `scripts/train_ml.py` pronto; aguarda 1000 labels Vina para treinar
+> - ✓ 3.10 Resistência proteolítica — **análise de clivagem executada** (commit 83299cc): 5/5 candidatos SUSCEPTÍVEIS (score=1,0; 5–7 P1-internos); estratégias de proteção definidas
+> - ⏳ 3.11 Especificidade — `SpecificityAgent` implementado; executa após docking expandido (1TRN + Apis mellifera)
 
 ---
 
@@ -229,7 +231,42 @@ O critério de estabilidade dinâmica (RMSD < 0,5 nm como limiar para pose está
 
 ---
 
-### 3.9 Inibidores de Referência
+### 3.10 Análise de Resistência Proteolítica (in silico)
+
+A viabilidade terapêutica de peptídeos inibidores aplicados via ingestão (spray foliar ou expressão transgênica) depende criticamente da capacidade de sobreviver ao trato intestinal sem serem degradados pelas próprias proteases-alvo (*Tamaki et al., 2014; Chen et al., 2020*). A análise de sítios de clivagem in silico foi realizada para os cinco candidatos MD utilizando as regras do ExPASy PeptideCutter para as proteases de maior relevância no gut de Lepidoptera.
+
+**Tabela 8.** Análise de resistência proteolítica — top-5 candidatos MD.
+
+| Candidato | P1-âncora (pos) | P1-internos (tripsina) | Sítios quimiotripsina | Sítios elastase | Score susceptibilidade | Veredicto |
+|-----------|-----------------|------------------------|----------------------|----------------|----------------------|-----------|
+| MKKQRENAKKVAEITLKKAK | 18 | **6** (pos 2,3,5,9,10,17) | 2 | 4 | 1,0 | **SUSCEPTÍVEL** |
+| GSRASARAYAARVRARRAAL | 17 | **5** (pos 3,7,12,14,16) | 1 | 12 | 1,0 | **SUSCEPTÍVEL** |
+| GARKSIREYQKRVLERLKKK | 19 | **7** (pos 3,4,7,11,12,16,18) | 1 | 4 | 1,0 | **SUSCEPTÍVEL** |
+| SLARKRAEENAKRFLERVKK | 19 | **6** (pos 4,5,6,12,13,17) | 1 | 5 | 1,0 | **SUSCEPTÍVEL** |
+| AARASIRAAAARFRARRAAL | 17 | **5** (pos 3,7,12,14,16) | 1 | 11 | 1,0 | **SUSCEPTÍVEL** |
+
+Todos os cinco candidatos apresentam score de susceptibilidade máximo (1,0) com 5 a 7 sítios de clivagem internos por tripsina além do resíduo P1-âncora C-terminal. Esse resultado é biologicamente esperado para peptídeos lineares de 20 aa ricos em Arg/Lys — o mesmo perfil composicional que maximiza a afinidade ao bolso S1 (necessidade de P1 = Arg/Lys) também torna o peptídeo substrato da própria tripsina em posições internas.
+
+**Implicação:** os candidatos atuais são adequados como **sondas de pesquisa** (inibição in vitro, validação do princípio de design), mas não podem ser utilizados diretamente como biopesticidas sem modificações químicas que confiram resistência proteolítica.
+
+**Estratégias de proteção propostas:**
+
+1. **Substituição de P1-internos por isósteros não-cliváveis:**
+   - K interno → Nle (norleucina): elimina o grupo ε-amino, mantém volume e hidrofobicidade
+   - R interno → Orn (ornitina): perde o guanidínio, mantém basicidade; ou Cit (citrulina): neutro
+   - Aplicação imediata: gerar variantes de MKKQRENAKKVAEITLKKAK e GSRASARAYAARVRARRAAL com Nle/Orn nas posições internas via `OptimizationAgent`
+
+2. **Incorporação de D-aminoácidos nas posições vulneráveis** (síntese Fmoc-SPPS): D-Lys e D-Arg são invisíveis para tripsinas enantiosseletivas; manutenção das posições L nos contatos de interface
+
+3. **Ciclização N-C-terminal:** reduz graus de liberdade conformacional e elimina extremidades cliváveis por aminopeptidases; aplicável a candidatos ≤10 aa da Fase 4
+
+4. **Design de novas sequências sem K/R internos (Fase 4):** RFdiffusion 5–15 aa com filtro explícito `n_internal_KR = 0` no ProteinMPNN — P1 único (pos 1 ou N-terminal) com Arg/Lys; posições internas exclusivamente Ala, Ser, Gly, Pro (resistentes a quimiotripsina e elastase também)
+
+A análise é complementada pelo `SpecificityAgent` (implementado neste commit): docking contra tripsina humana (1TRN) e *Apis mellifera* (AlphaFold Q9GYL5) para confirmar que a necessária especificidade seletiva (SI ≥ 2,0 kcal/mol) é mantida após otimização de resistência.
+
+---
+
+### 3.11 Inibidores de Referência
 
 | Peptídeo           | Sequência          | Comprimento | Fonte            |
 |--------------------|--------------------|-------------|------------------|
@@ -259,11 +296,16 @@ O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é 
 1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm, Vina −12,72, I_sc −80,49
 2. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm, Vina −13,62, I_sc −78,44
 
-**Próximas etapas (Plano 2026-06-25, 4 fases):**
-1. **Fase 2** *(rodando)* — Docking 1000 seqs → Rosetta top-50 → ranking atualizado (~8h GPU)
-2. **Fase 3** *(após Fase 2)* — `python scripts/train_ml.py` → Random Forest/XGBoost → predições para 24.513 seqs
-3. **Fase 1** *(após ranking)* — OptimizationAgent: variantes de MKKQRENAKKVAEITLKKAK e GSRASARAYAARVRARRAAL (~2h GPU)
-4. **Fase 4** *(paralela)* — RFdiffusion 5–15 aa reais (250 backbones novos) → candidatos para síntese Fmoc-SPPS
+**Próximas etapas (Plano 2026-06-25, 6 fases):**
+
+| Fase | Ação | Prioridade | Requisito atendido |
+|------|------|-----------|-------------------|
+| 2 *(rodando)* | Docking 1000 seqs → Rosetta top-50 → ranking atualizado | Alta | — |
+| 3 *(após Fase 2)* | ML training (RF+XGB) → predições 24.513 seqs | Alta | — |
+| 3b *(após ranking)* | `--step specificity`: docking 1TRN + Apis mellifera | Alta | R4 especificidade |
+| 3c *(após ranking)* | `--step cleavage`: análise P1-internos + variantes Nle/Orn | Alta | R5 resistência |
+| 4 *(paralela)* | RFdiffusion 5–15 aa com filtro KR-interno=0 | Média | R1 tamanhos, R5 |
+| 5 *(após Fase 4)* | Expansão para tripsinas *H. armigera*, *A. gemmatalis*, *D. saccharalis* | Média | R3 taxonomia |
 
 ---
 
