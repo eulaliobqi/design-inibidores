@@ -23,7 +23,7 @@ rfdiffusion:
   num_designs: 50
   noise_scale_ca: 0.2
   noise_scale_frame: 0.1
-  contig_lengths: [5, 7, 10, 12, 15, 20]
+  contig_lengths: [5, 7, 10, 12, 15]  # Fase 4: comprimentos reais (20 removido — rodada anterior fixou em 20aa)
   hotspot_radius: 6.0               # Å em torno do sítio S1
   # Caminhos possíveis (detectados automaticamente)
   install_paths:
@@ -49,7 +49,7 @@ proteinmpnn:
 ml_dataset:
   export_csv: true
   output_file: "outputs/dataset/ml_training_dataset.csv"
-  top_for_docking: 200               # Rodar docking apenas nos top-200 por heurística
+  top_for_docking: 1000              # Fase 2: expandido de 200→1000 para labels ML suficientes
   features:
     - length
     - mw_da
@@ -97,8 +97,8 @@ md:
   # Para produção: aumentar para 100+ ns
 
 optimization:
-  top_k: 10                         # candidatos para redesign
-  max_iterations: 3
+  top_k: 50                         # Fase 2: Rosetta refina top-50 dockados | para --step optimize usar 5
+  max_iterations: 2                 # 2 rodadas de mutação (reduzido de 3)
   mutation_rate: 0.3
   positions_to_vary: [2, 3, 4, 5]  # P2-P5 (P1 fixo)
 
