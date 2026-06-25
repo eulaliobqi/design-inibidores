@@ -762,77 +762,57 @@ for i, (seq, vina, isc, rv, ri, perfil, desc, c) in enumerate(top_cands):
 
 add_rect(slide, 0.4, 7.22, 12.5, 0.18, C_VERDE)
 add_text(slide,
-    "MD CONCLUIDO: GSRASARAYAARVRARRAAL | RMSD 0,37 nm | Rg 1,79 nm | Complexo ESTAVEL em 10 ns | ver slide 13",
+    "MD 5/5 CONCLUIDO: MKKQRENAKKVAEITLKKAK (0,447 nm) e GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEIS | ver slide 13",
     0.55, 7.23, 12.2, 0.16, font_size=11, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 12)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SLIDE 13 — MD Results: GSRASARAYAARVRARRAAL 10 ns
+# SLIDE 13 — MD Results: 5 candidatos × ACR157 (10 ns cada)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Dinamica Molecular — GSRASARAYAARVRARRAAL × ACR157",
-           "GROMACS | AMBER99SB-ILDN | TIP3P | 300 K | NVT 200 ps + NPT 500 ps + MD 10 ns | 3 replicas completas")
+header_bar(slide, "Dinamica Molecular — Top-5 Candidatos × ACR157",
+           "GROMACS | AMBER99SB-ILDN | TIP3P | 300 K | 10 ns cada | RTX 5070 Ti (~36 min/replica)")
 
-# — Painel esquerdo: métricas
-add_rect(slide, 0.4, 1.25, 5.8, 5.7, C_AZUL_ESCURO)
-add_text(slide, "Metricas de Estabilidade (10 ns)", 0.6, 1.35, 5.4, 0.42,
-         font_size=15, bold=True, color=C_CIANO)
-add_text(slide, "Melhor replica (Run 4, mais equilibrado):", 0.6, 1.82, 5.4, 0.3,
-         font_size=12, color=C_CINZA_CLARO)
+# — Cabeçalho tabela
+add_rect(slide, 0.3, 1.25, 12.7, 0.42, C_AZUL_ESCURO)
+for txt, x, w in [("Candidato", 0.35, 3.8), ("Vina", 4.2, 1.2), ("I_sc", 5.45, 1.2),
+                   ("RMSD avg", 6.7, 1.3), ("Rg (nm)", 8.05, 1.2), ("Hbond", 9.3, 1.0), ("Estabilidade", 10.35, 2.6)]:
+    add_text(slide, txt, x, 1.3, w, 0.32, font_size=12, bold=True, color=C_BRANCO)
 
-md_metrics = [
-    ("RMSD backbone", "0,365 nm (avg)", "0,375 nm (final)", C_VERDE),
-    ("RMSD maximo",   "2,507 nm",       "fase inicial (<2 ns)", C_AMARELO),
-    ("Rg complexo",   "1,792 nm (avg)", "std = 0,023 nm", C_VERDE),
-    ("H-bonds sist.", "160,1 (avg)",    "max 182", C_CIANO),
+# — Linhas da tabela
+C_VERDE_MD   = RGBColor(0xD4, 0xED, 0xDA)
+C_AMARELO_MD = RGBColor(0xFF, 0xF3, 0xCD)
+C_VERMELHO_MD= RGBColor(0xF8, 0xD7, 0xDA)
+
+md_rows = [
+    ("MKKQRENAKKVAEITLKKAK", "-12,72", "-80,49", "0,447 ± 0,332", "1,785", "161,0", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
+    ("GSRASARAYAARVRARRAAL", "-13,62", "-78,44", "0,494 ± 0,414", "1,799", "160,9", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
+    ("AARASIRAAAARFRARRAAL", "-12,62", "-75,45", "0,945 ± 0,924", "1,836", "163,6", "Marginal",  C_AMARELO_MD,  C_AMARELO),
+    ("GARKSIREYQKRVLERLKKK", "-12,76", "-86,28", "1,453 ± 1,003", "1,952", "160,5", "Instavel",  C_VERMELHO_MD, C_LARANJA),
+    ("SLARKRAEENAKRFLERVKK", "-12,71", "-61,41", "1,700 ± 1,033", "1,910", "170,8", "Instavel",  C_VERMELHO_MD, C_LARANJA),
 ]
-for i, (metrica, valor, detalhe, c) in enumerate(md_metrics):
-    y = 2.18 + i * 0.95
-    add_rect(slide, 0.5, y, 5.6, 0.85, RGBColor(0x14, 0x3D, 0x6B))
-    add_rect(slide, 0.5, y, 0.12, 0.85, c)
-    add_text(slide, metrica, 0.72, y + 0.05, 2.3, 0.35,
-             font_size=13, bold=True, color=C_CINZA_CLARO)
-    add_text(slide, valor, 3.1, y + 0.03, 2.9, 0.38,
-             font_size=15, bold=True, color=c, align=PP_ALIGN.RIGHT)
-    add_text(slide, detalhe, 0.72, y + 0.48, 4.8, 0.3,
-             font_size=10, italic=True, color=RGBColor(0xAA, 0xBB, 0xCC))
+for i, (seq, vina, isc, rmsd, rg, hb, status, bg, sc) in enumerate(md_rows):
+    y = 1.72 + i * 0.9
+    add_rect(slide, 0.3, y, 12.7, 0.85, bg)
+    add_rect(slide, 0.3, y, 0.08, 0.85, sc)
+    add_text(slide, seq, 0.45, y + 0.22, 3.7, 0.38, font_size=12, bold=True, color=C_AZUL_ESCURO)
+    for val, x in [(vina, 4.2), (isc, 5.45), (rmsd, 6.7), (rg, 8.05), (hb, 9.3)]:
+        add_text(slide, val, x, y + 0.22, 1.2, 0.38, font_size=12, color=C_CINZA_TEXTO)
+    add_rect(slide, 10.35, y + 0.17, 2.55, 0.48, sc)
+    add_text(slide, status, 10.35, y + 0.17, 2.55, 0.48,
+             font_size=13, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
-add_text(slide, "Replica Run 3 (ref. adicional):", 0.6, 6.05, 5.4, 0.28,
-         font_size=11, color=C_CINZA_CLARO)
-add_text(slide, "RMSD avg 0,522 nm | final 0,462 nm | Rg 1,840 ± 0,077 nm | Hbond avg 169,0",
-         0.6, 6.33, 5.4, 0.28, font_size=10, italic=True, color=RGBColor(0x88, 0x99, 0xAA))
-add_text(slide, "Consistente com Run 4 — convergencia progressiva entre replicas (1,20->0,52->0,37 nm avg RMSD)",
-         0.6, 6.6, 5.4, 0.28, font_size=9, italic=True, color=RGBColor(0x66, 0x77, 0x88))
-
-# — Painel direito: interpretação
-add_rect(slide, 6.5, 1.25, 6.4, 5.7, C_BRANCO)
-add_rect(slide, 6.5, 1.25, 6.4, 0.05, C_VERDE)
-add_text(slide, "Interpretacao", 6.7, 1.32, 6.0, 0.42,
-         font_size=15, bold=True, color=C_AZUL_ESCURO)
-
-interp = [
-    (C_VERDE,    "RMSD < 0,5 nm ao final (0,375 nm)", "Peptideo MANTEM pose de ligacao em 10 ns. Sem dissociacao."),
-    (C_VERDE,    "Rg 1,792 nm, std 0,023 nm",          "ACR157 mantem compacidade estrutural. Sem desnaturacao."),
-    (C_AMARELO,  "Pico RMSD ~2,5 nm em t<2 ns",        "Relaxamento inicial do complexo — comportamento normal. Pose estavel apos equilibracao."),
-    (C_CIANO,    "H-bonds sistema avg 160",            "Total proteina+peptideo (inter+intramolecular). Interface especifica sera quantificada em analise posterior."),
-    (C_CIANO,    "Mecanismo proposto",                  "Seg. GSRASA-R ancora Asp205 (S1) via guanidinio^2+. C-term RARRAAL contribui contatos secundarios."),
-    (C_VERDE,    "Validacao computacional confirmada",  "Vina (-13,62) + Rosetta I_sc (-78,44) + MD (RMSD 0,37 nm) — tres metodos independentes concordam."),
-]
-for i, (c, titulo, desc) in enumerate(interp):
-    y = 1.78 + i * 0.82
-    add_rect(slide, 6.6, y, 0.12, 0.7, c)
-    add_text(slide, titulo, 6.8, y + 0.02, 5.9, 0.3,
-             font_size=12, bold=True, color=C_AZUL_ESCURO)
-    add_text(slide, desc, 6.8, y + 0.34, 5.9, 0.42,
-             font_size=11, color=C_CINZA_TEXTO)
-
-# — Banner inferior
-add_rect(slide, 0.4, 7.08, 12.5, 0.3, C_AZUL_MEDIO)
+# — Painel inferior: reclassificação
+add_rect(slide, 0.3, 6.27, 12.7, 1.05, C_AZUL_ESCURO)
+add_text(slide, "RECLASSIFICACAO FINAL (Vina + I_sc Rosetta + RMSD MD)", 0.5, 6.32, 12.3, 0.38,
+         font_size=13, bold=True, color=C_CIANO)
 add_text(slide,
-    "Bug 40 CORRIGIDO (commit 36a83f6) — proxima rodada: GARKSIREYQKRVLERLKKK + AARASQREYQKKFLERLKKK + MKKQRENAKKVAEITLKKAK",
-    0.55, 7.12, 12.2, 0.24, font_size=12, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+    "#1 MKKQRENAKKVAEITLKKAK (RMSD 0,447 nm — mais estavel)    "
+    "#2 GSRASARAYAARVRARRAAL (Vina -13,62 + RMSD 0,494 nm)    "
+    "GARKSIREYQKRVLERLKKK descartado (melhor I_sc mas RMSD 1,45 nm = instavel em solvente)",
+    0.5, 6.72, 12.3, 0.55, font_size=11, color=C_CINZA_CLARO)
 
 slide_num(slide, 13)
 
@@ -974,12 +954,12 @@ slide_num(slide, 16)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Proximos Passos", "MD GSRASARA concluido (RMSD 0,37 nm) | outros 4 candidatos em execucao | 2026-06-18")
+header_bar(slide, "Proximos Passos", "MD 5/5 concluido | 2 estaveis: MKKQRENA (0,447 nm) + GSRASARA (0,494 nm) | 2026-06-25")
 
 steps_prox = [
-    ("1", "CONCLUIDO", "MD GSRASARAYAARVRARRAAL — COMPLEXO ESTAVEL",
-     "RMSD 0,37 nm (10 ns) | Rg 1,79 nm | 3 replicas completas\n"
-     "Bug 40 corrigido (commit 36a83f6) — rodar outros 4 candidatos",
+    ("1", "CONCLUIDO", "MD 5 candidatos — RECLASSIFICACAO COMPLETA",
+     "MKKQRENAKKVAEITLKKAK (0,447 nm) e GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEIS\n"
+     "GARKSIREYQKRVLERLKKK descartado (RMSD 1,45 nm apesar de melhor I_sc -86,28)",
      C_VERDE, "done"),
     ("2", "CURTO",   "Re-rodar RFdiffusion com comprimentos variados (5-15 aa)",
      "Chamar RFdiffusion com comprimentos independentes por rodada\n"
