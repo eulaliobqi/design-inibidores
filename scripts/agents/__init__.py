@@ -9,9 +9,10 @@ from .optimization_agent import OptimizationAgent
 from .ranking_agent import RankingAgent
 from .visualization_agent import VisualizationAgent
 from .report_agent import ReportAgent
+from .specificity_agent import SpecificityAgent
 
 __all__ = [
     "BaseAgent", "StructureAgent", "RFdiffusionAgent", "ProteinMPNNAgent",
     "RosettaAgent", "DockingAgent", "MDAgent", "OptimizationAgent",
-    "RankingAgent", "VisualizationAgent", "ReportAgent",
+    "RankingAgent", "VisualizationAgent", "ReportAgent", "SpecificityAgent",
 ]

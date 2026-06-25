@@ -12,9 +12,11 @@ Etapas:
   rfdiffusion → gera backbones peptídicos
   mpnn        → desenha sequências
   rosetta     → refina complexos
-  docking     → valida afinidade (Vina)
+  docking     → valida afinidade (Vina) contra alvos Lepidoptera
   md          → estabilidade MD (GROMACS)
   ranking     → score composto + CSV
+  specificity → seletividade vs não-alvos (humana + Apis mellifera) [R4]
+  cleavage    → resistência proteolítica in silico (PeptideCutter rules) [R5]
   visualize   → figuras automáticas
   report      → relatório HTML/Markdown
   optimize    → redesign iterativo (requer ranking prévio)
@@ -34,7 +36,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.agents import (
     StructureAgent, RFdiffusionAgent, ProteinMPNNAgent, RosettaAgent,
     DockingAgent, MDAgent, OptimizationAgent, RankingAgent,
-    VisualizationAgent, ReportAgent,
+    VisualizationAgent, ReportAgent, SpecificityAgent,
 )
 from scripts.utils import tool_summary
 
@@ -51,7 +53,8 @@ except ImportError:
 
 
 STEPS = ["structure", "rfdiffusion", "mpnn", "rosetta", "docking",
-         "md", "ranking", "visualize", "report", "optimize"]
+         "md", "ranking", "specificity", "cleavage",
+         "visualize", "report", "optimize"]
 
 
 def load_config(path: str) -> dict:
@@ -229,10 +232,59 @@ def main():
         rank_file = out_base / "ranking" / "ranking.csv"
         ranking_df = pd.read_csv(rank_file) if rank_file.exists() else pd.DataFrame()
 
-    # ── STAGE 8: Visualização ───────────────────────────────────────────────
+    # ── STAGE 8: Especificidade (R4) ───────────────────────────────────────
+    if should_run("specificity", args, ckpt):
+        print("━" * 50)
+        print("STAGE 8 — Especificidade vs. Não-Alvos (Vina: humana + Apis)")
+        if docking_results:
+            agent = SpecificityAgent("SpecificityAgent", config,
+                                      out_base / "specificity")
+            spec_results = agent.run(docking_results, docking_results)
+            n_approved = spec_results.get("n_approved", 0)
+            n_total    = len(spec_results.get("selectivity", {}))
+            ckpt.save("specificity", {"n_approved": n_approved, "n_total": n_total})
+            print(f"  ✓ {n_approved}/{n_total} candidatos aprovados (SI ≥ "
+                  f"{config.get('specificity', {}).get('selectivity_threshold', 2.0)} kcal/mol)")
+        else:
+            print("  ⚠ Docking não disponível — especificidade pulada")
+    else:
+        spec_file = out_base / "specificity" / "specificity_results.json"
+        spec_results = (json.loads(spec_file.read_text())
+                        if spec_file.exists() else {})
+
+    # ── STAGE 9: Resistência proteolítica (R5) ─────────────────────────────
+    if should_run("cleavage", args, ckpt):
+        print("━" * 50)
+        print("STAGE 9 — Resistência Proteolítica (Análise de Clivagem)")
+        import subprocess as _sp
+        import sys as _sys
+        _r = _sp.run(
+            [_sys.executable, str(ROOT / "scripts" / "analyze_cleavage.py"),
+             "--top", str(config.get("ranking", {}).get("top_candidates", 20))],
+            capture_output=True, text=True
+        )
+        cleavage_file = out_base / "cleavage_analysis.json"
+        if cleavage_file.exists():
+            cleavage_data = json.loads(cleavage_file.read_text())
+            n_resistant = sum(1 for r in cleavage_data if r.get("verdict") == "RESISTENTE")
+            n_total_cl  = len(cleavage_data)
+            ckpt.save("cleavage", {"n_resistant": n_resistant, "n_total": n_total_cl})
+            print(f"  ✓ {n_resistant}/{n_total_cl} candidatos resistentes ao trato intestinal")
+            if _r.stdout:
+                # Mostrar resumo (últimas 10 linhas)
+                for line in _r.stdout.strip().splitlines()[-10:]:
+                    print(f"    {line}")
+        else:
+            print(f"  ✗ Análise de clivagem falhou: {_r.stderr[:200]}")
+    else:
+        cleavage_file = out_base / "cleavage_analysis.json"
+        cleavage_data = (json.loads(cleavage_file.read_text())
+                         if cleavage_file.exists() else [])
+
+    # ── STAGE 10: Visualização ──────────────────────────────────────────────
     if should_run("visualize", args, ckpt):
         print("━" * 50)
-        print("STAGE 8 — Visualizações")
+        print("STAGE 10 — Visualizações")
         agent = VisualizationAgent("VisualizationAgent", config,
                                     out_base / "visualizations")
         figures = agent.run(ranking_df, binding_site)
@@ -241,10 +293,10 @@ def main():
     else:
         figures = {}
 
-    # ── STAGE 9: Relatório ──────────────────────────────────────────────────
+    # ── STAGE 11: Relatório ─────────────────────────────────────────────────
     if should_run("report", args, ckpt):
         print("━" * 50)
-        print("STAGE 9 — Relatório Final")
+        print("STAGE 11 — Relatório Final")
         agent = ReportAgent("ReportAgent", config, out_base / "reports")
         # Mover figuras para reports/
         import shutil
@@ -258,10 +310,10 @@ def main():
     else:
         report_paths = ckpt.load("report") or {}
 
-    # ── STAGE 10: Otimização iterativa ──────────────────────────────────────
+    # ── STAGE 12: Otimização iterativa ──────────────────────────────────────
     if should_run("optimize", args, ckpt):
         print("━" * 50)
-        print(f"STAGE 10 — Redesign Iterativo (iteração {args.iter})")
+        print(f"STAGE 12 — Redesign Iterativo (iteração {args.iter})")
         if ranking_df.empty:
             print("  ✗ Ranking vazio — execute --step ranking primeiro")
         else:

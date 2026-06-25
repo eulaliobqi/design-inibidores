@@ -114,3 +114,24 @@ ranking:
 report:
   format: ["markdown", "html"]
   top_n: 10
+
+# ── Análise de especificidade (R4 — não afetar não-alvos) ──────────────────
+specificity:
+  selectivity_threshold: 2.0          # kcal/mol: SI mínimo para aprovação
+  top_n_candidates: 20                # candidatos top-N por Vina a avaliar
+  # Proteases não-alvo — PDBs baixados automaticamente
+  nontargets:
+    human_trypsin:
+      pdb_id:      "1TRN"             # tripsina bovina (82% identidade com humana)
+      description: "Tripsina humana — segurança alimentar/toxicológica"
+    apis_mellifera:
+      uniprot_id:  "Q9GYL5"           # AlphaFold EBI
+      description: "Tripsina de Apis mellifera — proteção de polinizadores"
+
+# ── Análise de resistência proteolítica (R5 — sobreviver ao trato intestinal)
+cleavage:
+  # Proteases do gut de Lepidoptera analisadas (priority 1+2 = high+medium)
+  max_internal_trypsin_sites: 0       # flag candidatos com P1-internos
+  susceptibility_threshold: 0.4      # score ≤ 0.4 = considerado resistente
+  # Exporta resultados em:
+  output_file: "outputs/cleavage_analysis.json"
