@@ -4,8 +4,8 @@ Uso:
     python criar_slides.py
     # Gera: apresentacao_design_inibidores.pptx
 
-Atualizado 2026-06-18 — resultados reais completos:
-  RFdiffusion 330 backbones | ProteinMPNN 24.513 binders | Vina 194/194 | PyRosetta 10/10
+Atualizado 2026-06-27 — Fase 1-3 concluída:
+  RFdiffusion 330 | ProteinMPNN 24.513 | Vina 880 | PyRosetta 10 | MD 5/5 | ML RF | Specificity 20/20 | Cleavage 0/20
 """
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
@@ -565,18 +565,18 @@ slide_num(slide, 9)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Resultados Docking — Binders RFdiffusion+ProteinMPNN (2026-06-17)",
-           "194/194 poses validas | perfil basico/alifatico | mecanismo competitivo classico")
+header_bar(slide, "Resultados Docking + Ranking — Rodada Expandida (2026-06-27)",
+           "880/1000 poses validas | novo top-1: SARESIKKAYKTFLERYKKL -14,58 kcal/mol | 24.513 rankeados")
 
 add_rect(slide, 0.4, 1.25, 12.5, 1.0, C_AZUL_ESCURO)
-add_text(slide, "194 / 194", 0.5, 1.28, 4.5, 0.65,
+add_text(slide, "880 / 1000", 0.5, 1.28, 4.5, 0.65,
          font_size=44, bold=True, color=C_VERDE, align=PP_ALIGN.CENTER)
-add_text(slide, "poses Vina reais (kcal/mol)", 0.5, 1.88, 4.5, 0.28,
+add_text(slide, "poses Vina validas (rodada expandida)", 0.5, 1.88, 4.5, 0.28,
          font_size=13, color=C_CINZA_CLARO, align=PP_ALIGN.CENTER)
 stats_r = [
-    ("Melhor:", "-13.62 kcal/mol", C_VERDE),
-    ("Media:", "~-12.2 kcal/mol", C_CIANO),
-    ("Pior:", "~-10.8 kcal/mol", C_AMARELO),
+    ("Melhor:", "-14.58 kcal/mol", C_VERDE),
+    ("Media:", "~-12.4 kcal/mol", C_CIANO),
+    ("ML RMSE:", "0.514 kcal/mol", C_AMARELO),
 ]
 for k, (lbl, val, c) in enumerate(stats_r):
     add_text(slide, lbl, 5.2 + k * 2.5, 1.35, 1.1, 0.35,
@@ -584,23 +584,18 @@ for k, (lbl, val, c) in enumerate(stats_r):
     add_text(slide, val, 5.2 + k * 2.5, 1.66, 2.2, 0.42,
              font_size=18, bold=True, color=c)
 
-add_text(slide, "Top-10 por Vina puro:", 0.4, 2.35, 8.0, 0.38,
+add_text(slide, "Top-5 por score composto (ranking expandido):", 0.4, 2.35, 8.0, 0.38,
          font_size=14, bold=True, color=C_AZUL_ESCURO)
 
 top_r = [
-    (1,  "GSRASARAYAARVRARRAAL", 20, -13.62, "Gly/Ser N-term + Arg/Ala central — melhor absoluto"),
-    (2,  "GARKSIREYQKRVLERLKKK", 20, -12.76, "Alta densidade R/K (n=9) + Glu/Tyr — melhor I_sc Rosetta"),
-    (3,  "SLARKRAEENAKRFLERVKK", 20, -12.71, "Leu/Ala scaffold + R/K alternados"),
-    (4,  "MKKQRENAKKVAEITLKKAK", 20, -12.68, "Lys-rico (n=8), alifatico, solúvel"),
-    (5,  "AARASIRAAAARFRARRAAL", 20, -12.62, "Ala-rico com Arg interno e Phe aromático"),
-    (6,  "AARASQREYQKKFLERLKKK", 20, -12.52, "Ala N-term + R/K/F C-term — 2o melhor I_sc Rosetta"),
-    (7,  "AARASQREYAARFAERLAAK", 20, -12.52, "Tyr/Phe + Glu C-term"),
-    (8,  "SAAARARQRAVIARARARVA", 20, -12.44, "Ala/Arg alternados (anfipático regular)"),
-    (9,  "SAAARARQRAVGARMRARVA", 20, -12.44, "Ala/Arg/Met — variante de #8"),
-    (10, "AARENIRKAHKTFLERLKKK", 20, -12.36, "Ala/Leu + R/K/H distribuídos"),
+    (1, "SARESIKKAYKTFLERYKKL", 20, -14.58, 0.748, "NOVO top-1 — Vina mais negativo do pipeline"),
+    (2, "GSRASARAYAARVRARRAAL", 20, -13.62, 0.701, "Validado por MD (RMSD 0,494 nm, ESTAVEL)"),
+    (3, "GARESIREHQKRFLERYKKK", 20, -13.56, 0.661, "Gly/Ala + Glu/His + R/K C-term"),
+    (4, "GGPTGKRIAELYKKSLEKKK", 20, -13.47, 0.653, "Gly/Pro scaffold + Lys-rico"),
+    (5, "AARENIRAYAARFRARLAAK", 20, -13.79, 0.635, "Ala-rico + Arg/Tyr — Vina entre melhores"),
 ]
-hdrs_r = ["#", "Sequencia (20 aa)", "aa", "Vina", "Perfil composicional"]
-ws_r   = [0.38, 4.2, 0.42, 1.2, 6.1]
+hdrs_r = ["#", "Sequencia (20 aa)", "aa", "Vina", "Score", "Observacao"]
+ws_r   = [0.38, 4.0, 0.42, 1.2, 0.85, 5.47]
 x0r, y0r = 0.4, 2.8
 
 for j, (h, w) in enumerate(zip(hdrs_r, ws_r)):
@@ -608,24 +603,21 @@ for j, (h, w) in enumerate(zip(hdrs_r, ws_r)):
     add_text(slide, h, x0r + sum(ws_r[:j]) + 0.04, y0r + 0.02, w - 0.08, 0.31,
              font_size=10, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
-for i, (rank, seq, aa, vina, perfil) in enumerate(top_r):
+for i, (rank, seq, aa, vina, score, obs) in enumerate(top_r):
     bg = C_CINZA_CLARO if i % 2 == 0 else C_BRANCO
-    if rank <= 3:
-        add_rect(slide, x0r, y0r + 0.35 + i * 0.31, 0.07, 0.31, C_VERDE)
-    elif rank <= 6:
-        add_rect(slide, x0r, y0r + 0.35 + i * 0.31, 0.07, 0.31, C_AZUL_MEDIO)
-    row_vals = [str(rank), seq, str(aa), f"{vina:.2f}", perfil]
+    add_rect(slide, x0r, y0r + 0.35 + i * 0.38, 0.07, 0.38, C_VERDE if rank <= 2 else C_AZUL_MEDIO)
+    row_vals = [str(rank), seq, str(aa), f"{vina:.2f}", f"{score:.3f}", obs]
     for j, (cell, w) in enumerate(zip(row_vals, ws_r)):
-        add_rect(slide, x0r + sum(ws_r[:j]), y0r + 0.35 + i * 0.31, w, 0.31, bg)
-        c_cell = C_VERDE if j == 3 and rank <= 3 else (C_AZUL_ESCURO if j == 1 else C_CINZA_TEXTO)
-        add_text(slide, cell, x0r + sum(ws_r[:j]) + 0.04, y0r + 0.37 + i * 0.31, w - 0.08, 0.27,
-                 font_size=9 if j in (1,4) else 10, bold=(j==1 and rank<=3),
-                 color=c_cell, align=PP_ALIGN.LEFT if j in (1,4) else PP_ALIGN.CENTER)
+        add_rect(slide, x0r + sum(ws_r[:j]), y0r + 0.35 + i * 0.38, w, 0.38, bg)
+        c_cell = C_VERDE if j == 3 and rank == 1 else (C_AZUL_ESCURO if j == 1 else C_CINZA_TEXTO)
+        add_text(slide, cell, x0r + sum(ws_r[:j]) + 0.04, y0r + 0.37 + i * 0.38, w - 0.08, 0.34,
+                 font_size=9 if j in (1,5) else 10, bold=(j==1 and rank<=2),
+                 color=c_cell, align=PP_ALIGN.LEFT if j in (1,5) else PP_ALIGN.CENTER)
 
 add_rect(slide, 0.4, 7.1, 12.5, 0.28, C_AZUL_MEDIO)
 add_text(slide,
-    "Padrao: Arg/Lys + Ala/Ser (sem aromaticos) — mecanismo competitivo classico (Arg-Asp205 S1) | "
-    "contraste com candidatos heuristicos anteriores (aromatico-ricos)",
+    "Especificidade: 20/20 aprovados vs tripsina humana (1TRN) + Apis mellifera (A0A7M7MMI1) | "
+    "Resistencia: 0/20 resistentes — todos susceptiveis (K/R internos) — sondas in vitro",
     0.55, 7.12, 12.2, 0.24, font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 10)
@@ -954,32 +946,32 @@ slide_num(slide, 16)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Proximos Passos", "4 fases planejadas | Fase 2 rodando no servidor (2026-06-25)")
+header_bar(slide, "Proximos Passos", "Fase 4-5 | resultados Fase 1-3 concluidos (2026-06-27)")
 
 steps_prox = [
-    ("2", "RODANDO",  "Docking 1000 seqs + Rosetta top-50 + Ranking",
-     "top_for_docking: 200->1000 | optimization.top_k: 10->50\n"
-     "28x mais labels Vina | 5x mais I_sc -> dataset ML robusto (~8h GPU)",
-     C_VERDE, "~8h GPU"),
-    ("3", "PROXIMO",  "ML Training: Random Forest + XGBoost",
-     "scripts/train_ml.py: 1000 labels -> prediz afinidade para 24.513 seqs\n"
-     "Output: ml_top100_predicted.csv | feature importance | RMSE < 0,8 kcal/mol",
-     C_CIANO, "~5 min"),
-    ("1", "PROXIMO",  "OptimizationAgent: variantes dos candidatos estaveis",
-     "MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> point mutations + conservative swaps\n"
-     "-> re-dock automatico -> novos candidatos aprimorados (top_k: 50->5)",
-     C_AMARELO, "~2h GPU"),
-    ("4", "PARALELA", "RFdiffusion comprimentos variaveis (5-15 aa)",
-     "250 novos backbones reais: 50 x [5, 7, 10, 12, 15 aa]\n"
-     "Peptideos curtos: melhor sintese Fmoc-SPPS + bioatividade oral",
-     C_AMARELO, "~3h GPU"),
-    ("5", "FUTURO",   "Expandir para QCL936, XP273, XP352",
-     "Pipeline atual: ACR157 apenas. Rodar docking+Rosetta nos outros 3 receptores\n"
-     "-> seletividade por tripsina (XP273 hidrofobico = target diferenciado)",
+    ("4a", "PROXIMO",  "RFdiffusion 5-15 aa + filtro KR-interno=0",
+     "250 backbones curtos: 50 x [5, 7, 10, 12, 15 aa] | contigs independentes por comprimento\n"
+     "ProteinMPNN: P1 unico C-terminal (Arg/Lys) | posicoes internas = Ala/Ser/Gly/Pro",
+     C_VERDE, "~3h GPU"),
+    ("4b", "PROXIMO",  "MD dos 219 candidatos OptimizationAgent",
+     "219 variantes de MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL geradas\n"
+     "Selecionar top-5 por Vina -> MD 10 ns -> filtrar estaveis (RMSD < 0,5 nm)",
+     C_CIANO, "~5h GPU"),
+    ("4c", "PROXIMO",  "MD de SARESIKKAYKTFLERYKKL (novo top-1 Vina)",
+     "Melhor afinidade Vina do pipeline (-14,58 kcal/mol) ainda sem MD\n"
+     "Confirmar estabilidade antes de priorizar para sintese",
+     C_AMARELO, "~1h GPU"),
+    ("5",  "FUTURO",   "Expansao taxonomica: H. armigera + A. gemmatalis + D. saccharalis",
+     "Pipeline atual: ACR157 (A. gemmatalis) apenas\n"
+     "Rodar docking + Rosetta nos outros 3 receptores -> seletividade por especie",
      C_AZUL_MEDIO, "~GPU"),
-    ("6", "LONGO",    "Sintese e validacao experimental",
-     "Top-2: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> Fmoc-SPPS -> IC50 in vitro\n"
-     "Tripsinas recombinantes S. frugiperda + A. gemmatalis (GenOne / Peptide 2.0)",
+    ("6a", "FUTURO",   "Variantes resistentes: Nle/Orn/D-aa nos P1-internos",
+     "K interno -> Nle (norleucina) | R interno -> Orn (ornitina)\n"
+     "D-Lys / D-Arg: invisiveis para L-tripsinas enantiosseletivas (Fmoc-SPPS)",
+     C_LARANJA, "sintese"),
+    ("6b", "LONGO",    "Sintese e validacao experimental",
+     "Top-2 estaveis -> Fmoc-SPPS -> IC50 in vitro (S. frugiperda + A. gemmatalis)\n"
+     "Publicacao alvo: JCIM / CSBJ",
      C_LARANJA, "meses"),
 ]
 
@@ -1017,31 +1009,31 @@ add_rect(slide, 0, 0, 13.33, 1.25, C_AZUL_ESCURO)
 add_rect(slide, 0, 1.2, 13.33, 0.08, C_CIANO)
 add_text(slide, "Conclusoes", 0.5, 0.15, 12.0, 0.6,
          font_size=34, bold=True, color=C_BRANCO)
-add_text(slide, "MD 5/5 concluido | Docking 1000 rodando | 2 candidatos estaveis — 2026-06-25", 0.5, 0.72, 12.0, 0.42,
+add_text(slide, "Fase 1-3 CONCLUIDA | 880 poses | ML treinado | 20/20 seletivos | 0/20 resistentes — 2026-06-27", 0.5, 0.72, 12.0, 0.42,
          font_size=16, color=C_CIANO)
 
 conclusoes = [
     (C_VERDE, "✓",
-     "330 backbones reais (RFdiffusion) | 24.513 binders 20 aa (ProteinMPNN) | "
-     "42 bugs corrigidos | dataset 44 features × 24.513 sequencias"),
+     "330 backbones RFdiffusion | 24.513 binders ProteinMPNN | 880 poses Vina | "
+     "novo top-1: SARESIKKAYKTFLERYKKL (-14,58 kcal/mol, score=0,748)"),
     (C_VERDE, "✓",
-     "194 poses Vina reais (expandindo para 1000) | 10 I_sc PyRosetta (expandindo para 50) | "
-     "Ranking composto: Vina 50% + Rosetta 20% + H-bond 15% + RMSD 10%"),
+     "MD 10 ns — 5/5 concluidos | MKKQRENAKKVAEITLKKAK (RMSD 0,447 nm) ESTAVEL #1 | "
+     "GSRASARAYAARVRARRAAL (RMSD 0,494 nm) ESTAVEL #2 | 2 instáveis descartados"),
     (C_VERDE, "✓",
-     "MD 10 ns — 5/5 candidatos concluidos | MKKQRENAKKVAEITLKKAK (0,447 nm) ESTAVEL #1 | "
-     "GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEL #2 | GARKSIREYQKRVLERLKKK descartado (1,453 nm)"),
+     "ML: Random Forest RMSE=0,514 kcal/mol | 24.513 predicoes geradas | "
+     "219 novos candidatos por OptimizationAgent (redesign iterativo)"),
+    (C_VERDE, "✓",
+     "Especificidade: 20/20 aprovados vs tripsina humana (1TRN) + Apis mellifera (SI >= 2,0 kcal/mol) | "
+     "Resistencia proteolitica: 0/20 resistentes — sondas in vitro; modificacao quimica necessaria"),
     (C_CIANO, "→",
-     "Reclassificacao pos-MD: melhor I_sc (GARKSIREYQKRVLERLKKK, -86,28) instavel em solvente. "
-     "MD obrigatorio para filtrar falsos-positivos Rosetta — resultado consistente com literatura"),
+     "Trade-off intrínseco: Arg/Lys maximizam afinidade S1 (Asp205) mas sao substratos da propria tripsina. "
+     "Solucao: Fase 4 peptideos 5-15 aa + Nle/Orn/D-aa nos P1-internos"),
     (C_CIANO, "→",
-     "Padrao composicional: Arg/Lys + Ala/Ser (sem aromaticos) — mecanismo competitivo Arg-Asp205 (S1). "
-     "Mecanismo proposto validado por 3 metodos independentes (Vina + Rosetta + MD)"),
-    (C_AMARELO, "⏳",
-     "Fase 2 RODANDO: docking 1000 seqs + Rosetta 50 + ranking | "
-     "Proximo: scripts/train_ml.py (RF/XGBoost) + OptimizationAgent + RFdiffusion 5-15 aa"),
-    (C_LARANJA, "→",
-     "Alvo final: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> sintese Fmoc-SPPS -> "
-     "ensaios IC50 in vitro (S. frugiperda + A. gemmatalis). Publicacao: JCIM / CSBJ"),
+     "MD obrigatorio: GARKSIREYQKRVLERLKKK melhor I_sc Rosetta (-86,28) mas instavel em solvente (RMSD 1,45 nm). "
+     "3 metodos concordantes validam mecanismo competitivo Arg-Asp205"),
+    (C_LARANJA, "⏳",
+     "Fase 4: RFdiffusion 5-15 aa (KR-interno=0) + MD SARESIKKAYKTFLERYKKL + variantes Nle/Orn | "
+     "Alvo sintese: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> Fmoc-SPPS -> IC50 (JCIM/CSBJ)"),
 ]
 for i, (c, sym, texto) in enumerate(conclusoes):
     add_rect(slide, 0.4, 1.4 + i * 0.82, 0.55, 0.7, c)
