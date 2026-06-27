@@ -134,7 +134,7 @@ class SpecificityAgent(BaseAgent):
         seen: set = set()
         cands = []
         for v in sorted(docking_results.values(),
-                        key=lambda x: x.get("best_affinity_kcal", 0)):
+                        key=lambda x: x.get("best_affinity_kcal") or 0):
             seq = v.get("sequence", "")
             aff = v.get("best_affinity_kcal")
             if seq and aff is not None and seq not in seen:
