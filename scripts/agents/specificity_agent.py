@@ -33,7 +33,7 @@ NONTARGETS = {
         "description": "Tripsina bovina / humana (Asp189 S1-pocket) — segurança humana",
     },
     "apis_mellifera_trypsin": {
-        "uniprot_id": "Q9GYL5",
+        "uniprot_id": "A0A087ZPF5",
         "source":     "alphafold",
         "chain":      "A",
         "s1_residue": "ASP",
@@ -159,10 +159,15 @@ class SpecificityAgent(BaseAgent):
 
             elif info["source"] == "alphafold":
                 uid = info["uniprot_id"]
-                url = f"https://alphafold.ebi.ac.uk/files/AF-{uid}-F1-model_v4.pdb"
-                self.logger.info(f"Baixando AF-{uid} de AlphaFold EBI...")
-                urllib.request.urlretrieve(url, out_path)
-                return out_path
+                for version in ("v4", "v3", "v2"):
+                    url = f"https://alphafold.ebi.ac.uk/files/AF-{uid}-F1-model_{version}.pdb"
+                    self.logger.info(f"Baixando AF-{uid} de AlphaFold EBI ({version})...")
+                    try:
+                        urllib.request.urlretrieve(url, out_path)
+                        return out_path
+                    except Exception:
+                        continue
+                raise FileNotFoundError(f"AF-{uid} não encontrado em nenhuma versão AlphaFold")
 
         except Exception as e:
             self.logger.warning(f"Falha ao baixar {key}: {e}")
