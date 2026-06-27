@@ -33,7 +33,7 @@ NONTARGETS = {
         "description": "Tripsina bovina / humana (Asp189 S1-pocket) — segurança humana",
     },
     "apis_mellifera_trypsin": {
-        "uniprot_id": "A0A087ZPF5",
+        "uniprot_id": "A0A7M7MMI1",
         "source":     "alphafold",
         "chain":      "A",
         "s1_residue": "ASP",
@@ -159,7 +159,7 @@ class SpecificityAgent(BaseAgent):
 
             elif info["source"] == "alphafold":
                 uid = info["uniprot_id"]
-                for version in ("v4", "v3", "v2"):
+                for version in ("v6", "v4", "v3", "v2"):
                     url = f"https://alphafold.ebi.ac.uk/files/AF-{uid}-F1-model_{version}.pdb"
                     self.logger.info(f"Baixando AF-{uid} de AlphaFold EBI ({version})...")
                     try:
