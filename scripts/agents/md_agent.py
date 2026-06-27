@@ -165,8 +165,28 @@ class MDAgent(BaseAgent):
 
     def _select_top5_vina(self, rosetta_results: dict) -> list:
         """Seleciona top-5 ÚNICOS por Vina kcal/mol do docking_results.json.
+        Se config['md']['forced_sequences'] definido, usa essas sequências.
         Cria entradas mínimas para sequências que não passaram pelo Rosetta.
         Fallback para I_sc heurístico se docking_results.json não existir."""
+        forced = self.config.get("md", {}).get("forced_sequences")
+        if forced:
+            self.logger.info(f"Usando sequências forçadas ({len(forced)}): {forced}")
+            docking_json = self.workdir.parent / "docking" / "docking_results.json"
+            seq_vina = {}
+            if docking_json.exists():
+                dock = json.loads(docking_json.read_text())
+                seq_vina = {v["sequence"]: v.get("best_affinity_kcal")
+                            for v in dock.values() if v.get("sequence")}
+            result = []
+            for i, seq in enumerate(forced):
+                vina = seq_vina.get(seq)
+                result.append((f"forced_{i:02d}", {
+                    "sequence": seq,
+                    "length": len(seq),
+                    "vina_kcal": vina,
+                }))
+            return result
+
         docking_json = self.workdir.parent / "docking" / "docking_results.json"
         if docking_json.exists():
             try:

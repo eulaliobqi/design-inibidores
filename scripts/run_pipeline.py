@@ -112,6 +112,8 @@ def main():
                         help="Iteração de otimização (para --step optimize)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Mostrar ferramentas detectadas sem executar")
+    parser.add_argument("--md-sequences", nargs="+", metavar="SEQ",
+                        help="Forçar sequências específicas no --step md (sobrescreve seleção automática)")
     args = parser.parse_args()
 
     # ── Carregar configuração ────────────────────────────────────────────────
@@ -206,6 +208,9 @@ def main():
     if should_run("md", args, ckpt):
         print("━" * 50)
         print("STAGE 6 — Dinâmica Molecular (GROMACS)")
+        if getattr(args, "md_sequences", None):
+            config.setdefault("md", {})["forced_sequences"] = args.md_sequences
+            print(f"  → Sequências forçadas: {args.md_sequences}")
         agent = MDAgent("MDAgent", config, out_base / "md")
         md_results = agent.run(rosetta_results, primary_pdb)
         ckpt.save("md", md_results)
