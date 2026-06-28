@@ -8,7 +8,7 @@
 > - ✓ 3.5 Ranking — **24.513 candidatos rankeados**; novo top-1: SARESIKKAYKTFLERYKKL (score=0,748)
 > - ✓ 3.6 PyRosetta — 10 complexos refinados (top-10 Vina); top I_sc: GARKSIREYQKRVLERLKKK (−86,28)
 > - ✓ 3.7 Candidatos prioritários — reclassificados pós-MD: MKKQRENAKKVAEITLKKAK #1, GSRASARAYAARVRARRAAL #2
-> - ✓ 3.8 MD — **5/5 concluídos** (10 ns); 2 estáveis (RMSD < 0,5 nm), 1 marginal, 2 instáveis
+> - ✓ 3.8 MD — **11/11 concluídos** (10 ns); Fase 3: 2 estáveis + 1 marginal + 2 instáveis; Fase 4: 1 estável (RLREELKKAEEWLEKRRKEE, RMSD 0,294 nm) + 3 marginais + 2 instáveis
 > - ✓ 3.9 ML/DL — **treinado**: RF RMSE=0,514 kcal/mol, R²=0,315 (455 labels, 1,9%); 24.513 predições geradas
 > - ✓ 3.10 Resistência proteolítica — **20/20 candidatos SUSCEPTÍVEIS** (top-20 ranking); 5–7 P1-internos K/R
 > - ✓ 3.11 Especificidade — **20/20 aprovados** vs tripsina humana (1TRN) E vs *Apis mellifera* (AF-A0A7M7MMI1); SI ≥ 2,0 kcal/mol
@@ -191,15 +191,46 @@ Em contraste, **GARKSIREYQKRVLERLKKK** — o candidato com maior energia de inte
 
 A maior densidade de H-bonds em SLARKRAEENAKRFLERVKK (170,8 avg) é aparente: como o complexo se desfaz parcialmente (RMSD alto), os H-bonds contabilizados incluem contribuições intra-peptídeo de estruturas reconfiguradas, não contatos de interface produtivos.
 
-**Reclassificação dos candidatos prioritários pós-MD:**
+**Reclassificação dos candidatos prioritários pós-MD (Fase 3):**
 
-O critério de estabilidade dinâmica (RMSD < 0,5 nm como limiar para pose estável, seguindo *de Oliveira et al., 2020*; *Bakan et al., 2014*) promove a seguinte hierarquia final:
+O critério de estabilidade dinâmica (RMSD < 0,5 nm como limiar para pose estável, seguindo *de Oliveira et al., 2020*; *Bakan et al., 2014*) promove a seguinte hierarquia:
 
-1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm (**mais estável**), Vina −12,72, I_sc −80,49; candidato de síntese prioritária
+1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm (**estável**), Vina −12,72, I_sc −80,49; candidato de síntese prioritária
 2. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm (**estável**), melhor Vina (−13,62), I_sc −78,44; candidato de síntese prioritária
-3. **AARASIRAAAARFRARRAAL** — RMSD 0,945 nm (marginal), Vina −12,62, I_sc −75,45; candidato secundário (simulação estendida recomendada)
+3. **AARASIRAAAARFRARRAAL** — RMSD 0,945 nm (marginal); candidato secundário
 4. ~~GARKSIREYQKRVLERLKKK~~ — descartado (instável em MD apesar de melhor I_sc)
 5. ~~SLARKRAEENAKRFLERVKK~~ — descartado (instável, divergente Vina × Rosetta)
+
+---
+
+### 3.8b Avaliação de Estabilidade — Fase 4 (Redesign + Novo Top-1 Vina)
+
+Uma segunda rodada de MD (Fase 4, 2026-06-27) foi conduzida com protocolo idêntico para seis candidatos adicionais: o novo top-1 por afinidade Vina (SARESIKKAYKTFLERYKKL, −14,58 kcal/mol) e os cinco melhores candidatos gerados pelo OptimizationAgent por redesign iterativo dos estáveis da Fase 3.
+
+**Tabela 7b.** Métricas de estabilidade MD — Fase 4 (6 candidatos × 10 ns).
+
+| Candidato | Origem | Vina (kcal/mol) | RMSD avg ± DP (nm) | Rg (nm) | Estabilidade |
+|-----------|--------|-----------------|----------------------|---------|--------------|
+| RLREELKKAEEWLEKRRKEE | Optimize #5 | — | **0,294 ± 0,065** | 1,780 | **ESTÁVEL ★** |
+| RLRAIWLEAEKLLEERRKKK | Optimize #2 | — | 0,725 ± 0,870 | 1,815 | Marginal |
+| RVKDQWLEAEKLLEERRKKK | Optimize #4 | — | 0,834 ± 0,806 | 1,876 | Marginal |
+| SARESIKKAYKTFLERYKKL | Top-1 Vina | −14,58 | 0,871 ± 0,844 | 1,864 | Marginal |
+| RLRENWLEAEKLLEERRKKK | Optimize #3 | — | 1,002 ± 1,012 | 1,881 | Instável |
+| KRLRENWLEAEKLLEERRKKK | Optimize #1 | — | 1,074 ± 1,103 | 1,869 | Instável |
+
+**RLREELKKAEEWLEKRRKEE** emerge como o candidato mais estável de todo o pipeline (RMSD 0,294 nm, DP = 0,065 — desvio-padrão mais baixo registrado, indicando convergência para pose única sem amostragem de múltiplas conformações). Esse resultado é notável pois o candidato foi classificado 5° pelo OptimizationAgent por critério heurístico (contagem n_arg_lys = 8), mas superou todos os outros na dinâmica molecular. Sua composição — rico em Glu/Leu com Lys/Arg distribuídos — sugere mecanismo de ligação distinto dos candidatos Ala/Ser-ricos da Fase 3: possivelmente combinação de interações eletrostáticas (K/R–Asp205) com contatos hidrofóbicos (Leu, Trp).
+
+**SARESIKKAYKTFLERYKKL** (melhor Vina, −14,58 kcal/mol) apresentou comportamento marginal em MD (RMSD 0,871 nm, DP 0,844). O alto desvio-padrão indica amostragem de múltiplas conformações — o alto score de docking rígido não se traduz em pose estável em solvente explícito, padrão análogo ao observado para GARKSIREYQKRVLERLKKK na Fase 3 (melhor I_sc Rosetta, instável em MD). Esse resultado reforça a necessidade da etapa MD como filtro obrigatório antes da síntese.
+
+**Hierarquia final integrada (Fases 3 + 4):**
+
+| Rank | Sequência | RMSD (nm) | Vina | Origem | Síntese |
+|------|-----------|-----------|------|--------|---------|
+| **1** | **MKKQRENAKKVAEITLKKAK** | **0,447** | −12,72 | Fase 3 | ★★★ |
+| **2** | **RLREELKKAEEWLEKRRKEE** | **0,294** | — | Fase 4 Optimize | ★★★ |
+| **3** | **GSRASARAYAARVRARRAAL** | **0,494** | −13,62 | Fase 3 | ★★★ |
+| 4 | RLRAIWLEAEKLLEERRKKK | 0,725 | — | Fase 4 | ★★ (marginal) |
+| 5 | SARESIKKAYKTFLERYKKL | 0,871 | −14,58 | Fase 4 | ★ (marginal) |
 
 ---
 
@@ -302,7 +333,8 @@ O pipeline multiagente completou todas as etapas planejadas para a Fase 1–3: d
 - **24.513 sequências únicas** de binder 20 aa via ProteinMPNN real
 - **880 poses Vina** válidas; novo top-1: **SARESIKKAYKTFLERYKKL** (−14,58 kcal/mol)
 - **10 complexos PyRosetta**; top I_sc: GARKSIREYQKRVLERLKKK (−86,28 kcal/mol)
-- **MD 10 ns**: 2 estáveis (RMSD < 0,5 nm), 1 marginal, 2 instáveis; reclassificação pós-MD prioriza MKKQRENAKKVAEITLKKAK (#1) e GSRASARAYAARVRARRAAL (#2)
+- **MD 10 ns (Fase 3)**: 2 estáveis, 1 marginal, 2 instáveis — top-2: MKKQRENAKKVAEITLKKAK (0,447 nm) e GSRASARAYAARVRARRAAL (0,494 nm)
+- **MD 10 ns (Fase 4)**: 6 candidatos adicionais — **RLREELKKAEEWLEKRRKEE ESTÁVEL** (0,294 nm, DP=0,065 — mais estável do pipeline); SARESIKKAYKTFLERYKKL Marginal apesar de melhor Vina
 - **ML**: Random Forest RMSE = 0,514 kcal/mol; 24.513 predições qualitativas geradas
 - **Resistência proteolítica**: 0/20 candidatos resistentes — todos susceptíveis (3–7 P1-internos K/R)
 - **Especificidade**: 20/20 aprovados vs tripsina humana (1TRN) e *Apis mellifera* (SI ≥ 2,0 kcal/mol)
@@ -312,12 +344,13 @@ O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é 
 
 A susceptibilidade proteolítica universal (0/20 resistentes) é a principal limitação dos candidatos de 20 aa lineares e decorre do trade-off intrínseco: resíduos Arg/Lys que maximizam afinidade ao S1 também são substratos da própria tripsina em posições internas. Esse resultado redireciona a Fase 4 para o design de peptídeos 5–15 aa com filtro KR-interno=0 e estratégias de proteção química (Nle, Orn, D-aa).
 
-**Candidatos de síntese prioritária (pós-MD, estáveis em 10 ns):**
-1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm, Vina −12,72, I_sc −80,49
-2. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm, Vina −13,62, I_sc −78,44
+**Candidatos de síntese prioritária (pós-MD Fases 3+4, estáveis em 10 ns):**
+1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm, Vina −12,72, I_sc −80,49 (Fase 3)
+2. **RLREELKKAEEWLEKRRKEE** — RMSD 0,294 nm, DP=0,065 — **mais estável do pipeline** (Fase 4)
+3. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm, Vina −13,62, I_sc −78,44 (Fase 3)
 
-**Candidato de alta afinidade para validação experimental:**
-- **SARESIKKAYKTFLERYKKL** — Vina −14,58 kcal/mol (melhor docking do pipeline); MD pendente
+**Candidato marginal com alta afinidade:**
+- **SARESIKKAYKTFLERYKKL** — Vina −14,58 kcal/mol (melhor docking), RMSD 0,871 nm (marginal em MD)
 
 **Próximas etapas (Fase 4–5):**
 

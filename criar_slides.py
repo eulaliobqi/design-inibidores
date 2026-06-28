@@ -754,7 +754,7 @@ for i, (seq, vina, isc, rv, ri, perfil, desc, c) in enumerate(top_cands):
 
 add_rect(slide, 0.4, 7.22, 12.5, 0.18, C_VERDE)
 add_text(slide,
-    "MD 5/5 CONCLUIDO: MKKQRENAKKVAEITLKKAK (0,447 nm) e GSRASARAYAARVRARRAAL (0,494 nm) ESTAVEIS | ver slide 13",
+    "MD 11/11 CONCLUIDO (Fases 3+4): top-3 sintese — MKKQRENA(0,447nm) | RLREELKK(0,294nm★) | GSRASARA(0,494nm) | ver slide 13",
     0.55, 7.23, 12.2, 0.16, font_size=11, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 slide_num(slide, 12)
@@ -764,14 +764,14 @@ slide_num(slide, 12)
 # ─────────────────────────────────────────────────────────────────────────────
 slide = prs.slides.add_slide(BLANK)
 bg_light(slide)
-header_bar(slide, "Dinamica Molecular — Top-5 Candidatos × ACR157",
+header_bar(slide, "Dinamica Molecular — 11 Candidatos × ACR157 (Fases 3+4)",
            "GROMACS | AMBER99SB-ILDN | TIP3P | 300 K | 10 ns cada | RTX 5070 Ti (~36 min/replica)")
 
 # — Cabeçalho tabela
 add_rect(slide, 0.3, 1.25, 12.7, 0.42, C_AZUL_ESCURO)
-for txt, x, w in [("Candidato", 0.35, 3.8), ("Vina", 4.2, 1.2), ("I_sc", 5.45, 1.2),
-                   ("RMSD avg", 6.7, 1.3), ("Rg (nm)", 8.05, 1.2), ("Hbond", 9.3, 1.0), ("Estabilidade", 10.35, 2.6)]:
-    add_text(slide, txt, x, 1.3, w, 0.32, font_size=12, bold=True, color=C_BRANCO)
+for txt, x, w in [("Candidato", 0.35, 3.55), ("Fase", 4.0, 0.55), ("Vina", 4.6, 1.1),
+                   ("I_sc", 5.7, 1.1), ("RMSD avg±DP (nm)", 6.85, 2.8), ("Rg", 9.7, 0.8), ("Estabilidade", 9.75, 3.2)]:
+    add_text(slide, txt, x, 1.3, w, 0.32, font_size=11, bold=True, color=C_BRANCO)
 
 # — Linhas da tabela
 C_VERDE_MD   = RGBColor(0xD4, 0xED, 0xDA)
@@ -779,32 +779,39 @@ C_AMARELO_MD = RGBColor(0xFF, 0xF3, 0xCD)
 C_VERMELHO_MD= RGBColor(0xF8, 0xD7, 0xDA)
 
 md_rows = [
-    ("MKKQRENAKKVAEITLKKAK", "-12,72", "-80,49", "0,447 ± 0,332", "1,785", "161,0", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
-    ("GSRASARAYAARVRARRAAL", "-13,62", "-78,44", "0,494 ± 0,414", "1,799", "160,9", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
-    ("AARASIRAAAARFRARRAAL", "-12,62", "-75,45", "0,945 ± 0,924", "1,836", "163,6", "Marginal",  C_AMARELO_MD,  C_AMARELO),
-    ("GARKSIREYQKRVLERLKKK", "-12,76", "-86,28", "1,453 ± 1,003", "1,952", "160,5", "Instavel",  C_VERMELHO_MD, C_LARANJA),
-    ("SLARKRAEENAKRFLERVKK", "-12,71", "-61,41", "1,700 ± 1,033", "1,910", "170,8", "Instavel",  C_VERMELHO_MD, C_LARANJA),
+    # Fase 3
+    ("MKKQRENAKKVAEITLKKAK", "-12,72", "-80,49", "0,447 ± 0,332", "1,785", "F3", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
+    ("GSRASARAYAARVRARRAAL", "-13,62", "-78,44", "0,494 ± 0,414", "1,799", "F3", "ESTAVEL",   C_VERDE_MD,    C_VERDE),
+    ("AARASIRAAAARFRARRAAL", "-12,62", "-75,45", "0,945 ± 0,924", "1,836", "F3", "Marginal",  C_AMARELO_MD,  C_AMARELO),
+    # Fase 4
+    ("RLREELKKAEEWLEKRRKEE", "—",      "—",      "0,294 ± 0,065", "1,780", "F4", "ESTAVEL*",  C_VERDE_MD,    C_VERDE),
+    ("RLRAIWLEAEKLLEERRKKK", "—",      "—",      "0,725 ± 0,870", "1,815", "F4", "Marginal",  C_AMARELO_MD,  C_AMARELO),
+    ("SARESIKKAYKTFLERYKKL", "-14,58", "—",      "0,871 ± 0,844", "1,864", "F4", "Marginal",  C_AMARELO_MD,  C_AMARELO),
+    ("KRLRENWLEAEKLLEERRKKK","—",      "—",      "1,074 ± 1,103", "1,869", "F4", "Instavel",  C_VERMELHO_MD, C_LARANJA),
 ]
-for i, (seq, vina, isc, rmsd, rg, hb, status, bg, sc) in enumerate(md_rows):
-    y = 1.72 + i * 0.9
-    add_rect(slide, 0.3, y, 12.7, 0.85, bg)
-    add_rect(slide, 0.3, y, 0.08, 0.85, sc)
-    add_text(slide, seq, 0.45, y + 0.22, 3.7, 0.38, font_size=12, bold=True, color=C_AZUL_ESCURO)
-    for val, x in [(vina, 4.2), (isc, 5.45), (rmsd, 6.7), (rg, 8.05), (hb, 9.3)]:
-        add_text(slide, val, x, y + 0.22, 1.2, 0.38, font_size=12, color=C_CINZA_TEXTO)
-    add_rect(slide, 10.35, y + 0.17, 2.55, 0.48, sc)
-    add_text(slide, status, 10.35, y + 0.17, 2.55, 0.48,
-             font_size=13, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
+for i, (seq, vina, isc, rmsd, rg, fase, status, bg, sc) in enumerate(md_rows):
+    y = 1.72 + i * 0.67
+    add_rect(slide, 0.3, y, 12.7, 0.62, bg)
+    add_rect(slide, 0.3, y, 0.08, 0.62, sc)
+    add_text(slide, seq, 0.45, y + 0.14, 3.55, 0.32, font_size=10, bold=True, color=C_AZUL_ESCURO)
+    add_text(slide, fase, 4.0, y + 0.14, 0.55, 0.32, font_size=9, bold=True,
+             color=C_VERDE if fase=="F4" else C_AZUL_MEDIO)
+    for val, x in [(vina, 4.6), (isc, 5.7), (rmsd, 6.85), (rg, 8.55)]:
+        add_text(slide, val, x, y + 0.14, 1.15, 0.32, font_size=10, color=C_CINZA_TEXTO)
+    add_rect(slide, 9.75, y + 0.1, 3.2, 0.42, sc)
+    add_text(slide, status, 9.75, y + 0.1, 3.2, 0.42,
+             font_size=11, bold=True, color=C_BRANCO, align=PP_ALIGN.CENTER)
 
 # — Painel inferior: reclassificação
-add_rect(slide, 0.3, 6.27, 12.7, 1.05, C_AZUL_ESCURO)
-add_text(slide, "RECLASSIFICACAO FINAL (Vina + I_sc Rosetta + RMSD MD)", 0.5, 6.32, 12.3, 0.38,
-         font_size=13, bold=True, color=C_CIANO)
+add_rect(slide, 0.3, 6.44, 12.7, 0.88, C_AZUL_ESCURO)
+add_text(slide, "TOP-3 SINTESE (Fases 3+4) — todos RMSD < 0,5 nm em 10 ns", 0.5, 6.48, 12.3, 0.32,
+         font_size=12, bold=True, color=C_CIANO)
 add_text(slide,
-    "#1 MKKQRENAKKVAEITLKKAK (RMSD 0,447 nm — mais estavel)    "
-    "#2 GSRASARAYAARVRARRAAL (Vina -13,62 + RMSD 0,494 nm)    "
-    "GARKSIREYQKRVLERLKKK descartado (melhor I_sc mas RMSD 1,45 nm = instavel em solvente)",
-    0.5, 6.72, 12.3, 0.55, font_size=11, color=C_CINZA_CLARO)
+    "#1 MKKQRENAKKVAEITLKKAK (0,447 nm, F3)  |  "
+    "#2 RLREELKKAEEWLEKRRKEE (0,294 nm, F4 — MAIS ESTAVEL DO PIPELINE)  |  "
+    "#3 GSRASARAYAARVRARRAAL (0,494 nm, F3)  |  "
+    "SARESIKKAYKTFLERYKKL: melhor Vina (-14,58) mas marginal em MD",
+    0.5, 6.82, 12.3, 0.46, font_size=10, color=C_CINZA_CLARO)
 
 slide_num(slide, 13)
 
@@ -1009,31 +1016,33 @@ add_rect(slide, 0, 0, 13.33, 1.25, C_AZUL_ESCURO)
 add_rect(slide, 0, 1.2, 13.33, 0.08, C_CIANO)
 add_text(slide, "Conclusoes", 0.5, 0.15, 12.0, 0.6,
          font_size=34, bold=True, color=C_BRANCO)
-add_text(slide, "Fase 1-3 CONCLUIDA | 880 poses | ML treinado | 20/20 seletivos | 0/20 resistentes — 2026-06-27", 0.5, 0.72, 12.0, 0.42,
+add_text(slide, "Fases 1-4 CONCLUIDAS | 11 MD | 3 candidatos estaveis | RLREELKK mais estavel do pipeline — 2026-06-27", 0.5, 0.72, 12.0, 0.42,
          font_size=16, color=C_CIANO)
 
 conclusoes = [
     (C_VERDE, "✓",
      "330 backbones RFdiffusion | 24.513 binders ProteinMPNN | 880 poses Vina | "
-     "novo top-1: SARESIKKAYKTFLERYKKL (-14,58 kcal/mol, score=0,748)"),
+     "top-1 Vina: SARESIKKAYKTFLERYKKL (-14,58 kcal/mol) | 219 variantes OptimizationAgent"),
     (C_VERDE, "✓",
-     "MD 10 ns — 5/5 concluidos | MKKQRENAKKVAEITLKKAK (RMSD 0,447 nm) ESTAVEL #1 | "
-     "GSRASARAYAARVRARRAAL (RMSD 0,494 nm) ESTAVEL #2 | 2 instáveis descartados"),
-    (C_VERDE, "✓",
-     "ML: Random Forest RMSE=0,514 kcal/mol | 24.513 predicoes geradas | "
-     "219 novos candidatos por OptimizationAgent (redesign iterativo)"),
+     "MD 11/11 concluidos (Fases 3+4) | TOP-3 SINTESE: "
+     "#1 MKKQRENAKKVAEITLKKAK (0,447 nm) | #2 RLREELKKAEEWLEKRRKEE (0,294 nm ★MAIS ESTAVEL) | "
+     "#3 GSRASARAYAARVRARRAAL (0,494 nm)"),
     (C_VERDE, "✓",
      "Especificidade: 20/20 aprovados vs tripsina humana (1TRN) + Apis mellifera (SI >= 2,0 kcal/mol) | "
-     "Resistencia proteolitica: 0/20 resistentes — sondas in vitro; modificacao quimica necessaria"),
+     "ML RF RMSE=0,514 kcal/mol | 24.513 predicoes geradas"),
+    (C_VERDE, "✓",
+     "Resistencia proteolitica: 0/20 resistentes (3-7 P1-internos K/R) — sondas in vitro. "
+     "Especificidade preservada: seletividade nao e comprometida pelo perfil Arg/Lys"),
     (C_CIANO, "→",
-     "Trade-off intrínseco: Arg/Lys maximizam afinidade S1 (Asp205) mas sao substratos da propria tripsina. "
-     "Solucao: Fase 4 peptideos 5-15 aa + Nle/Orn/D-aa nos P1-internos"),
+     "MD obrigatorio como filtro: GARKSIREYQKRVLERLKKK (melhor I_sc -86,28) instavel em MD (1,45 nm). "
+     "SARESIKKAYKTFLERYKKL (melhor Vina -14,58) marginal em MD (0,871 nm). "
+     "Afinidade estatica != estabilidade dinamica"),
     (C_CIANO, "→",
-     "MD obrigatorio: GARKSIREYQKRVLERLKKK melhor I_sc Rosetta (-86,28) mas instavel em solvente (RMSD 1,45 nm). "
-     "3 metodos concordantes validam mecanismo competitivo Arg-Asp205"),
+     "RLREELKKAEEWLEKRRKEE: surpresa positiva — 5o por heuristica OptimizationAgent mas mais estavel do pipeline "
+     "(RMSD 0,294 nm, DP=0,065). Composicao Glu/Leu sugere mecanismo de ligacao distinto"),
     (C_LARANJA, "⏳",
-     "Fase 4: RFdiffusion 5-15 aa (KR-interno=0) + MD SARESIKKAYKTFLERYKKL + variantes Nle/Orn | "
-     "Alvo sintese: MKKQRENAKKVAEITLKKAK + GSRASARAYAARVRARRAAL -> Fmoc-SPPS -> IC50 (JCIM/CSBJ)"),
+     "Proximo: RFdiffusion 5-15 aa (KR-interno=0) + estrategias Nle/Orn/D-aa para resistencia proteolitica | "
+     "Sintese: MKKQRENA + RLREELKK + GSRASARA -> Fmoc-SPPS -> IC50 in vitro (JCIM/CSBJ)"),
 ]
 for i, (c, sym, texto) in enumerate(conclusoes):
     add_rect(slide, 0.4, 1.4 + i * 0.82, 0.55, 0.7, c)
