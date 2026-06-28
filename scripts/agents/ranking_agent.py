@@ -4,8 +4,14 @@ Métricas integradas:
   - vina_affinity (kcal/mol): menor = melhor
   - rosetta_I_sc: menor = melhor
   - hbond_count: maior = melhor
-  - md_rmsd: menor = melhor
+  - md_rmsd: menor = melhor (filtro duro: >1.0 nm = instável, penalizado)
   - n_arg_lys: maior = melhor (especificidade P1)
+
+Lição aprendida (Fases 3+4):
+  MD é filtro obrigatório — candidatos com melhor Vina/Rosetta podem ser
+  instáveis em solvente (RMSD >0.5 nm). Flag md_stable adicionado.
+  SARESIKKAYKTFLERYKKL: top-1 Vina (-14.58) mas marginal em MD (0.871 nm).
+  RLREELKKAEEWLEKRRKEE: surgiu do OptimizationAgent como mais estável (0.294 nm).
 """
 import json
 from pathlib import Path
@@ -104,6 +110,23 @@ class RankingAgent(BaseAgent):
             w_alk  * df["n_alk"]
         )
 
+        # Classificação de estabilidade MD (Fases 3+4 validaram estes limiares)
+        def md_stability(rmsd):
+            if pd.isna(rmsd):
+                return "sem_md"
+            r = float(rmsd)
+            if r < 0.5:
+                return "estavel"
+            if r <= 1.0:
+                return "marginal"
+            return "instavel"
+
+        df["md_stable"] = df["md_rmsd_nm"].apply(md_stability)
+
+        # Penalizar instáveis na pontuação final (lição: RMSD >1.0 descarta candidato)
+        instavel_mask = df["md_stable"] == "instavel"
+        df.loc[instavel_mask, "final_score"] *= 0.5
+
         df = df.sort_values("final_score", ascending=False).reset_index(drop=True)
         df.insert(0, "rank", df.index + 1)
 
@@ -118,12 +141,21 @@ class RankingAgent(BaseAgent):
             json.dumps(top_json, indent=2, default=str)
         )
 
+        # Salvar lista de estáveis separadamente (usada como parental pelo OptimizationAgent)
+        stable = df[df["md_stable"] == "estavel"]
+        if not stable.empty:
+            (self.workdir / "ranking_stable.json").write_text(
+                json.dumps(stable.head(top_n).to_dict(orient="records"), indent=2, default=str)
+            )
+            self.logger.info(f"Candidatos MD estáveis: {len(stable)} → ranking_stable.json")
+
         # Preencher labels no dataset ML
         self._fill_ml_labels(df)
 
         self.logger.info(
             f"Ranking gerado: {len(df)} sequências. "
-            f"Top-1: {df.iloc[0]['sequence']} (score={df.iloc[0]['final_score']:.3f})"
+            f"Top-1: {df.iloc[0]['sequence']} (score={df.iloc[0]['final_score']:.3f}) "
+            f"[MD: {df.iloc[0]['md_stable']}]"
         )
         return df
 

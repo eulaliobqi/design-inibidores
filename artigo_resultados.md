@@ -363,13 +363,45 @@ A susceptibilidade proteolítica universal (0/20 resistentes) é a principal lim
 
 ---
 
-## Referências (parcial)
+## Referências
 
-- Chaudhury S et al. (2010) PyRosetta: a script-based interface for implementing molecular modeling algorithms using Rosetta. *Bioinformatics*, 26, 689–691.
-- Dauparas J et al. (2022) Robust deep learning-based protein sequence design using ProteinMPNN. *Science*, 378, 49–56.
+**Alvo biológico e caracterização das tripsinas:**
+- Paulo et al. (2026) Peptides derived from reactive center loops inhibit digestive trypsin-like enzymes in Lepidopteran pests. *Arch Insect Biochem Physiol*, DOI: 10.1002/arch.70123
+- Oliveira et al. (2017) Kinetic characterization of *Anticarsia gemmatalis* digestive serine-proteases. PubMed 28925864
+- Leite et al. (2024) Inhibitory efficacy of tripeptides on trypsin-like activity in *A. gemmatalis*. *Phytoparasitica*, DOI: 10.1007/s12600-024-01125-x
+- Boaventura et al. (2023) Soybean trypsin inhibitor reduces resistance to transgenic maize in *S. frugiperda*. *J Econ Entomol* 116(6):2146
+- Brito et al. (2013) Insensitive trypsins are differentially transcribed during *S. frugiperda* adaptation against plant protease inhibitors. PubMed 23466403
+- Spit et al. (2016) Comparative analysis of trypsin/chymotrypsin gene expression in Lepidoptera with different inhibitor sensitivities. PubMed 26944308
+- Oliveira et al. (2020) Noncompetitive tight-binding inhibition of *A. gemmatalis* trypsins by *Adenanthera pavonina* inhibitor. PubMed 32342573
 - Hedstrom L (2002) Serine protease mechanism and specificity. *Chem Rev*, 102, 4501–4524.
 - Lopes AR et al. (2004) Comparative studies of digestive enzymes and midgut cells of *Spodoptera frugiperda*. *Comp Biochem Physiol*, 137, 119–129.
-- Raveh B et al. (2011) Sub-angstrom modeling of complexes between flexible peptides and globular proteins. *PLoS Comput Biol*, 7, e1002110.
-- Trott O & Olson AJ (2010) AutoDock Vina: improving the speed and accuracy of docking. *J Comput Chem*, 31, 455–461.
-- Van der Spoel D et al. (2005) GROMACS: fast, flexible, and free. *J Comput Chem*, 26, 1701–1718.
-- Watson JL et al. (2023) De novo design of protein structure and function with RFdiffusion. *Nature*, 620, 1089–1100.
+
+**Estrutura de inibidores e mecanismo:**
+- Tabosa et al. (2020) EcTI impairs *Aedes aegypti* development and enhances Bt toxins. *Pest Mgmt Sci*, PMID 32453460
+- PMC3633903. Crystal structures of EcTI and complex with bovine trypsin.
+- Dutta et al. (2021) Structure-activity relationship and molecular docking of Kunitzin-AH. PMC8309051
+
+**Resistência proteolítica:**
+- Sivaramakrishnan et al. (2019) Phyto-inspired cyclic peptides from Pin-II RCLs for crop protection. *Phytomedicine*, PMID 31077794
+- PMC7688903. D- and unnatural amino acid peptides with improved proteolytic resistance.
+- biorXiv (2025) D-amino acid substitution and cyclisation in arginine-rich peptides. DOI: 10.1101/2025.06.17.660067
+
+**Expressão heteróloga:**
+- Springer (2014) Trypsin inhibitor expression in *P. pastoris* vs *Mamestra brassicae*. DOI: 10.1007/s11033-014-3760-y
+- ScienceDirect (2022) ChTI + Cry co-expression reduces resistance in *H. armigera*. DOI: 10.1016/j.indcrop.2022.115780
+- PMC9982021. Soybean trypsin inhibitor in transgenic plants reduces *H. zea* defoliation.
+
+**Ferramentas computacionais:**
+- Chaudhury S et al. (2010) PyRosetta. *Bioinformatics*, 26, 689–691.
+- Dauparas J et al. (2022) ProteinMPNN. *Science*, 378, 49–56.
+- Raveh B et al. (2011) FlexPepDock. *PLoS Comput Biol*, 7, e1002110.
+- Trott O & Olson AJ (2010) AutoDock Vina. *J Comput Chem*, 31, 455–461.
+- Van der Spoel D et al. (2005) GROMACS. *J Comput Chem*, 26, 1701–1718.
+- Watson JL et al. (2023) RFdiffusion. *Nature*, 620, 1089–1100.
+- Nature Chem Biol (2025) RFpeptides macrocyclic binders. DOI: 10.1038/s41589-025-01929-w
+
+**Formulação e regulatório:**
+- Molecules (2026) Nanopesticides delivery platforms. DOI: 10.3390/molecules31030453
+- Nature Comm (2025) Azadirachtin nano-assemblies vs *S. frugiperda*. DOI: 10.1038/s41467-025-57028-w
+- ACS Omega (2024) IPM sustainability update. PMC11465254
+- Frontiers (2025) Biopesticides sustainable agriculture. DOI: 10.3389/fsufs.2025.1657000

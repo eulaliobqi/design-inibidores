@@ -101,14 +101,17 @@ optimization:
   max_iterations: 2                 # 2 rodadas de mutação (reduzido de 3)
   mutation_rate: 0.3
   positions_to_vary: [2, 3, 4, 5]  # P2-P5 (P1 fixo)
+  require_no_kr_internal: false     # true = filtrar candidatos com K/R internos (resistência proteolítica)
+  prefer_md_stable_parents: true    # preferir candidatos MD estáveis como parentais
 
 ranking:
   weights:
-    vina_affinity: 0.50             # kcal/mol (menor = melhor) — energia física real, peso dominante
+    # Validado Fases 3+4: MD é filtro duro (instável = ×0.5 penalidade), não só peso
+    vina_affinity: 0.45             # kcal/mol (menor = melhor) — energia física real
     rosetta_I_sc: 0.20             # interface score (menor = melhor)
     hbond_count: 0.15              # contatos H-bond (maior = melhor)
-    md_rmsd: 0.10                  # RMSD MD (menor = melhor)
-    hydrophobicity: 0.05           # complementaridade hidrofóbica (reduzido: evita viés n_arg_lys)
+    md_rmsd: 0.15                  # RMSD MD (menor = melhor) — aumentado: lição Fases 3+4
+    hydrophobicity: 0.05           # complementaridade hidrofóbica
   top_candidates: 20
 
 report:
@@ -125,7 +128,7 @@ specificity:
       pdb_id:      "1TRN"             # tripsina bovina (82% identidade com humana)
       description: "Tripsina humana — segurança alimentar/toxicológica"
     apis_mellifera:
-      uniprot_id:  "Q9GYL5"           # AlphaFold EBI
+      uniprot_id:  "A0A7M7MMI1"       # CORRIGIDO: Q9GYL5 dava 404; A0A7M7MMI1 = 247aa, AlphaFold v6 confirmado
       description: "Tripsina de Apis mellifera — proteção de polinizadores"
 
 # ── Análise de resistência proteolítica (R5 — sobreviver ao trato intestinal)
