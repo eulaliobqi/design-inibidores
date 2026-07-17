@@ -6,6 +6,7 @@ Para cada candidato top (sequências do ProteinMPNN):
   3. Executa Vina com grid centrado no sítio S1
   4. Retorna afinidades e poses
 """
+import hashlib
 import json
 import re
 import subprocess
@@ -51,7 +52,10 @@ class DockingAgent(BaseAgent):
 
         for item in candidates:
             seq = item["sequence"]
-            stem = f"len{item['length']}_{seq[:8]}"
+            # Pasta em disco: hash evita colisão entre variantes MPNN quase-idênticas
+            # (ex.: família "GGATGAEI..." — 7 sequências distintas com o mesmo seq[:8]).
+            seq_hash = hashlib.md5(seq.encode()).hexdigest()[:6]
+            stem = f"len{item['length']}_{seq[:8]}_{seq_hash}"
             out_dir = self.workdir / stem
             out_dir.mkdir(exist_ok=True)
 
@@ -64,7 +68,7 @@ class DockingAgent(BaseAgent):
                                     cfg.get("exhaustiveness", 8), out_dir)
             result["sequence"] = seq
             result["length"] = item["length"]
-            results[stem] = result
+            results[seq] = result
 
         # Salvar
         (self.workdir / "docking_results.json").write_text(
