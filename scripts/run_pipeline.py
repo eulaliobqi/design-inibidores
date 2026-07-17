@@ -114,6 +114,8 @@ def main():
                         help="Mostrar ferramentas detectadas sem executar")
     parser.add_argument("--md-sequences", nargs="+", metavar="SEQ",
                         help="Forçar sequências específicas no --step md (sobrescreve seleção automática)")
+    parser.add_argument("--docking-sequences", nargs="+", metavar="SEQ",
+                        help="Forçar sequências específicas no --step docking (sobrescreve heurística de seleção top-N)")
     args = parser.parse_args()
 
     # ── Carregar configuração ────────────────────────────────────────────────
@@ -195,6 +197,9 @@ def main():
     if should_run("docking", args, ckpt):
         print("━" * 50)
         print("STAGE 5 — Docking Molecular (AutoDock Vina)")
+        if getattr(args, "docking_sequences", None):
+            config.setdefault("docking", {})["forced_sequences"] = args.docking_sequences
+            print(f"  → Sequências forçadas: {args.docking_sequences}")
         agent = DockingAgent("DockingAgent", config, out_base / "docking")
         docking_results = agent.run(primary_pdb, sequences_data, binding_site)
         ckpt.save("docking", docking_results)

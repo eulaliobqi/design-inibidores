@@ -40,6 +40,12 @@ class DockingAgent(BaseAgent):
         rec_pdbqt = self._prepare_receptor_pdbqt(receptor_pdb)
 
         results = {}
+        results_file = self.workdir / "docking_results.json"
+        if cfg.get("forced_sequences") and results_file.exists():
+            # Sequências forçadas ampliam o pool já dockado — mescla em vez de sobrescrever
+            results = json.loads(results_file.read_text())
+            self.logger.info(f"Mesclando com {len(results)} resultados de docking já existentes.")
+
         candidates = self._top_candidates(sequences_data)
         self.logger.info(f"Docking Vina: {len(candidates)} candidatos...")
 
@@ -296,6 +302,11 @@ class DockingAgent(BaseAgent):
         }
 
     def _top_candidates(self, sequences_data: dict) -> list[dict]:
+        forced = self.config.get("docking", {}).get("forced_sequences")
+        if forced:
+            self.logger.info(f"Usando sequências forçadas para docking ({len(forced)}).")
+            return [{"sequence": s, "length": len(s), "_heuristic": None} for s in forced]
+
         # top_for_docking do config ML (padrão 200) para dataset de labels
         limit = self.config.get("ml_dataset", {}).get("top_for_docking", 200)
         candidates = []
