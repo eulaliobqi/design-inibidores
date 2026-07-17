@@ -295,6 +295,26 @@ A viabilidade terapêutica de peptídeos inibidores aplicados via ingestão (spr
 
 A análise de especificidade (Seção 3.11) confirmou que todos os 20 candidatos mantêm seletividade adequada (SI ≥ 2,0 kcal/mol) frente às tripsinas não-alvo mesmo com alto conteúdo de R/K, reforçando que a susceptibilidade à clivagem é intrínseca ao peptídeo linear — não ao perfil de especificidade — e pode ser corrigida pelas estratégias acima sem comprometer a seletividade.
 
+### 3.10b Fase 5 — Mineração de Candidatos Nativamente Resistentes (2026-07-17)
+
+A estratégia 4 da Seção 3.10 (design sem K/R internos) foi ativada via `require_no_kr_internal: true` no `OptimizationAgent`. A tentativa inicial de gerar novos candidatos por mutação/crossover dos 50 parentais de maior ranking retornou **0 candidatos válidos**: os parentais selecionados por afinidade são composticionalmente saturados de Arg/Lys fora das posições mutáveis (P2–P5), de modo que nenhuma mutação pontual consegue eliminar todos os sítios K/R internos herdados do parental.
+
+Investigação subsequente revelou que a heurística de pré-seleção para docking (`net_charge × 1,2 + frac_hidrofóbica × 3,0 + n_arg_lys × 0,5`) favorece sistematicamente sequências ricas em K/R, excluindo do top-1000 original as sequências do pool ProteinMPNN (24.513 no total) que já não possuem K/R interno. Cruzando o filtro `KR_interno = 0` com as predições do modelo de ML (Random Forest, Seção 3.9) sobre as 24.513 sequências, **1.458 candidatos nativamente resistentes nunca haviam sido dockados de verdade**.
+
+As 60 sequências desse subconjunto com melhor afinidade *predita* pelo modelo foram submetidas a docking Vina real (nova opção `--docking-sequences`, mesclada aos 930 resultados pré-existentes). Durante essa validação foi identificado e corrigido um bug real no `DockingAgent`: os resultados eram indexados por uma chave truncada (`len{n}_{seq[:8]}`) que colide entre sequências quase-idênticas, causando perda silenciosa de resultados (confirmado: 78 grupos de colisão no top-1000 original, dos quais 19 sequências distintas — o restante eram duplicatas exatas — tiveram dado real sobrescrito historicamente; as 3 candidatas de síntese da Seção 3.7/3.8b não foram afetadas, prefixos únicos). Corrigido indexando por sequência completa; as 60 sequências foram redockadas por completo após o fix.
+
+**Tabela 9b.** Top-5 candidatos nativamente resistentes (KR-interno = 0) por Vina real, docking completo 2026-07-17.
+
+| Sequência | Vina real (kcal/mol) | KR-interno | Status |
+|-----------|----------------------|------------|--------|
+| SEEEVLAANEAYAAAHTAYN | **−13,40** | 0 | aguarda MD |
+| MGYLTAYHQALAAQNAALLA | −13,04 | 0 | aguarda MD |
+| SHIAEHEAELDAYAEAQAAA | −12,76 | 0 | aguarda MD |
+| MGSLTAYLEAYAAENAAALA | −12,67 | 0 | aguarda MD |
+| SALASIAAHQATFLAYLESK | −12,52 | 0 | aguarda MD |
+
+`SEEEVLAANEAYAAAHTAYN` combina resistência estrutural à autoclivagem (sem sítios K/R internos) com afinidade Vina real competitiva com o TOP-3 atual (Seção 3.7/3.8b: RLREELKKAEEWLEKRRKEE, MKKQRENAKKVAEITLKKAK −12,72, GSRASARAYAARVRARRAAL −13,62). Consistente com a lição da Seção 3.8 (melhor Vina ≠ estabilidade em solvente), este candidato **ainda não passou por MD** e não deve ser considerado para síntese antes dessa validação.
+
 ---
 
 ### 3.11 Especificidade vs. Tripsinas Não-Alvo
