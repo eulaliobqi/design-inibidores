@@ -224,7 +224,7 @@ def print_report(result: dict):
     print(f"P1-internos tripsina: {result['trypsin_internal_sites']}")
     print()
     print(f"{'Protease':<25} {'Sítios':<8} {'Posições (1-based)'}")
-    print("─"*60)
+    print("-"*60)
     for protease, data in result["by_protease"].items():
         if CLEAVAGE_RULES[protease]["priority"] > 2:
             continue   # mostrar apenas alta/média prioridade
@@ -293,7 +293,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"RESUMO — {len(results)} sequências analisadas")
         print(f"{'Sequência':<25} {'Comprimento':<12} {'P1-int':<8} {'Score':<8} Veredicto")
-        print("─"*60)
+        print("-"*60)
         for r in sorted(results, key=lambda x: x["susceptibility_score"]):
             v = r["verdict"]
             v_color = {"RESISTENTE": "\033[92m", "MARGINAL": "\033[93m", "SUSCEPTIVEL": "\033[91m"}
