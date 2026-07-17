@@ -101,7 +101,7 @@ optimization:
   max_iterations: 2                 # 2 rodadas de mutação (reduzido de 3)
   mutation_rate: 0.3
   positions_to_vary: [2, 3, 4, 5]  # P2-P5 (P1 fixo)
-  require_no_kr_internal: false     # true = filtrar candidatos com K/R internos (resistência proteolítica)
+  require_no_kr_internal: true      # Fase 5a (2026-07-17): filtra candidatos com K/R internos (resistência proteolítica) — 0/20 candidatos das Fases 3-4 eram resistentes
   prefer_md_stable_parents: true    # preferir candidatos MD estáveis como parentais
 
 ranking:
