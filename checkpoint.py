@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 class CheckpointManager:
@@ -11,8 +12,14 @@ class CheckpointManager:
 
     def save(self, step, result):
         self.data[step] = result
-        with open(self.filename, "w") as f:
+        # Escrita atômica (tmp + replace): evita corrupção quando dois processos
+        # gravam o mesmo checkpoint.json quase ao mesmo tempo (colisão real
+        # encontrada 2026-07-18 — dois --step concorrentes intercalaram bytes
+        # no meio do arquivo, corrompendo o JSON).
+        tmp = self.filename.with_suffix(self.filename.suffix + ".tmp")
+        with open(tmp, "w") as f:
             json.dump(self.data, f, indent=2)
+        os.replace(tmp, self.filename)
 
     def load(self, step):
         return self.data.get(step, {})
