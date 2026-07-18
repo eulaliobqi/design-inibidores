@@ -11,7 +11,7 @@
 > - ✓ 3.8 MD — **11/11 concluídos** (10 ns); Fase 3: 2 estáveis + 1 marginal + 2 instáveis; Fase 4: 1 estável (RLREELKKAEEWLEKRRKEE, RMSD 0,294 nm) + 3 marginais + 2 instáveis
 > - ✓ 3.9 ML/DL — **treinado**: RF RMSE=0,514 kcal/mol, R²=0,315 (455 labels, 1,9%); 24.513 predições geradas
 > - ✓ 3.10 Resistência proteolítica — **20/20 candidatos SUSCEPTÍVEIS** (top-20 ranking); 5–7 P1-internos K/R
-> - ⚠️ 3.11 Especificidade — **CORRIGIDO 2026-07-18**: a afirmação original "20/20 aprovados" (Fase 3) nunca teve dado real por trás (bug de preparo de PDBQT — ver Seção 2.11/metodologia). Re-executado com dado Vina real: **0/21 candidatos aprovados** (SI ≥ 2,0 kcal/mol), incluindo os candidatos de síntese prioritários.
+> - ⚠️ 3.11 Especificidade — **CORRIGIDO 2026-07-18**: a afirmação original "20/20 aprovados" (Fase 3) nunca teve dado real por trás (bug de preparo de PDBQT — ver Seção 2.11/metodologia). Re-executado com dado Vina real: **0/23 candidatos aprovados** (SI ≥ 2,0 kcal/mol) até o momento, incluindo os candidatos de síntese prioritários e os 2 melhores da Fase 6 (5/7aa). Melhor SI real da sessão: HRPRRPR (7aa), min_SI=1,41.
 
 ---
 
