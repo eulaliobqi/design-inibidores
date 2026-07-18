@@ -36,7 +36,7 @@ O processo foi configurado para o receptor ACR157 (231 resíduos, cadeia A) com 
 - Hotspot residues: resíduos dentro de 6,0 Å do centro consenso do sítio S1
 - Parâmetro obrigatório: `inference.ckpt_override_path` (instalação via pip não inclui diretório `models/`)
 
-Foram gerados **330 backbones** para o receptor ACR157 em uma única rodada de difusão. A variação de comprimento (5, 7, 10, 12, 15 e 20 aa) foi especificada como parâmetro de configuração, porém todos os 330 backbones convergiram para binders de **20 aminoácidos** na cadeia B — limitação da configuração empregada nesta rodada. Os backbones gerados apresentam diversidade conformacional real (hélices, estruturas estendidas, *hairpins*), em contraste com os scaffolds lineares poly-Ala gerados em modo *fallback*.
+Foram gerados **330 backbones** para o receptor ACR157 em uma única rodada de difusão, 55 para cada um dos 6 comprimentos configurados (5, 7, 10, 12, 15, 20 aa). **Correção metodológica (2026-07-18)**: uma nota anterior desta seção afirmava que todos os 330 backbones haviam convergido para 20 aminoácidos — essa afirmação estava **errada**. Inspeção direta dos arquivos PDB (contagem de átomos Cα por comprimento) confirmou que os backbones sempre tiveram o comprimento correto e real (5, 7, 10, 12, 15 ou 20 resíduos na cadeia B, conforme o contig especificado). O problema real estava numa etapa posterior — ver Seção 2.4. Os backbones gerados apresentam diversidade conformacional real (hélices, estruturas estendidas, *hairpins*), em contraste com os scaffolds lineares poly-Ala gerados em modo *fallback*.
 
 Os arquivos PDB de entrada (ACR157, QCL936, XP273, XP352) foram pré-processados por `scripts/prep_pdbs.py` para correção de cadeia (blank → A) e renumeração de resíduos (início em 1), requisito do parser interno do RFdiffusion.
 
@@ -47,11 +47,39 @@ O ProteinMPNN (*Dauparas et al., Science, 2022*) foi executado no modo real (ins
 **Formato de saída FASTA e extração do binder:**  
 O ProteinMPNN gera sequências no formato `RECEPTOR_SEQ/BINDER_SEQ` (cadeias separadas por `/`). O módulo `_run_mpnn()` extrai a cadeia binder (parte após o último `/`) via `parts = seq.split("/"); binder = parts[-1]`. A concatenação incorreta (`replace("/","")`) foi identificada como bug crítico na sessão anterior, pois produzia sequências quiméricas receptor+binder de 240+ aa como candidatos — redesigns das tripsinas de input, não inibidores. O fix (commit `e9024bc`) garante que apenas os 20 aa desenhados para a interface sejam avaliados.
 
-**Dataset resultante:**
+**Dataset resultante (histórico, Fases 1-2):**
 - 330 backbones × 500 sequências = 165.000 brutas
-- Após remoção de duplicatas: **24.513 sequências únicas de binder (20 aa)**
-- Todos os binders têm comprimento homogêneo de 20 aa (limitação desta rodada — ver Seção 2.3)
+- Após remoção de duplicatas: 24.513 sequências únicas de binder — **100% de 20 aa**, apesar de
+  55 dos 330 backbones terem 5, 7, 10, 12 ou 15 resíduos reais (ver correção acima)
 - Dataset exportado: `outputs/dataset/ml_training_dataset.csv` com 41 features físico-químicas
+
+**Bug real identificado e corrigido (2026-07-18, Fase 6.4):** a causa da homogeneidade de 20 aa
+não estava nos backbones (corretos, ver Seção 2.3) nem no parsing `RECEPTOR/BINDER` acima
+(correto) — estava no cache de execução do ProteinMPNN. `_run_mpnn()` usava
+`out_dir = mpnn_out/{pdb.stem}`, onde `pdb.stem` (ex. `"design_0"`) se repete identicamente em
+cada pasta `len_N/` (`len_5/design_0.pdb`, `len_7/design_0.pdb`, ...). A checagem "só roda
+ProteinMPNN se o FASTA de saída ainda não existe" reutilizava silenciosamente o resultado já
+em cache de **um** comprimento (a rodada histórica original de 20 aa) para **todos** os outros,
+mascarando por completo os comprimentos reais dos backbones. Confirmado empiricamente: o cache
+`mpnn_out/design_0/seqs/design_0.fa` continha sequências de exatamente 20 resíduos
+(ex. `MERLRAEMEEKEARREARAK`), reaproveitadas para toda solicitação de redesenho independente do
+comprimento real do backbone de entrada.
+
+**Fix**: `out_dir` qualificado por comprimento (`mpnn_out/len{N}_{pdb.stem}/`). Reexecução
+completa de `--step mpnn` (44 min, `--batch_size` elevado de 1 para 25 — ganho de ~25× medido
+diretamente: 500 sequências reais em 7,5 s vs. >3 min antes, GPU RTX 5070 Ti antes subutilizada a
+38%/540 MB) gerou **120.558 sequências totais** (96.045 novas + 24.513 históricas preservadas
+pelo merge), com **100% de correspondência verificada** entre comprimento real da sequência e
+comprimento do backbone de origem:
+
+| Comprimento | N sequências |
+|---|---|
+| 5 aa | 4.468 |
+| 7 aa | 9.606 |
+| 10 aa | 17.259 |
+| 12 aa | 19.100 |
+| 15 aa | 21.934 |
+| 20 aa | 48.191 |
 
 Não foram aplicadas restrições de aminoácido na posição P1, permitindo explorar mecanismos de inibição além do competitivo clássico (modulação alostérica, bloqueio estérico, inibição mista).
 
