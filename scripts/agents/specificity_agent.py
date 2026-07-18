@@ -216,8 +216,12 @@ class SpecificityAgent(BaseAgent):
 
         ob = subprocess.run(["which", "obabel"], capture_output=True)
         if ob.returncode == 0:
+            # -xr: receptor rígido sem ROOT/ENDROOT/TORSDOF — sem essa flag Vina rejeita
+            # o PDBQT como receptor ("Unknown or inappropriate tag... ROOT"). Mesmo fix
+            # já validado em docking_agent.py._prepare_receptor_pdbqt (990 docagens reais).
             r = subprocess.run(
-                ["obabel", str(cleaned), "-O", str(pdbqt), "-h", "--partialcharge", "gasteiger"],
+                ["obabel", str(cleaned), "-O", str(pdbqt), "-h", "-xr",
+                 "--partialcharge", "gasteiger"],
                 capture_output=True, text=True
             )
             if pdbqt.exists() and pdbqt.stat().st_size > 2000:
