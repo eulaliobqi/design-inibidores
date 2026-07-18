@@ -170,6 +170,17 @@ candidato mais estável do pipeline (RLREELKKAEEWLEKRRKEE, RMSD 0,294 nm), o sca
 formação explícita da ligação dissulfeto (`pdb2gmx -ss`, produzindo o resíduo `CYX` já definido
 no campo de força `amber99sb-ildn.ff`).
 
+**Tentativa de validação (2026-07-18) — resultado negativo, causa raiz diagnosticada.** A
+primeira rodada de MD da variante E4C/L6C (`RLRCECKKAEEWLEKRRKEE`) via `--md-sequences` abortou
+(SIGABRT) 6 segundos após o início do equilíbrio NVT — sem produzir dado fabricado
+(`md_results.json` registrou corretamente `rmsd_avg_nm: null` com a mensagem de erro real). A
+causa raiz é metodológica: `_build_complex_for_md()` reconstrói o peptídeo do zero via
+`PeptideBuilder` a partir da sequência, sem partir da conformação real já equilibrada de onde a
+distância de 5,42 Å foi medida — a estrutura recém-construída não tem geometria compatível com
+dissulfeto entre essas posições, e forçar `-ss` sobre ela gerou clash estérico severo. Validar a
+hipótese corretamente exigirá mutar os resíduos *in place* na conformação real equilibrada
+(extraída da trajetória, não reconstruída do zero), tarefa de implementação ainda pendente.
+
 **pH real do intestino de Lepidoptera.** O intestino médio de larvas de Lepidoptera é fortemente
 alcalino (pH 8–11 em geral; tripsina de *Manduca sexta* tem ótimo em pH 10,5, com atividade máxima
 registrada em pH 11,5 em outra espécie lepidóptera — *Lazarević, Entomol. Exp. Appl., 2015*;
