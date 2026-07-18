@@ -71,7 +71,7 @@ class ProteinMPNNAgent(BaseAgent):
                 if not pdb.exists():
                     continue
                 if mpnn_path:
-                    seqs = self._run_mpnn(mpnn_path, pdb, receptor_pdb, cfg)
+                    seqs = self._run_mpnn(mpnn_path, pdb, receptor_pdb, cfg, int(length))
                 else:
                     seqs = self._generate_ml_dataset(int(length), cfg)
 
@@ -326,8 +326,17 @@ class ProteinMPNNAgent(BaseAgent):
     # ProteinMPNN real (quando instalado)
     # ──────────────────────────────────────────────
 
-    def _run_mpnn(self, mpnn_path: Path, pdb: Path, receptor_pdb: str, cfg: dict) -> list[str]:
-        out_dir = self.workdir / "mpnn_out" / pdb.stem
+    def _run_mpnn(self, mpnn_path: Path, pdb: Path, receptor_pdb: str, cfg: dict,
+                  length: int) -> list[str]:
+        # BUG REAL confirmado 2026-07-18: out_dir usava só pdb.stem ("design_0", por
+        # exemplo), que se repete em CADA pasta len_N/ (len_5/design_0.pdb,
+        # len_7/design_0.pdb, ...). O cache "só roda se FASTA não existe" reutilizava
+        # silenciosamente o resultado de um comprimento (20aa, a rodada histórica
+        # original) para TODOS os outros comprimentos — por isso as 165.330 sequências
+        # geradas eram 100% de 20 resíduos, mesmo com backbones corretos de 5/7/10/12/15
+        # resíduos confirmados por inspeção direta dos PDBs. Qualificar por comprimento
+        # resolve a colisão.
+        out_dir = self.workdir / "mpnn_out" / f"len{length}_{pdb.stem}"
         out_dir.mkdir(parents=True, exist_ok=True)
 
         fasta_files = (
