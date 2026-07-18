@@ -58,10 +58,20 @@ class SpecificityAgent(BaseAgent):
         cfg    = self.config.get("specificity", {})
         thresh = cfg.get("selectivity_threshold", 2.0)
         top_n  = cfg.get("top_n_candidates", 20)
+        forced = cfg.get("forced_sequences")
 
-        # Top candidatos por Vina (únicos)
-        top_cands = self._select_top_candidates(docking_results, top_n)
+        if forced:
+            self.logger.info(f"Usando sequências forçadas para especificidade ({len(forced)}).")
+            seq_vina = {v.get("sequence"): v.get("best_affinity_kcal")
+                        for v in docking_results.values() if v.get("sequence")}
+            top_cands = [{"sequence": s, "vina_kcal": seq_vina.get(s)} for s in forced]
+        else:
+            # Top candidatos por Vina (únicos)
+            top_cands = self._select_top_candidates(docking_results, top_n)
         self.logger.info(f"Especificidade: {len(top_cands)} candidatos × {len(NONTARGETS)} não-alvos")
+
+        results_file = self.workdir / "specificity_results.json"
+        prev = json.loads(results_file.read_text()) if forced and results_file.exists() else None
 
         results: dict = {}
 
@@ -83,6 +93,12 @@ class SpecificityAgent(BaseAgent):
                 seq   = cand["sequence"]
                 affnt = self._dock_peptide(seq, rec_pdbqt, center, nt_key)
                 nontarget_affs[seq] = affnt
+
+            if prev and nt_key in prev.get("nontarget_affinities", {}):
+                # Mescla com afinidades já calculadas para outros candidatos
+                merged_affs = dict(prev["nontarget_affinities"][nt_key]["affinities"])
+                merged_affs.update(nontarget_affs)
+                nontarget_affs = merged_affs
 
             results[nt_key] = {
                 "description": nt_info["description"],
@@ -110,6 +126,12 @@ class SpecificityAgent(BaseAgent):
                 "min_SI": round(min(sis.values()), 3) if sis else None,
                 "approved": approved,
             }
+
+        if prev:
+            # Sequências forçadas ampliam o histórico — mescla em vez de sobrescrever
+            merged_selectivity = dict(prev.get("selectivity", {}))
+            merged_selectivity.update(selectivity)
+            selectivity = merged_selectivity
 
         n_approved = sum(1 for v in selectivity.values() if v["approved"])
         self.logger.info(

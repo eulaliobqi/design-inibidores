@@ -116,6 +116,8 @@ def main():
                         help="Forçar sequências específicas no --step md (sobrescreve seleção automática)")
     parser.add_argument("--docking-sequences", nargs="+", metavar="SEQ",
                         help="Forçar sequências específicas no --step docking (sobrescreve heurística de seleção top-N)")
+    parser.add_argument("--specificity-sequences", nargs="+", metavar="SEQ",
+                        help="Forçar sequências específicas no --step specificity (sobrescreve top-N por Vina)")
     args = parser.parse_args()
 
     # ── Carregar configuração ────────────────────────────────────────────────
@@ -246,6 +248,9 @@ def main():
     if should_run("specificity", args, ckpt):
         print("━" * 50)
         print("STAGE 8 — Especificidade vs. Não-Alvos (Vina: humana + Apis)")
+        if getattr(args, "specificity_sequences", None):
+            config.setdefault("specificity", {})["forced_sequences"] = args.specificity_sequences
+            print(f"  → Sequências forçadas: {args.specificity_sequences}")
         if docking_results:
             agent = SpecificityAgent("SpecificityAgent", config,
                                       out_base / "specificity")
