@@ -398,6 +398,52 @@ class MDAgent(BaseAgent):
 
         return "gmx_mpi"  # vai falhar com mensagem clara
 
+    def _apply_ph_protonation(self, clean_pdb: Path, out: Path) -> Path:
+        """Ajusta nomes de resíduo (HID/HIE/HIP/LYN/ASH/GLH) via pdb2pqr+propka para
+        refletir o pH real e alcalino do intestino de Lepidoptera (config md.gut_ph,
+        padrão 10.0 — Manduca sexta trypsin ótimo pH 10,5). amber99sb-ildn.ff já define
+        essas entradas alternativas; pdb2gmx as reconhece automaticamente pelo nome.
+
+        Degrada graciosamente (retorna clean_pdb sem alteração) se pdb2pqr30 não estiver
+        instalado ou falhar — nunca trava o pipeline por causa de uma etapa opcional."""
+        cfg = self.config.get("md", {})
+        if not cfg.get("use_propka", True):
+            return clean_pdb
+        ph = cfg.get("gut_ph", 10.0)
+        pqr_out = out / "propka.pqr"
+        pdb_out = out / "complex_protonated.pdb"
+        try:
+            p = subprocess.run(
+                ["pdb2pqr30", "--ff", "AMBER", "--ffout", "AMBER",
+                 "--titration-state-method", "propka", "--with-ph", str(ph),
+                 "--keep-chain", "--pdb-output", str(pdb_out),
+                 str(clean_pdb), str(pqr_out)],
+                capture_output=True, text=True, timeout=180,
+            )
+            if p.returncode != 0 or not pdb_out.exists():
+                self.logger.warning(
+                    f"  pdb2pqr rc={p.returncode}; usando protonação padrão do pdb2gmx. "
+                    f"{(p.stderr or '')[-300:]}"
+                )
+                return clean_pdb
+            non_default = set()
+            for line in pdb_out.read_text().splitlines():
+                if line.startswith(("ATOM", "HETATM")):
+                    resname = line[17:20].strip()
+                    if resname in ("HID", "HIE", "HIP", "LYN", "ASH", "GLH"):
+                        non_default.add(f"{resname}{line[22:26].strip()}")
+            self.logger.info(
+                f"  pdb2pqr/propka (pH {ph}): {len(non_default)} resíduos com "
+                f"protonação não-padrão: {sorted(non_default)}"
+            )
+            return pdb_out
+        except FileNotFoundError:
+            self.logger.warning("  pdb2pqr30 não encontrado no PATH; usando protonação padrão do pdb2gmx.")
+            return clean_pdb
+        except Exception as e:
+            self.logger.warning(f"  pdb2pqr erro ({e}); usando protonação padrão do pdb2gmx.")
+            return clean_pdb
+
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
                      temp: int, seq: str) -> dict:
         gmx = self._find_gmx()
@@ -450,12 +496,23 @@ class MDAgent(BaseAgent):
             clean_pdb.write_text("".join(lines_clean) + "\nEND\n")
             self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
 
+            # pH do intestino de Lepidoptera (alcalino, 8-11) — ajusta estado de
+            # protonação real via pdb2pqr/propka antes do pdb2gmx (Fase 5+, 2026-07-17)
+            protonated_pdb = self._apply_ph_protonation(clean_pdb, out)
+
             # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
             self.logger.info("  pdb2gmx...")
-            p = gmx_run(["pdb2gmx", "-f", "complex_clean.pdb", "-o", "processed.gro",
-                          "-p", "topol.top", "-i", "posre.itp",
-                          "-ff", ff, "-water", water, "-ignh"],
-                         input="1\n", timeout=120)
+            pdb2gmx_args = ["pdb2gmx", "-f", protonated_pdb.name, "-o", "processed.gro",
+                             "-p", "topol.top", "-i", "posre.itp",
+                             "-ff", ff, "-water", water, "-ignh"]
+            stdin_input = "1\n"
+            if seq.count("C") >= 2:
+                # Candidato com potencial dissulfeto (Fase 5+): pdb2gmx -ss pergunta
+                # y/N por par Cys geometricamente compatível; aceitar todos.
+                pdb2gmx_args.append("-ss")
+                stdin_input = "1\n" + "y\n" * 10
+                self.logger.info(f"  {seq.count('C')} Cys na sequência — tentando formar dissulfeto (-ss)")
+            p = gmx_run(pdb2gmx_args, input=stdin_input, timeout=120)
             check(p, "pdb2gmx")
 
             # editconf

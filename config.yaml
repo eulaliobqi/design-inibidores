@@ -38,7 +38,11 @@ proteinmpnn:
   sampling_temp: 0.1
   backbone_noise: 0.05
   fixed_positions: {}
-  omit_aas: "CX"
+  # Fase 5+ (2026-07-17): Cys reabilitada — SFTI-1 (14aa, 1 dissulfeto, Ki=0,5nM) mostra
+  # que rigidez do loop reativo via dissulfeto é o principal determinante de potência+
+  # resistência em inibidores canônicos curtos (Laskowski mechanism). omit_aas="CX" antigo
+  # bloqueava essa estratégia por completo. Ver scripts/scan_disulfide_geometry.py.
+  omit_aas: "X"
   bias_aa: {}
   install_paths:
     - "~/ProteinMPNN"
@@ -94,6 +98,12 @@ md:
   temperature: 300                  # K
   forcefield: "amber99sb-ildn"
   water_model: "tip3p"
+  # Fase 5+ (2026-07-17): intestino de Lepidoptera é fortemente alcalino (pH 8-11;
+  # Manduca sexta trypsin ótimo pH 10,5, atividade máx. registrada pH 11,5 em outra espécie).
+  # MD padrão assume protonação ~neutra — pdb2pqr/propka corrige estado de protonação real
+  # de His/Lys/Asp/Glu antes do pdb2gmx (amber99sb-ildn.ff já tem HID/HIE/HIP/LYN/ASH/GLH/CYX).
+  gut_ph: 10.0
+  use_propka: true
   # Para produção: aumentar para 100+ ns
 
 optimization:
