@@ -361,6 +361,50 @@ com His46 e Asp91 não garante estabilidade geral do complexo — o único outro
 padrão (SHIAEHEAELDAYAEAQAAA) foi o mais instável de todos. Fica registrado como hipótese a
 acompanhar em candidatos futuros, não como conclusão validada.
 
+### 3.10c Fase 6 — Comparação Real entre Comprimentos (R1, 2026-07-18)
+
+O requisito R1 (testar 5, 7, 10, 12, 15 e 20 aa e comparar os melhores por etapa) nunca havia
+sido respondido com dado real: um bug de cache no `ProteinMPNNAgent` (Seção 2.4) fazia com que
+100% das sequências geradas saíssem de 20 aa, independentemente do comprimento real do backbone
+de origem. Corrigido o bug, o ProteinMPNN foi reexecutado (120.558 sequências, 100% de
+correspondência verificada entre comprimento real e label do backbone) e os 30 melhores
+candidatos de cada comprimento (5/7/10/12/15 aa, selecionados por heurística de carga +
+hidrofobicidade + `n_arg_lys`, com bônus para P1 = Lys — ver justificativa abaixo) foram
+dockados com Vina real (150/150 com sucesso).
+
+**Tabela 9d.** Melhor candidato real por comprimento — Vina e MD (10 ns).
+
+| Comprimento | Sequência | Vina real (kcal/mol) | RMSD MD (nm) | Veredicto |
+|---|---|---|---|---|
+| 5 aa | **SRTRR** | −10,31 | **0,2425** | **ESTÁVEL — mais estável de todo o pipeline** |
+| 7 aa | **HRPRRPR** | −11,72 | **0,2659** | **ESTÁVEL — 2º mais estável de todo o pipeline** |
+| 10 aa | KPRWKYRRRP | −12,04 | — | MD falhou (SIGABRT real durante NVT; sem dado fabricado) |
+| 12 aa | TAGAILRKRVKK | −12,53 | 0,9584 | instável/marginal |
+| 15 aa | TRARLRAEVLRARAR | −13,06 | 1,8284 | muito instável |
+
+A afinidade Vina melhora de forma monotônica com o comprimento (mais contatos possíveis), como
+esperado. **O achado real e contraintuitivo está na estabilidade**: os dois candidatos mais
+curtos (5 e 7 aa) são os únicos estáveis desse grupo e superam em RMSD todos os candidatos de
+20 aa já testados no pipeline, incluindo `RLREELKKAEEWLEKRRKEE` (0,294 nm, recordista anterior).
+Os candidatos de 12 e 15 aa, apesar de melhor Vina, são instáveis. Isso inverte a suposição
+implícita nas Fases 1-5 de que comprimentos maiores seriam preferíveis — reforça, aliás, a lição
+já estabelecida na Seção 3.8 (melhor Vina não implica estabilidade) e é ainda mais favorável ao
+requisito R7 (expressão transgênica: peptídeo menor = gene menor = custo de síntese menor).
+
+**Ressalva real**: n=1 candidato testado por comprimento (não é amostra estatística) — motiva
+expandir o MD para mais candidatos por classe de tamanho antes de tratar "peptídeo curto é mais
+estável" como regra geral, mas é a primeira resposta real e completa (Vina + MD) ao requisito R1
+desde o início do projeto. `SRTRR` e `HRPRRPR` tornam-se candidatos de síntese prioritários,
+pendente ainda de teste real de especificidade (Seção 3.11) — nenhum dos 5 comprimentos novos foi
+avaliado contra tripsina humana/*Apis mellifera* até o momento deste texto.
+
+**Seleção de P1 informada por dado real**: entre os 228 candidatos com Vina real disponíveis
+antes desta rodada, o resíduo C-terminal (P1) com melhor afinidade média e amostra robusta era
+Lys (K, n=81, média −11,78 kcal/mol), superando Arg (R, n=29, média −11,56) apesar de ambos
+serem tratados como equivalentes no design canônico "P1 = Arg/Lys" usado desde a Fase 1. Essa
+descoberta foi usada como critério real de priorização (não de geração) na seleção dos 150
+candidatos desta rodada.
+
 ---
 
 ### 3.11 Especificidade vs. Tripsinas Não-Alvo
