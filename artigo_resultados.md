@@ -338,6 +338,23 @@ peptídeo ocupa a fenda catalítica via contatos de backbone e um resíduo arom�
 (especificidade, ranking) foi calibrado assumindo o mecanismo canônico, esse candidato requer
 validação experimental própria antes de qualquer decisão final de síntese.
 
+A mesma análise PLIP foi estendida aos outros 4 candidatos resistentes com MD real concluído:
+
+**Tabela 9c.** Contato com a tríade catalítica (His46/Asp91) e região S1 (Ser188/Asp182) por PLIP.
+
+| Candidato | RMSD MD (nm) | Contata His46? | Contata Asp91? | Região Ser188/Asp182 |
+|---|---|---|---|---|
+| SEEEVLAANEAYAAAHTAYN | 0,474 (estável) | ✓ (π-cátion) | ✓ | ✓ |
+| SHIAEHEAELDAYAEAQAAA | 1,607 (instável) | ✓ | ✓ | ✓ |
+| SALASIAAHQATFLAYLESK | 0,568 (marginal) | ✓ | — | ✓ |
+| MGSLTAYLEAYAAENAAALA | 0,639 (marginal) | — | — | ✓ (via Asp187) |
+| MGYLTAYHQALAAQNAALLA | 0,820 (marginal) | — | — | ✓ (via Gln183) |
+
+Com amostra pequena (n=5) a leitura é apenas observacional, não causal: o engajamento simultâneo
+com His46 e Asp91 não garante estabilidade geral do complexo — o único outro candidato com esse
+padrão (SHIAEHEAELDAYAEAQAAA) foi o mais instável de todos. Fica registrado como hipótese a
+acompanhar em candidatos futuros, não como conclusão validada.
+
 ---
 
 ### 3.11 Especificidade vs. Tripsinas Não-Alvo
