@@ -52,9 +52,17 @@ class ProteinMPNNAgent(BaseAgent):
         cfg = self.config.get("proteinmpnn", {})
         ml_cfg = self.config.get("ml_dataset", {})
 
-        results = {}
+        # Mescla com resultados já existentes em vez de sobrescrever — mesmo bug de
+        # overwrite já corrigido em Docking/MD/Rosetta/SpecificityAgent (commits
+        # 1d8a674, 14f8c94, 8042004, e este). Rodar --step mpnn de novo (ex.: novos
+        # backbones de 5/7/10/12/15aa na Fase 6.4) sem isso apagaria as 24.513
+        # sequências históricas de sequences_properties.json e ml_training_dataset.csv.
+        results_file = self.workdir / "sequences_properties.json"
+        results = json.loads(results_file.read_text()) if results_file.exists() else {}
         all_unique: list[dict] = []
-        seen_seqs: set[str] = set()
+        seen_seqs: set[str] = {
+            s for data in results.values() for s in data.get("sequences", [])
+        }
 
         for length, pdb_list in backbones.items():
             self.logger.info(f"ProteinMPNN — {len(pdb_list)} backbones de {length} aa...")
@@ -274,19 +282,44 @@ class ProteinMPNNAgent(BaseAgent):
         label_cols = ["vina_affinity_kcal", "rosetta_I_sc", "is_known_inhibitor"]
         fieldnames = base_cols + aa_cols + label_cols
 
+        # Mescla com o CSV já existente em vez de sobrescrever (mesmo bug de overwrite
+        # já corrigido em Docking/MD/Rosetta/SpecificityAgent). Preserva colunas extras
+        # escritas depois por outros agentes (ex. final_score do RankingAgent) e só
+        # adiciona linhas para sequências genuinamente novas.
+        existing_rows: dict[str, dict] = {}
+        extra_fieldnames: list[str] = []
+        if out_path.exists():
+            with open(out_path, newline="", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    seq = row.get("sequence")
+                    if seq:
+                        existing_rows[seq] = row
+                if reader.fieldnames:
+                    extra_fieldnames = [c for c in reader.fieldnames if c not in fieldnames]
+
+        all_fieldnames = fieldnames + extra_fieldnames
+        n_new = 0
+        for item in sequences:
+            seq = item.get("sequence")
+            if seq in existing_rows:
+                continue  # já presente (histórico ou duplicata desta rodada)
+            row = {k: item.get(k, "") for k in fieldnames}
+            row.setdefault("vina_affinity_kcal", "")
+            row.setdefault("rosetta_I_sc", "")
+            row.setdefault("is_known_inhibitor", item.get("is_known_inhibitor", 0))
+            existing_rows[seq] = row
+            n_new += 1
+
         with open(out_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+            writer = csv.DictWriter(f, fieldnames=all_fieldnames, extrasaction="ignore")
             writer.writeheader()
-            for item in sequences:
-                row = {k: item.get(k, "") for k in fieldnames}
-                row.setdefault("vina_affinity_kcal", "")
-                row.setdefault("rosetta_I_sc", "")
-                row.setdefault("is_known_inhibitor", item.get("is_known_inhibitor", 0))
+            for row in existing_rows.values():
                 writer.writerow(row)
 
         self.logger.info(
             f"Dataset ML exportado → {out_path} "
-            f"({len(sequences)} sequências, {len(fieldnames)} features)"
+            f"({len(existing_rows)} sequências totais, {n_new} novas, {len(all_fieldnames)} features)"
         )
 
     # ──────────────────────────────────────────────

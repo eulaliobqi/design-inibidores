@@ -20,10 +20,22 @@ class RosettaAgent(BaseAgent):
         nstruct = cfg.get("flexpepdock_nstruct", 10)
         center = binding_site["consensus_center_xyz"]
 
+        # Mescla com resultados já existentes em vez de sobrescrever — mesmo bug de
+        # chave truncada + overwrite já corrigido em Docking/MD/SpecificityAgent
+        # (commits 1d8a674, 14f8c94, 8042004); aqui indexado por sequência completa.
+        results_file = self.workdir / "rosetta_scores.json"
         results = {}
+        if results_file.exists():
+            prev = json.loads(results_file.read_text())
+            for v in prev.values():
+                seq_prev = v.get("sequence")
+                if seq_prev:
+                    results[seq_prev] = v
+
         top_complexes = self._select_top_sequences(sequences_data)
 
         self.logger.info(f"Refinando {len(top_complexes)} candidatos com Rosetta...")
+        warned_missing_tool = False
 
         for item in top_complexes:
             seq = item["sequence"]
@@ -41,13 +53,14 @@ class RosettaAgent(BaseAgent):
                 scored = self._run_flexpepdock(rosetta_path, complex_pdb, out_dir, nstruct)
             else:
                 scored = self._fallback_score(seq, complex_pdb)
-                if not results:
+                if not warned_missing_tool:
+                    warned_missing_tool = True
                     self._warn_missing_tool(
                         "Rosetta/PyRosetta",
                         "Instalar PyRosetta: https://www.pyrosetta.org/downloads"
                     )
 
-            results[stem] = {
+            results[seq] = {
                 "sequence": seq,
                 "length": item["length"],
                 "complex_pdb": str(complex_pdb),
