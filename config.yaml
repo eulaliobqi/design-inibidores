@@ -37,6 +37,10 @@ proteinmpnn:
   num_seq_per_target: 500            # Dataset ML/DL — máxima cobertura do espaço
   sampling_temp: 0.1
   backbone_noise: 0.05
+  # batch_size=1 (default do ProteinMPNN) subutiliza GPU real (RTX 5070 Ti 16GB —
+  # observado 2026-07-18: só 540MB/38% util. a batch_size=1). 25 acelera bastante
+  # com margem segura de VRAM para peptídeos curtos (5-20aa) + receptor ~231aa.
+  batch_size: 25
   fixed_positions: {}
   # Cys banida (revertido 2026-07-18): tentativa de dissulfeto SFTI-1-like (Fase 5+)
   # exigiria reconstrução de estrutura in-place na conformação MD real, não apenas

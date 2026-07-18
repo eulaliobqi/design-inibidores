@@ -346,6 +346,10 @@ class ProteinMPNNAgent(BaseAgent):
 
         # Só roda ProteinMPNN se os FASTAs ainda não existem (evita re-execução demorada)
         if not fasta_files:
+            # batch_size=1 (default antigo) subutiliza GPU real (RTX 5070 Ti 16GB, ~540MB
+            # usados a 38% util. observado 2026-07-18) — configurável, default 25 mantém
+            # margem segura de VRAM enquanto acelera bastante os 500 seqs/backbone.
+            batch_size = cfg.get("batch_size", 25)
             cmd = [
                 "python", str(mpnn_path / "protein_mpnn_run.py"),
                 "--pdb_path", str(pdb),
@@ -354,12 +358,19 @@ class ProteinMPNNAgent(BaseAgent):
                 "--sampling_temp", str(cfg.get("sampling_temp", 0.1)),
                 "--backbone_noise", str(cfg.get("backbone_noise", 0.05)),
                 "--omit_AAs", cfg.get("omit_aas", "CX"),
-                "--batch_size", "1",
+                "--batch_size", str(batch_size),
             ]
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            try:
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+            except subprocess.TimeoutExpired:
+                # Nunca fabricar dado nesse caso: retorna vazio (backbone genuinamente
+                # sem sequência real) em vez de cair num fallback heurístico de
+                # comprimento errado que poderia se misturar com dado real sem marcação.
+                self.logger.error(f"ProteinMPNN timeout (1800s) em {pdb.stem} (len={length}) — pulando, sem fallback fabricado")
+                return []
             if proc.returncode != 0:
-                self.logger.error(f"ProteinMPNN falhou ({pdb.stem}): {proc.stderr[-300:]}")
-                return self._generate_ml_dataset(10, cfg)
+                self.logger.error(f"ProteinMPNN falhou ({pdb.stem}, len={length}): {proc.stderr[-300:]} — pulando, sem fallback fabricado")
+                return []
             fasta_files = (
                 list((out_dir / "seqs").glob("*.fa")) +
                 list((out_dir / "seqs").glob("*.fasta"))
@@ -375,4 +386,6 @@ class ProteinMPNNAgent(BaseAgent):
                 binder = parts[-1] if len(parts) > 1 else parts[0]
                 if binder:
                     sequences.append(binder)
-        return sequences if sequences else self._generate_ml_dataset(10, cfg)
+        if not sequences:
+            self.logger.warning(f"ProteinMPNN não retornou sequências parseáveis ({pdb.stem}, len={length}) — sem fallback fabricado")
+        return sequences
