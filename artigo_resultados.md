@@ -11,7 +11,7 @@
 > - ✓ 3.8 MD — **11/11 concluídos** (10 ns); Fase 3: 2 estáveis + 1 marginal + 2 instáveis; Fase 4: 1 estável (RLREELKKAEEWLEKRRKEE, RMSD 0,294 nm) + 3 marginais + 2 instáveis
 > - ✓ 3.9 ML/DL — **treinado**: RF RMSE=0,514 kcal/mol, R²=0,315 (455 labels, 1,9%); 24.513 predições geradas
 > - ✓ 3.10 Resistência proteolítica — **20/20 candidatos SUSCEPTÍVEIS** (top-20 ranking); 5–7 P1-internos K/R
-> - ✓ 3.11 Especificidade — **20/20 aprovados** vs tripsina humana (1TRN) E vs *Apis mellifera* (AF-A0A7M7MMI1); SI ≥ 2,0 kcal/mol
+> - ⚠️ 3.11 Especificidade — **CORRIGIDO 2026-07-18**: a afirmação original "20/20 aprovados" (Fase 3) nunca teve dado real por trás (bug de preparo de PDBQT — ver Seção 2.11/metodologia). Re-executado com dado Vina real: **0/21 candidatos aprovados** (SI ≥ 2,0 kcal/mol), incluindo os candidatos de síntese prioritários.
 
 ---
 
@@ -293,7 +293,13 @@ A viabilidade terapêutica de peptídeos inibidores aplicados via ingestão (spr
 
 4. **Design de novas sequências sem K/R internos (Fase 4):** RFdiffusion 5–15 aa com filtro explícito `n_internal_KR = 0` no ProteinMPNN — P1 único (pos 1 ou N-terminal) com Arg/Lys; posições internas exclusivamente Ala, Ser, Gly, Pro (resistentes a quimiotripsina e elastase também)
 
-A análise de especificidade (Seção 3.11) confirmou que todos os 20 candidatos mantêm seletividade adequada (SI ≥ 2,0 kcal/mol) frente às tripsinas não-alvo mesmo com alto conteúdo de R/K, reforçando que a susceptibilidade à clivagem é intrínseca ao peptídeo linear — não ao perfil de especificidade — e pode ser corrigida pelas estratégias acima sem comprometer a seletividade.
+**Atualização 2026-07-18**: a análise de especificidade (Seção 3.11) foi re-executada após
+correção de bug metodológico e mostrou o oposto do relatado originalmente aqui — **nenhum**
+candidato atinge SI ≥ 2,0 kcal/mol contra ambos os não-alvos. A susceptibilidade à clivagem
+continua sendo intrínseca ao peptídeo linear (não muda a conclusão desta seção), mas a hipótese
+de que a especificidade de espécie estaria "garantida" e não precisaria de atenção nas
+estratégias de correção acima **não se sustenta** — especificidade agora precisa ser tratada
+como objetivo de otimização explícito, junto com resistência proteolítica.
 
 ### 3.10b Fase 5 — Mineração de Candidatos Nativamente Resistentes (2026-07-17)
 
@@ -359,18 +365,46 @@ acompanhar em candidatos futuros, não como conclusão validada.
 
 ### 3.11 Especificidade vs. Tripsinas Não-Alvo
 
-A seletividade dos 20 candidatos de maior ranking foi avaliada por docking contra duas tripsinas não-alvo: tripsina humana (*Homo sapiens*, PDB 1TRN, download RCSB) e tripsina de *Apis mellifera* (AlphaFold AF-A0A7M7MMI1-F1-model_v6, 247 aa, download EBI). O índice de seletividade (SI) foi calculado como SI = afinidade(não-alvo) − afinidade(alvo Lepidoptera), com limiar aprovação SI ≥ 2,0 kcal/mol.
+**CORREÇÃO METODOLÓGICA (2026-07-18):** a versão original desta seção (Fase 3, 2026-06-25)
+relatava "20/20 candidatos aprovados, SI ≥ 2,0 kcal/mol" — esse resultado **nunca teve dado real
+por trás**. Uma auditoria de código encontrou dois bugs no `SpecificityAgent`: (1) o PDBQT dos
+receptores não-alvo era gerado sem a flag `-xr` do OpenBabel, produzindo formato incompatível
+que o Vina rejeitava como receptor rígido; (2) o peptídeo-ligante era construído como átomos Cα
+isolados sem ligação, que o OpenBabel tratava como moléculas separadas, gerando PDBQTs também
+rejeitados pelo Vina. Como consequência, **nenhuma docagem real contra os não-alvos jamais foi
+executada** — o campo `selectivity_index` ficava vazio e `approved` permanecia `True` apenas
+pelo valor-padrão do laço de comparação, nunca sobrescrito. Ambos os bugs foram corrigidos
+(reaproveitando `build_peptide_pdbqt()`, a mesma construção all-atom via PeptideBuilder já
+validada em ~990 docagens reais do `DockingAgent`) e a análise foi **re-executada por completo**
+com dado Vina real.
 
-**Resultado: 20/20 candidatos aprovados em ambos os não-alvos** (SI ≥ 2,0 kcal/mol).
+A seletividade dos 20 candidatos de maior ranking (mais os 2 candidatos de síntese prioritários
+da Fase 5, RLREELKKAEEWLEKRRKEE e SEEEVLAANEAYAAAHTAYN — 21 no total) foi avaliada por docking
+real contra duas tripsinas não-alvo: tripsina humana (*Homo sapiens*, PDB 1TRN, download RCSB) e
+tripsina de *Apis mellifera* (AlphaFold AF-A0A7M7MMI1-F1-model_v6, 247 aa, download EBI). O
+índice de seletividade (SI) foi calculado como SI = afinidade(não-alvo) − afinidade(alvo
+Lepidoptera), com limiar de aprovação SI ≥ 2,0 kcal/mol.
 
-| Não-alvo | Candidatos aprovados | Candidatos reprovados | SI médio |
-|----------|---------------------|----------------------|----------|
-| Tripsina humana (1TRN) | **20/20** | 0 | > 2,0 kcal/mol |
-| Tripsina *A. mellifera* (A0A7M7MMI1) | **20/20** | 0 | > 2,0 kcal/mol |
+**Resultado real: 0/21 candidatos aprovados** em pelo menos um dos dois não-alvos.
 
-Esse resultado demonstra que o pipeline de design, baseado em backbones gerados por RFdiffusion ancorados especificamente ao sítio catalítico de ACR157 (*A. gemmatalis*), produz sequências com seletividade intrínseca frente a tripsinas evolutivamente distintas. A diferença de especificidade é atribuída principalmente às variações na geometria do bolso S1: ACR157 possui Asp205 em posição e orientação distintas de 1TRN (Asp189) e da *A. mellifera* (posição equivalente com offset ~5 Å no centro de ligação), resultando em diferentes volumes e potenciais eletrostáticos que modulam a seletividade peptídeo–receptor.
+| Não-alvo | Candidatos aprovados | SI médio | SI mín. | SI máx. |
+|----------|---------------------|----------|---------|---------|
+| Tripsina humana (1TRN) | 0/21 | 0,84 kcal/mol | 0,06 | 1,91 |
+| Tripsina *A. mellifera* (A0A7M7MMI1) | 0/21 | 1,12 kcal/mol | **−0,09** | 1,88 |
 
-A aprovação de **100% dos candidatos** em ambos os não-alvos é um resultado favorável para a estratégia de design, indicando que a seletividade de espécie pode ser mantida mesmo após otimização de resistência proteolítica (Seção 3.10).
+O candidato `SARASIRRFAATWRARLAAA` tem SI **negativo** contra *Apis mellifera* (−0,09) — ou
+seja, essa sequência liga-se de fato **melhor** à tripsina do polinizador não-alvo do que à
+tripsina de *A. gemmatalis* alvo. O candidato mais estável do pipeline em MD
+(`RLREELKKAEEWLEKRRKEE`, Seção 3.8b) tem SI real de apenas 0,06 (humana) e 0,27 (Apis) —
+essencialmente sem margem de seletividade nenhuma, apesar de nunca antes ter sido testado.
+
+**Implicação — reverte a conclusão da versão original desta seção**: ao contrário do que se
+pensava, o pipeline atual **não** demonstra seletividade intrínseca de espécie. Nenhum candidato
+avaliado até agora, incluindo os priorizados para síntese, atende ao requisito R4 (não afetar
+não-alvos) com margem de segurança adequada. Isso não invalida a estratégia de design geral, mas
+indica que **otimização explícita de especificidade** (não apenas afinidade ao alvo) precisa ser
+incorporada como objetivo de otimização de primeira classe nas próximas fases — atualmente o
+`OptimizationAgent` não usa SI como critério de seleção/mutação.
 
 ### 3.12 Inibidores de Referência
 
@@ -397,7 +431,7 @@ O pipeline multiagente completou todas as etapas planejadas para a Fase 1–3: d
 - **MD 10 ns (Fase 4)**: 6 candidatos adicionais — **RLREELKKAEEWLEKRRKEE ESTÁVEL** (0,294 nm, DP=0,065 — mais estável do pipeline); SARESIKKAYKTFLERYKKL Marginal apesar de melhor Vina
 - **ML**: Random Forest RMSE = 0,514 kcal/mol; 24.513 predições qualitativas geradas
 - **Resistência proteolítica**: 0/20 candidatos resistentes — todos susceptíveis (3–7 P1-internos K/R)
-- **Especificidade**: 20/20 aprovados vs tripsina humana (1TRN) e *Apis mellifera* (SI ≥ 2,0 kcal/mol)
+- **Especificidade (corrigido 2026-07-18)**: **0/21 aprovados** vs tripsina humana (1TRN) e/ou *Apis mellifera* — resultado original "20/20" era artefato de bug metodológico sem dado real (Seção 3.11); SI real médio 0,84 (humana) / 1,12 (Apis), abaixo do limiar de 2,0
 - **OptimizationAgent**: 219 novos candidatos gerados por redesign iterativo dos top-50
 
 O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é biologicamente coerente com o bolso S1 de tripsina (Asp205, interação eletrostática com P1 = Arg/Lys). A avaliação dinâmica revela que estimativas estáticas (Vina, Rosetta) podem divergir da estabilidade em solvente explícito: GARKSIREYQKRVLERLKKK, com melhor I_sc (−86,28 kcal/mol), apresentou RMSD = 1,45 nm em MD — descartado. A etapa MD é, portanto, essencial para filtrar candidatos antes da síntese.
