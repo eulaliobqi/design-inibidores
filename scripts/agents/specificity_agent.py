@@ -268,33 +268,30 @@ class SpecificityAgent(BaseAgent):
         return [round(best[0], 3), round(best[1], 3), round(best[2], 3)]
 
     def _dock_peptide(self, seq: str, rec_pdbqt: Path, center: list, nt_key: str) -> Optional[float]:
-        """Constrói peptídeo, prepara PDBQT e roda Vina contra não-alvo."""
-        from ..utils import AA_1TO3
+        """Constrói peptídeo, prepara PDBQT e roda Vina contra não-alvo.
+
+        Usa build_peptide_pdbqt (utils.py, extraído de DockingAgent — 990 docagens reais
+        validadas) em vez da antiga _build_linear_pdb/_minimal_pdbqt daqui: essa gerava só
+        átomos CA isolados sem ligação, que o obabel tratava como moléculas separadas,
+        produzindo múltiplos blocos ROOT que o Vina rejeitava (bug real: TODOS os
+        candidatos de especificidade, incluindo os 20 "aprovados" da Fase 3, nunca tiveram
+        dado real — selectivity_index sempre vazio, "approved" só pelo default nunca
+        sobrescrito). Ver commit desta correção.
+        """
+        from ..utils import build_peptide_pdbqt
         stem   = f"{nt_key}_{seq[:8]}"
         out_dir = self.workdir / stem
         out_dir.mkdir(exist_ok=True)
 
-        # Construir PDB linear do peptídeo
-        pdb_path = out_dir / "peptide.pdb"
-        self._build_linear_pdb(seq, pdb_path, AA_1TO3)
-
-        # Converter para PDBQT
-        lig_pdbqt = out_dir / "ligand.pdbqt"
-        ob = subprocess.run(["which", "obabel"], capture_output=True)
-        if ob.returncode == 0:
-            subprocess.run(
-                ["obabel", str(pdb_path), "-O", str(lig_pdbqt), "-h",
-                 "--partialcharge", "gasteiger", "--gen3d"],
-                capture_output=True
-            )
-        if not lig_pdbqt.exists() or lig_pdbqt.stat().st_size < 100:
-            lig_pdbqt = self._minimal_pdbqt(seq, pdb_path, lig_pdbqt, AA_1TO3)
+        lig_pdbqt = build_peptide_pdbqt(seq, center, out_dir, self.logger)
         if lig_pdbqt is None:
             return None
 
-        # Vina
+        # Vina — grid adaptativo ao comprimento (mesma fórmula do DockingAgent)
         out_pdbqt  = out_dir / "docked.pdbqt"
-        size       = [60.0, 60.0, 60.0]  # grid generoso para não-alvos
+        needed     = int(len(seq) * 3.6) + 8
+        s          = max(60.0, float(needed))
+        size       = [s, s, s]
         vina_cmd   = [
             "vina",
             "--receptor",    str(rec_pdbqt),
@@ -319,29 +316,6 @@ class SpecificityAgent(BaseAgent):
             if m:
                 return float(m.group(1))
         return None
-
-    def _build_linear_pdb(self, seq: str, out_path: Path, aa_map: dict):
-        lines = ["REMARK LINEAR PEPTIDE"]
-        atom_num = 1
-        for i, aa in enumerate(seq):
-            resn = aa_map.get(aa, "GLY")
-            x    = float(i * 3.8)
-            lines.append(
-                f"ATOM  {atom_num:5d}  CA  {resn} A{i+1:4d}    "
-                f"{x:8.3f}{0.0:8.3f}{0.0:8.3f}  1.00  0.00          C  "
-            )
-            atom_num += 1
-        lines.append("END")
-        out_path.write_text("\n".join(lines))
-
-    def _minimal_pdbqt(self, seq: str, pdb_path: Path,
-                       pdbqt_path: Path, aa_map: dict) -> Optional[Path]:
-        lines = []
-        for line in pdb_path.read_text().splitlines():
-            if line.startswith("ATOM"):
-                lines.append(line[:66] + "  0.000  0.000          C \n")
-        pdbqt_path.write_text("".join(lines))
-        return pdbqt_path if pdbqt_path.exists() else None
 
     def _heuristic_specificity(self, docking_results: dict) -> dict:
         """Fallback quando Vina não está disponível."""

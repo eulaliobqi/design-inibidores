@@ -176,6 +176,107 @@ def seq3to1(seq3: str) -> str:
     return ''.join(AA_3TO1.get(aa, 'X') for aa in seq3.split())
 
 
+def build_peptide_pdbqt(sequence: str, center: list, out_dir, logger=None) -> Optional[Path]:
+    """Constrói PDBQT rígido do peptídeo para Vina (all-atom via PeptideBuilder + obabel).
+
+    Extraído de DockingAgent._build_peptide_pdbqt (validado em ~990 docagens reais nesta
+    sessão) para reuso em outros agentes (ex. SpecificityAgent, que tinha implementação
+    própria com átomos CA isolados sem ligação — obabel tratava cada átomo como molécula
+    separada, gerando múltiplos blocos ROOT que o Vina rejeitava).
+    """
+    out_dir = Path(out_dir)
+    pdb_path = out_dir / "peptide.pdb"
+    pdbqt_path = out_dir / "peptide.pdbqt"
+
+    built = _build_allatom_pdb(sequence, center, pdb_path, logger)
+
+    if built and shutil.which("obabel"):
+        # Sem -xr: obabel em modo ligante gera tipos AD4 corretos (N, OA, SA).
+        proc = subprocess.run(
+            ["obabel", str(pdb_path), "-O", str(pdbqt_path), "-h"],
+            capture_output=True, timeout=60
+        )
+        if proc.returncode == 0 and pdbqt_path.exists() and pdbqt_path.stat().st_size > 100:
+            _ensure_ligand_pdbqt_format(pdbqt_path)
+            return pdbqt_path
+        if logger:
+            logger.warning(f"obabel peptide falhou ({sequence[:8]}): {proc.stderr[:80]}")
+
+    if logger:
+        logger.warning(f"Peptide PDBQT fallback (CA-only): {sequence[:8]}")
+    return _write_ca_pdbqt(sequence, center, pdbqt_path)
+
+
+def _build_allatom_pdb(sequence: str, center: list, pdb_path: Path, logger=None) -> bool:
+    """Gera PDB all-atom via PeptideBuilder (Ala como fallback por resíduo)."""
+    try:
+        import PeptideBuilder
+        from PeptideBuilder import Geometry
+        import Bio.PDB
+        import numpy as np
+
+        first_aa = sequence[0] if sequence[0] != "B" else "A"
+        try:
+            geo = Geometry.geometry(first_aa)
+        except Exception:
+            geo = Geometry.geometry("A")
+        structure = PeptideBuilder.initialize_res(geo)
+
+        for aa in sequence[1:]:
+            try:
+                g = Geometry.geometry(aa)
+            except Exception:
+                g = Geometry.geometry("A")
+            PeptideBuilder.add_residue(structure, g)
+
+        target = np.array([float(v) for v in center])
+        coords = np.array([a.coord for a in structure.get_atoms()])
+        com = coords.mean(axis=0)
+        offset = target - com
+        for atom in structure.get_atoms():
+            atom.coord += offset
+
+        io = Bio.PDB.PDBIO()
+        io.set_structure(structure)
+        io.save(str(pdb_path))
+        return True
+    except Exception as e:
+        if logger:
+            logger.warning(f"PeptideBuilder falhou ({sequence[:6]}): {e}")
+        return False
+
+
+def _ensure_ligand_pdbqt_format(pdbqt_path: Path):
+    """Força formato ligante rígido: apenas ATOM/HETATM dentro de ROOT/ENDROOT/TORSDOF 0."""
+    content = pdbqt_path.read_text()
+    atom_lines = [l for l in content.splitlines() if l.startswith(("ATOM", "HETATM"))]
+    if not atom_lines:
+        return
+    with open(pdbqt_path, "w") as f:
+        f.write("ROOT\n")
+        for line in atom_lines:
+            f.write(line.rstrip() + "\n")
+        f.write("ENDROOT\n")
+        f.write("TORSDOF 0\n")
+
+
+def _write_ca_pdbqt(sequence: str, center: list, pdbqt_path: Path) -> Path:
+    """PDBQT CA-only como último recurso."""
+    cx, cy, cz = center
+    ad4 = {"R": "N", "K": "N", "H": "N", "D": "OA", "E": "OA", "S": "OA", "T": "OA",
+           "Y": "OA", "N": "NA", "Q": "NA", "W": "A", "F": "A", "P": "A"}
+    with open(pdbqt_path, "w") as f:
+        f.write("ROOT\n")
+        for i, aa in enumerate(sequence):
+            resname = AA_1TO3.get(aa, "ALA")
+            atype = ad4.get(aa, "C")
+            f.write(f"ATOM  {i+1:5d}  CA  {resname} B{i+1:4d}    "
+                    f"{cx+i*3.8:8.3f}{cy:8.3f}{cz:8.3f}  1.00  0.00"
+                    f"    0.000 {atype}\n")
+        f.write("ENDROOT\nTORSDOF 0\n")
+    return pdbqt_path
+
+
 def parse_fasta(fasta_path: str) -> list[tuple[str, str]]:
     """Retorna lista de (header, sequence)."""
     seqs = []
