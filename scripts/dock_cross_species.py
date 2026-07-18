@@ -19,6 +19,7 @@ from pathlib import Path
 from utils import build_peptide_pdbqt
 
 SPECIES = {
+    "Agemmatalis": ("data-nontargets/Agemmatalis-A0A2U8NFD7-AlphaFold.pdb", "outputs/structure_agemmatalis/binding_site.json"),
     "Harmigera": ("data-nontargets/Harmigera-B6CME8-ESMFold.pdb", "outputs/structure_harmigera/binding_site.json"),
     "Msexta": ("data-nontargets/Msexta-P35045-AlphaFold.pdb", "outputs/structure_msexta/binding_site.json"),
     "Bmori": ("data-nontargets/Bmori-A0A8R2C8B0-AlphaFold.pdb", "outputs/structure_bmori/binding_site.json"),
