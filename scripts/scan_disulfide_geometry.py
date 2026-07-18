@@ -31,14 +31,18 @@ def extract_snapshot_pdb(md_dir: Path) -> Path:
     return out_pdb
 
 
-def parse_chain_P(pdb_path: Path) -> dict:
-    """Retorna {resnum: {'resname':.., 'CA':xyz, 'CB':xyz|None}} para a cadeia P (peptídeo)."""
+def parse_chain_P(pdb_path: Path, chain_id: str = "B") -> dict:
+    """Retorna {resnum: {'resname':.., 'CA':xyz, 'CB':xyz|None}} para a cadeia do peptídeo.
+
+    Nota: o PDB original construído por _build_complex_for_md usa cadeia "P", mas
+    pdb2gmx/trjconv reatribuem letras de cadeia (tipicamente "B" para a 2a molécula
+    proteica) — usar chain_id="B" por padrão; ajustar se a topologia mudar."""
     residues: dict = {}
     for line in pdb_path.read_text(errors="replace").splitlines():
         if not line.startswith(("ATOM", "HETATM")):
             continue
         chain = line[21]
-        if chain != "P":
+        if chain != chain_id:
             continue
         atomname = line[12:16].strip()
         if atomname not in ("CA", "CB"):
@@ -79,8 +83,9 @@ def main():
     md_dir = Path(sys.argv[1])
     seq = sys.argv[2]
 
+    chain_id = sys.argv[3] if len(sys.argv) > 3 else "B"
     snapshot = extract_snapshot_pdb(md_dir)
-    residues = parse_chain_P(snapshot)
+    residues = parse_chain_P(snapshot, chain_id)
     print(f"Cadeia P (peptídeo): {len(residues)}/{len(seq)} resíduos extraídos de {snapshot}")
     if len(residues) < len(seq):
         print("AVISO: menos resíduos extraídos que o esperado — verificar snapshot/cadeia.")
