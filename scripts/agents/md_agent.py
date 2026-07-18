@@ -502,17 +502,10 @@ class MDAgent(BaseAgent):
 
             # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
             self.logger.info("  pdb2gmx...")
-            pdb2gmx_args = ["pdb2gmx", "-f", protonated_pdb.name, "-o", "processed.gro",
-                             "-p", "topol.top", "-i", "posre.itp",
-                             "-ff", ff, "-water", water, "-ignh"]
-            stdin_input = "1\n"
-            if seq.count("C") >= 2:
-                # Candidato com potencial dissulfeto (Fase 5+): pdb2gmx -ss pergunta
-                # y/N por par Cys geometricamente compatível; aceitar todos.
-                pdb2gmx_args.append("-ss")
-                stdin_input = "1\n" + "y\n" * 10
-                self.logger.info(f"  {seq.count('C')} Cys na sequência — tentando formar dissulfeto (-ss)")
-            p = gmx_run(pdb2gmx_args, input=stdin_input, timeout=120)
+            p = gmx_run(["pdb2gmx", "-f", protonated_pdb.name, "-o", "processed.gro",
+                          "-p", "topol.top", "-i", "posre.itp",
+                          "-ff", ff, "-water", water, "-ignh"],
+                         input="1\n", timeout=120)
             check(p, "pdb2gmx")
 
             # editconf

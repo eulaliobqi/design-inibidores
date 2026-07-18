@@ -38,11 +38,12 @@ proteinmpnn:
   sampling_temp: 0.1
   backbone_noise: 0.05
   fixed_positions: {}
-  # Fase 5+ (2026-07-17): Cys reabilitada — SFTI-1 (14aa, 1 dissulfeto, Ki=0,5nM) mostra
-  # que rigidez do loop reativo via dissulfeto é o principal determinante de potência+
-  # resistência em inibidores canônicos curtos (Laskowski mechanism). omit_aas="CX" antigo
-  # bloqueava essa estratégia por completo. Ver scripts/scan_disulfide_geometry.py.
-  omit_aas: "X"
+  # Cys banida (revertido 2026-07-18): tentativa de dissulfeto SFTI-1-like (Fase 5+)
+  # exigiria reconstrução de estrutura in-place na conformação MD real, não apenas
+  # liberar Cys no MPNN + mutação ingênua via PeptideBuilder — ver
+  # memória literatura_inibidor_ideal_tripsina.md, decisão do usuário de não seguir
+  # essa linha por ora (esforço vs. retorno não compensava).
+  omit_aas: "CX"
   bias_aa: {}
   install_paths:
     - "~/ProteinMPNN"
