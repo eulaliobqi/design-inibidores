@@ -320,10 +320,23 @@ e estabilidade confirmada por MD real (RMSD 0,474 nm, abaixo do limiar de 0,5 nm
 Dos outros 4 candidatos resistentes testados, nenhum atingiu o limiar de estabilidade — reforçando
 mais uma vez a lição da Seção 3.8 (melhor Vina não implica estabilidade em solvente), agora também
 confirmada dentro do próprio subconjunto de candidatos resistentes. `SEEEVLAANEAYAAAHTAYN` passa a
-ser candidato de síntese prioritário junto com RLREELKKAEEWLEKRRKEE, com a ressalva metodológica
-registrada na Seção 2.11: não contém nenhum resíduo Arg/Lys, não usando o mecanismo canônico
-P1-Arg/Lys↔Asp189 — seu mecanismo real de ligação permanece a ser investigado antes de qualquer
-decisão final de síntese.
+ser candidato de síntese prioritário junto com RLREELKKAEEWLEKRRKEE.
+
+**Mecanismo de ligação real (investigado 2026-07-18).** `SEEEVLAANEAYAAAHTAYN` não contém nenhum
+resíduo Arg/Lys, não podendo usar o mecanismo canônico P1-Arg/Lys↔Asp189 assumido no restante do
+design. Para investigar o mecanismo real, a conformação MD equilibrada (10 ns, `forced_00`) foi
+analisada com PLIP 3.0.0 (`--peptides B`), revelando que o peptídeo **contata de fato a tríade
+catalítica e o bolso S1** do receptor ACR157: interação π-cátion entre a Tyr12 do peptídeo e a
+His46 catalítica (His69 na numeração original), contato hidrofóbico e ponte de hidrogênio com o
+Asp91 catalítico (Asp114 original), e rede de pontes de hidrogênio via backbone (resíduos
+Asn9/Glu10/Ala11) próxima à Ser188 catalítica e ao Asp182 do bolso S1 (Ser211/Asp205 originais).
+No total, a interface reúne 10 contatos hidrofóbicos, 13 pontes de hidrogênio e 1 interação
+π-cátion — uma rede distribuída ao longo de toda a fenda catalítica, não um único contato tipo
+salt-bridge. O mecanismo é portanto real e mecanisticamente plausível, ainda que não-canônico: o
+peptídeo ocupa a fenda catalítica via contatos de backbone e um resíduo aromático específico
+(Tyr12), não via a ponte salina P1-Arg/Lys↔Asp205 padrão. Como todo o restante do pipeline
+(especificidade, ranking) foi calibrado assumindo o mecanismo canônico, esse candidato requer
+validação experimental própria antes de qualquer decisão final de síntese.
 
 ---
 
