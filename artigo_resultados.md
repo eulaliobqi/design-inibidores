@@ -450,6 +450,43 @@ indica que **otimização explícita de especificidade** (não apenas afinidade 
 incorporada como objetivo de otimização de primeira classe nas próximas fases — atualmente o
 `OptimizationAgent` não usa SI como critério de seleção/mutação.
 
+### 3.11b TOP-10 Real Consolidado (Vina + MD + Especificidade, 2026-07-18)
+
+Integrando as três métricas reais disponíveis (Seções 3.4, 3.8/3.10c, 3.11) para os candidatos
+com bateria completa de avaliação, ordenados por estabilidade MD (critério mais rigoroso —
+Seção 3.8):
+
+**Tabela 9e.** TOP-10 por RMSD MD ascendente, com Vina real e especificidade real (SI).
+
+| # | Sequência | Comp. | Vina (kcal/mol) | RMSD MD (nm) | SI humana | SI Apis | Aprovado? |
+|---|---|---|---|---|---|---|---|
+| 1 | SRTRR | 5 aa | −10,31 | **0,2425** | 1,17 | 1,61 | não |
+| 2 | HRPRRPR | 7 aa | −11,72 | **0,2659** | 1,41 | 1,78 | não |
+| 3 | RLREELKKAEEWLEKRRKEE | 20 aa | −12,21 | 0,2940 | 0,06 | 0,27 | não |
+| 4 | SEEEVLAANEAYAAAHTAYN | 20 aa | −13,40 | 0,4742 | 1,23 | 1,70 | não |
+| 5 | SALASIAAHQATFLAYLESK | 20 aa | −12,52 | 0,5677 | 0,27 | −0,64 | não |
+| 6 | MGSLTAYLEAYAAENAAALA | 20 aa | −12,67 | 0,6390 | 0,18 | 0,43 | não |
+| 7 | RLRAIWLEAEKLLEERRKKK | 20 aa | −12,22 | 0,7251 | **−1,59** | −0,07 | não |
+| 8 | MGYLTAYHQALAAQNAALLA | 20 aa | −13,04 | 0,8204 | 0,48 | — | não |
+| 9 | RVKDQWLEAEKLLEERRKKK | 20 aa | −11,52 | 0,8341 | **−2,75** | −0,28 | não |
+| 10 | SARESIKKAYKTFLERYKKL | 20 aa | −14,58 | 0,8713 | 1,91 | 1,61 | não |
+
+**Fora do top-10 por RMSD, mas notáveis por especificidade:** `TRARLRAEVLRARAR` (15 aa) tem
+RMSD 1,8284 nm (muito instável) mas **SI mínimo = 1,76 — o melhor de toda a sessão**, próximo do
+limiar de aprovação (2,0). `TAGAILRKRVKK` (12 aa): RMSD 0,9584 nm, SI = 0,81.
+
+**Achado de segurança real**: `RLRAIWLEAEKLLEERRKKK` e `RVKDQWLEAEKLLEERRKKK` (variantes de
+redesign da família RLREELKK-*like*) apresentam **SI negativo contra tripsina humana** (−1,59 e
+−2,75 kcal/mol) — ligam-se de fato *melhor* à tripsina humana do que ao alvo *A. gemmatalis*.
+Diferente dos demais candidatos (apenas não-seletivos), esses dois são provavelmente mais ativos
+contra o não-alvo humano do que contra a praga — devem ser **eliminados** da lista de síntese,
+não apenas despriorizados.
+
+**Nenhum dos 10 (nem os 29 candidatos com especificidade real testada até o momento) atinge
+SI ≥ 2,0 kcal/mol contra ambos os não-alvos**, confirmando a Seção 3.11. Os valores de
+`TRARLRAEVLRARAR` (1,76) e `SARESIKKAYKTFLERYKKL` (1,61) mostram que a barra de 2,0 kcal/mol
+está próxima do alcançável, motivando otimização explícita de especificidade nas próximas fases.
+
 ### 3.12 Inibidores de Referência
 
 | Peptídeo           | Sequência          | Comprimento | Fonte            |
