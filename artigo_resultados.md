@@ -487,6 +487,44 @@ SI ≥ 2,0 kcal/mol contra ambos os não-alvos**, confirmando a Seção 3.11. Os
 `TRARLRAEVLRARAR` (1,76) e `SARESIKKAYKTFLERYKKL` (1,61) mostram que a barra de 2,0 kcal/mol
 está próxima do alcançável, motivando otimização explícita de especificidade nas próximas fases.
 
+### 3.11c Expansão Cross-Species (R3) — TOP-10 vs. *Helicoverpa armigera* real (2026-07-18)
+
+Diferente da Seção 3.11 (não-alvos humano/*Apis mellifera*, onde afinidade **baixa** é
+desejável), esta seção testa afinidade contra **outra espécie-praga** — aqui, afinidade **alta**
+(comparável ao alvo primário) é o resultado desejado, pois indicaria eficácia de amplo espectro
+entre Lepidoptera-praga (requisito R3).
+
+Como os quatro receptores originais (ACR157/QCL936/XP273/XP352) têm documentação de espécie
+internamente conflitante no projeto (não resolvida — ver metodologia), a expansão usou uma
+tripsina digestiva nova e verificável: UniProt B6CME8 (*H. armigera*, TrEMBL, 279 aa), sem
+estrutura no AlphaFold DB (HTTP 404 confirmado em todas as versões v1–v6) — estrutura obtida via
+API pública do ESMFold (Lin et al., 2022). Tríade catalítica real mapeada por
+`StructureAgent._analyze_single` (mesmo método dos 4 receptores primários): His82/Asp132/Ser251,
+Asp233 no bolso S1.
+
+**Tabela 9f.** TOP-10 — Vina real contra alvo primário (ACR157) vs. *H. armigera* (B6CME8).
+
+| Sequência | Comp. | Vina ACR157 | Vina *H. armigera* | Δ (Harmigera − ACR157) |
+|---|---|---|---|---|
+| SRTRR | 5 | −10,31 | −8,88 | +1,43 |
+| HRPRRPR | 7 | −11,72 | −10,52 | +1,20 |
+| RLREELKKAEEWLEKRRKEE | 20 | −12,21 | −11,79 | +0,42 |
+| SEEEVLAANEAYAAAHTAYN | 20 | −13,40 | −12,48 | +0,92 |
+| SALASIAAHQATFLAYLESK | 20 | −12,52 | **−13,03** | **−0,51** |
+| MGSLTAYLEAYAAENAAALA | 20 | −12,67 | −11,28 | +1,39 |
+| RLRAIWLEAEKLLEERRKKK | 20 | −12,22 | −11,58 | +0,64 |
+| MGYLTAYHQALAAQNAALLA | 20 | −13,04 | −11,88 | +1,16 |
+| RVKDQWLEAEKLLEERRKKK | 20 | −11,52 | −12,04 | −0,52 |
+| SARESIKKAYKTFLERYKKL | 20 | −14,58 | −12,36 | +2,22 |
+
+Todos os 10 candidatos mantêm afinidade real e competitiva (−8,9 a −13,0 kcal/mol) contra
+*H. armigera*, sem nenhuma ruptura de ligação — evidência de que o design não é
+hiperespecífico a ACR157. Dois candidatos (`SALASIAAHQATFLAYLESK`, `RVKDQWLEAEKLLEERRKKK`)
+tiveram afinidade real **melhor** contra *H. armigera* do que contra o alvo primário. Expansão
+para mais 6 espécies de Lepidoptera bem documentadas (*Manduca sexta*, *Bombyx mori*,
+*Plutella xylostella*, *Spodoptera litura*, *S. frugiperda*, *Ostrinia nubilalis* — accessions e
+estruturas AlphaFold DB reais em andamento; resultado a reportar quando concluído.
+
 ### 3.12 Inibidores de Referência
 
 | Peptídeo           | Sequência          | Comprimento | Fonte            |
