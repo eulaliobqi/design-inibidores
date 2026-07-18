@@ -42,7 +42,7 @@ Os arquivos PDB de entrada (ACR157, QCL936, XP273, XP352) foram pré-processados
 
 ### 2.4 Design de Sequências por ProteinMPNN
 
-O ProteinMPNN (*Dauparas et al., Science, 2022*) foi executado no modo real (instalado em `~/ProteinMPNN`) sobre os 330 backbones gerados pelo RFdiffusion. Cada backbone recebeu **500 sequências redesenhadas** para a cadeia binder (cadeia B, 20 aa), configuradas com temperatura de amostragem `0,1`, ruído de backbone `0,05` e exclusão de Cys/X (`--omit_AAs CX`). As sequências de receptor (cadeia A) foram mantidas fixas.
+O ProteinMPNN (*Dauparas et al., Science, 2022*) foi executado no modo real (instalado em `~/ProteinMPNN`) sobre os 330 backbones gerados pelo RFdiffusion. Cada backbone recebeu **500 sequências redesenhadas** para a cadeia binder (cadeia B, 20 aa), configuradas com temperatura de amostragem `0,1`, ruído de backbone `0,05` e exclusão de Cys/X (`--omit_AAs CX`) — restrição revista na Fase 5+ (Seção 2.11): Cys foi liberada para permitir desenho de dissulfeto estabilizador. As sequências de receptor (cadeia A) foram mantidas fixas.
 
 **Formato de saída FASTA e extração do binder:**  
 O ProteinMPNN gera sequências no formato `RECEPTOR_SEQ/BINDER_SEQ` (cadeias separadas por `/`). O módulo `_run_mpnn()` extrai a cadeia binder (parte após o último `/`) via `parts = seq.split("/"); binder = parts[-1]`. A concatenação incorreta (`replace("/","")`) foi identificada como bug crítico na sessão anterior, pois produzia sequências quiméricas receptor+binder de 240+ aa como candidatos — redesigns das tripsinas de input, não inibidores. O fix (commit `e9024bc`) garante que apenas os 20 aa desenhados para a interface sejam avaliados.
@@ -144,3 +144,49 @@ Pipeline implementado em Python 3.10 como sistema **multiagente** com 10 módulo
 | ProteinMPNN | ✓ | `~/ProteinMPNN` (git clone); 24.513 binders gerados |
 | RFdiffusion | ✓ | `~/RFdiffusion`; checkpoint `Complex_base_ckpt.pt` 462 MB; 330 backbones gerados |
 | PyRosetta | ✓ | `pyrosetta-2026.25+release`; `pyrosetta-installer`; FastRelax + InterfaceAnalyzerMover |
+| pdb2pqr / propka | ✓ (Fase 5+, 2026-07-17) | `pdb2pqr` 3.6.2 + `propka` 3.5.1, instalados via pip em `protein_design_env` |
+
+### 2.11 Fase 5+ — Critérios de Inibidor Ideal (Revisão de Literatura) e Ajustes de Rigidez/pH
+
+Uma revisão de literatura direcionada (2026-07-17) sobre determinantes reais de potência e
+resistência em inibidores de tripsina revelou duas lacunas metodológicas nas Fases 1-5, corrigidas
+nesta seção.
+
+**Rigidez do loop reativo (mecanismo de Laskowski).** Inibidores canônicos naturais (Kunitz,
+Bowman-Birk, e principalmente o SFTI-1 de girassol — peptídeo bicíclico de 14 resíduos, uma única
+ponte dissulfeto, Ki = 0,5 nM contra tripsina) alcançam potência nanomolar e resistência à
+hidrólise simultaneamente porque o loop reativo é conformacionalmente travado por uma rede de
+pontes de hidrogênio e uma ponte dissulfeto — não porque evitam quimicamente sítios de clivagem
+(*Veer et al., Angew. Chem. Int. Ed., 2021*; revisão do mecanismo em *Mastering the Canonical
+Loop of Serine Protease Inhibitors*, PLOS One, 2011). O design das Fases 1-5 usava
+`--omit_AAs CX` no ProteinMPNN, excluindo Cisteína de **todo** o espaço de sequências geradas —
+bloqueando estruturalmente essa estratégia. A partir desta sessão, `omit_aas` foi alterado para
+`"X"` (Cys liberada), e `scripts/scan_disulfide_geometry.py` foi implementado para varrer
+conformações **já simuladas por MD real** (10 ns, pós-produção) em busca de pares de resíduos com
+distância Cβ-Cβ compatível com dissulfeto (3,5–7,5 Å), no estilo *Disulfide-by-Design*. Aplicado ao
+candidato mais estável do pipeline (RLREELKKAEEWLEKRRKEE, RMSD 0,294 nm), o scan identificou
+**11 pares geometricamente compatíveis** na conformação real; o melhor (posições 4/Glu e 6/Leu,
+5,42 Å) é candidato direto para uma variante E4C/L6C a ser validada em nova rodada de MD com
+formação explícita da ligação dissulfeto (`pdb2gmx -ss`, produzindo o resíduo `CYX` já definido
+no campo de força `amber99sb-ildn.ff`).
+
+**pH real do intestino de Lepidoptera.** O intestino médio de larvas de Lepidoptera é fortemente
+alcalino (pH 8–11 em geral; tripsina de *Manduca sexta* tem ótimo em pH 10,5, com atividade máxima
+registrada em pH 11,5 em outra espécie lepidóptera — *Lazarević, Entomol. Exp. Appl., 2015*;
+tripsinas bacterianas do intestino de *A. gemmatalis* ativas em pH 7,5–10 — *Pilon et al., Arch.
+Insect Biochem. Physiol., 2017*). Todas as simulações de MD das Fases 1-5 usaram os estados de
+protonação padrão do `pdb2gmx` (aproximadamente neutros), sem qualquer ajuste para esse ambiente
+alcalino real. A partir desta sessão, `md_agent.py` executa `pdb2pqr30 --ff AMBER --ffout AMBER
+--titration-state-method propka --with-ph {config md.gut_ph, padrão 10,0}` antes do `pdb2gmx`,
+renomeando resíduos titculáveis para os estados de protonação corretos nesse pH
+(`HID`/`HIE`/`HIP` para His, `LYN` para Lys neutra, `ASH`/`GLH` para Asp/Glu protonados) — todos
+já definidos em `amber99sb-ildn.ff/aminoacids.rtp`, confirmados por inspeção direta do arquivo no
+servidor. A etapa degrada graciosamente (mantém protonação padrão) se `pdb2pqr30` falhar ou não
+estiver disponível, preservando a robustez do pipeline.
+
+**Ressalva sobre o candidato resistente da Fase 5.** O melhor candidato nativamente resistente
+encontrado até agora (`SEEEVLAANEAYAAAHTAYN`, Vina real −13,40 kcal/mol, 0 sítios K/R internos —
+Seção 3.10b) não contém nenhum resíduo Arg ou Lys, não podendo usar o mecanismo canônico
+P1-Arg/Lys↔Asp189 assumido no restante do design. Seu mecanismo de ligação real permanece
+desconhecido e não deve ser priorizado para síntese antes de investigação adicional (redocking
+com análise de pose, contatos reais na interface).
