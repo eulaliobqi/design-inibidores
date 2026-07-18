@@ -303,17 +303,27 @@ Investigação subsequente revelou que a heurística de pré-seleção para dock
 
 As 60 sequências desse subconjunto com melhor afinidade *predita* pelo modelo foram submetidas a docking Vina real (nova opção `--docking-sequences`, mesclada aos 930 resultados pré-existentes). Durante essa validação foi identificado e corrigido um bug real no `DockingAgent`: os resultados eram indexados por uma chave truncada (`len{n}_{seq[:8]}`) que colide entre sequências quase-idênticas, causando perda silenciosa de resultados (confirmado: 78 grupos de colisão no top-1000 original, dos quais 19 sequências distintas — o restante eram duplicatas exatas — tiveram dado real sobrescrito historicamente; as 3 candidatas de síntese da Seção 3.7/3.8b não foram afetadas, prefixos únicos). Corrigido indexando por sequência completa; as 60 sequências foram redockadas por completo após o fix.
 
-**Tabela 9b.** Top-5 candidatos nativamente resistentes (KR-interno = 0) por Vina real, docking completo 2026-07-17.
+**Tabela 9b.** Top-5 candidatos nativamente resistentes (KR-interno = 0) por Vina real, docking completo 2026-07-17, MD (10 ns, gmx_mpi GPU) concluído 2026-07-18.
 
-| Sequência | Vina real (kcal/mol) | KR-interno | Status |
-|-----------|----------------------|------------|--------|
-| SEEEVLAANEAYAAAHTAYN | **−13,40** | 0 | aguarda MD |
-| MGYLTAYHQALAAQNAALLA | −13,04 | 0 | aguarda MD |
-| SHIAEHEAELDAYAEAQAAA | −12,76 | 0 | aguarda MD |
-| MGSLTAYLEAYAAENAAALA | −12,67 | 0 | aguarda MD |
-| SALASIAAHQATFLAYLESK | −12,52 | 0 | aguarda MD |
+| Sequência | Vina real (kcal/mol) | KR-interno | RMSD MD (nm) | Rg (nm) | Veredicto |
+|-----------|----------------------|------------|---------------|---------|-----------|
+| **SEEEVLAANEAYAAAHTAYN** | **−13,40** | 0 | **0,474** | 1,765 | **ESTÁVEL** |
+| SALASIAAHQATFLAYLESK | −12,52 | 0 | 0,568 | 1,801 | marginal |
+| MGSLTAYLEAYAAENAAALA | −12,67 | 0 | 0,639 | 1,800 | marginal |
+| MGYLTAYHQALAAQNAALLA | −13,04 | 0 | 0,820 | 1,805 | marginal |
+| SHIAEHEAELDAYAEAQAAA | −12,76 | 0 | 1,607 | 1,844 | **instável** |
 
-`SEEEVLAANEAYAAAHTAYN` combina resistência estrutural à autoclivagem (sem sítios K/R internos) com afinidade Vina real competitiva com o TOP-3 atual (Seção 3.7/3.8b: RLREELKKAEEWLEKRRKEE, MKKQRENAKKVAEITLKKAK −12,72, GSRASARAYAARVRARRAAL −13,62). Consistente com a lição da Seção 3.8 (melhor Vina ≠ estabilidade em solvente), este candidato **ainda não passou por MD** e não deve ser considerado para síntese antes dessa validação.
+`SEEEVLAANEAYAAAHTAYN` é o primeiro candidato do pipeline a reunir **simultaneamente** resistência
+estrutural à autoclivagem (KR-interno = 0), afinidade Vina real competitiva com o TOP-3 atual
+(Seção 3.7/3.8b: RLREELKKAEEWLEKRRKEE, MKKQRENAKKVAEITLKKAK −12,72, GSRASARAYAARVRARRAAL −13,62)
+e estabilidade confirmada por MD real (RMSD 0,474 nm, abaixo do limiar de 0,5 nm da Seção 3.8).
+Dos outros 4 candidatos resistentes testados, nenhum atingiu o limiar de estabilidade — reforçando
+mais uma vez a lição da Seção 3.8 (melhor Vina não implica estabilidade em solvente), agora também
+confirmada dentro do próprio subconjunto de candidatos resistentes. `SEEEVLAANEAYAAAHTAYN` passa a
+ser candidato de síntese prioritário junto com RLREELKKAEEWLEKRRKEE, com a ressalva metodológica
+registrada na Seção 2.11: não contém nenhum resíduo Arg/Lys, não usando o mecanismo canônico
+P1-Arg/Lys↔Asp189 — seu mecanismo real de ligação permanece a ser investigado antes de qualquer
+decisão final de síntese.
 
 ---
 
