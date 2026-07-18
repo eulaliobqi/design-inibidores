@@ -405,6 +405,41 @@ serem tratados como equivalentes no design canônico "P1 = Arg/Lys" usado desde 
 descoberta foi usada como critério real de priorização (não de geração) na seleção dos 150
 candidatos desta rodada.
 
+### 3.10d Expansão de Amostra — MD dos Comprimentos Curtos (n=4, 2026-07-18)
+
+A ressalva de amostra da Seção 3.10c (n=1 por comprimento) foi endereçada para as duas classes
+mais curtas: mais 3 candidatos de 5 aa (VRYRR, VRTRR, VRRPR) e 3 de 7 aa (HRPRRSR, HRPRRPK,
+KPKFKVR) — os próximos melhores por Vina real dentro do lote de 30 já dockado por comprimento —
+foram simulados em MD real (10 ns cada), elevando a amostra para **n=4 por comprimento**.
+
+**Tabela 9d-2.** MD real, n=4 — comprimentos 5 e 7 aa.
+
+| Sequência | Comp. | RMSD (nm) | DP | Rg (nm) | Vina real |
+|---|---|---|---|---|---|
+| **VRTRR** | 5 | **0,1936** | 0,0121 | 1,688 | −9,55 |
+| VRYRR | 5 | 0,1985 | 0,0198 | 1,709 | −10,22 |
+| SRTRR | 5 | 0,2425 | 0,0222 | 1,695 | −10,31 |
+| VRRPR | 5 | 0,2679 | 0,0282 | 1,747 | −9,45 |
+| HRPRRPR | 7 | 0,2659 | 0,0479 | 1,754 | −11,72 |
+| HRPRRSR | 7 | 0,2743 | 0,0264 | 1,739 | −11,56 |
+| HRPRRPK | 7 | 0,4103 | 0,3798 | 1,742 | −10,99 |
+| KPKFKVR | 7 | 0,5982 | 0,5232 | 1,750 | −10,59 |
+
+`VRTRR` (5 aa) é agora o **candidato mais estável de todo o pipeline** (RMSD 0,1936 nm),
+superando `SRTRR` (recordista anterior, Seção 3.10c) e `RLREELKKAEEWLEKRRKEE` (0,294 nm,
+recordista da Fase 4).
+
+**Achado real com amostra ampliada (deixa de ser observação de n=1)**: a classe de **5 aa é
+uniformemente estável** — os 4 candidatos ficam todos entre 0,19–0,27 nm (faixa de apenas
+0,074 nm). A classe de **7 aa é heterogênea** — varia de 0,27 nm (estável) a 0,60 nm (instável)
+dentro do mesmo comprimento (faixa de 0,332 nm, quase 4,5× maior). **Conclusão real**: "peptídeo
+curto implica maior estabilidade" é uma regra mais confiável em 5 aa do que em 7 aa; em 7 aa a
+estabilidade real depende mais da sequência específica do que apenas do comprimento.
+
+**Pendência real**: nenhum dos 6 novos candidatos tem especificidade real (humano/*Apis*) ou
+docking cross-species (Seção 3.11c) — `VRTRR`, o novo recordista, está sem qualquer dado de
+especificidade até o momento deste texto.
+
 ---
 
 ### 3.11 Especificidade vs. Tripsinas Não-Alvo
@@ -520,10 +555,52 @@ Asp233 no bolso S1.
 Todos os 10 candidatos mantêm afinidade real e competitiva (−8,9 a −13,0 kcal/mol) contra
 *H. armigera*, sem nenhuma ruptura de ligação — evidência de que o design não é
 hiperespecífico a ACR157. Dois candidatos (`SALASIAAHQATFLAYLESK`, `RVKDQWLEAEKLLEERRKKK`)
-tiveram afinidade real **melhor** contra *H. armigera* do que contra o alvo primário. Expansão
-para mais 6 espécies de Lepidoptera bem documentadas (*Manduca sexta*, *Bombyx mori*,
-*Plutella xylostella*, *Spodoptera litura*, *S. frugiperda*, *Ostrinia nubilalis* — accessions e
-estruturas AlphaFold DB reais em andamento; resultado a reportar quando concluído.
+tiveram afinidade real **melhor** contra *H. armigera* do que contra o alvo primário.
+
+**Expansão completa para 8 espécies (2026-07-18).** Seis espécies adicionais bem documentadas
+foram incorporadas via busca UniProt REST real, priorizando entradas com padrão de tripsina
+digestiva (~250–270 aa) e estrutura AlphaFold DB confirmada (v6, contagem de átomos Cα conferida
+contra o UniProt em todos os casos): *Manduca sexta* (P35045, **Swiss-Prot revisado**, "Trypsin
+alkaline A"), *Bombyx mori* (A0A8R2C8B0), *Plutella xylostella* (E2IGY7), *Spodoptera litura*
+(B3F884), *S. frugiperda* (A0A089QDB3), *Ostrinia nubilalis* (Q6R561). Uma sétima espécie —
+*Anticarsia gemmatalis* (A0A2U8NFD7, "Trypsin 1", 260 aa) — foi adicionada como referência
+independente e verificada da própria espécie-alvo do projeto (distinta da identidade
+documentalmente ambígua de ACR157). A tríade catalítica de todas as 7 novas estruturas foi
+mapeada com `StructureAgent._analyze_single` (mesmo método dos 4 receptores primários) e
+confirmada canônica (His/Asp/Ser reais + segundo Asp real no bolsão S1) **por construção do
+algoritmo** — a busca só considera candidatos entre resíduos com o `resname` correto, nunca
+substitui por outro tipo de aminoácido.
+
+**Tabela 9g.** Matriz completa — Vina real (kcal/mol), TOP-10 × 8 espécies de Lepidoptera.
+
+| Sequência | A. gemmatalis | H. armigera | M. sexta | B. mori | P. xylostella | S. litura | S. frugiperda | O. nubilalis |
+|---|---|---|---|---|---|---|---|---|
+| SRTRR | −9,19 | −8,88 | −9,53 | −9,56 | −9,72 | −9,28 | −10,95 | −9,43 |
+| HRPRRPR | −10,10 | −10,52 | −11,44 | −10,62 | −11,71 | −10,27 | −11,42 | −11,88 |
+| RLREELKKAEEWLEKRRKEE | −12,75 | −11,79 | −11,99 | −13,28 | −12,81 | −12,36 | −13,36 | −12,77 |
+| SEEEVLAANEAYAAAHTAYN | −12,31 | −12,48 | **−14,30** | **−14,48** | −13,02 | −12,47 | −12,49 | −12,14 |
+| SALASIAAHQATFLAYLESK | −11,97 | −13,03 | −11,87 | −12,15 | −13,27 | −11,66 | −12,87 | −11,97 |
+| MGSLTAYLEAYAAENAAALA | −13,31 | −11,28 | −13,15 | −13,03 | −12,40 | −11,49 | −13,01 | −13,04 |
+| RLRAIWLEAEKLLEERRKKK | **−15,35** | −11,58 | −12,76 | −13,77 | −13,50 | −12,07 | −14,18 | −11,88 |
+| MGYLTAYHQALAAQNAALLA | −14,26 | −11,88 | −12,23 | −13,80 | −12,31 | −12,52 | −12,20 | −11,82 |
+| RVKDQWLEAEKLLEERRKKK | −14,40 | −12,04 | −13,65 | −13,78 | −13,13 | −12,25 | **−14,49** | −12,31 |
+| SARESIKKAYKTFLERYKKL | −12,51 | −12,36 | −12,88 | **−14,74** | −13,57 | −13,01 | −13,31 | −12,41 |
+| **Média** | −12,62 | −11,58 | −12,38 | −12,92 | −12,54 | −11,74 | −12,83 | −11,97 |
+
+**Leitura honesta**: nenhum candidato perde afinidade real em nenhuma das 8 espécies — faixa
+completa −8,9 a −15,4 kcal/mol, sempre competitiva. As médias por espécie são próximas
+(−11,58 a −12,92 kcal/mol), sem nenhuma espécie "imune" ao design. Isso é evidência real de
+potencial de amplo espectro entre pragas Lepidoptera, satisfazendo o requisito R3. Os dois
+candidatos já identificados com SI **negativo** contra tripsina humana (Seção 3.11b —
+`RLRAIWLEAEKLLEERRKKK`, `RVKDQWLEAEKLLEERRKKK`) são também os que mostram maior afinidade real
+contra *A. gemmatalis* verdadeira entre todos os 80 valores da matriz (−15,35 e −14,40) — reforça
+que são candidatos de afinidade alta e pouco discriminativa, não apenas "menos seletivos".
+
+**Limitações reais**: (1) esta matriz é só docking rígido — não testa estabilidade MD
+cross-species nem especificidade humano/*Apis* para os 6 novos candidatos curtos gerados na
+Seção 3.10c (não fazem parte deste TOP-10); (2) a comparação direta ACR157×A0A2U8NFD7 mostra
+correlação moderada mas não perfeita (2 candidatos divergem >2 kcal/mol) — dado real, mas
+insuficiente para concluir se ACR157 é ou não *A. gemmatalis*, não usado para essa inferência.
 
 ### 3.12 Inibidores de Referência
 
