@@ -137,6 +137,12 @@ class MDAgent(BaseAgent):
         self.logger.info(f"MD GROMACS: {len(top5)} complexos, {ns} ns cada...")
 
         results = {}
+        results_file = self.workdir / "md_results.json"
+        if cfg.get("forced_sequences") and results_file.exists():
+            # Sequências forçadas ampliam o histórico de MD — mescla em vez de sobrescrever
+            # (mesma correção aplicada ao DockingAgent, commit 1d8a674).
+            results = json.loads(results_file.read_text())
+            self.logger.info(f"Mesclando com {len(results)} resultados de MD já existentes.")
         for stem, rdata in top5:
             seq = rdata.get("sequence", "?")
             complex_pdb = rdata.get("complex_pdb") or rdata.get("refined_pdb")
@@ -178,9 +184,12 @@ class MDAgent(BaseAgent):
                 seq_vina = {v["sequence"]: v.get("best_affinity_kcal")
                             for v in dock.values() if v.get("sequence")}
             result = []
-            for i, seq in enumerate(forced):
+            for seq in forced:
                 vina = seq_vina.get(seq)
-                result.append((f"forced_{i:02d}", {
+                # Chave = sequência completa (não posicional): evita colisão entre
+                # invocações forçadas separadas sobrescrevendo resultados de MD reais
+                # (mesmo bug de stem[:8] já corrigido no DockingAgent, commit 1d8a674).
+                result.append((seq, {
                     "sequence": seq,
                     "length": len(seq),
                     "vina_kcal": vina,
