@@ -26,6 +26,7 @@ Confirmado por inspeção direta de `outputs/md/SRTRR/minim.gro` no servidor (ca
 - **Átomos da carboxila do Asp**: `OD1`/`OD2` (nomenclatura AMBER99SB-ILDN padrão, confirmado nos átomos reais do resíduo 187).
 - **P1 não é sempre o resíduo C-terminal**: 5/13 candidatos do TOP-13 não terminam em Arg/Lys (`RLREELKKAEEWLEKRRKEE`, `SEEEVLAANEAYAAAHTAYN`, `MGSLTAYLEAYAAENAAALA`, `MGYLTAYHQALAAQNAALLA`, `SARESIKKAYKTFLERYKKL`) — a Frente 2 **descobre empiricamente** qual resíduo do peptídeo fica mais perto do Asp-S1 em vez de assumir C-terminal.
 - **Frames nativos salvos**: `nstxout-compressed = 2500` passos × 2 fs = 1 frame a cada 5 ps → 2000 frames por réplica de 10 ns (`md.xtc`).
+- **Corte de ocupância real, decidido durante a validação da Task 3 (2026-07-19)**: validação real contra `SRTRR` (candidato mais estável/reprodutível do pipeline) mostrou que seu resíduo âncora real (Arg, índice 1) fica a maior parte do tempo a 4-6 Å do Asp catalítico (94% dos frames <6Å, 35% <5Å), mas raramente <4,0 Å (~1-3,5%) — o corte único de 4,0 Å (salt-bridge apertada, textbook-padrão) some quase todo o sinal real mesmo para o candidato mais robusto. Decisão do usuário: reportar **3 cortes** (4/5/6 Å) em vez de um único, sem descartar a leitura original de 4Å. Isso substitui `OCCUPANCY_CUTOFF_A` (constante única) por `OCCUPANCY_CUTOFFS_A = [4.0, 5.0, 6.0]` e o campo `occupancy_fraction` por `occupancy_fraction_4A`/`occupancy_fraction_5A`/`occupancy_fraction_6A` no schema de saída (Task 2, já refletido no código abaixo).
 
 ---
 
@@ -122,7 +123,8 @@ git commit -m "feat(persistence): funções puras de ocupância e âncora empír
 - Produces: `outputs/persistence_deep/persistence_summary.json` — schema:
   ```json
   {"SRTRR": {"rep1": {"anchor_residue_seq_idx": 4, "anchor_residue_aa": "R",
-                        "occupancy_fraction": 0.94, "n_frames": 2000,
+                        "occupancy_fraction_4A": 0.01, "occupancy_fraction_5A": 0.35,
+                        "occupancy_fraction_6A": 0.94, "n_frames": 2000,
                         "local_rmsd_pocket_nm": 0.18},
              "rep2": {...}, "rep3": {...}}}
   ```
@@ -166,7 +168,7 @@ CANDIDATES = [
 REP1_DIR_OVERRIDE = {"RLREELKKAEEWLEKRRKEE": "forced_05"}
 S1_ASP_RESID = 187  # outputs/structure/binding_site.json, receptor ACR157 (individual_sites[0])
 S1_ASP_ATOMS = "name OD1 OD2"
-OCCUPANCY_CUTOFF_A = 4.0
+OCCUPANCY_CUTOFFS_A = [4.0, 5.0, 6.0]  # ver nota "Corte de ocupância real" no topo do plano
 
 MD_DIR = Path("outputs/md")
 REPLICATES_DIR = Path("outputs/md_replicates")
@@ -237,13 +239,16 @@ def analyze_replicate(seq: str, tpr: Path, xtc: Path) -> dict:
         local_rmsd_frames.append(float(np.sqrt(np.mean(np.sum((moved - ref) ** 2, axis=1)))) / 10.0)
 
     anchor_idx = find_anchor_residue(distances_per_residue)
-    return {
+    result = {
         "anchor_residue_seq_idx": anchor_idx,
         "anchor_residue_aa": seq[anchor_idx],
-        "occupancy_fraction": occupancy_fraction(distances_per_residue[anchor_idx], OCCUPANCY_CUTOFF_A),
         "n_frames": len(distances_per_residue[anchor_idx]),
         "local_rmsd_pocket_nm": round(float(np.mean(local_rmsd_frames)), 4) if local_rmsd_frames else None,
     }
+    for cutoff in OCCUPANCY_CUTOFFS_A:
+        key = f"occupancy_fraction_{int(cutoff)}A"
+        result[key] = occupancy_fraction(distances_per_residue[anchor_idx], cutoff)
+    return result
 
 
 def main():
@@ -311,7 +316,7 @@ print(analyze_replicate('SRTRR', tpr, xtc))
 "
 ```
 
-Expected: `anchor_residue_aa` deve ser `R` ou `A`/`R`/`R` (SRTRR = S-R-T-R-R, índices 1/3/4 são Arg) — **não pode ser `S` ou `T`** (não-básicos); `occupancy_fraction` deve ser alto (>0.5), consistente com SRTRR já confirmado como o candidato mais estável e reprodutível (Tabela 9n, DP=0,025nm). Se o resíduo âncora vier errado (S ou T) ou a ocupância vier muito baixa (<0.1) para um candidato já sabido estável, **parar e investigar antes de rodar os 13** — sinal de bug na seleção de átomos.
+Expected: `anchor_residue_aa` deve ser `R` (SRTRR = S-R-T-R-R, resíduo âncora real confirmado nesta sessão = índice 1); **não pode ser `S` ou `T`** (não-básicos). Quanto à ocupância: **validação real desta sessão (2026-07-19) já confirmou** que `occupancy_fraction_4A` fica baixo (~0,01-0,035) mesmo para SRTRR — não é bug, é o corte de 4Å sendo estrito demais (ver nota "Corte de ocupância real" no topo do plano); o critério de sanidade correto é `occupancy_fraction_6A` alto (>0.7) E o resíduo âncora ser quimicamente sensato (Arg/Lys, distância média bem menor que os outros resíduos do peptídeo — confirmado para SRTRR: Arg1 média 5,2Å vs. Arg3/Arg4 média 9,9/12,4Å). Se o resíduo âncora vier errado (não-básico) ou `occupancy_fraction_6A` vier muito baixo (<0.3) para um candidato já sabido estável, **parar e investigar antes de rodar os 13**.
 
 - [ ] **Step 3: Se validação passar, commit de confirmação**
 
@@ -333,7 +338,7 @@ ssh eulalio@200.235.143.10 "cd ~/design-inibidores && screen -dmS persistence_fu
 
 - [ ] **Step 2: Monitorar até `DONE`** (mesmo padrão de monitor incremental por offset usado para o `deep_test_md_replicates.py` nesta sessão — poll via `wc -l`/`tail -n +N` no `outputs/persistence_run.log`, não `tail -n 5` fixo).
 
-- [ ] **Step 3: Puxar `persistence_summary.json` e escrever Tabela nova em `artigo_resultados.md`** (Seção 3.11g, mesmo estilo das Tabelas 9k-9n): colunas Sequência | Resíduo âncora real | Ocupância (%) | RMSD local do bolso (nm) | Interpretação.
+- [ ] **Step 3: Puxar `persistence_summary.json` e escrever Tabela nova em `artigo_resultados.md`** (Seção 3.11g, mesmo estilo das Tabelas 9k-9n): colunas Sequência | Resíduo âncora real | Ocupância 4Å/5Å/6Å (%) | RMSD local do bolso (nm) | Interpretação.
 
 - [ ] **Step 4: Atualizar `project_design_inibidores.md`** com o achado real (quais candidatos têm ocupância alta vs. baixa, se algum candidato "estável" por RMSD global na verdade tem ocupância baixa — i.e., balança mas sai do sítio).
 
@@ -645,7 +650,7 @@ ssh eulalio@200.235.143.10 "cd ~/design-inibidores && git pull"
 
 - [ ] **Step 1: Ler os 3 JSONs reais já gerados** — `outputs/persistence_deep/persistence_summary.json` (Task 4), `outputs/s2s3_deep/s2s3_summary.json` (Task 7), e a Tabela 9m já existente (contato com tríade catalítica, `outputs/plip_deep/plip_deep_summary.json`).
 
-- [ ] **Step 2: Montar tabela única** para os 4 candidatos reprodutivelmente estáveis (SRTRR, VRYRR, VRRPR, HRPRRPR) + `SEEEVLAANEAYAAAHTAYN` (caso não-canônico): colunas Sequência | Contato tríade (His/Asp/Ser) | Ocupância P1-AspS1 (%) | RMSD local do bolso | Contato S2'/S3' (%) — nenhuma célula inferida, só o que os 3 JSONs mostrarem.
+- [ ] **Step 2: Montar tabela única** para os 4 candidatos reprodutivelmente estáveis (SRTRR, VRYRR, VRRPR, HRPRRPR) + `SEEEVLAANEAYAAAHTAYN` (caso não-canônico): colunas Sequência | Contato tríade (His/Asp/Ser) | Ocupância P1-AspS1 6Å (%) | RMSD local do bolso | Contato S2'/S3' (%) — usar o corte de 6Å como referência principal (mais informativo que 4Å per validação real da Task 3), citar 4Å/5Å como contexto adicional; nenhuma célula inferida, só o que os 3 JSONs mostrarem.
 
 - [ ] **Step 3: Escrever parágrafo de interpretação** apontando quais contatos são comuns aos 4 estáveis vs. ausentes nos marginais/alta-variância — sem extrapolar além do que os números mostrarem.
 
