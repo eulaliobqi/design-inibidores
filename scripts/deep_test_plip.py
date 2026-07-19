@@ -66,14 +66,21 @@ def run_plip(seq: str, prot_pdb: Path) -> dict:
     # Bug real corrigido: cwd=out_dir + path já relativo-à-raiz duplicava o caminho
     # (mesma causa raiz do bug em deep_test_mmpbsa.py) — sem cwd, paths já são
     # relativos à raiz do repo (como o script é invocado).
+    # Bug real corrigido 2: trjconv extrai do grupo "System" completo e RENOMEIA as
+    # cadeias (A=receptor, B=peptídeo) — a cadeia "P" do topol_Protein_chain_P.itp
+    # original não sobrevive à extração. Confirmado via inspeção direta da coluna 22
+    # do PDB extraído (receptor=A 3342 átomos, peptídeo=B 100 átomos, igual ao
+    # make_ndx). Também: PLIP nomeia o relatório com base no nome do arquivo de
+    # entrada (ex. last_frame_protonated_report.txt), não "report.txt" fixo.
     proc = subprocess.run(
-        ["plip", "-f", str(prot_pdb), "--peptides", "P", "-o", str(out_dir), "-t"],
+        ["plip", "-f", str(prot_pdb), "--peptides", "B", "-o", str(out_dir), "-t"],
         capture_output=True, text=True, timeout=180,
     )
-    report = out_dir / "report.txt"
-    if not report.exists():
+    reports = list(out_dir.glob("*_report.txt"))
+    if not reports:
         print(f"[{seq}] PLIP falhou: rc={proc.returncode} {proc.stderr[-300:]}")
         return {"seq": seq, "status": "falhou", "stderr": proc.stderr[-500:]}
+    report = reports[0]
 
     text = report.read_text(errors="ignore")
     contacts_his = bool(re.search(r"\bHIS\b", text))
