@@ -1017,6 +1017,72 @@ ser lida como um teste exploratório que **não encontrou evidência clara**, po
 de contato adicional em S2'/S3' entre os candidatos já caracterizados — não como confirmação nem
 como descarte de qualquer candidato.
 
+### 3.11i Assinatura Digital de Interação — Síntese das Frentes 2+3 (2026-07-19)
+
+A pedido do usuário, esta seção não introduz nenhum dado novo — é uma tabela de síntese que reúne,
+lado a lado, três métricas reais já reportadas separadamente nas Tabelas 9m (PLIP, contato real
+com a tríade catalítica, Seção 3.10b/3.11e), 9o (ocupância real do bolso S1 e RMSD local do bolso,
+Seção 3.11g) e 9p (contato heurístico real com S2'/S3', Seção 3.11h), para os 4 candidatos
+confirmados "ESTÁVEL REPRODUTÍVEL" por RMSD do complexo inteiro em n=3 réplicas (Tabela 9n:
+`SRTRR`, `VRYRR`, `VRRPR`, `HRPRRPR`) mais o caso não-canônico `SEEEVLAANEAYAAAHTAYN` (classificado
+"marginal reprodutível", não "estável", na Tabela 9n). Nenhuma célula foi calculada ou inferida —
+todos os valores abaixo são cópia direta das Tabelas 9m/9o/9p já publicadas nesta Seção 3.11. O
+corte de 6 Å é usado como referência principal para a ocupância do bolso S1, por ser o corte
+validado como mais informativo na Seção 3.11g (o corte de 4 Å captura apenas 0,3-1% dos frames
+mesmo no candidato mais robusto do pipeline); os valores de 4 Å/5 Å são citados entre colchetes
+como contexto adicional, não como métrica principal.
+
+**Tabela 9q.** Assinatura digital de interação — síntese dos 5 candidatos (Tabelas 9m + 9o + 9p).
+
+| Sequência | Contato tríade His/Asp/Ser (Tabela 9m) | Ocupância bolso S1 6 Å (%) [4 Å / 5 Å] (Tabela 9o) | RMSD local do bolso (nm) (Tabela 9o) | Contato S2'/S3' (%, heurística) (Tabela 9p) |
+|---|---|---|---|---|
+| SRTRR | ✓ / ✓ / ✓ | 94,3 [33,3 / 48,2] | 0,406 | 33,3 |
+| VRYRR | ✓ / ✓ / ✓ | 100,0 [99,5 / 99,9] | 0,435 | 6,7 |
+| VRRPR | ✓ / ✓ / ✓ | 33,5 [0,0 / 0,5] | 0,416 | 13,3 |
+| HRPRRPR | ✓ / ✓ / ✓ | 96,1 [0,0 / 15,5] | 0,271 | 40,0 |
+| SEEEVLAANEAYAAAHTAYN (n=2, rep1 sem trajetória) | ✓ / ✓ / ✓ | 88,1 [0,1 / 24,5] | 0,696 | 60,0 |
+
+**Achado real — o que é comum aos 5 candidatos, e o que separa `VRRPR` do restante**: contato
+completo com a tríade catalítica (His+Asp+Ser, Tabela 9m) é o único traço universal entre os 5 —
+inclusive o caso não-canônico `SEEEVLAANEAYAAAHTAYN`. Entre os 4 classificados "ESTÁVEL
+REPRODUTÍVEL" por RMSD do complexo inteiro (Tabela 9n), 3 (`SRTRR`, `VRYRR`, `HRPRRPR`) também
+mostram ocupância real alta e consistente do bolso S1 a 6 Å (94,3-100,0%), confirmando que a
+estabilidade do complexo inteiro corresponde, nesses 3 casos, à permanência real do peptídeo perto
+do Asp187 catalítico. `VRRPR` é a exceção clara: apesar de estar no mesmo grupo "estável
+reprodutível" por RMSD global (e de ter o menor DP de RMSD entre os 13 candidatos originais, Tabela
+9n), sua ocupância a 6 Å é a segunda mais baixa da tabela (33,5%, caindo monotonicamente entre
+réplicas conforme já registrado na Tabela 9o) — evidência real de que baixa variância no RMSD do
+complexo não implica permanência do peptídeo no bolso catalítico. `SEEEVLAANEAYAAAHTAYN`, apesar de
+classificado apenas "marginal reprodutível" (não "estável") por RMSD global, tem ocupância a 6 Å
+(88,1%) mais próxima do grupo de 3 candidatos genuinamente persistentes do que de `VRRPR`, embora
+com âncora não-básica (Asn, Tabela 9o) e RMSD local do bolso mais alto (0,696 nm) que qualquer um
+dos outros 4 — sinal misto, não uma confirmação de persistência equivalente.
+
+Sobre a coluna de contato S2'/S3': os 5 valores variam de 6,7% (`VRYRR`) a 60,0%
+(`SEEEVLAANEAYAAAHTAYN`), mas a Seção 3.11h já estabeleceu, sobre o conjunto completo de 13
+candidatos, que esse sinal é ruidoso e **não discrimina** candidatos estruturalmente robustos dos
+demais (média do grupo "estável" 23,3% vs. 25,2% dos outros 9). Essa mesma falta de poder
+discriminante aparece dentro do subconjunto de 5 candidatos desta tabela: `VRYRR` — o candidato com
+contato mais completo e consistente à tríade catalítica e a única salt-bridge S1 constante a 4 Å —
+tem o menor contato médio S2'/S3' de todos (6,7%), enquanto `HRPRRPR` e `SEEEVLAANEAYAAAHTAYN` têm
+os maiores (40,0% e 60,0%) sem que nenhuma outra métrica desta tabela os distinga favoravelmente do
+resto. A única exceção pontual, já registrada na Seção 3.11h, é `VRRPR`: seu contato S2'/S3' baixo
+(13,3%) está na mesma direção qualitativa do seu colapso de ocupância S1 (Tabela 9o) — mas essa é
+uma coincidência isolada de um único candidato, não uma correlação geral entre as duas métricas, e
+a Seção 3.11h é explícita em não sustentar "nenhuma narrativa de candidato X também ocupa S2'/S3'"
+a partir desses números. A coluna S2'/S3' desta síntese deve, portanto, ser lida como contexto
+exploratório de baixa confiabilidade, não como um quinto critério de seleção com o mesmo peso das
+colunas de tríade catalítica e ocupância do bolso S1.
+
+**Limitação explícita**: esta tabela é uma reorganização visual, não uma nova análise — herda todas
+as limitações já documentadas nas Seções 3.11f-h (n=3 réplicas insuficiente para convergência
+estatística robusta, n=2 para `SEEEVLAANEAYAAAHTAYN`, heurística S2'/S3' não validada
+estruturalmente e com resolução amostral baixa de 5 frames/réplica). Nenhum dos 5 candidatos desta
+tabela tem margem de seletividade real comprovada (SI real < 2,0 para os 4 do grupo "estável
+reprodutível": SRTRR=1,17, VRYRR=0,92, HRPRRPR=1,41, VRRPR=−0,13, Seção 3.11f) — a "assinatura
+digital de interação" aqui descrita caracteriza modo de ligação estrutural, não especificidade real
+contra os alvos Lepidoptera.
+
 ---
 
 ### 3.12 Inibidores de Referência
