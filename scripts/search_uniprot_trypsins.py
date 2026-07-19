@@ -9,6 +9,9 @@ SPECIES = [
     "Spodoptera litura",
     "Spodoptera frugiperda",
     "Ostrinia nubilalis",
+    "Diatraea saccharalis",
+    "Heliothis virescens",
+    "Chrysodeixis includens",
 ]
 
 for sp in SPECIES:
