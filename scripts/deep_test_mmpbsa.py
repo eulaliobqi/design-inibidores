@@ -32,8 +32,15 @@ MMPBSA_IN = "&general\nstartframe=1000, endframe=2000, interval=20,\n/\n&gb\nigb
 
 
 def run(cmd, cwd, timeout, input_text=None):
-    return subprocess.run(cmd, cwd=str(cwd), input=input_text, capture_output=True,
-                           text=True, timeout=timeout)
+    # subprocess.run(input=...) não é confiável com gmx_mpi em screen detached
+    # (MPI_ABORT / "Cannot read from input") — usar pipe de shell real (testado e
+    # confirmado funcionando, 2026-07-18).
+    if input_text:
+        printf_arg = input_text.replace("\n", "\\n")
+        shell_cmd = f"printf '{printf_arg}' | " + " ".join(str(c) for c in cmd)
+        return subprocess.run(["bash", "-c", shell_cmd], cwd=str(cwd),
+                               capture_output=True, text=True, timeout=timeout)
+    return subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True, timeout=timeout)
 
 
 def process_candidate(seq: str, max_attempts: int = 3) -> dict:

@@ -35,11 +35,11 @@ def extract_last_frame(seq: str) -> Path | None:
     frame_pdb = out_dir / "last_frame.pdb"
     if frame_pdb.exists() and frame_pdb.stat().st_size > 1000:
         return frame_pdb
-    proc = subprocess.run(
-        [GMX, "trjconv", "-s", str(tpr), "-f", str(xtc), "-o", str(frame_pdb),
-         "-pbc", "mol", "-center", "-dump", "999999"],
-        input="1\n0\n", capture_output=True, text=True, timeout=180,
-    )
+    # subprocess.run(input=...) não funciona de forma confiável com gmx_mpi em screen
+    # detached (MPI_ABORT / "Cannot read from input") — usar pipe de shell real, testado
+    # e confirmado funcionando (2026-07-18).
+    cmd = f"printf '1\\n0\\n' | {GMX} trjconv -s {tpr} -f {xtc} -o {frame_pdb} -pbc mol -center -dump 999999"
+    proc = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=180)
     if not frame_pdb.exists() or frame_pdb.stat().st_size < 1000:
         print(f"[{seq}] trjconv falhou: {proc.stderr[-400:]}")
         return None
