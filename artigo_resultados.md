@@ -577,6 +577,64 @@ agora. As diferenças, porém, são as mais informativas:
 de 0/35 candidatos aprovados (Seção 3.11) permanece válido. Esta comparação é sobre *ranking
 relativo* entre candidatos reais, não sobre candidatos aprovados por um critério absoluto.
 
+**Correção de dado (2026-07-18):** a extração inicial de `RLREELKKAEEWLEKRRKEE` buscava o valor
+de Vina no campo errado do JSON de MD (`vina_kcal`, sempre nulo para candidatos não redockados
+diretamente) em vez do campo real em `docking_results.json` (`best_affinity_kcal`). O valor real
+é **−12,21 kcal/mol** (não "—" como reportado inicialmente nesta seção) — corrigido na Tabela 9j
+abaixo, que também substitui as Tabelas 9h/9i por uma visão unificada.
+
+**Tabela 9j.** Comparação unificada — união dos dois rankings (13 candidatos), com posição em
+cada critério e classificação de grupo.
+
+| Sequência | Comp. | Vina (kcal/mol) | RMSD MD (nm) | min_SI (kcal/mol) | Rank Absoluto | Rank Especificidade | Grupo |
+|---|---|---|---|---|---|---|---|
+| VRTRR | 5 | −9,55 | 0,1936 | 0,39 | 1 | 9 | Comum |
+| VRYRR | 5 | −10,22 | 0,1985 | 0,92 | 2 | 5 | Comum |
+| SRTRR | 5 | −10,31 | 0,2425 | 1,17 | 3 | 4 | Comum |
+| HRPRRPR | 7 | −11,72 | 0,2659 | 1,41 | 4 | 2 | Comum |
+| VRRPR | 5 | −9,45 | 0,2679 | **−0,13** | 5 | — | Só Absoluto |
+| HRPRRSR | 7 | −11,56 | 0,2743 | 0,59 | 6 | 7 | Comum |
+| RLREELKKAEEWLEKRRKEE | 20 | −12,21 | 0,2940 | **0,06** | 7 | — | Só Absoluto |
+| HRPRRPK | 7 | −10,99 | 0,4103 | 0,87 | 8 | 6 | Comum |
+| SEEEVLAANEAYAAAHTAYN | 20 | −13,40 | 0,4742 | 1,23 | 9 | 3 | Comum |
+| SALASIAAHQATFLAYLESK | 20 | −12,52 | 0,5677 | **−0,64** | 10 | — | Só Absoluto |
+| SARESIKKAYKTFLERYKKL | 20 | −14,58 | 0,8713 (marginal) | 1,61 | — | 1 | Só Especificidade |
+| MGYLTAYHQALAAQNAALLA | 20 | −13,04 | 0,8204 (marginal) | 0,48 | — | 8 | Só Especificidade |
+| MGSLTAYLEAYAAENAAALA | 20 | −12,67 | 0,6390 (marginal) | 0,18 | — | 10 | Só Especificidade |
+
+**Descrição do resultado considerando os dois grupos em conjunto:**
+
+O grupo **Comum** (7 candidatos, robustos nos dois critérios) é dominado por peptídeos curtos:
+6 dos 7 têm 5 ou 7 aa (VRTRR, VRYRR, SRTRR, HRPRRPR, HRPRRSR, HRPRRPK); apenas
+`SEEEVLAANEAYAAAHTAYN` (20 aa, mecanismo não-canônico via Tyr — Seção 3.10b) consegue reunir
+estabilidade real (RMSD 0,4742 nm) e especificidade real (SI 1,23) entre os candidatos de 20 aa.
+Dentro deste grupo, o RMSD varia pouco (0,19–0,47 nm) e o SI mínimo é sempre positivo
+(0,39–1,41) — é o conjunto de candidatos com o perfil de risco mais baixo do pipeline inteiro.
+
+O grupo **Só Absoluto** (candidatos estáveis, mas que falham quando a especificidade é
+considerada) mistura comprimentos: 2 de 20 aa (`RLREELKKAEEWLEKRRKEE`, o histórico
+"mais estável" do pipeline, e `SALASIAAHQATFLAYLESK`) e 1 curto (`VRRPR`, 5 aa). O achado real
+mais importante deste grupo é que **nem todo peptídeo curto é automaticamente seguro** —
+`VRRPR` é tão estável quanto os demais 5 aa (RMSD 0,2679 nm), mas tem SI real negativo (−0,13)
+contra *Apis mellifera*, no mesmo padrão de risco dos candidatos de 20 aa já eliminados na Seção
+3.11b. Comprimento curto correlaciona com estabilidade, mas não é garantia de especificidade.
+
+O grupo **Só Especificidade** (candidatos seletivos, mas apenas marginalmente estáveis) é
+uniformemente de 20 aa (`SARESIKKAYKTFLERYKKL`, `MGYLTAYHQALAAQNAALLA`,
+`MGSLTAYLEAYAAENAAALA`), todos com RMSD entre 0,62–0,87 nm (zona marginal, não estável pelo
+critério de 0,5 nm da Seção 3.8) mas SI real positivo e a segunda/terceira/décima melhores
+posições do ranking de especificidade. `SARESIKKAYKTFLERYKKL` — o melhor Vina bruto de todo o
+pipeline (−14,58 kcal/mol) — ilustra o padrão: docking rígido excelente, MD apenas marginal, mas
+a melhor especificidade real medida (SI = 1,61).
+
+**Síntese real, com ressalva de amostra pequena**: entre os candidatos curtos (5/7 aa), quando um
+é estável ele tende também a ser razoavelmente seletivo (6 de 7 casos "Comum" são curtos) — mas
+`VRRPR` mostra que essa tendência não é uma regra garantida. Entre os candidatos de 20 aa, o
+padrão é mais bipolar: ou estável-mas-não-seletivo, ou seletivo-mas-só-marginalmente-estável,
+com `SEEEVLAANEAYAAAHTAYN` como única exceção real a reunir as duas propriedades nesse
+comprimento. Com n pequeno em cada grupo, isso é uma observação a acompanhar com mais candidatos,
+não uma lei estatística estabelecida.
+
 ### 3.11c Expansão Cross-Species (R3) — TOP-10 vs. *Helicoverpa armigera* real (2026-07-18)
 
 Diferente da Seção 3.11 (não-alvos humano/*Apis mellifera*, onde afinidade **baixa** é
