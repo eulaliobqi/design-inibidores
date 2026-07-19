@@ -949,6 +949,74 @@ estatística robusta. Os valores de ocupância a 4 Å devem ser lidos como sinal
 (mesmo candidatos genuinamente estáveis passam a maior parte do tempo entre 4 e 6 Å do Asp187,
 não colados a ele), não como ausência de interação real.
 
+### 3.11h Contato Real com Subsítios S2'/S3' Canônicos — Heurística Geométrica (2026-07-19)
+
+**Ressalva metodológica explícita, antes de qualquer número**: nenhum receptor deste projeto tem
+estrutura cristalográfica com substrato ligado nos subsítios S2'/S3' — apenas modelos
+estruturais/AlphaFold. Não existe, portanto, posição canônica pronta desses subsítios. Os
+resíduos 204 e 218 (receptor ACR157) usados nesta seção vêm de uma **heurística
+geométrica+sequencial** implementada em `scripts/s2s3_utils.py` (Task 5 do mesmo plano): dentre os
+resíduos já no hotspot de 8 Å do receptor, foram selecionados os que ficam na vizinhança
+sequencial da Ser catalítica (Ser+1 a Ser+15) e fora da vizinhança imediata do Asp do bolso S1
+(±2 resíduos). **Isso é uma aproximação operacional, não uma validação estrutural externa** — o
+mesmo tratamento explícito de limitação já dado ao mapeamento igualmente fraco do sítio S2'
+(diferente, de outra proteína-alvo) no projeto irmão `analise-alosterica`. Qualquer menção a
+"contato com S2'/S3'" nesta seção deve ser lida como "contato real com os resíduos 204/218,
+operacionalmente definidos por esta heurística como S2'/S3'", nunca como confirmação mecanística.
+
+Para os mesmos 13 candidatos e as mesmas réplicas reais (rep1/rep2/rep3, `.tpr`/`.xtc`
+preservados) usadas nas Seções 3.11f/3.11g, foram extraídos 5 frames por réplica (1, 3, 5, 7 e
+9 ns de produção) via `gmx trjconv -pbc mol -center`, protonados com `obabel -h`, e submetidos ao
+PLIP (`--peptides B`, mesmo padrão validado na Seção 3.11e). Contato = qualquer bloco de
+interação do PLIP (ligação de H, hidrofóbica ou ponte salina) entre o peptídeo e o resíduo 204
+**ou** o 218. A fração reportada é o número de frames com contato dividido pelo número de frames
+processados com sucesso (até 5 por réplica) — ou seja, cada frame individual vale 20 pontos
+percentuais, e a métrica é deliberadamente grosseira.
+
+**Tabela 9p.** Fração média de frames com contato real S2'/S3' (heurística), n=3 réplicas salvo
+indicação contrária.
+
+| Sequência | Fração de frames com contato S2'/S3' (méd., %) | Fração por réplica (rep1/rep2/rep3, %) | Resíduos-alvo reais | Interpretação |
+|---|---|---|---|---|
+| SRTRR | 33,3 | 0,0 / 0,0 / 100,0 | 204, 218 | "estável/persistente" no S1 (Tabelas 9n/9o), mas contato S2'/S3' oscila entre ausente e total — não há sinal estável |
+| VRYRR | 6,7 | 0,0 / 0,0 / 20,0 | 204, 218 | menor contato médio do grupo, apesar de ser o único com salt-bridge S1 constante a 4 Å (Tabela 9o) |
+| VRRPR | 13,3 | 0,0 / 20,0 / 20,0 | 204, 218 | contato S2'/S3' baixo, na mesma direção do achado da Tabela 9o (sai do bolso S1 na rep3) — nenhum sinal de compensação no S2'/S3' |
+| HRPRRPR | 40,0 | 20,0 / 20,0 / 80,0 | 204, 218 | quarto "reprodutivelmente estável" (Tabela 9n); contato S2'/S3' moderado, réplica 3 destoa das outras duas |
+| HRPRRSR | 66,7 | 100,0 / 60,0 / 40,0 | 204, 218 | maior contato médio do grupo, mas candidato classificado "ALTA VARIÂNCIA" de RMSD (Tabela 9n) — não é um candidato validado como estável |
+| VRTRR | 40,0 | 20,0 / 0,0 / 100,0 | 204, 218 | mesma instabilidade de pose já identificada na Tabela 9o (âncora S1 muda entre réplicas); contato S2'/S3' igualmente errático |
+| HRPRRPK | 40,0 | 0,0 / 60,0 / 60,0 | 204, 218 | contato moderado, crescente entre réplicas, na mesma direção da ocupância S1 crescente (Tabela 9o) |
+| SEEEVLAANEAYAAAHTAYN (n=2, rep1 sem trajetória) | 60,0 | — / 40,0 / 80,0 | 204, 218 | segundo maior contato médio do grupo; candidato "marginal reprodutível" por RMSD (Tabela 9n), não "estável" |
+| MGYLTAYHQALAAQNAALLA (n=2, rep1 sem trajetória) | 0,0 | — / 0,0 / 0,0 | 204, 218 | nenhum contato real detectado nas 2 réplicas disponíveis |
+| MGSLTAYLEAYAAENAAALA (n=2, rep1 sem trajetória) | 20,0 | — / 20,0 / 20,0 | 204, 218 | contato baixo mas consistente entre as 2 réplicas disponíveis |
+| SARESIKKAYKTFLERYKKL (n=2, rep1 sem trajetória) | 0,0 | — / 0,0 / 0,0 | 204, 218 | nenhum contato real detectado nas 2 réplicas disponíveis |
+| RLREELKKAEEWLEKRRKEE | 0,0 | 0,0 / 0,0 / 0,0 | 204, 218 | nenhum contato real detectado em nenhuma das 3 réplicas — candidato já refutado como "mais estável do pipeline" (Tabela 9n) |
+| SALASIAAHQATFLAYLESK (n=2, rep1 sem trajetória) | 0,0 | — / 0,0 / 0,0 | 204, 218 | nenhum contato real detectado nas 2 réplicas disponíveis; já o pior perfil de persistência S1 do grupo (Tabela 9o) |
+
+**Achado real — sinal ruidoso, sem correlação coerente com os achados anteriores**: a média de
+fração de contato S2'/S3' dos 4 candidatos "ESTÁVEL REPRODUTÍVEL" por RMSD (Tabela 9n: SRTRR,
+VRYRR, VRRPR, HRPRRPR) é 23,3% — praticamente idêntica à média dos outros 9 candidatos (25,2%).
+Ou seja, **este sinal não discrimina** os candidatos já validados como estruturalmente robustos
+dos demais. Dentro do próprio grupo dos 4 "estáveis", o espalhamento é grande: `VRYRR` — o único
+com salt-bridge S1 constante e contato completo à tríade catalítica (Tabela 9m) — tem o **menor**
+contato médio S2'/S3' de todos os 13 candidatos (6,7%), enquanto `HRPRRPR` tem o maior entre os 4
+(40,0%). O caso mais consistente com um achado anterior é `VRRPR`: contato S2'/S3' baixo (13,3%)
+na mesma direção qualitativa do que a Tabela 9o já mostrou para o bolso S1 (ocupância caindo entre
+réplicas) — o candidato não parece compensar a saída do S1 com contato adicional em S2'/S3'. Fora
+esse caso, **os dados não sustentam nenhuma narrativa de "candidato X também ocupa S2'/S3'"** de
+forma clara: a variação intra-candidato entre réplicas do mesmo peptídeo (ex. SRTRR: 0,0/0,0/1,0;
+VRTRR: 0,2/0,0/1,0) é da mesma ordem de grandeza da variação entre candidatos diferentes, o que é
+esperado quando cada réplica contribui só 5 frames e cada frame vale 20 pontos percentuais.
+
+**Limitação explícita, em duas camadas**: (1) a definição dos resíduos 204/218 como S2'/S3' é uma
+heurística geométrica+sequencial não validada externamente (ver ressalva no início da seção),
+então mesmo um sinal limpo não seria prova estrutural de ocupação do subsítio real; (2) mesmo
+aceitando a heurística, a resolução amostral (5 frames/réplica, cada um valendo 20 pontos
+percentuais da fração) é baixa demais para separar sinal real de ruído estocástico de trajetória —
+o mesmo tipo de limitação já registrado nas Seções 3.11f/3.11g para n=3 réplicas. Esta seção deve
+ser lida como um teste exploratório que **não encontrou evidência clara**, positiva ou negativa,
+de contato adicional em S2'/S3' entre os candidatos já caracterizados — não como confirmação nem
+como descarte de qualquer candidato.
+
 ---
 
 ### 3.12 Inibidores de Referência
@@ -979,6 +1047,7 @@ O pipeline multiagente completou todas as etapas planejadas para a Fase 1–3: d
 - **Especificidade (corrigido 2026-07-18)**: **0/21 aprovados** vs tripsina humana (1TRN) e/ou *Apis mellifera* — resultado original "20/20" era artefato de bug metodológico sem dado real (Seção 3.11); SI real médio 0,84 (humana) / 1,12 (Apis), abaixo do limiar de 2,0
 - **MD réplicas reais n=3 (corrigido 2026-07-19)**: dos 13 candidatos retestados com réplicas independentes (Seção 3.11f), apenas **4 são reprodutivelmente estáveis** (DP<0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR. Os 2 "recordistas de estabilidade" citados abaixo (RLREELKKAEEWLEKRRKEE e VRTRR, ambos de réplica única) **não se sustentam** — DP real de 0,606 e 0,360 nm entre réplicas
 - **Persistência competitiva real (2026-07-19)**: dos 4 candidatos "reprodutivelmente estáveis" acima (Seção 3.11g), apenas 3 confirmam ocupância real alta do bolso S1 a 6Å (SRTRR 94,3%, VRYRR 100,0%, HRPRRPR 96,1%); **VRRPR não se sustenta nesta métrica** — ocupância a 6Å cai 67,6%→32,9%→0,15% entre réplicas apesar de RMSD do complexo estável, ou seja, o complexo balança rígido mas o peptídeo sai do bolso. `VRYRR` é o único com salt-bridge real constante mesmo a 4Å (~100% nas 3 réplicas)
+- **Contato real S2'/S3' — heurística geométrica (2026-07-19)**: dos mesmos 13 candidatos (Seção 3.11h), a fração média de frames com contato PLIP real nos resíduos 204/218 (definição operacional, não validada estruturalmente) não discrimina os 4 "reprodutivelmente estáveis" do restante (médias de grupo praticamente iguais, 23,3% vs. 25,2%); sinal ruidoso demais (5 frames/réplica) para sustentar qualquer conclusão adicional além de "não encontrado padrão claro"
 - **OptimizationAgent**: 219 novos candidatos gerados por redesign iterativo dos top-50
 
 O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é biologicamente coerente com o bolso S1 de tripsina (Asp205, interação eletrostática com P1 = Arg/Lys). A avaliação dinâmica revela que estimativas estáticas (Vina, Rosetta) podem divergir da estabilidade em solvente explícito: GARKSIREYQKRVLERLKKK, com melhor I_sc (−86,28 kcal/mol), apresentou RMSD = 1,45 nm em MD — descartado. A etapa MD é, portanto, essencial para filtrar candidatos antes da síntese.
