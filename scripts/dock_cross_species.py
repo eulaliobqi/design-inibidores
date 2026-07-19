@@ -27,14 +27,17 @@ SPECIES = {
     "Slitura": ("data-nontargets/Slitura-B3F884-AlphaFold.pdb", "outputs/structure_slitura/binding_site.json"),
     "Sfrugiperda": ("data-nontargets/Sfrugiperda-A0A089QDB3-AlphaFold.pdb", "outputs/structure_sfrugiperda/binding_site.json"),
     "Onubilalis": ("data-nontargets/Onubilalis-Q6R561-AlphaFold.pdb", "outputs/structure_onubilalis/binding_site.json"),
+    "Dsaccharalis": ("data-nontargets/Dsaccharalis-T1QDI0-AlphaFold.pdb", "outputs/structure_dsaccharalis/binding_site.json"),
+    "Hvirescens": ("data-nontargets/Hvirescens-I7D523-AlphaFold.pdb", "outputs/structure_hvirescens/binding_site.json"),
+    "Cincludens": ("data-nontargets/Cincludens-A0A9P0BRD5-AlphaFold.pdb", "outputs/structure_cincludens/binding_site.json"),
 }
 
+# TOP-13 (Tabela 9n) — R3. RLRAIWLEAEKLLEERRKKK, RVKDQWLEAEKLLEERRKKK e KPKFKVR saíram da
+# lista; resume-safe: espécies antigas já têm resultado real p/ estes 13, não reprocessam.
 CANDIDATES = [
     "SRTRR", "HRPRRPR", "RLREELKKAEEWLEKRRKEE", "SEEEVLAANEAYAAAHTAYN",
-    "SALASIAAHQATFLAYLESK", "MGSLTAYLEAYAAENAAALA", "RLRAIWLEAEKLLEERRKKK",
-    "MGYLTAYHQALAAQNAALLA", "RVKDQWLEAEKLLEERRKKK", "SARESIKKAYKTFLERYKKL",
-    # Expansão MD n=4 (2026-07-18) — candidatos curtos 5/7aa
-    "VRYRR", "VRTRR", "VRRPR", "HRPRRSR", "HRPRRPK", "KPKFKVR",
+    "SALASIAAHQATFLAYLESK", "MGSLTAYLEAYAAENAAALA", "MGYLTAYHQALAAQNAALLA",
+    "SARESIKKAYKTFLERYKKL", "VRYRR", "VRTRR", "VRRPR", "HRPRRSR", "HRPRRPK",
 ]
 
 WORKDIR = Path("outputs/cross_species_docking")
