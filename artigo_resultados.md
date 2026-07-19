@@ -13,6 +13,7 @@
 > - ✓ 3.10 Resistência proteolítica — **20/20 candidatos SUSCEPTÍVEIS** (top-20 ranking); 5–7 P1-internos K/R
 > - ⚠️ 3.11 Especificidade — **CORRIGIDO 2026-07-18**: a afirmação original "20/20 aprovados" (Fase 3) nunca teve dado real por trás (bug de preparo de PDBQT — ver Seção 2.11/metodologia). Re-executado com dado Vina real: **0/23 candidatos aprovados** (SI ≥ 2,0 kcal/mol) até o momento, incluindo os candidatos de síntese prioritários e os 2 melhores da Fase 6 (5/7aa). Melhor SI real da sessão: HRPRRPR (7aa), min_SI=1,41.
 > - ✓ 3.11f Réplicas reais de MD (n=3) — **CONCLUÍDO 2026-07-19**: TOP-13 rodado com 2 réplicas adicionais (rep2/rep3, gen_seed=-1) sobre o `complex_clean.pdb` já equilibrado da rep1. Achado crítico: os 2 "recordistas de estabilidade" do pipeline (RLREELKKAEEWLEKRRKEE 0,294 nm e VRTRR 0,1936 nm, ambos de réplica única) têm DP real de 0,606 e 0,360 nm entre réplicas — resultado não reprodutível, provável artefato de seed único. Só 4 candidatos são reprodutivelmente estáveis (DP<0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR.
+> - ✓ 3.11g Persistência competitiva real (ocupância P1-Asp187) — **CONCLUÍDO 2026-07-19**: TOP-13 reanalisado com métrica nova (resíduo âncora descoberto empiricamente por candidato, não assumido; ocupância a 4/5/6 Å; RMSD local do bolso via superposição só no receptor). Achado crítico: dos 4 candidatos "reprodutivelmente estáveis" da Tabela 9n, `VRRPR` na verdade **sai do bolso real** (ocupância a 6Å caindo de 67,6%→32,9%→0,15% entre réplicas, âncora é a Valina N-terminal, não um resíduo básico) — RMSD global baixo não implica permanência real perto de Asp187. `VRYRR` é o único candidato com contato tipo salt-bridge real (~100% mesmo a 4Å) nas 3 réplicas.
 
 ---
 
@@ -876,6 +877,78 @@ variância" deve ser lido como "réplica única não é confiável para este can
 "candidato definitivamente instável" — RLREELKKAEEWLEKRRKEE e VRTRR precisariam de réplicas
 adicionais (n≥5) ou trajetórias mais longas para uma classificação definitiva.
 
+### 3.11g Persistência Competitiva Real — Ocupância do Bolso S1 ao Longo da Trajetória (2026-07-19)
+
+A pedido do usuário, os 13 candidatos da Tabela 9j foram submetidos a uma métrica nova, que mede
+algo diferente do RMSD do complexo inteiro já reportado nas Tabelas 9n e anteriores: para cada
+frame de cada réplica real (n=3 quando disponível, `nstxout-compressed` = 1 frame/5 ps, 2001
+frames/réplica), calculou-se a distância entre cada resíduo do peptídeo e o Asp187 catalítico
+(bolso S1, receptor ACR157), e o **resíduo âncora real** foi definido empiricamente por candidato
+como aquele com a menor distância média — nunca assumido a priori como o resíduo C-terminal ou o
+P1 "esperado" (5 dos 13 candidatos nem terminam em Arg/Lys). A partir da série temporal de
+distâncias do resíduo âncora, dois números foram reportados: (1) a **ocupância** — fração dos
+frames em que essa distância fica abaixo de um corte (3 cortes reportados: 4, 5 e 6 Å; a
+validação real contra `SRTRR` durante a implementação mostrou que o corte estrito de 4 Å, padrão
+textbook de salt-bridge, captura quase nada — 0,3–1% dos frames mesmo para o candidato mais
+robusto do pipeline — enquanto o corte de 6 Å captura 87–100% nas 3 réplicas do mesmo candidato;
+por isso os 3 cortes são reportados lado a lado, com 6 Å tratado como sinal principal de
+"permanece perto do bolso" e 4 Å como sinal estrito de "salt bridge apertada", sem descartar
+nenhum dos dois); e (2) o **RMSD local do bolso** — RMSD do peptídeo após superposição feita
+**apenas** nos átomos Cα do receptor (não do complexo inteiro), isolando "o peptídeo saiu do
+bolso" de "o complexo inteiro balançou" — uma métrica diferente e complementar ao RMSD do
+complexo já usado nas Tabelas 9n e anteriores, não um substituto nem o mesmo número. Réplicas sem
+`.tpr`/`.xtc` reais preservados foram reportadas como dado ausente (`error`), nunca inferidas.
+
+**Tabela 9o.** Ocupância real do bolso S1 (4/5/6 Å) e RMSD local do bolso, média entre réplicas
+reais disponíveis (n=3 salvo indicação contrária).
+
+| Sequência | Resíduo âncora real | Ocupância 4Å / 5Å / 6Å (méd., %) | RMSD local do bolso (méd., nm) | Interpretação |
+|---|---|---|---|---|
+| SRTRR | Arg (idx1), consistente nas 3 réplicas | 33,3 / 48,2 / 94,3 | 0,406 | ocupância a 6Å alta mas contato apertado (4Å) intermitente — rep2 ~99% a 4Å, rep1/rep3 quase 0% |
+| VRYRR | Arg (idx1), consistente nas 3 réplicas | 99,5 / 99,9 / 100,0 | 0,435 | **único candidato com salt-bridge real (~4Å) constante nas 3 réplicas** |
+| VRRPR | Val (idx0, N-terminal — não básico), consistente nas 3 réplicas | 0,0 / 0,5 / 33,5 | 0,416 | **ocupância REAL BAIXA e caindo entre réplicas (67,6%→32,9%→0,15% a 6Å)** — estável por RMSD global, sai do bolso na prática |
+| HRPRRPR | Pro (idx2 — não básico), consistente nas 3 réplicas | 0,0 / 15,5 / 96,1 | 0,271 | ocupância a 6Å alta e consistente; âncora real é Prolina, não o resíduo P1 esperado |
+| HRPRRSR | Pro (idx2 — não básico), consistente nas 3 réplicas | 0,0 / 8,5 / 80,1 | 0,362 | ocupância a 6Å boa mas fraca a 5Å; mesma âncora não-básica de HRPRRPR/HRPRRPK |
+| VRTRR | Arg (idx1) em rep1/rep2, **Thr (idx2) em rep3** — âncora muda entre réplicas | 33,9 / 55,4 / 94,3 | 0,526 | pose não convergente (âncora instável); consistente com classificação "ALTA VARIÂNCIA" da Tabela 9n |
+| HRPRRPK | Pro (idx2 — não básico), consistente nas 3 réplicas | 0,8 / 40,1 / 90,4 | 0,284 | ocupância a 6Å alta e crescente entre réplicas (73,0%→99,9%→98,3%) |
+| SEEEVLAANEAYAAAHTAYN (n=2, rep1 sem trajetória) | Asn (idx8 — não básico) | 0,1 / 24,5 / 88,1 | 0,696 | ocupância a 6Å boa mas contato frouxo (quase nulo a 4/5Å) |
+| MGYLTAYHQALAAQNAALLA (n=2, rep1 sem trajetória) | Gln (idx8 — não básico) | 25,0 / 85,6 / 100,0 | 0,837 | ocupância alta em todos os cortes — melhor persistência do grupo de 20aa |
+| MGSLTAYLEAYAAENAAALA (n=2, rep1 sem trajetória) | Glu (idx8 — não básico) | 9,8 / 86,2 / 99,4 | 0,835 | ocupância alta e consistente nas 2 réplicas disponíveis |
+| SARESIKKAYKTFLERYKKL (n=2, rep1 sem trajetória) | Lys (idx6 em rep2, idx7 em rep3 — mesmo resíduo, deslocamento de índice) | 0,0 / 8,0 / 87,2 | 0,844 | ocupância a 6Å alta mas contato frouxo (4/5Å quase nulos) |
+| RLREELKKAEEWLEKRRKEE | Glu (idx9 — não básico), consistente nas 3 réplicas | 4,6 / 54,0 / 82,5 | 0,595 | ocupância moderada e mais consistente entre réplicas do que seu RMSD global (DP=0,606 nm, Tabela 9n) sugeriria |
+| SALASIAAHQATFLAYLESK (n=2, rep1 sem trajetória) | Gln (idx9 — não básico) | 0,0 / 0,8 / 32,5 | 0,725 | **pior perfil de persistência real do grupo** — 6Å médio 32,5%, rep3 cai a 8,0% |
+
+**Achado real crítico — confirma parcialmente, mas complica, a conclusão da Tabela 9n**: dos 4
+candidatos classificados como "ESTÁVEL REPRODUTÍVEL" pelo RMSD do complexo inteiro (SRTRR,
+VRYRR, VRRPR, HRPRRPR), 3 confirmam ocupância real alta e consistente a 6Å (SRTRR 94,3%, VRYRR
+100,0%, HRPRRPR 96,1%) — ou seja, para esses 3, "complexo estável" de fato corresponde a
+"peptídeo permanece perto de Asp187". `VRYRR` se destaca ainda mais nesta métrica: é o único
+candidato com ocupância alta mesmo no corte estrito de 4 Å (99,5% médio, ~100% em todas as 3
+réplicas) — uma salt-bridge real e constante, coerente com seu contato completo à tríade
+catalítica já reportado na Tabela 9m (PLIP). **`VRRPR` é a exceção que complica a conclusão
+anterior**: apesar de ter o menor DP de RMSD do complexo entre os 13 candidatos (0,016 nm, Tabela
+9n), seu resíduo âncora real é a Valina N-terminal (não um resíduo básico, e não o resíduo mais
+próximo do P1 esperado), e sua ocupância a 6Å **cai monotonicamente entre réplicas** — 67,6% na
+rep1, 32,9% na rep2, 0,15% na rep3 (média 33,5%, a segunda pior do grupo). Isso é evidência real
+de que `VRRPR` pode manter o complexo geometricamente rígido (baixo RMSD do sistema inteiro) sem
+que o peptídeo de fato permaneça ancorado perto do bolso catalítico — o cenário que a Seção 3.11f
+já havia alertado ser possível ("balança perto do receptor mas sai do sítio"), agora com dado
+real que o identifica especificamente neste candidato.
+
+Outros dois achados reais notáveis: (1) para os três candidatos `HRPRRPR`/`HRPRRSR`/`HRPRRPK`, o
+resíduo âncora real nas 3 réplicas é sempre a **Prolina** interna (índice 2), não um resíduo
+básico nem o C-terminal — achado validado manualmente por rastreamento de distância durante a
+Task 3 desta sessão, não um bug do script; (2) `VRTRR` — já sinalizado como instável em réplicas
+pela Tabela 9n (DP=0,360 nm) — é o único candidato cujo **resíduo âncora muda de identidade**
+entre réplicas (Arg em rep1/rep2, Thr em rep3), reforçando por uma via independente que sua pose
+de ligação não converge.
+
+**Limitação explícita**: assim como a Tabela 9n, esta análise usa n=3 réplicas (n=2 para os 5
+candidatos sem `rep1` preservada) — suficiente para apontar variância real, não para convergência
+estatística robusta. Os valores de ocupância a 4 Å devem ser lidos como sinal estrito e raro
+(mesmo candidatos genuinamente estáveis passam a maior parte do tempo entre 4 e 6 Å do Asp187,
+não colados a ele), não como ausência de interação real.
+
 ---
 
 ### 3.12 Inibidores de Referência
@@ -905,6 +978,7 @@ O pipeline multiagente completou todas as etapas planejadas para a Fase 1–3: d
 - **Resistência proteolítica**: 0/20 candidatos resistentes — todos susceptíveis (3–7 P1-internos K/R)
 - **Especificidade (corrigido 2026-07-18)**: **0/21 aprovados** vs tripsina humana (1TRN) e/ou *Apis mellifera* — resultado original "20/20" era artefato de bug metodológico sem dado real (Seção 3.11); SI real médio 0,84 (humana) / 1,12 (Apis), abaixo do limiar de 2,0
 - **MD réplicas reais n=3 (corrigido 2026-07-19)**: dos 13 candidatos retestados com réplicas independentes (Seção 3.11f), apenas **4 são reprodutivelmente estáveis** (DP<0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR. Os 2 "recordistas de estabilidade" citados abaixo (RLREELKKAEEWLEKRRKEE e VRTRR, ambos de réplica única) **não se sustentam** — DP real de 0,606 e 0,360 nm entre réplicas
+- **Persistência competitiva real (2026-07-19)**: dos 4 candidatos "reprodutivelmente estáveis" acima (Seção 3.11g), apenas 3 confirmam ocupância real alta do bolso S1 a 6Å (SRTRR 94,3%, VRYRR 100,0%, HRPRRPR 96,1%); **VRRPR não se sustenta nesta métrica** — ocupância a 6Å cai 67,6%→32,9%→0,15% entre réplicas apesar de RMSD do complexo estável, ou seja, o complexo balança rígido mas o peptídeo sai do bolso. `VRYRR` é o único com salt-bridge real constante mesmo a 4Å (~100% nas 3 réplicas)
 - **OptimizationAgent**: 219 novos candidatos gerados por redesign iterativo dos top-50
 
 O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é biologicamente coerente com o bolso S1 de tripsina (Asp205, interação eletrostática com P1 = Arg/Lys). A avaliação dinâmica revela que estimativas estáticas (Vina, Rosetta) podem divergir da estabilidade em solvente explícito: GARKSIREYQKRVLERLKKK, com melhor I_sc (−86,28 kcal/mol), apresentou RMSD = 1,45 nm em MD — descartado. A etapa MD é, portanto, essencial para filtrar candidatos antes da síntese.
