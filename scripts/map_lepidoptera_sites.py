@@ -17,6 +17,9 @@ STRUCTS = {
     "Slitura": ("data-nontargets/Slitura-B3F884-AlphaFold.pdb", "B3F884", "Spodoptera litura"),
     "Sfrugiperda": ("data-nontargets/Sfrugiperda-A0A089QDB3-AlphaFold.pdb", "A0A089QDB3", "Spodoptera frugiperda"),
     "Onubilalis": ("data-nontargets/Onubilalis-Q6R561-AlphaFold.pdb", "Q6R561", "Ostrinia nubilalis"),
+    "Dsaccharalis": ("data-nontargets/Dsaccharalis-T1QDI0-AlphaFold.pdb", "T1QDI0", "Diatraea saccharalis"),
+    "Hvirescens": ("data-nontargets/Hvirescens-I7D523-AlphaFold.pdb", "I7D523", "Heliothis virescens"),
+    "Cincludens": ("data-nontargets/Cincludens-A0A9P0BRD5-AlphaFold.pdb", "A0A9P0BRD5", "Chrysodeixis includens"),
 }
 
 agent = StructureAgent("StructureAgent_multi", config, "outputs/structure_multi")

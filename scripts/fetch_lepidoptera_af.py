@@ -13,6 +13,9 @@ SPECIES = {
     "Slitura": ("B3F884", "Spodoptera litura", "trypsin (TrEMBL)"),
     "Sfrugiperda": ("A0A089QDB3", "Spodoptera frugiperda", "trypsin (TrEMBL)"),
     "Onubilalis": ("Q6R561", "Ostrinia nubilalis", "Trypsin-like proteinase T25 (TrEMBL)"),
+    "Dsaccharalis": ("T1QDI0", "Diatraea saccharalis", "Trypsin 2 (TrEMBL)"),
+    "Hvirescens": ("I7D523", "Heliothis virescens", "Trypsin (TrEMBL)"),
+    "Cincludens": ("A0A9P0BRD5", "Chrysodeixis includens", "trypsin (TrEMBL)"),
 }
 
 OUT_DIR = Path("data-nontargets")
