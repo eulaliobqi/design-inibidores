@@ -12,6 +12,7 @@
 > - ✓ 3.9 ML/DL — **treinado**: RF RMSE=0,514 kcal/mol, R²=0,315 (455 labels, 1,9%); 24.513 predições geradas
 > - ✓ 3.10 Resistência proteolítica — **20/20 candidatos SUSCEPTÍVEIS** (top-20 ranking); 5–7 P1-internos K/R
 > - ⚠️ 3.11 Especificidade — **CORRIGIDO 2026-07-18**: a afirmação original "20/20 aprovados" (Fase 3) nunca teve dado real por trás (bug de preparo de PDBQT — ver Seção 2.11/metodologia). Re-executado com dado Vina real: **0/23 candidatos aprovados** (SI ≥ 2,0 kcal/mol) até o momento, incluindo os candidatos de síntese prioritários e os 2 melhores da Fase 6 (5/7aa). Melhor SI real da sessão: HRPRRPR (7aa), min_SI=1,41.
+> - ✓ 3.11f Réplicas reais de MD (n=3) — **CONCLUÍDO 2026-07-19**: TOP-13 rodado com 2 réplicas adicionais (rep2/rep3, gen_seed=-1) sobre o `complex_clean.pdb` já equilibrado da rep1. Achado crítico: os 2 "recordistas de estabilidade" do pipeline (RLREELKKAEEWLEKRRKEE 0,294 nm e VRTRR 0,1936 nm, ambos de réplica única) têm DP real de 0,606 e 0,360 nm entre réplicas — resultado não reprodutível, provável artefato de seed único. Só 4 candidatos são reprodutivelmente estáveis (DP<0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR.
 
 ---
 
@@ -811,6 +812,70 @@ SI real fraco (0,39, Seção anterior), isso sugere que `VRTRR` pode se ligar de
 sítio mas por um modo de interação menos completo/específico que os demais candidatos curtos —
 hipótese mecanística a acompanhar, não conclusão fechada (n=1 observação).
 
+### 3.11f Réplicas Reais de MD (n=3) — Reprodutibilidade da Estabilidade (2026-07-19)
+
+A pedido do usuário, os 13 candidatos da Tabela 9j foram submetidos a réplicas reais adicionais
+de MD (rep2 e rep3, 10 ns cada, `gen_seed=-1` na etapa NVT para garantir velocidades iniciais
+independentes), partindo do mesmo `complex_clean.pdb` já equilibrado da rep1 (não reconstruído do
+zero — mesma lição da Seção 3.11e). Isso fecha n=3 réplicas totais por candidato e testa se os
+valores de RMSD usados em todas as seções anteriores (rep1 única) são representativos ou
+artefato de um único seed aleatório.
+
+**Tabela 9n.** RMSD real médio ± DP entre 3 réplicas independentes (rep1 histórica + rep2 + rep3
+novas), Rg médio das 3 réplicas, e reclassificação por reprodutibilidade.
+
+| Sequência | Comp. | RMSD rep1 (nm) | RMSD n=3 méd (nm) | DP real (n=3) | Rg n=3 méd (nm) | Classificação real |
+|---|---|---|---|---|---|---|
+| SRTRR | 5 | 0,2425 | **0,214** | 0,025 | 1,693 | **ESTÁVEL REPRODUTÍVEL** |
+| VRYRR | 5 | 0,1985 | **0,215** | 0,023 | 1,712 | **ESTÁVEL REPRODUTÍVEL** |
+| VRRPR | 5 | 0,2679 | **0,256** | 0,016 | 1,732 | **ESTÁVEL REPRODUTÍVEL** |
+| HRPRRPR | 7 | 0,2659 | **0,270** | 0,044 | 1,749 | **ESTÁVEL REPRODUTÍVEL** |
+| HRPRRSR | 7 | 0,2743 | 0,377 | 0,173 | 1,736 | ALTA VARIÂNCIA |
+| VRTRR | 5 | 0,1936 | 0,417 | **0,360** | 1,708 | **ALTA VARIÂNCIA — refuta recorde anterior** |
+| HRPRRPK | 7 | 0,4103 | 0,421 | 0,092 | 1,758 | marginal reprodutível |
+| SEEEVLAANEAYAAAHTAYN | 20 | 0,4742 | 0,478 | 0,041 | 1,771 | marginal reprodutível |
+| MGYLTAYHQALAAQNAALLA | 20 | 0,8204 | 0,576 | 0,233 | 1,776 | ALTA VARIÂNCIA |
+| MGSLTAYLEAYAAENAAALA | 20 | 0,6390 | 0,662 | 0,032 | 1,784 | marginal reprodutível |
+| SARESIKKAYKTFLERYKKL | 20 | 0,8713 | 0,758 | 0,339 | 1,838 | ALTA VARIÂNCIA |
+| RLREELKKAEEWLEKRRKEE | 20 | 0,2940 | 0,810 | **0,606** | 1,857 | **ALTA VARIÂNCIA — refuta recorde anterior** |
+| SALASIAAHQATFLAYLESK | 20 | 0,5677 | 1,014 | 0,762 | 1,835 | ALTA VARIÂNCIA |
+
+Critério de classificação (transparente, não arbitrário pós-hoc): **ESTÁVEL REPRODUTÍVEL** =
+RMSD médio n=3 < 0,30 nm E DP < 0,05 nm; **marginal reprodutível** = DP < 0,10 nm independente da
+média; **ALTA VARIÂNCIA** = DP ≥ 0,15 nm, indicando que o valor de réplica única não é
+representativo do comportamento real do candidato.
+
+**Achado real crítico**: os dois candidatos historicamente descritos como "mais estável do
+pipeline" em toda a Seção 3 — `RLREELKKAEEWLEKRRKEE` (0,294 nm, Fase 4, Seção 3.7/3.8b) e
+`VRTRR` (0,1936 nm, "novo recordista", Seção 3.10d) — **não se sustentam como estáveis quando
+testados em réplicas independentes**. `VRTRR` rep2 chegou a 0,8315 nm (vs. 0,2251 nm da rep3 e
+0,1936 nm da rep1) e `RLREELKKAEEWLEKRRKEE` rep3 chegou a 1,4771 nm. Isso significa que os
+valores únicos de RMSD usados para classificar candidatos como "estáveis" em todas as seções
+anteriores (3.7 a 3.11e) carregam risco real de não-representatividade — o resultado de uma
+única trajetória de 10 ns pode refletir o seed inicial, não a estabilidade termodinâmica real do
+complexo.
+
+Em contraste, **4 candidatos se confirmam genuinamente estáveis e reprodutíveis**: `SRTRR`,
+`VRYRR`, `VRRPR` e `HRPRRPR` — todos com DP real < 0,05 nm entre as 3 réplicas independentes.
+Desses 4, nenhum atinge SI real ≥ 2,0 (Tabela 9j: SRTRR=1,17, VRYRR=0,92, HRPRRPR=1,41,
+VRRPR=−0,13) — ou seja, mesmo o subconjunto agora validado como robusto em MD continua **sem
+margem de seletividade real comprovada** (Seção 3.11), reforçando que estabilidade estrutural e
+especificidade são bloqueadores independentes, ambos ainda não resolvidos simultaneamente por
+nenhum candidato.
+
+**Ressalva de fonte para `SARESIKKAYKTFLERYKKL`**: diferente dos outros 12 candidatos, suas
+réplicas rep2/rep3 partiram do PDB pré-MD (`complex_md_SARESIKKAY.pdb`), não do
+`complex_clean.pdb` já equilibrado da rep1 (não preservado) — ponto de partida menos ideal
+(Seção 2.12/metodologia). O DP alto observado (0,339 nm) pode refletir tanto instabilidade real
+quanto esse ponto de partida diferente; interpretar com cautela adicional em relação aos demais.
+
+**Limitação metodológica explícita**: n=3 réplicas de 10 ns é o mínimo para estimar variância,
+não para convergência estatística robusta (tipicamente requer n≥5 ou trajetórias mais longas,
+≥50-100 ns, para sistemas com DP tão alto quanto os observados aqui). O achado de "alta
+variância" deve ser lido como "réplica única não é confiável para este candidato", não como
+"candidato definitivamente instável" — RLREELKKAEEWLEKRRKEE e VRTRR precisariam de réplicas
+adicionais (n≥5) ou trajetórias mais longas para uma classificação definitiva.
+
 ---
 
 ### 3.12 Inibidores de Referência
@@ -839,6 +904,7 @@ O pipeline multiagente completou todas as etapas planejadas para a Fase 1–3: d
 - **ML**: Random Forest RMSE = 0,514 kcal/mol; 24.513 predições qualitativas geradas
 - **Resistência proteolítica**: 0/20 candidatos resistentes — todos susceptíveis (3–7 P1-internos K/R)
 - **Especificidade (corrigido 2026-07-18)**: **0/21 aprovados** vs tripsina humana (1TRN) e/ou *Apis mellifera* — resultado original "20/20" era artefato de bug metodológico sem dado real (Seção 3.11); SI real médio 0,84 (humana) / 1,12 (Apis), abaixo do limiar de 2,0
+- **MD réplicas reais n=3 (corrigido 2026-07-19)**: dos 13 candidatos retestados com réplicas independentes (Seção 3.11f), apenas **4 são reprodutivelmente estáveis** (DP<0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR. Os 2 "recordistas de estabilidade" citados abaixo (RLREELKKAEEWLEKRRKEE e VRTRR, ambos de réplica única) **não se sustentam** — DP real de 0,606 e 0,360 nm entre réplicas
 - **OptimizationAgent**: 219 novos candidatos gerados por redesign iterativo dos top-50
 
 O padrão composicional dos top binders (Arg/Lys + Ala/Ser, sem aromáticos) é biologicamente coerente com o bolso S1 de tripsina (Asp205, interação eletrostática com P1 = Arg/Lys). A avaliação dinâmica revela que estimativas estáticas (Vina, Rosetta) podem divergir da estabilidade em solvente explícito: GARKSIREYQKRVLERLKKK, com melhor I_sc (−86,28 kcal/mol), apresentou RMSD = 1,45 nm em MD — descartado. A etapa MD é, portanto, essencial para filtrar candidatos antes da síntese.
@@ -847,7 +913,7 @@ A susceptibilidade proteolítica universal (0/20 resistentes) é a principal lim
 
 **Candidatos de síntese prioritária (pós-MD Fases 3+4, estáveis em 10 ns):**
 1. **MKKQRENAKKVAEITLKKAK** — RMSD 0,447 nm, Vina −12,72, I_sc −80,49 (Fase 3)
-2. **RLREELKKAEEWLEKRRKEE** — RMSD 0,294 nm, DP=0,065 — **mais estável do pipeline** (Fase 4)
+2. **RLREELKKAEEWLEKRRKEE** — RMSD 0,294 nm, DP=0,065 — ~~mais estável do pipeline~~ **título revogado 2026-07-19**: réplicas reais (n=3) mostram RMSD médio 0,810 nm, DP=0,606 nm (Seção 3.11f) — resultado de réplica única não era representativo
 3. **GSRASARAYAARVRARRAAL** — RMSD 0,494 nm, Vina −13,62, I_sc −78,44 (Fase 3)
 
 **Candidato marginal com alta afinidade:**

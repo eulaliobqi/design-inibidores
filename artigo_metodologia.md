@@ -229,3 +229,37 @@ Seção 3.10b) não contém nenhum resíduo Arg ou Lys, não podendo usar o meca
 P1-Arg/Lys↔Asp189 assumido no restante do design. Seu mecanismo de ligação real permanece
 desconhecido e não deve ser priorizado para síntese antes de investigação adicional (redocking
 com análise de pose, contatos reais na interface).
+
+### 2.12 Réplicas Reais de MD (n=3) — Teste de Reprodutibilidade (2026-07-19)
+
+Todas as classificações de estabilidade das Seções 3.7–3.11e (Fases 3–6) foram feitas a partir de
+uma **única trajetória de 10 ns por candidato** (rep1). Como o protocolo de NVT do pipeline usa um
+`gen_seed` fixo por padrão, essa rep1 é determinística — não há garantia de que reflita o
+comportamento típico do sistema, apenas uma amostra de um ponto no espaço conformacional. A
+pedido do usuário, os 13 candidatos unificados da Tabela 9j (ranking absoluto ∪ ranking por
+especificidade) foram submetidos a 2 réplicas adicionais reais (rep2, rep3), fechando n=3 por
+candidato.
+
+**Protocolo:** `scripts/deep_test_md_replicates.py` reusa diretamente `MDAgent._run_gromacs()`
+(mesmo código validado das Fases 1-6, não uma reimplementação) partindo do `complex_clean.pdb`
+**já minimizado/equilibrado da rep1** de cada candidato — nunca reconstruído do zero via
+`PeptideBuilder`, pela mesma razão diagnosticada na tentativa de dissulfeto da Seção 2.11
+(reconstrução do zero não preserva geometria real e pode introduzir clashes espúrios). Cada
+réplica usa `gen_seed=-1` na etapa de equilíbrio NVT, instruindo o GROMACS a sortear uma seed de
+velocidades iniciais genuinamente aleatória (em vez do seed fixo determinístico do restante do
+pipeline) — condição necessária para que rep2/rep3 sejam estatisticamente independentes de rep1 e
+entre si, e não repetições determinísticas da mesma trajetória. Protocolo físico idêntico ao da
+Seção 2.8 (AMBER99SB-ILDN, TIP3P, 300 K, 1 bar, minimização + NVT 200 ps + NPT 500 ps + produção
+10 ns, 2 fs, PME), rodado sequencialmente (1 GPU) dentro de sessão `screen` no servidor, com
+checkpoint por réplica em `outputs/md_replicates/replicates_summary.json` (resume-safe a quedas
+de conexão/processo).
+
+**Mapeamento de fonte real.** Parte dos 13 candidatos vem do batch antigo das Fases 4/5, cujo
+`complex_clean.pdb` está salvo em `outputs/md/forced_NN/` (nome de pasta genérico, não pela
+sequência) em vez de `outputs/md/{sequência}/`. O mapeamento candidato→pasta foi reconstruído por
+leitura da sequência real presente em cada `complex_clean.pdb` (extração direta dos resíduos via
+Biopython), não adivinhado por ordem ou data de criação. Um candidato (`SARESIKKAYKTFLERYKKL`)
+não teve seu `complex_clean.pdb` da rep1 preservado — suas réplicas rep2/rep3 partiram do PDB
+pré-MD (`outputs/md/complex_md_SARESIKKAY.pdb`) em vez da estrutura já equilibrada, ponto de
+partida menos ideal que o dos outros 12 candidatos (ainda assim dado real de simulação completa,
+não fabricado — ressalva registrada na Tabela 9n).
