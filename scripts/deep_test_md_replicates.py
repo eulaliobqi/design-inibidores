@@ -9,7 +9,10 @@ PeptideBuilder do zero — lição da Fase 5/dissulfeto: reconstrução do zero 
 real). Roda 2 réplicas adicionais por candidato (rep2, rep3) para chegar a n=3 total por
 candidato (rep1 = resultado já existente em outputs/md/{seq ou forced_NN}/).
 
-Uso: conda run -n protein_design_env python scripts/deep_test_md_replicates.py
+Uso: conda run -n protein_design_env python -m scripts.deep_test_md_replicates
+(precisa ser `-m scripts.X`, não `python scripts/X.py` — o import
+`from scripts.agents...` só resolve com a raiz do repo em sys.path, o que só
+acontece com invocação de módulo; bug real corrigido 2026-07-18: ModuleNotFoundError)
 """
 import json
 import logging
