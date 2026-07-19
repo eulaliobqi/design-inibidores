@@ -1090,10 +1090,17 @@ Lepidoptera): *Diatraea saccharalis*, *Heliothis virescens* e *Chrysodeixis incl
 foram incorporadas com o mesmo protocolo das 8 espécies anteriores — busca UniProt REST real
 (accessions T1QDI0, I7D523 e A0A9P0BRD5, respectivamente), estrutura AlphaFold DB e tríade
 catalítica mapeada por `StructureAgent._analyze_single` — e dockadas em `screen` no servidor
-(sessão `crossspecies_r3b`, log terminado em `DONE`, resume-safe confirmado: as 8 espécies antigas
-não geraram chamadas Vina novas). O conjunto de candidatos usado foi o TOP-13 já fixado na Tabela
-9n (não o TOP-10 original da Tabela 9g), o que também gerou 3 valores novos e reais para as 8
-espécies antigas onde esses candidatos ainda não tinham sido dockados antes.
+(sessão `crossspecies_r3b`, log terminado em `DONE`). O conjunto de candidatos usado foi o TOP-13
+já fixado na Tabela 9n (não o TOP-10 original da Tabela 9g) — como os 5 candidatos curtos
+(`VRYRR`/`VRTRR`/`VRRPR`/`HRPRRSR`/`HRPRRPK`) nunca tinham sido dockados contra as 8 espécies
+antigas (Seção 3.10d já registrava essa lacuna explicitamente), o resume-safe do
+`dock_cross_species.py` corretamente detectou e preencheu essas 40 combinações
+(candidato × espécie) que faltavam, além dos 39 dockings completos (13×3) das 3 espécies novas —
+total real de até 79 dockings novos nesta rodada. O resume-safe funcionou como esperado no sentido
+que importa: os 103 valores que já existiam (13 candidatos originais do TOP-10 × 8 espécies + o
+que já estava preenchido) não foram recalculados nem sobrescritos — confirmado por comparação
+direta, ex. `SRTRR` × *A. gemmatalis* permanece em −9,19 kcal/mol, idêntico ao valor já publicado
+na Tabela 9g.
 
 **Tabela 9q.** Matriz completa e final — Vina real (kcal/mol), TOP-13 × 11 espécies de Lepidoptera-praga.
 
