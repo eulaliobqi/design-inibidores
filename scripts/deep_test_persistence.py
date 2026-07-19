@@ -14,12 +14,16 @@ simulação nova.
 Uso: conda run -n protein_design_env python -m scripts.deep_test_persistence
 """
 import json
+import subprocess
 from pathlib import Path
 
 import MDAnalysis as mda
 import numpy as np
+from MDAnalysis.analysis import align
 
 from scripts.persistence_utils import occupancy_fraction, find_anchor_residue
+
+GMX = "/home/eulalio/miniforge3/envs/md-gromacs/bin/gmx_mpi"
 
 CANDIDATES = [
     "SRTRR", "HRPRRPR", "RLREELKKAEEWLEKRRKEE", "SEEEVLAANEAYAAAHTAYN",
@@ -34,6 +38,9 @@ REP1_DIR_OVERRIDE = {"RLREELKKAEEWLEKRRKEE": "forced_05"}
 S1_ASP_RESID = 187  # outputs/structure/binding_site.json, receptor ACR157 (individual_sites[0])
 S1_ASP_ATOMS = "name OD1 OD2"
 OCCUPANCY_CUTOFF_A = 4.0
+EXPECTED_RECEPTOR_RESIDUES = 231  # receptor ACR157, confirmado em outputs/structure/binding_site.json
+# e docs/superpowers/plans/2026-07-19-eficacia-persistencia-fingerprint-plan.md
+# (resid 1-231 no .gro, idem numeracao original do PDB)
 
 MD_DIR = Path("outputs/md")
 REPLICATES_DIR = Path("outputs/md_replicates")
@@ -58,19 +65,48 @@ def _rep_paths(seq: str, rep: str) -> tuple[Path, Path] | None:
     return None
 
 
+def _ensure_pbc_corrected(tpr: Path, xtc: Path) -> Path | dict:
+    """Gera (ou reusa) a trajetoria completa corrigida de PBC (-pbc mol -center) ao lado
+    da trajetoria bruta, para nao computar distancia/RMSD sobre moleculas quebradas pela
+    imagem periodica da caixa (mesmo problema resolvido em deep_test_plip.py, mas aqui
+    para a trajetoria inteira, nao so o ultimo frame — occupancy/RMSD precisam de todos
+    os frames). Nome distinto (md_pbc_full.xtc) para nao colidir com md_pbc.xtc
+    pre-existente de outro fluxo em alguns diretorios rep1.
+    Retorna o Path da trajetoria corrigida, ou um dict {"error": ...} se trjconv falhar.
+    """
+    corrected_xtc = xtc.parent / "md_pbc_full.xtc"
+    if corrected_xtc.exists() and corrected_xtc.stat().st_size > 1000:
+        return corrected_xtc
+    # mesmo padrao de deep_test_plip.py: pipe de shell real (subprocess.run(input=...) nao
+    # funciona de forma confiavel com gmx_mpi em screen detached); sem -dump para pegar a
+    # trajetoria inteira, nao so um frame.
+    cmd = f"printf '1\\n0\\n' | {GMX} trjconv -s {tpr} -f {xtc} -o {corrected_xtc} -pbc mol -center"
+    proc = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=1800)
+    if not corrected_xtc.exists() or corrected_xtc.stat().st_size < 1000:
+        return {"error": f"trjconv -pbc mol -center falhou ou gerou arquivo vazio/pequeno "
+                          f"para {xtc}: {proc.stderr[-400:]}"}
+    return corrected_xtc
+
+
 def analyze_replicate(seq: str, tpr: Path, xtc: Path) -> dict:
-    u = mda.Universe(str(tpr), str(xtc))
+    corrected = _ensure_pbc_corrected(tpr, xtc)
+    if isinstance(corrected, dict):
+        return corrected
+    corrected_xtc = corrected
+
+    u = mda.Universe(str(tpr), str(corrected_xtc))
     protein = u.select_atoms("protein")
     n_receptor = len(protein.residues) - len(seq)
     if n_receptor <= 0:
         return {"error": f"contagem de residuos de proteina ({len(protein.residues)}) "
                           f"menor ou igual ao comprimento do peptideo ({len(seq)})"}
+    if n_receptor != EXPECTED_RECEPTOR_RESIDUES:
+        return {"error": f"n_receptor calculado ({n_receptor}) diferente do esperado para "
+                          f"o receptor ACR157 ({EXPECTED_RECEPTOR_RESIDUES}) — contagem de "
+                          f"residuos da trajetoria nao bate com o padrao do projeto"}
 
     receptor_residues = protein.residues[:n_receptor]
     peptide_residues = protein.residues[n_receptor:n_receptor + len(seq)]
-    if len(peptide_residues) != len(seq):
-        return {"error": f"esperava {len(seq)} residuos de peptideo, achou "
-                          f"{len(peptide_residues)} (posicao sequencial nao bateu)"}
 
     s1_asp = receptor_residues[receptor_residues.resids == S1_ASP_RESID]
     if len(s1_asp) == 0:
@@ -85,8 +121,6 @@ def analyze_replicate(seq: str, tpr: Path, xtc: Path) -> dict:
     distances_per_residue = {i: [] for i in range(len(seq))}
     local_rmsd_frames = []
     ref_receptor_ca = receptor_ca.positions.copy()
-
-    from MDAnalysis.analysis import align, rms as mda_rms
 
     for ts in u.trajectory:
         for i, res in enumerate(peptide_residues):
