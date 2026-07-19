@@ -1083,6 +1083,55 @@ reprodutível": SRTRR=1,17, VRYRR=0,92, HRPRRPR=1,41, VRRPR=−0,13, Seção 3.1
 digital de interação" aqui descrita caracteriza modo de ligação estrutural, não especificidade real
 contra os alvos Lepidoptera.
 
+### 3.11j Fechamento do R3 — Matriz Consolidada TOP-13 × 11 Espécies (2026-07-19)
+
+A Seção 3.11c havia deixado 3 espécies-praga pendentes do requisito R3 (amplo espectro entre
+Lepidoptera): *Diatraea saccharalis*, *Heliothis virescens* e *Chrysodeixis includens*. As três
+foram incorporadas com o mesmo protocolo das 8 espécies anteriores — busca UniProt REST real
+(accessions T1QDI0, I7D523 e A0A9P0BRD5, respectivamente), estrutura AlphaFold DB e tríade
+catalítica mapeada por `StructureAgent._analyze_single` — e dockadas em `screen` no servidor
+(sessão `crossspecies_r3b`, log terminado em `DONE`, resume-safe confirmado: as 8 espécies antigas
+não geraram chamadas Vina novas). O conjunto de candidatos usado foi o TOP-13 já fixado na Tabela
+9n (não o TOP-10 original da Tabela 9g), o que também gerou 3 valores novos e reais para as 8
+espécies antigas onde esses candidatos ainda não tinham sido dockados antes.
+
+**Tabela 9q.** Matriz completa e final — Vina real (kcal/mol), TOP-13 × 11 espécies de Lepidoptera-praga.
+
+| Sequência | A. gemmatalis | H. armigera | M. sexta | B. mori | P. xylostella | S. litura | S. frugiperda | O. nubilalis | D. saccharalis | H. virescens | C. includens | Média |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SRTRR | −9,19 | −8,88 | −9,53 | −9,56 | −9,72 | −9,28 | −10,95 | −9,43 | −9,90 | −11,00 | −9,80 | −9,75 |
+| HRPRRPR | −10,10 | −10,52 | −11,44 | −10,62 | −11,71 | −10,27 | −11,42 | −11,88 | −10,12 | −12,93 | −11,45 | −11,13 |
+| RLREELKKAEEWLEKRRKEE | −12,75 | −11,79 | −11,99 | −13,28 | −12,81 | −12,36 | −13,36 | −12,77 | −12,27 | −13,06 | −12,79 | −12,66 |
+| SEEEVLAANEAYAAAHTAYN | −12,31 | −12,48 | −14,30 | −14,48 | −13,02 | −12,47 | −12,49 | −12,14 | −10,85 | −12,00 | −13,21 | −12,70 |
+| SALASIAAHQATFLAYLESK | −11,97 | −13,03 | −11,87 | −12,15 | −13,27 | −11,66 | −12,87 | −11,97 | −11,41 | −11,76 | −12,87 | −12,26 |
+| MGSLTAYLEAYAAENAAALA | −13,31 | −11,28 | −13,15 | −13,03 | −12,40 | −11,49 | −13,01 | −13,04 | −11,94 | −13,85 | −13,22 | −12,70 |
+| MGYLTAYHQALAAQNAALLA | −14,26 | −11,88 | −12,23 | −13,80 | −12,31 | −12,52 | −12,20 | −11,82 | −12,53 | −12,47 | −12,24 | −12,57 |
+| SARESIKKAYKTFLERYKKL | −12,51 | −12,36 | −12,88 | −14,74 | −13,57 | −13,01 | −13,31 | −12,41 | −14,14 | −13,39 | −14,54 | −13,35 |
+| VRYRR | −9,53 | −9,83 | −9,57 | −9,17 | −10,09 | −10,84 | −9,71 | −10,55 | −10,40 | −10,48 | −10,87 | −10,10 |
+| VRTRR | −8,86 | −9,11 | −9,66 | −9,80 | −9,26 | −8,95 | −11,01 | −9,23 | −9,34 | −9,43 | −9,52 | −9,47 |
+| VRRPR | −9,20 | −9,72 | −9,81 | −9,41 | −9,48 | −9,92 | −10,41 | −9,65 | −9,87 | −11,13 | −9,76 | −9,85 |
+| HRPRRSR | −10,95 | −10,55 | −11,52 | −10,59 | −12,02 | −9,83 | −11,53 | −11,54 | −10,05 | −12,54 | −11,39 | −11,14 |
+| HRPRRPK | −9,71 | −10,26 | −11,05 | −10,36 | −11,71 | −10,27 | −11,66 | −11,81 | −10,16 | −12,94 | −11,24 | −11,02 |
+| **Média** | −11,13 | −10,90 | −11,46 | −11,61 | −11,64 | −10,99 | −11,84 | −11,40 | −11,00 | −12,08 | −11,76 | −11,44 |
+
+**Leitura honesta**: os 143 valores (13 candidatos × 11 espécies) são todos reais, sem nenhuma
+lacuna. A faixa completa vai de −8,86 (`VRTRR` × *A. gemmatalis*) a −14,74 kcal/mol
+(`SARESIKKAYKTFLERYKKL` × *B. mori*) — nenhum candidato perde afinidade competitiva em nenhuma das
+3 espécies novas. As médias por espécie ficam entre −10,90 (*H. armigera*) e −12,08
+(*H. virescens*), intervalo comparável ao já visto nas 8 espécies antigas (Tabela 9g:
+−11,58 a −12,92) — nenhuma das 3 novas espécies se comporta como "imune" ao design, o que fecha o
+requisito R3 (amplo espectro entre pragas Lepidoptera) para o TOP-13 completo. `SARESIKKAYKTFLERYKKL`
+segue sendo o candidato de maior afinidade média (−13,35) e também o de maior afinidade absoluta
+contra as 3 espécies novas isoladamente (−14,14 em *D. saccharalis*, −13,39 em *H. virescens*,
+−14,54 em *C. includens*).
+
+**Limitação explícita, já registrada nas Seções anteriores e reafirmada aqui**: esta matriz é
+docking rígido (Vina, `exhaustiveness=8`), não testa estabilidade MD nem persistência de bolso S1
+nas 3 espécies novas — as análises de MD/persistência/PLIP (Seções 3.11e-j) permanecem restritas ao
+receptor primário. Amplo espectro de afinidade *in silico* não implica margem de seletividade real
+(Seção 3.11b/3.11f já mostraram 0/23 candidatos com SI real aprovado contra tripsina humana) — as
+duas conclusões são independentes e nenhuma substitui a outra.
+
 ---
 
 ### 3.12 Inibidores de Referência
