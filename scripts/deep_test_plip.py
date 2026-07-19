@@ -19,12 +19,17 @@ CANDIDATES = [
     "VRYRR", "VRTRR", "HRPRRSR", "HRPRRPK",
 ]
 
+# Achado real: candidatos do batch antigo (Fase 4/5) têm trajetória em outputs/md/forced_NN/,
+# não outputs/md/{seq}/ — mapeamento reconstruído via sequência real em complex_clean.pdb
+# (2026-07-18). SARESIKKAYKTFLERYKKL não tem md.tpr/md.xtc preservado em lugar nenhum.
+DIR_OVERRIDE = {"RLREELKKAEEWLEKRRKEE": "forced_05"}
+
 MD_DIR = Path("outputs/md")
 OUT_DIR = Path("outputs/plip_deep")
 
 
 def extract_last_frame(seq: str) -> Path | None:
-    run_dir = MD_DIR / seq
+    run_dir = MD_DIR / DIR_OVERRIDE.get(seq, seq)
     tpr = run_dir / "md.tpr"
     xtc = run_dir / "md.xtc"
     if not tpr.exists() or not xtc.exists():

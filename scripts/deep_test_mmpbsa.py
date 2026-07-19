@@ -27,6 +27,19 @@ CANDIDATES = [
     "SARESIKKAYKTFLERYKKL", "VRYRR", "VRTRR", "VRRPR", "HRPRRSR", "HRPRRPK",
 ]
 
+# Achado real: candidatos da Fase 4/5 (batch antigo) têm trajetória em outputs/md/forced_NN/,
+# não outputs/md/{seq}/ — mapeamento reconstruído via sequência do peptídeo em complex_clean.pdb
+# (2026-07-18). SARESIKKAYKTFLERYKKL não tem md.tpr/md.xtc preservado em lugar nenhum (só o
+# resultado resumido em md_results.json) — trajetória bruta não existe, sem re-análise possível
+# sem rodar MD do zero.
+DIR_OVERRIDE = {
+    "SEEEVLAANEAYAAAHTAYN": "forced_00",
+    "MGYLTAYHQALAAQNAALLA": "forced_01",
+    "MGSLTAYLEAYAAENAAALA": "forced_03",
+    "SALASIAAHQATFLAYLESK": "forced_04",
+    "RLREELKKAEEWLEKRRKEE": "forced_05",
+}
+
 MD_DIR = Path("outputs/md")
 MMPBSA_IN = "&general\nstartframe=1000, endframe=2000, interval=20,\n/\n&gb\nigb=5, saltcon=0.150,\n/\n"
 
@@ -44,7 +57,7 @@ def run(cmd, cwd, timeout, input_text=None):
 
 
 def process_candidate(seq: str, max_attempts: int = 3) -> dict:
-    run_dir = MD_DIR / seq
+    run_dir = MD_DIR / DIR_OVERRIDE.get(seq, seq)
     tpr, xtc = run_dir / "md.tpr", run_dir / "md.xtc"
     if not tpr.exists() or not xtc.exists():
         return {"seq": seq, "status": "sem_trajetoria_real"}
