@@ -10,6 +10,7 @@ salt-bridge) com os resíduos S2'/S3' definidos por scripts/s2s3_utils.py.
 Uso: conda run -n protein_design_env python -m scripts.deep_test_s2s3_subsites
 """
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -80,9 +81,17 @@ def check_s2s3_contact(prot_pdb: Path) -> bool | None:
         return None
     text = reports[0].read_text(errors="ignore")
     # Contato real com qualquer resíduo S2'/S3': procurar o número do resíduo
-    # (coluna RESNR do PLIP) nas linhas de tabela de interação.
+    # especificamente na coluna RESNR das tabelas de interação do PLIP, não em
+    # qualquer número solto no relatório. Formato real (PLIP v3.0.0, tabela
+    # "| RESNR | RESTYPE | RESCHAIN | ... |"), ex.:
+    #   | 204   | PHE     | A        | 4         | ARG         | B  ...
+    # A 1a coluna (RESNR, do receptor/cadeia A) é sempre seguida da 2a coluna
+    # RESTYPE com o código de 3 letras maiúsculas do resíduo (ex. PHE, GLY).
+    # Isso evita falso-positivo em índices de átomo (DONORIDX/ACCEPTORIDX),
+    # distâncias/ângulos, coordenadas ou RESNR_LIG (resíduo do peptídeo, 1-5),
+    # que também são números soltos no mesmo relatório.
     for resnum in S2S3_RESIDUES:
-        if re.search(rf"\b{resnum}\b", text):
+        if re.search(rf"^\s*\|\s*{resnum}\s*\|\s*[A-Z]{{3}}\s*\|", text, re.MULTILINE):
             return True
     return False
 
@@ -90,7 +99,8 @@ def check_s2s3_contact(prot_pdb: Path) -> bool | None:
 def analyze_replicate(seq: str, rep: str, run_dir: Path) -> dict:
     out_dir = OUT_DIR / seq / rep
     out_dir.mkdir(parents=True, exist_ok=True)
-    contacts = []
+    frames_ok = []  # timepoints (ps) que realmente produziram um resultado PLIP
+    contacts = []   # bool de contato S2'/S3', pareado 1:1 com frames_ok
     for t in FRAME_TIMES_PS:
         frame = extract_frame(run_dir, t, out_dir)
         if frame is None:
@@ -99,15 +109,26 @@ def analyze_replicate(seq: str, rep: str, run_dir: Path) -> dict:
         if prot is None:
             continue
         c = check_s2s3_contact(prot)
-        if c is not None:
-            contacts.append(c)
+        if c is None:
+            continue
+        frames_ok.append(t)
+        contacts.append(c)
     if not contacts:
         return {"error": "nenhum frame processado com sucesso"}
     return {
-        "frames_analisados": FRAME_TIMES_PS[:len(contacts)],
+        "frames_analisados": frames_ok,
         "contato_s2s3_fracao": sum(contacts) / len(contacts),
         "residuos_alvo": S2S3_RESIDUES,
     }
+
+
+def _write_summary_atomic(summary: dict, summary_path: Path) -> None:
+    """Grava summary_path atomicamente (tmp + os.replace) para nao corromper
+    o progresso acumulado se o processo for interrompido no meio da escrita
+    (mesma classe de incidente real do checkpoint.json, commit ce5d209)."""
+    tmp_path = summary_path.with_name(summary_path.name + ".tmp")
+    tmp_path.write_text(json.dumps(summary, indent=2))
+    os.replace(tmp_path, summary_path)
 
 
 def main():
@@ -125,11 +146,11 @@ def main():
             run_dir = _rep_dir(seq, rep)
             if run_dir is None:
                 seq_results[rep] = {"error": "sem trajetoria real (.tpr/.xtc) preservada"}
-                summary_path.write_text(json.dumps(summary, indent=2))
+                _write_summary_atomic(summary, summary_path)
                 continue
             print(f"[{seq}] {rep}...")
             seq_results[rep] = analyze_replicate(seq, rep, run_dir)
-            summary_path.write_text(json.dumps(summary, indent=2))
+            _write_summary_atomic(summary, summary_path)
             print(f"[{seq}] {rep}: {seq_results[rep]}")
 
     print(f"\nSalvo: {summary_path}")
