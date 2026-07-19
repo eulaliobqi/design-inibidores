@@ -37,7 +37,7 @@ CANDIDATES = [
 REP1_DIR_OVERRIDE = {"RLREELKKAEEWLEKRRKEE": "forced_05"}
 S1_ASP_RESID = 187  # outputs/structure/binding_site.json, receptor ACR157 (individual_sites[0])
 S1_ASP_ATOMS = "name OD1 OD2"
-OCCUPANCY_CUTOFF_A = 4.0
+OCCUPANCY_CUTOFFS_A = [4.0, 5.0, 6.0]
 EXPECTED_RECEPTOR_RESIDUES = 231  # receptor ACR157, confirmado em outputs/structure/binding_site.json
 # e docs/superpowers/plans/2026-07-19-eficacia-persistencia-fingerprint-plan.md
 # (resid 1-231 no .gro, idem numeracao original do PDB)
@@ -138,13 +138,16 @@ def analyze_replicate(seq: str, tpr: Path, xtc: Path) -> dict:
         local_rmsd_frames.append(float(np.sqrt(np.mean(np.sum((moved - ref) ** 2, axis=1)))) / 10.0)
 
     anchor_idx = find_anchor_residue(distances_per_residue)
-    return {
+    result = {
         "anchor_residue_seq_idx": anchor_idx,
         "anchor_residue_aa": seq[anchor_idx],
-        "occupancy_fraction": occupancy_fraction(distances_per_residue[anchor_idx], OCCUPANCY_CUTOFF_A),
         "n_frames": len(distances_per_residue[anchor_idx]),
         "local_rmsd_pocket_nm": round(float(np.mean(local_rmsd_frames)), 4) if local_rmsd_frames else None,
     }
+    for cutoff in OCCUPANCY_CUTOFFS_A:
+        result[f"occupancy_fraction_{int(cutoff)}A"] = occupancy_fraction(
+            distances_per_residue[anchor_idx], cutoff)
+    return result
 
 
 def main():
