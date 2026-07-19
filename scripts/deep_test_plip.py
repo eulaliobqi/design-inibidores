@@ -63,9 +63,12 @@ def protonate(seq: str, frame_pdb: Path) -> Path | None:
 
 def run_plip(seq: str, prot_pdb: Path) -> dict:
     out_dir = prot_pdb.parent
+    # Bug real corrigido: cwd=out_dir + path já relativo-à-raiz duplicava o caminho
+    # (mesma causa raiz do bug em deep_test_mmpbsa.py) — sem cwd, paths já são
+    # relativos à raiz do repo (como o script é invocado).
     proc = subprocess.run(
         ["plip", "-f", str(prot_pdb), "--peptides", "P", "-o", str(out_dir), "-t"],
-        capture_output=True, text=True, timeout=180, cwd=str(out_dir),
+        capture_output=True, text=True, timeout=180,
     )
     report = out_dir / "report.txt"
     if not report.exists():

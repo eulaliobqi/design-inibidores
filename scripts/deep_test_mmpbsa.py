@@ -53,16 +53,19 @@ def process_candidate(seq: str, max_attempts: int = 3) -> dict:
     if final_dat.exists():
         return parse_result(seq, final_dat)
 
+    # Bug real corrigido: cwd=run_dir + paths JÁ relativos-à-raiz duplicava o caminho
+    # (outputs/md/SEQ/outputs/md/SEQ/md.tpr, inexistente) — causava MPI_ABORT genérico
+    # do gmx_mpi ao não achar o arquivo de input. Usar só nomes de arquivo com cwd=run_dir.
     pbc_xtc = run_dir / "md_pbc.xtc"
     if not pbc_xtc.exists() or pbc_xtc.stat().st_size < 1000:
-        p = run([GMX, "trjconv", "-s", str(tpr), "-f", str(xtc), "-o", str(pbc_xtc),
+        p = run([GMX, "trjconv", "-s", "md.tpr", "-f", "md.xtc", "-o", "md_pbc.xtc",
                  "-pbc", "mol", "-center"], run_dir, 300, input_text="1\n0\n")
         if not pbc_xtc.exists():
             return {"seq": seq, "status": "falhou_trjconv", "stderr": p.stderr[-500:]}
 
     ndx = run_dir / "index_mmpbsa.ndx"
     if not ndx.exists():
-        run([GMX, "make_ndx", "-f", str(tpr), "-o", str(ndx)], run_dir, 120, input_text="splitch 1\nq\n")
+        run([GMX, "make_ndx", "-f", "md.tpr", "-o", "index_mmpbsa.ndx"], run_dir, 120, input_text="splitch 1\nq\n")
         if not ndx.exists():
             return {"seq": seq, "status": "falhou_make_ndx"}
 
