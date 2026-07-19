@@ -29,10 +29,12 @@ SPECIES = {
     "Onubilalis": ("data-nontargets/Onubilalis-Q6R561-AlphaFold.pdb", "outputs/structure_onubilalis/binding_site.json"),
 }
 
-TOP10 = [
+CANDIDATES = [
     "SRTRR", "HRPRRPR", "RLREELKKAEEWLEKRRKEE", "SEEEVLAANEAYAAAHTAYN",
     "SALASIAAHQATFLAYLESK", "MGSLTAYLEAYAAENAAALA", "RLRAIWLEAEKLLEERRKKK",
     "MGYLTAYHQALAAQNAALLA", "RVKDQWLEAEKLLEERRKKK", "SARESIKKAYKTFLERYKKL",
+    # Expansão MD n=4 (2026-07-18) — candidatos curtos 5/7aa
+    "VRYRR", "VRTRR", "VRRPR", "HRPRRSR", "HRPRRPK", "KPKFKVR",
 ]
 
 WORKDIR = Path("outputs/cross_species_docking")
@@ -88,21 +90,24 @@ def main():
         sp_dir = WORKDIR / tag
         sp_dir.mkdir(exist_ok=True)
         existing = sp_dir / "results.json"
+        results = {}
         if existing.exists():
-            prev = json.loads(existing.read_text())
-            if prev and all(v is not None for v in prev.values()):
-                print(f"[{tag}] resultados ja existem ({existing}), pulando (resume-safe)")
-                all_results[tag] = prev
-                continue
+            results = json.loads(existing.read_text())
+
+        missing = [s for s in CANDIDATES if results.get(s) is None]
+        if not missing:
+            print(f"[{tag}] todos os {len(CANDIDATES)} candidatos ja tem resultado real, pulando (resume-safe)")
+            all_results[tag] = results
+            continue
+
         try:
             rec_pdbqt = prepare_receptor(tag, receptor_pdb, sp_dir)
         except RuntimeError as e:
             print(e)
             continue
-        print(f"[{tag}] receptor real preparado ({rec_pdbqt.stat().st_size} bytes), centro={center}")
+        print(f"[{tag}] receptor real preparado ({rec_pdbqt.stat().st_size} bytes), centro={center}, faltam {len(missing)}/{len(CANDIDATES)}")
 
-        results = {}
-        for seq in TOP10:
+        for seq in missing:
             out_dir = sp_dir / seq[:15]
             out_dir.mkdir(exist_ok=True)
             lig_pdbqt = build_peptide_pdbqt(seq, center, out_dir, logger=None)
@@ -113,9 +118,9 @@ def main():
             aff = run_vina(rec_pdbqt, lig_pdbqt, out_dir, center, adaptive_grid(len(seq)))
             results[seq] = aff
             print(f"[{tag}] {seq} (len={len(seq)}): Vina real = {aff}")
+            (sp_dir / "results.json").write_text(json.dumps(results, indent=2))
 
         all_results[tag] = results
-        (sp_dir / "results.json").write_text(json.dumps(results, indent=2))
 
     (WORKDIR / "all_cross_species_results.json").write_text(json.dumps(all_results, indent=2))
     print(f"\nSalvo: {WORKDIR / 'all_cross_species_results.json'}")
