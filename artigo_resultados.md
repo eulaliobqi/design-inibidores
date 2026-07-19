@@ -522,6 +522,61 @@ SI ≥ 2,0 kcal/mol contra ambos os não-alvos**, confirmando a Seção 3.11. Os
 `TRARLRAEVLRARAR` (1,76) e `SARESIKKAYKTFLERYKKL` (1,61) mostram que a barra de 2,0 kcal/mol
 está próxima do alcançável, motivando otimização explícita de especificidade nas próximas fases.
 
+### 3.11d Comparação Dupla — TOP-10 Absoluto vs. TOP-10 por Especificidade (2026-07-18)
+
+Após a especificidade real dos 6 candidatos curtos novos (VRYRR, VRTRR, VRRPR, HRPRRSR, HRPRRPK,
+KPKFKVR — Seção 3.10d) ficar disponível, o dataset de 16 candidatos com MD + especificidade real
+completos foi comparado sob dois critérios de ranking distintos.
+
+**Tabela 9h.** Ranking 1 — TOP-10 absoluto (RMSD MD ascendente, critério de estabilidade sem
+considerar especificidade).
+
+| # | Sequência | Comp. | RMSD MD (nm) | Vina primário | min_SI |
+|---|---|---|---|---|---|
+| 1 | VRTRR | 5 | 0,1936 | −9,55 | 0,39 |
+| 2 | VRYRR | 5 | 0,1985 | −10,22 | 0,92 |
+| 3 | SRTRR | 5 | 0,2425 | −10,31 | 1,17 |
+| 4 | HRPRRPR | 7 | 0,2659 | −11,72 | 1,41 |
+| 5 | VRRPR | 5 | 0,2679 | −9,45 | **−0,13** |
+| 6 | HRPRRSR | 7 | 0,2743 | −11,56 | 0,59 |
+| 7 | RLREELKKAEEWLEKRRKEE | 20 | 0,2940 | — | **0,06** |
+| 8 | HRPRRPK | 7 | 0,4103 | −10,99 | 0,87 |
+| 9 | SEEEVLAANEAYAAAHTAYN | 20 | 0,4742 | −13,40 | 1,23 |
+| 10 | SALASIAAHQATFLAYLESK | 20 | 0,5677 | −12,52 | **−0,64** |
+
+**Tabela 9i.** Ranking 2 — TOP-10 por especificidade real (min_SI descendente).
+
+| # | Sequência | Comp. | min_SI | RMSD MD (nm) | Vina primário |
+|---|---|---|---|---|---|
+| 1 | SARESIKKAYKTFLERYKKL | 20 | 1,61 | 0,8713 (marginal) | −14,58 |
+| 2 | HRPRRPR | 7 | 1,41 | 0,2659 | −11,72 |
+| 3 | SEEEVLAANEAYAAAHTAYN | 20 | 1,23 | 0,4742 | −13,40 |
+| 4 | SRTRR | 5 | 1,17 | 0,2425 | −10,31 |
+| 5 | VRYRR | 5 | 0,92 | 0,1985 | −10,22 |
+| 6 | HRPRRPK | 7 | 0,87 | 0,4103 | −10,99 |
+| 7 | HRPRRSR | 7 | 0,59 | 0,2743 | −11,56 |
+| 8 | MGYLTAYHQALAAQNAALLA | 20 | 0,48 | 0,8204 (marginal) | −13,04 |
+| 9 | VRTRR | 5 | 0,39 | 0,1936 | −9,55 |
+| 10 | MGSLTAYLEAYAAENAAALA | 20 | 0,18 | 0,6390 (marginal) | −12,67 |
+
+**Interpretação real**: **7 dos 10 candidatos coincidem nas duas listas** (VRTRR, VRYRR, SRTRR,
+HRPRRPR, HRPRRSR, HRPRRPK, SEEEVLAANEAYAAAHTAYN) — sinal real e encorajador de que estabilidade
+MD e especificidade real não são propriedades incompatíveis na maioria dos casos observados até
+agora. As diferenças, porém, são as mais informativas:
+
+- **Saem quando a especificidade é considerada**: `RLREELKKAEEWLEKRRKEE` — o candidato
+  historicamente tratado como "mais estável" do pipeline (Seção 3.8b) — tem min_SI real de
+  apenas 0,06, essencialmente **sem margem de seletividade nenhuma**. `VRRPR` e
+  `SALASIAAHQATFLAYLESK` saem por SI real **negativo** (−0,13 e −0,64).
+- **Entram quando a especificidade é considerada**: `SARESIKKAYKTFLERYKKL` (o melhor Vina bruto
+  de todo o pipeline, −14,58, mas MD apenas marginal) sobe ao #1 do ranking 2 por ter o melhor
+  SI real do conjunto (1,61); `MGYLTAYHQALAAQNAALLA` e `MGSLTAYLEAYAAENAAALA` entram pelo mesmo
+  motivo (MD marginal, mas SI real positivo).
+
+**Nenhum dos 16 candidatos atinge o limiar formal de aprovação (SI ≥ 2,0 kcal/mol)** — o placar
+de 0/35 candidatos aprovados (Seção 3.11) permanece válido. Esta comparação é sobre *ranking
+relativo* entre candidatos reais, não sobre candidatos aprovados por um critério absoluto.
+
 ### 3.11c Expansão Cross-Species (R3) — TOP-10 vs. *Helicoverpa armigera* real (2026-07-18)
 
 Diferente da Seção 3.11 (não-alvos humano/*Apis mellifera*, onde afinidade **baixa** é
