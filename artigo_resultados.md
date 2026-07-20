@@ -914,7 +914,7 @@ reais disponíveis (n=3 salvo indicação contrária).
 | SEEEVLAANEAYAAAHTAYN | Asn (idx8 — não básico), consistente nas 3 réplicas | 0,4 / 41,7 / 91,9 | 0,729 | n=3 completo (2026-07-20, fix de mapeamento REP1_DIR_OVERRIDE — rep1 real existia em forced_00/, não estava sendo lida); ocupância a 6Å boa mas contato frouxo a 4Å |
 | MGYLTAYHQALAAQNAALLA | Gln (idx8 — não básico), consistente nas 3 réplicas | 36,8 / 89,4 / 100,0 | 0,837 | n=3 completo (fix 2026-07-20, forced_01/); ocupância alta em todos os cortes — melhor persistência do grupo de 20aa |
 | MGSLTAYLEAYAAENAAALA | Glu (idx8 — não básico), consistente nas 3 réplicas | 7,5 / 65,1 / 87,4 | 1,033 | n=3 completo (fix 2026-07-20, forced_03/); ocupância alta a 6Å mas RMSD local do bolso é o mais alto do grupo (rep1=1,429 nm) |
-| SARESIKKAYKTFLERYKKL (n=2, rep1 sem trajetória) | Lys (idx6 em rep2, idx7 em rep3 — mesmo resíduo, deslocamento de índice) | 0,0 / 8,0 / 87,2 | 0,844 | único candidato do TOP-13 sem complex_clean.pdb preservado da rep1 original — rep1 real nova rodando (MD do zero) para fechar n=3 |
+| SARESIKKAYKTFLERYKKL | Tyr (idx9) em rep1, **Lys (idx6/idx7) em rep2/rep3** — âncora muda de identidade entre réplicas | 0,0 / 5,3 / 78,4 | 0,760 | n=3 completo (2026-07-20, rep1 real rodada do zero — único candidato do TOP-13 sem `complex_clean.pdb` original preservado); âncora não-convergente é achado independente análogo ao de `VRTRR` (Tabela 9n) |
 | RLREELKKAEEWLEKRRKEE | Glu (idx9 — não básico), consistente nas 3 réplicas | 4,6 / 54,0 / 82,5 | 0,595 | ocupância moderada e mais consistente entre réplicas do que seu RMSD global (DP=0,606 nm, Tabela 9n) sugeriria |
 | SALASIAAHQATFLAYLESK | Gln (idx9 — não básico), consistente nas 3 réplicas | 0,0 / 6,2 / 48,2 | 0,763 | n=3 completo (fix 2026-07-20, forced_04/); **ainda o pior perfil de persistência real do grupo** — 6Å médio 48,2%, mas real (rep2/rep3 antigos já indicavam isso, agora confirmado com rep1) |
 
@@ -935,20 +935,24 @@ que o peptídeo de fato permaneça ancorado perto do bolso catalítico — o cen
 já havia alertado ser possível ("balança perto do receptor mas sai do sítio"), agora com dado
 real que o identifica especificamente neste candidato.
 
-Outros dois achados reais notáveis: (1) para os três candidatos `HRPRRPR`/`HRPRRSR`/`HRPRRPK`, o
+Outros três achados reais notáveis: (1) para os três candidatos `HRPRRPR`/`HRPRRSR`/`HRPRRPK`, o
 resíduo âncora real nas 3 réplicas é sempre a **Prolina** interna (índice 2), não um resíduo
 básico nem o C-terminal — achado validado manualmente por rastreamento de distância durante a
 Task 3 desta sessão, não um bug do script; (2) `VRTRR` — já sinalizado como instável em réplicas
-pela Tabela 9n (DP=0,360 nm) — é o único candidato cujo **resíduo âncora muda de identidade**
-entre réplicas (Arg em rep1/rep2, Thr em rep3), reforçando por uma via independente que sua pose
-de ligação não converge.
+pela Tabela 9n (DP=0,360 nm) — é o único candidato de 5 aa cujo **resíduo âncora muda de
+identidade** entre réplicas (Arg em rep1/rep2, Thr em rep3), reforçando por uma via independente
+que sua pose de ligação não converge; (3) `SARESIKKAYKTFLERYKKL` mostra o mesmo padrão de
+não-convergência — Tyr (idx9) na rep1 real (gerada do zero em 2026-07-20, única fonte pré-MD do
+TOP-13) vs. Lys (idx6/idx7) em rep2/rep3 — consistente com sua já conhecida classificação "ALTA
+VARIÂNCIA" na Tabela 9n (DP=0,339 nm).
 
-**Limitação explícita**: assim como a Tabela 9n, esta análise usa n=3 réplicas (n=2 para
-`SARESIKKAYKTFLERYKKL`, único candidato do TOP-13 sem `complex_clean.pdb` preservado da rep1
-original — os outros 4 candidatos que inicialmente apareciam como n=2 tinham rep1 real já
-preservada em `outputs/md/forced_NN/`, só não estavam mapeadas corretamente no script; corrigido
-em 2026-07-20, ver `REP1_DIR_OVERRIDE` em `scripts/deep_test_persistence.py`) — suficiente para
-apontar variância real, não para convergência estatística robusta. Os valores de ocupância a 4 Å
+**Limitação explícita**: assim como a Tabela 9n, esta análise usa n=3 réplicas reais para os 13
+candidatos (2026-07-20: gap inicial de n=2 fechado para todos — 4 candidatos tinham rep1 real já
+preservada em `outputs/md/forced_NN/`, só não mapeada corretamente no script, corrigido via
+`REP1_DIR_OVERRIDE` em `scripts/deep_test_persistence.py`; `SARESIKKAYKTFLERYKKL`, único sem
+`complex_clean.pdb` original preservado, teve rep1 real gerada do zero — mesmo protocolo
+validado, `MDAgent._run_gromacs`) — suficiente para apontar variância real, não para convergência
+estatística robusta. Os valores de ocupância a 4 Å
 devem ser lidos como sinal estrito e raro (mesmo candidatos genuinamente estáveis passam a maior
 parte do tempo entre 4 e 6 Å do Asp187, não colados a ele), não como ausência de interação real.
 
