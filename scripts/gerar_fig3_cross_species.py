@@ -11,6 +11,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from scripts.figuras_utils import (
     SEQUENTIAL_BLUE_FULL, SPECIES_LABELS, SPECIES_ORDER, TEXT_PRIMARY, TOP13, fetch_remote_json,
+    require_key,
 )
 
 OUT_DIR = Path("outputs/figuras_artigo")
@@ -24,7 +25,8 @@ def main():
     matrix = np.zeros((len(TOP13), len(SPECIES_ORDER)))
     for i, seq in enumerate(TOP13):
         for j, sp in enumerate(SPECIES_ORDER):
-            val = data[sp][seq]
+            sp_entry = require_key(data, sp, f"all_cross_species_results.json[{sp}]")
+            val = require_key(sp_entry, seq, f"{seq} x {sp}")
             if val is None:
                 raise RuntimeError(f"Vina ausente real para {seq} x {sp} — sem inferir, investigar")
             matrix[i, j] = val

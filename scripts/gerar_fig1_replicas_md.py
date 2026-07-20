@@ -12,7 +12,7 @@ import numpy as np
 
 from scripts.figuras_utils import (
     GRID_COLOR, STATUS, TEXT_PRIMARY, TEXT_SECONDARY, TOP13, classify_stability,
-    fetch_remote_json,
+    fetch_remote_json, require_key,
 )
 
 OUT_DIR = Path("outputs/figuras_artigo")
@@ -35,9 +35,10 @@ def main():
 
     rows = []
     for seq in TOP13:
-        rep1 = md_results[seq]["rmsd_avg_nm"]
-        rep2 = replicates[seq]["replicates"]["rep2"]["rmsd_avg_nm"]
-        rep3 = replicates[seq]["replicates"]["rep3"]["rmsd_avg_nm"]
+        rep1 = require_key(md_results, seq, f"md_results.json[{seq}]")["rmsd_avg_nm"]
+        rep_seq = require_key(replicates, seq, f"replicates_summary.json[{seq}]")["replicates"]
+        rep2 = require_key(rep_seq, "rep2", f"replicates_summary.json[{seq}].replicates[rep2]")["rmsd_avg_nm"]
+        rep3 = require_key(rep_seq, "rep3", f"replicates_summary.json[{seq}].replicates[rep3]")["rmsd_avg_nm"]
         vals = np.array([rep1, rep2, rep3])
         mean, std = float(vals.mean()), float(vals.std(ddof=1))
         status = classify_stability(mean, std)

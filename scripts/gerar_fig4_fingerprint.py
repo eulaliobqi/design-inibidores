@@ -10,7 +10,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from scripts.figuras_utils import STATUS, TEXT_MUTED, TEXT_PRIMARY, TEXT_SECONDARY, fetch_remote_json
+from scripts.figuras_utils import (
+    STATUS, TEXT_MUTED, TEXT_PRIMARY, TEXT_SECONDARY, fetch_remote_json, require_key,
+)
 
 OUT_DIR = Path("outputs/figuras_artigo")
 CANDIDATES = ["SRTRR", "VRYRR", "VRRPR", "HRPRRPR", "SEEEVLAANEAYAAAHTAYN"]
@@ -30,12 +32,23 @@ def main():
     rows = []
     for seq in CANDIDATES:
         triad = plip[seq] if seq in plip else SEEEVLAANE_TRIAD_HISTORICO
-        occ6 = [persistence[seq][r]["occupancy_fraction_6A"] for r in ("rep1", "rep2", "rep3")
-                if "error" not in persistence[seq].get(r, {"error": 1})]
-        rmsd_local = [persistence[seq][r]["local_rmsd_pocket_nm"] for r in ("rep1", "rep2", "rep3")
-                      if "error" not in persistence[seq].get(r, {"error": 1})]
-        s2s3_vals = [s2s3[seq][r]["contato_s2s3_fracao"] for r in ("rep1", "rep2", "rep3")
-                     if "error" not in s2s3[seq].get(r, {"error": 1})]
+        persistence_seq = require_key(persistence, seq, f"persistence_summary.json[{seq}]")
+        s2s3_seq = require_key(s2s3, seq, f"s2s3_summary.json[{seq}]")
+        occ6 = [require_key(persistence_seq, r, f"persistence_summary.json[{seq}][{r}]")["occupancy_fraction_6A"]
+                for r in ("rep1", "rep2", "rep3")
+                if "error" not in persistence_seq.get(r, {"error": 1})]
+        rmsd_local = [require_key(persistence_seq, r, f"persistence_summary.json[{seq}][{r}]")["local_rmsd_pocket_nm"]
+                      for r in ("rep1", "rep2", "rep3")
+                      if "error" not in persistence_seq.get(r, {"error": 1})]
+        s2s3_vals = [require_key(s2s3_seq, r, f"s2s3_summary.json[{seq}][{r}]")["contato_s2s3_fracao"]
+                     for r in ("rep1", "rep2", "rep3")
+                     if "error" not in s2s3_seq.get(r, {"error": 1})]
+        for field_name, vals in (("occ6", occ6), ("rmsd_local", rmsd_local), ("s2s3_vals", s2s3_vals)):
+            if not vals:
+                raise RuntimeError(
+                    f"Dado ausente real: {seq}, campo {field_name} — zero réplicas válidas "
+                    "(todas com erro), sem fabricar média"
+                )
         row = {
             "seq": seq,
             "triad": all([triad["contacts_his_any"], triad["contacts_asp_any"], triad["contacts_ser_any"]]),

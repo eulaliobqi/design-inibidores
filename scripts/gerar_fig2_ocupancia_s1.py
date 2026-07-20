@@ -11,6 +11,7 @@ import numpy as np
 
 from scripts.figuras_utils import (
     GRID_COLOR, SEQUENTIAL_BLUE_3, TEXT_PRIMARY, TEXT_SECONDARY, TOP13, fetch_remote_json,
+    require_key,
 )
 
 OUT_DIR = Path("outputs/figuras_artigo")
@@ -23,14 +24,21 @@ def main():
 
     rows = []
     for seq in TOP13:
+        seq_entry = require_key(data, seq, f"persistence_summary.json[{seq}]")
         per_cutoff = {c: [] for c in CUTOFFS}
         for rep in ("rep1", "rep2", "rep3"):
-            entry = data[seq].get(rep)
+            entry = seq_entry.get(rep)
             if entry is None or "error" in entry:
                 continue
             for c in CUTOFFS:
                 per_cutoff[c].append(entry[f"occupancy_fraction_{c}"])
         means = {c: float(np.mean(v)) * 100 if v else None for c, v in per_cutoff.items()}
+        for c in CUTOFFS:
+            if means[c] is None:
+                raise RuntimeError(
+                    f"Dado ausente real: {seq}, corte {c} — zero réplicas válidas "
+                    "(todas com erro), sem fabricar média"
+                )
         rows.append((seq, means))
         print(f"{seq}: n={len(per_cutoff['4A'])} "
               f"4A={means['4A']:.1f}% 5A={means['5A']:.1f}% 6A={means['6A']:.1f}%")

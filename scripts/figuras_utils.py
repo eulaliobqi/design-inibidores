@@ -67,6 +67,14 @@ def fetch_remote_json(remote_path: str) -> dict:
         raise RuntimeError(f"JSON invalido em {remote_path}: {e}\nstdout[:300]={result.stdout[:300]}")
 
 
+def require_key(d: dict, key, context: str):
+    """Acesso a dict que falha alto e claro (RuntimeError) em vez de KeyError
+    opaco, quando um dado esperado do servidor está ausente."""
+    if key not in d:
+        raise RuntimeError(f"Dado ausente real: {context} (chave '{key}' não encontrada)")
+    return d[key]
+
+
 def classify_stability(mean_nm: float, std_nm: float) -> str:
     """Mesma regra ja documentada em artigo_resultados.md (Secao 3.11f):
     ESTAVEL_REPRODUTIVEL = media<0.30nm E DP<0.05nm; MARGINAL_REPRODUTIVEL = DP<0.10nm
