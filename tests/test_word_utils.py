@@ -28,3 +28,22 @@ def test_add_inline_markdown_code_inline():
     add_inline_markdown(p, "roda `scripts/prep_pdbs.py` real")
     assert p.runs[1].text == "scripts/prep_pdbs.py"
     assert p.runs[1].font.name == "Consolas"
+
+def test_add_inline_markdown_code_inline_inherits_bold():
+    doc = Document()
+    p = doc.add_paragraph()
+    add_inline_markdown(p, "**Bug (commit `e9024bc`):**")
+    code_run = next(r for r in p.runs if r.text == "e9024bc")
+    assert code_run.bold is True
+    assert code_run.font.name == "Consolas"
+
+def test_add_inline_markdown_same_type_nested_emphasis():
+    doc = Document()
+    p = doc.add_paragraph()
+    add_inline_markdown(p, "**outer __inner__ outer**")
+    texts = [(r.text, bool(r.bold)) for r in p.runs]
+    assert texts == [
+        ("outer ", True),
+        ("inner", True),
+        (" outer", True),
+    ]

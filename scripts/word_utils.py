@@ -15,21 +15,23 @@ def add_inline_markdown(paragraph, text: str) -> None:
     """Adiciona texto com negrito/italico/codigo real (via tokens
     markdown-it-py) como runs no paragrafo python-docx."""
     tokens = _md_inline.parseInline(text)[0].children
-    bold = False
-    italic = False
+    bold_depth = 0
+    italic_depth = 0
     for tok in tokens:
         if tok.type == "strong_open":
-            bold = True
+            bold_depth += 1
         elif tok.type == "strong_close":
-            bold = False
+            bold_depth -= 1
         elif tok.type == "em_open":
-            italic = True
+            italic_depth += 1
         elif tok.type == "em_close":
-            italic = False
+            italic_depth -= 1
         elif tok.type == "code_inline":
             run = paragraph.add_run(tok.content)
             run.font.name = "Consolas"
+            run.bold = (bold_depth > 0) or None
+            run.italic = (italic_depth > 0) or None
         elif tok.type == "text" and tok.content:
             run = paragraph.add_run(tok.content)
-            run.bold = bold or None
-            run.italic = italic or None
+            run.bold = (bold_depth > 0) or None
+            run.italic = (italic_depth > 0) or None
