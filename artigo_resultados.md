@@ -911,12 +911,12 @@ reais disponíveis (n=3 salvo indicação contrária).
 | HRPRRSR | Pro (idx2 — não básico), consistente nas 3 réplicas | 0,0 / 8,5 / 80,1 | 0,362 | ocupância a 6Å boa mas fraca a 5Å; mesma âncora não-básica de HRPRRPR/HRPRRPK |
 | VRTRR | Arg (idx1) em rep1/rep2, **Thr (idx2) em rep3** — âncora muda entre réplicas | 33,9 / 55,4 / 94,3 | 0,526 | pose não convergente (âncora instável); consistente com classificação "ALTA VARIÂNCIA" da Tabela 9n |
 | HRPRRPK | Pro (idx2 — não básico), consistente nas 3 réplicas | 0,8 / 40,1 / 90,4 | 0,284 | ocupância a 6Å alta e crescente entre réplicas (73,0%→99,9%→98,3%) |
-| SEEEVLAANEAYAAAHTAYN (n=2, rep1 sem trajetória) | Asn (idx8 — não básico) | 0,1 / 24,5 / 88,1 | 0,696 | ocupância a 6Å boa mas contato frouxo (quase nulo a 4/5Å) |
-| MGYLTAYHQALAAQNAALLA (n=2, rep1 sem trajetória) | Gln (idx8 — não básico) | 25,0 / 85,6 / 100,0 | 0,837 | ocupância alta em todos os cortes — melhor persistência do grupo de 20aa |
-| MGSLTAYLEAYAAENAAALA (n=2, rep1 sem trajetória) | Glu (idx8 — não básico) | 9,8 / 86,2 / 99,4 | 0,835 | ocupância alta e consistente nas 2 réplicas disponíveis |
-| SARESIKKAYKTFLERYKKL (n=2, rep1 sem trajetória) | Lys (idx6 em rep2, idx7 em rep3 — mesmo resíduo, deslocamento de índice) | 0,0 / 8,0 / 87,2 | 0,844 | ocupância a 6Å alta mas contato frouxo (4/5Å quase nulos) |
+| SEEEVLAANEAYAAAHTAYN | Asn (idx8 — não básico), consistente nas 3 réplicas | 0,4 / 41,7 / 91,9 | 0,729 | n=3 completo (2026-07-20, fix de mapeamento REP1_DIR_OVERRIDE — rep1 real existia em forced_00/, não estava sendo lida); ocupância a 6Å boa mas contato frouxo a 4Å |
+| MGYLTAYHQALAAQNAALLA | Gln (idx8 — não básico), consistente nas 3 réplicas | 36,8 / 89,4 / 100,0 | 0,837 | n=3 completo (fix 2026-07-20, forced_01/); ocupância alta em todos os cortes — melhor persistência do grupo de 20aa |
+| MGSLTAYLEAYAAENAAALA | Glu (idx8 — não básico), consistente nas 3 réplicas | 7,5 / 65,1 / 87,4 | 1,033 | n=3 completo (fix 2026-07-20, forced_03/); ocupância alta a 6Å mas RMSD local do bolso é o mais alto do grupo (rep1=1,429 nm) |
+| SARESIKKAYKTFLERYKKL (n=2, rep1 sem trajetória) | Lys (idx6 em rep2, idx7 em rep3 — mesmo resíduo, deslocamento de índice) | 0,0 / 8,0 / 87,2 | 0,844 | único candidato do TOP-13 sem complex_clean.pdb preservado da rep1 original — rep1 real nova rodando (MD do zero) para fechar n=3 |
 | RLREELKKAEEWLEKRRKEE | Glu (idx9 — não básico), consistente nas 3 réplicas | 4,6 / 54,0 / 82,5 | 0,595 | ocupância moderada e mais consistente entre réplicas do que seu RMSD global (DP=0,606 nm, Tabela 9n) sugeriria |
-| SALASIAAHQATFLAYLESK (n=2, rep1 sem trajetória) | Gln (idx9 — não básico) | 0,0 / 0,8 / 32,5 | 0,725 | **pior perfil de persistência real do grupo** — 6Å médio 32,5%, rep3 cai a 8,0% |
+| SALASIAAHQATFLAYLESK | Gln (idx9 — não básico), consistente nas 3 réplicas | 0,0 / 6,2 / 48,2 | 0,763 | n=3 completo (fix 2026-07-20, forced_04/); **ainda o pior perfil de persistência real do grupo** — 6Å médio 48,2%, mas real (rep2/rep3 antigos já indicavam isso, agora confirmado com rep1) |
 
 **Achado real crítico — confirma parcialmente, mas complica, a conclusão da Tabela 9n**: dos 4
 candidatos classificados como "ESTÁVEL REPRODUTÍVEL" pelo RMSD do complexo inteiro (SRTRR,
@@ -943,11 +943,14 @@ pela Tabela 9n (DP=0,360 nm) — é o único candidato cujo **resíduo âncora m
 entre réplicas (Arg em rep1/rep2, Thr em rep3), reforçando por uma via independente que sua pose
 de ligação não converge.
 
-**Limitação explícita**: assim como a Tabela 9n, esta análise usa n=3 réplicas (n=2 para os 5
-candidatos sem `rep1` preservada) — suficiente para apontar variância real, não para convergência
-estatística robusta. Os valores de ocupância a 4 Å devem ser lidos como sinal estrito e raro
-(mesmo candidatos genuinamente estáveis passam a maior parte do tempo entre 4 e 6 Å do Asp187,
-não colados a ele), não como ausência de interação real.
+**Limitação explícita**: assim como a Tabela 9n, esta análise usa n=3 réplicas (n=2 para
+`SARESIKKAYKTFLERYKKL`, único candidato do TOP-13 sem `complex_clean.pdb` preservado da rep1
+original — os outros 4 candidatos que inicialmente apareciam como n=2 tinham rep1 real já
+preservada em `outputs/md/forced_NN/`, só não estavam mapeadas corretamente no script; corrigido
+em 2026-07-20, ver `REP1_DIR_OVERRIDE` em `scripts/deep_test_persistence.py`) — suficiente para
+apontar variância real, não para convergência estatística robusta. Os valores de ocupância a 4 Å
+devem ser lidos como sinal estrito e raro (mesmo candidatos genuinamente estáveis passam a maior
+parte do tempo entre 4 e 6 Å do Asp187, não colados a ele), não como ausência de interação real.
 
 ### 3.11h Contato Real com Subsítios S2'/S3' Canônicos — Heurística Geométrica (2026-07-19)
 
@@ -1040,7 +1043,7 @@ como contexto adicional, não como métrica principal.
 | VRYRR | ✓ / ✓ / ✓ | 100,0 [99,5 / 99,9] | 0,435 | 6,7 |
 | VRRPR | ✓ / ✓ / ✓ | 33,5 [0,0 / 0,5] | 0,416 | 13,3 |
 | HRPRRPR | ✓ / ✓ / ✓ | 96,1 [0,0 / 15,5] | 0,271 | 40,0 |
-| SEEEVLAANEAYAAAHTAYN (n=2, rep1 sem trajetória) | ✓ / ✓ / ✓ | 88,1 [0,1 / 24,5] | 0,696 | 60,0 |
+| SEEEVLAANEAYAAAHTAYN | ✓ / ✓ / ✓ | 91,9 [0,4 / 41,7] | 0,729 | 60,0 |
 
 **Achado real — o que é comum aos 5 candidatos, e o que separa `VRRPR` do restante**: contato
 completo com a tríade catalítica (His+Asp+Ser, Tabela 9m) é o único traço universal entre os 5 —
@@ -1054,9 +1057,10 @@ reprodutível" por RMSD global (e de ter o menor DP de RMSD entre os 13 candidat
 réplicas conforme já registrado na Tabela 9o) — evidência real de que baixa variância no RMSD do
 complexo não implica permanência do peptídeo no bolso catalítico. `SEEEVLAANEAYAAAHTAYN`, apesar de
 classificado apenas "marginal reprodutível" (não "estável") por RMSD global, tem ocupância a 6 Å
-(88,1%) mais próxima do grupo de 3 candidatos genuinamente persistentes do que de `VRRPR`, embora
-com âncora não-básica (Asn, Tabela 9o) e RMSD local do bolso mais alto (0,696 nm) que qualquer um
-dos outros 4 — sinal misto, não uma confirmação de persistência equivalente.
+(91,9%, agora com n=3 completo — fix de mapeamento 2026-07-20) mais próxima do grupo de 3
+candidatos genuinamente persistentes do que de `VRRPR`, embora com âncora não-básica (Asn, Tabela
+9o) e RMSD local do bolso mais alto (0,729 nm) que qualquer um dos outros 4 — sinal misto, não uma
+confirmação de persistência equivalente.
 
 Sobre a coluna de contato S2'/S3': os 5 valores variam de 6,7% (`VRYRR`) a 60,0%
 (`SEEEVLAANEAYAAAHTAYN`), mas a Seção 3.11h já estabeleceu, sobre o conjunto completo de 13
@@ -1076,8 +1080,10 @@ colunas de tríade catalítica e ocupância do bolso S1.
 
 **Limitação explícita**: esta tabela é uma reorganização visual, não uma nova análise — herda todas
 as limitações já documentadas nas Seções 3.11f-h (n=3 réplicas insuficiente para convergência
-estatística robusta, n=2 para `SEEEVLAANEAYAAAHTAYN`, heurística S2'/S3' não validada
-estruturalmente e com resolução amostral baixa de 5 frames/réplica). Nenhum dos 5 candidatos desta
+estatística robusta; heurística S2'/S3' não validada estruturalmente e com resolução amostral
+baixa de 5 frames/réplica — essa parte da análise (Tabela 9p) segue com n=2 para
+`SEEEVLAANEAYAAAHTAYN`, já que a Frente 3 não foi rerodada após o fix de mapeamento de 2026-07-20;
+a coluna de ocupância do bolso S1, Tabela 9o, já está com n=3 completo para este candidato). Nenhum dos 5 candidatos desta
 tabela tem margem de seletividade real comprovada (SI real < 2,0 para os 4 do grupo "estável
 reprodutível": SRTRR=1,17, VRYRR=0,92, HRPRRPR=1,41, VRRPR=−0,13, Seção 3.11f) — a "assinatura
 digital de interação" aqui descrita caracteriza modo de ligação estrutural, não especificidade real
