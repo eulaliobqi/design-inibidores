@@ -35,7 +35,17 @@ CANDIDATES = [
 # rep1: mesmo mapeamento de outputs/md/forced_NN/ usado em deep_test_plip.py e
 # deep_test_md_replicates.py (candidatos do batch antigo Fase 4/5) — reconstruído por
 # sequência real, não adivinhado.
-REP1_DIR_OVERRIDE = {"RLREELKKAEEWLEKRRKEE": "forced_05"}
+REP1_DIR_OVERRIDE = {
+    "RLREELKKAEEWLEKRRKEE": "forced_05",
+    "SEEEVLAANEAYAAAHTAYN": "forced_00",
+    "MGYLTAYHQALAAQNAALLA": "forced_01",
+    "MGSLTAYLEAYAAENAAALA": "forced_03",
+    "SALASIAAHQATFLAYLESK": "forced_04",
+}  # mapeamento verificado 2026-07-20 por sequência real em complex_clean.pdb (não adivinhado) —
+# faltavam 4 entradas: essas 4 tinham rep1 real preservado em forced_NN/, mas o dict incompleto
+# fazia o script procurar em outputs/md/{seq}/ (inexistente) e reportar "sem trajetoria real"
+# por engano. SARESIKKAYKTFLERYKKL segue genuinamente sem complex_clean preservado (confirmado
+# em md_agent.py: fonte pre-MD, sem geometria equilibrada real de rep1).
 S1_ASP_RESID = 187  # outputs/structure/binding_site.json, receptor ACR157 (individual_sites[0])
 S1_ASP_ATOMS = "name OD1 OD2"
 OCCUPANCY_CUTOFFS_A = [4.0, 5.0, 6.0]
