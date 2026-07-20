@@ -35,3 +35,34 @@ def add_inline_markdown(paragraph, text: str) -> None:
             run = paragraph.add_run(tok.content)
             run.bold = (bold_depth > 0) or None
             run.italic = (italic_depth > 0) or None
+
+
+def parse_markdown_table(lines: list) -> tuple:
+    """Parseia um bloco de tabela Markdown real (header, separador '---',
+    linhas de dado) em (headers, rows) de strings cruas (formatacao inline
+    aplicada depois, na insercao no docx)."""
+    def split_row(line: str) -> list:
+        cells = line.strip().strip("|").split("|")
+        return [c.strip() for c in cells]
+
+    headers = split_row(lines[0])
+    rows = [split_row(line) for line in lines[2:] if line.strip()]
+    return headers, rows
+
+
+def add_markdown_table(document, headers: list, rows: list) -> None:
+    """Cria uma tabela real no docx, com negrito/italico/codigo reais em
+    cada celula (via add_inline_markdown) — nao so texto plano."""
+    table = document.add_table(rows=1 + len(rows), cols=len(headers))
+    table.style = "Light Grid Accent 1"
+    for j, h in enumerate(headers):
+        cell = table.cell(0, j)
+        cell.paragraphs[0].clear()
+        add_inline_markdown(cell.paragraphs[0], h)
+        for run in cell.paragraphs[0].runs:
+            run.bold = True
+    for i, row in enumerate(rows, start=1):
+        for j, val in enumerate(row):
+            cell = table.cell(i, j)
+            cell.paragraphs[0].clear()
+            add_inline_markdown(cell.paragraphs[0], val)

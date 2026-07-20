@@ -1,5 +1,5 @@
 from docx import Document
-from scripts.word_utils import add_inline_markdown
+from scripts.word_utils import add_inline_markdown, parse_markdown_table, add_markdown_table
 
 def test_add_inline_markdown_plain_text():
     doc = Document()
@@ -47,3 +47,29 @@ def test_add_inline_markdown_same_type_nested_emphasis():
         ("inner", True),
         (" outer", True),
     ]
+
+def test_parse_markdown_table_real_format():
+    lines = [
+        "| Modelo       | Res. catalítico 1 | Asp (tríade) |",
+        "|--------------|-------------------|--------------|",
+        "| ACR157       | His69             | Asp114       |",
+        "| **Consenso** | —                 | —            |",
+    ]
+    headers, rows = parse_markdown_table(lines)
+    assert headers == ["Modelo", "Res. catalítico 1", "Asp (tríade)"]
+    assert rows == [
+        ["ACR157", "His69", "Asp114"],
+        ["**Consenso**", "—", "—"],
+    ]
+
+def test_add_markdown_table_creates_real_docx_table():
+    doc = Document()
+    headers = ["A", "B"]
+    rows = [["1", "2"], ["3", "**4**"]]
+    add_markdown_table(doc, headers, rows)
+    table = doc.tables[0]
+    assert len(table.rows) == 3  # header + 2 data rows
+    assert table.cell(0, 0).paragraphs[0].runs[0].text == "A"
+    assert table.cell(0, 0).paragraphs[0].runs[0].bold is True
+    assert table.cell(2, 1).paragraphs[0].runs[0].text == "4"
+    assert table.cell(2, 1).paragraphs[0].runs[0].bold is True
