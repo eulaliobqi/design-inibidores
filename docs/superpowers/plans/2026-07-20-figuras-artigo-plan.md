@@ -37,7 +37,7 @@ Fontes de dado real confirmadas por inspeção direta no servidor:
 - Test: `tests/test_figuras_utils.py`
 
 **Interfaces:**
-- Produces: `fetch_remote_json(remote_path: str) -> dict`, `classify_stability(mean_nm: float, std_nm: float) -> str`, module-level constants `CATEGORICAL`, `STATUS`, `SEQUENTIAL_BLUE`, `GRID_COLOR`, `TOP13` (list), `SPECIES_ORDER` (list) — usados por todas as Tasks 2-5.
+- Produces: `fetch_remote_json(remote_path: str) -> dict`, `classify_stability(mean_nm: float, std_nm: float) -> str`, module-level constants `CATEGORICAL`, `STATUS`, `SEQUENTIAL_BLUE_3`, `SEQUENTIAL_BLUE_FULL`, `GRID_COLOR`, `TOP13` (list), `SPECIES_ORDER` (list) — usados por todas as Tasks 2-5.
 
 - [ ] **Step 1: Write the failing test**
 
