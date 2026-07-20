@@ -14,6 +14,7 @@ simulação nova.
 Uso: conda run -n protein_design_env python -m scripts.deep_test_persistence
 """
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -150,6 +151,15 @@ def analyze_replicate(seq: str, tpr: Path, xtc: Path) -> dict:
     return result
 
 
+def _write_summary_atomic(summary: dict, summary_path: Path) -> None:
+    """Grava summary_path atomicamente (tmp + os.replace) para nao corromper
+    o progresso acumulado se o processo for interrompido no meio da escrita
+    (mesma classe de incidente real do checkpoint.json, commit ce5d209)."""
+    tmp_path = summary_path.with_name(summary_path.name + ".tmp")
+    tmp_path.write_text(json.dumps(summary, indent=2))
+    os.replace(tmp_path, summary_path)
+
+
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     summary_path = OUT_DIR / "persistence_summary.json"
@@ -165,7 +175,7 @@ def main():
             if paths is None:
                 seq_results[rep] = {"error": "sem trajetoria real (.tpr/.xtc) preservada"}
                 print(f"[{seq}] {rep}: sem trajetoria real, pulando")
-                summary_path.write_text(json.dumps(summary, indent=2))
+                _write_summary_atomic(summary, summary_path)
                 continue
             tpr, xtc = paths
             try:
@@ -174,7 +184,7 @@ def main():
                 result = {"error": str(e)}
             seq_results[rep] = result
             print(f"[{seq}] {rep}: {result}")
-            summary_path.write_text(json.dumps(summary, indent=2))
+            _write_summary_atomic(summary, summary_path)
 
     print(f"\nSalvo: {summary_path}")
 

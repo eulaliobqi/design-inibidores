@@ -1102,7 +1102,7 @@ que já estava preenchido) não foram recalculados nem sobrescritos — confirma
 direta, ex. `SRTRR` × *A. gemmatalis* permanece em −9,19 kcal/mol, idêntico ao valor já publicado
 na Tabela 9g.
 
-**Tabela 9q.** Matriz completa e final — Vina real (kcal/mol), TOP-13 × 11 espécies de Lepidoptera-praga.
+**Tabela 9r.** Matriz completa e final — Vina real (kcal/mol), TOP-13 × 11 espécies de Lepidoptera-praga.
 
 | Sequência | A. gemmatalis | H. armigera | M. sexta | B. mori | P. xylostella | S. litura | S. frugiperda | O. nubilalis | D. saccharalis | H. virescens | C. includens | Média |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
