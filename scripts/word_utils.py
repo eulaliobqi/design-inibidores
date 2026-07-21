@@ -126,9 +126,14 @@ def convert_markdown_body(document, lines: list, figure_after_heading: dict = No
             continue
 
         if stripped.startswith("**Tabela") or stripped.startswith("**Table"):
-            caption_p = document.add_paragraph()
-            add_inline_markdown(caption_p, stripped)
+            caption_lines = [stripped]
             i += 1
+            # caption pode continuar em linhas adicionais (ate blank line ou tabela)
+            while i < n and lines[i].strip() and not lines[i].strip().startswith("|"):
+                caption_lines.append(lines[i].strip())
+                i += 1
+            caption_p = document.add_paragraph()
+            add_inline_markdown(caption_p, " ".join(caption_lines))
             # proxima linha nao-vazia deve ser a tabela
             while i < n and not lines[i].strip():
                 i += 1
@@ -136,8 +141,9 @@ def convert_markdown_body(document, lines: list, figure_after_heading: dict = No
             while i < n and lines[i].strip().startswith("|"):
                 table_lines.append(lines[i])
                 i += 1
-            headers, rows = parse_markdown_table(table_lines)
-            add_markdown_table(document, headers, rows)
+            if table_lines:  # so processa se houver tabela
+                headers, rows = parse_markdown_table(table_lines)
+                add_markdown_table(document, headers, rows)
             continue
 
         # paragrafo normal: junta linhas contiguas nao-vazias, nao-tabela,
