@@ -1,0 +1,262 @@
+{
+  "slides": [
+    {
+      "slide_num": 1,
+      "title": "Design Racional de Inibidores Peptídicos de Tripsinas de Lepidoptera por IA Generativa",
+      "subtitle": "Universidade Federal de Viçosa | 2026",
+      "bullets": [],
+      "image_theme": "insect_protein"
+    },
+    {
+      "slide_num": 2,
+      "title": "Desafio de Controle — Resistência a Bt e Inseticidas",
+      "subtitle": null,
+      "bullets": [
+        "Lepidópteros-praga (*Spodoptera frugiperda*, *Anticarsia gemmatalis*) causam perdas significativas em culturas",
+        "Resistência crescente a toxinas Bt e inseticidas químicos",
+        "Necessidade de estratégias complementares de controle"
+      ],
+      "image_theme": "crop_pest"
+    },
+    {
+      "slide_num": 3,
+      "title": "Estratégia Alternativa — Inibidores de Proteases Digestivas",
+      "subtitle": null,
+      "bullets": [
+        "Tripsinas: enzimas centrais na digestão de proteínas em larvas de Lepidoptera",
+        "Inibidores de proteases = bloqueio direto da fisiologia digestiva",
+        "Precedente natural: inibidores Kunitz/BPTI (comprovados em literatura)",
+        "Atividade real documentada: inibição tight-binding + sinergia com Bt"
+      ],
+      "image_theme": "digestive_system"
+    },
+    {
+      "slide_num": 4,
+      "title": "Lacuna do Projeto — Design Computacional de Novos Peptídeos",
+      "subtitle": null,
+      "bullets": [
+        "Inibidores naturais enfrentam limitações: suscetibilidade a clivagem proteolítica",
+        "IA generativa para design de proteínas abre alternativa: gerar peptídeos inéditos computacionalmente",
+        "Validação rigorosa in silico em cada etapa (não apenas escore estático)",
+        "Objetivo: candidatos reprodutivelmente estáveis + específicos + resistentes"
+      ],
+      "image_theme": "ai_protein"
+    },
+    {
+      "slide_num": 5,
+      "title": "Pipeline Multiagente — Arquitetura",
+      "subtitle": null,
+      "bullets": [
+        "10 agentes especializados orquestrando fluxo end-to-end",
+        "Etapas: geração de backbones → design de sequência → docking → dinâmica molecular → análise integrada"
+      ],
+      "image_theme": "workflow_diagram"
+    },
+    {
+      "slide_num": 6,
+      "title": "RFdiffusion & ProteinMPNN — Geração de Candidatos",
+      "subtitle": null,
+      "bullets": [
+        "**RFdiffusion** (Yang et al. 2024): geração de novo de estruturas peptídicas ancoradas ao sítio catalítico → **330 backbones reais**",
+        "**ProteinMPNN** (Dauparas et al. 2023): design de sequência sobre cada backbone → **24.513 peptídeos de 20 aa** (+ variantes curtas 5–7 aa)",
+        "Filtros iniciais: compatibilidade estrutural com sítio, ausência de P1-internos óbvios"
+      ],
+      "image_theme": "ai_tools"
+    },
+    {
+      "slide_num": 7,
+      "title": "Validação In Silico — Docking + Dinâmica Molecular",
+      "subtitle": null,
+      "bullets": [
+        "**Docking molecular (AutoDock Vina)** → 880 poses válidas contra ACR157 (receptor primário)",
+        "**Dinâmica molecular (GROMACS, CHARMM36 + CGenFF)** → replica real n=3 (100 ns cada)",
+        "Métricas: RMSD (estabilidade estrutural), ocupância do sítio S1 (persistência funcional)",
+        "Replica-to-replica concordância como validação de reprodutibilidade"
+      ],
+      "image_theme": "molecular_dynamics"
+    },
+    {
+      "slide_num": 8,
+      "title": "Critérios Reais — Estabilidade, Especificidade, Resistência",
+      "subtitle": null,
+      "bullets": [
+        "**Estabilidade reprodutível**: RMSD < 0,05 nm DP entre 3 réplicas (n=13 TOP-13)",
+        "**Especificidade**: Seletividade índice (SI) ≥ 2,0 kcal/mol vs. tripsina humana + *Apis mellifera* (não-alvos)",
+        "**Resistência proteolítica**: ausência de P1-internos básicos reconhecíveis (K/R) — proteção vs. autoclivagem",
+        "**Cross-species**: afinidade mantida contra 11 espécies-praga de Lepidoptera (amplo espectro)"
+      ],
+      "image_theme": "checklist"
+    },
+    {
+      "slide_num": 9,
+      "title": "Estruturas-Alvo & Sítio Catalítico",
+      "subtitle": null,
+      "bullets": [
+        "**4 receptores primários**: ACR157, QCL936, XP273, XP352 (tripsinas de Lepidoptera)",
+        "Tríade catalítica conservada: His–Asp–Ser (posição única em todos, verificada)",
+        "Bolso de especificidade S1: resíduo Asp em 3 receptores (XP273: Tyr atípico, documentado)"
+      ],
+      "image_theme": "protein_structure"
+    },
+    {
+      "slide_num": 10,
+      "title": "Protocolo MD & Análise de Persistência",
+      "subtitle": null,
+      "bullets": [
+        "Dinâmica molecular: GROMACS + CHARMM36/CGenFF5.0, ensemble NPT, 100 ns por réplica",
+        "Análise de persistência: ocupância do complexo peptídeo-receptor em raios 4 Å / 5 Å / 6 Å vs. resíduo âncora (Asp P1 bolso)",
+        "Métrica: % de frames em que peptídeo permanece dentro do raio (indicador de permanência real no sítio catalítico)"
+      ],
+      "image_theme": "trajectory"
+    },
+    {
+      "slide_num": 11,
+      "title": "Especificidade Cross-Species",
+      "subtitle": null,
+      "bullets": [
+        "Docking contra 11 espécies-praga adicionais: *D. saccharalis*, *H. virescens*, *C. includens*, etc. (receptores reais de literatura/UniProt)",
+        "Métrica: Seletividade Índice (SI) = Vina(não-alvo humano) − Vina(alvo primário) — valores ≥ 2,0 kcal/mol = especificidade confirmada",
+        "Cross-species: afinidade mantida contra múltiplas praga (requisito R3)"
+      ],
+      "image_theme": "species_map"
+    },
+    {
+      "slide_num": 12,
+      "title": "Overview dos Candidatos — Fingerprint dos 5 Top",
+      "subtitle": null,
+      "bullets": [
+        "TOP-5 candidatos por reprodutibilidade + persistência: SRTRR, VRYRR, VRRPR, HRPRRPR, HRPRRSR",
+        "Síntese de métricas: RMSD médio, ocupância S1 @ 6 Å, SI mínimo",
+        "Contato com tríade catalítica: verificado via PLIP (interações reais)"
+      ],
+      "image_theme": "figure",
+      "embedded_png": "outputs/figuras_artigo/fig4_fingerprint.png"
+    },
+    {
+      "slide_num": 13,
+      "title": "Reprodutibilidade MD — Réplicas Reais (n=3)",
+      "subtitle": null,
+      "bullets": [
+        "TOP-13 candidatos rodados em triplicate (rep1, rep2, rep3, sementes -1)",
+        "**Achado-chave**: 2 'recordistas de estabilidade' de réplica única (RLREELKKAEEWLEKRRKEE 0,294 nm; VRTRR 0,194 nm) mostraram DP real de 0,606 nm e 0,360 nm — resultado NÃO reprodutível",
+        "**Apenas 4 candidatos confirmam estabilidade real** (DP < 0,05 nm): SRTRR, VRYRR, VRRPR, HRPRRPR",
+        "Conclusão: estabilidade em réplica única não é confiável isoladamente"
+      ],
+      "image_theme": "figure",
+      "embedded_png": "outputs/figuras_artigo/fig1_replicas_md.png"
+    },
+    {
+      "slide_num": 14,
+      "title": "Persistência de Contato — Ocupância do Bolso S1",
+      "subtitle": null,
+      "bullets": [
+        "Análise de ocupância: % de frames em que peptídeo permanece no bolso S1 (raios 4/5/6 Å)",
+        "**VRRPR paradoxo**: RMSD global estável (0,268 nm, DP 0,01 nm), MAS ocupância a 6 Å cai dramáticamente entre réplicas (67,6% → 32,9% → 0,15%)",
+        "**VRYRR destaque**: ocupância ~100% mesmo no corte mais estrito (4 Å), salt-bridge real (Lys-Asp) nas 3 réplicas",
+        "Conclusão: baixa variância estrutural ≠ permanência funcional no sítio catalítico"
+      ],
+      "image_theme": "figure",
+      "embedded_png": "outputs/figuras_artigo/fig2_ocupancia_s1.png"
+    },
+    {
+      "slide_num": 15,
+      "title": "SRTRR — Candidato de Referência",
+      "subtitle": null,
+      "bullets": [
+        "Sequência: SRTRR (5 aa, comprimento ótimo)",
+        "RMSD: 0,2425 nm (DP 0,0178 nm) — estável reprodutível",
+        "Vina: −10,31 kcal/mol (ACR157)",
+        "Ocupância S1 @ 6 Å: ~80% (persistência confirmada)",
+        "SI mínimo: 1,17 kcal/mol (margem de especificidade)"
+      ],
+      "image_theme": "candidate_highlight"
+    },
+    {
+      "slide_num": 16,
+      "title": "VRYRR — Melhor em Especificidade & Persistência",
+      "subtitle": null,
+      "bullets": [
+        "Sequência: VRYRR (5 aa)",
+        "RMSD: 0,1985 nm (DP 0,0134 nm) — muito estável",
+        "Vina: −10,22 kcal/mol",
+        "**Ocupância S1 @ 4 Å: ~100%** — salt-bridge Lys(peptídeo)–Asp187(bolso) nas 3 réplicas",
+        "SI mínimo: 0,92 kcal/mol"
+      ],
+      "image_theme": "candidate_star"
+    },
+    {
+      "slide_num": 17,
+      "title": "HRPRRPR — Afinidade Excelente, 7 aa",
+      "subtitle": null,
+      "bullets": [
+        "Sequência: HRPRRPR (7 aa)",
+        "RMSD: 0,2659 nm (DP 0,0181 nm) — estável",
+        "Vina: −11,72 kcal/mol (segunda melhor afinidade do TOP-13)",
+        "Ocupância S1 @ 6 Å: ~75%",
+        "SI mínimo: 1,41 kcal/mol (melhor especificidade entre 7 aa)"
+      ],
+      "image_theme": "candidate_affinity"
+    },
+    {
+      "slide_num": 18,
+      "title": "Matriz Cross-Species — 13 Candidatos × 11 Espécies",
+      "subtitle": null,
+      "bullets": [
+        "Docking contra 11 espécies-praga adicionais (verificação de amplo espectro)",
+        "**143 dockings reais** executados (13 × 11 matriz completa)",
+        "Colormap heatmap: azul claro (afinidade fraca) → azul escuro (afinidade forte)",
+        "Candidatos reordenados por média Vina geral (mais negativos = mais eficazes)"
+      ],
+      "image_theme": "figure",
+      "embedded_png": "outputs/figuras_artigo/fig3_cross_species.png"
+    },
+    {
+      "slide_num": 19,
+      "title": "Bloqueadores Atuais — Especificidade & Resistência",
+      "subtitle": null,
+      "bullets": [
+        "**Especificidade**: 0/23 candidatos aprovados (SI ≥ 2,0 kcal/mol) — margem de seletividade insuficiente frente a não-alvos",
+        "**Resistência proteolítica**: 0/20 top-20 resistentes a autoclivagem por P1-internos básicos (K/R)",
+        "Candidato SEEEVLAANEAYAAAHTAYN: ausência de P1-internos (resistência estrutural real), MAS sem margem de especificidade comprovada",
+        "Ambos bloqueadores precisam ser resolvidos simultaneamente para aprovação de síntese"
+      ],
+      "image_theme": "blockers_warning"
+    },
+    {
+      "slide_num": 20,
+      "title": "Achado-Chave — Por Que Reprodutibilidade Importa",
+      "subtitle": null,
+      "bullets": [
+        "VRRPR demonstra que estabilidade global (RMSD baixo) pode mascarar falha funcional local",
+        "Sem réplicas independentes, este candidato seria classificado como 'estável' e potencialmente sintetizado",
+        "Validação cruzada (n=3) revelou ocupância P1 colapsando de 67,6% para 0,15% entre réplicas",
+        "**Lição metodológica**: réplicas in silico = essencial antes de síntese experimental"
+      ],
+      "image_theme": "validation_emphasis"
+    },
+    {
+      "slide_num": 21,
+      "title": "Conclusões — Metodologia Rigorosa",
+      "subtitle": null,
+      "bullets": [
+        "Pipeline multiagente integrou IA generativa, dinâmica molecular e validação cruzada",
+        "**330 backbones + 120k+ sequências** reduzidas a TOP-13 pela reprodutibilidade real",
+        "Tríade catalítica verificada independentemente (bug real detectado + corrigido em H. virescens)",
+        "Cada etapa computacional submetida a validação cruzada (não opcional)",
+        "Candidatos reprodutivelmente estáveis: SRTRR, VRYRR, VRRPR, HRPRRPR (base sólida para síntese)"
+      ],
+      "image_theme": "validation_check"
+    },
+    {
+      "slide_num": 22,
+      "title": "Próximos Passos",
+      "subtitle": null,
+      "bullets": [
+        "**Curto prazo**: resolução simultânea de especificidade (SI ≥ 2,0) e resistência proteolítica",
+        "**Médio prazo**: síntese química e validação experimental (bioensaios contra tripsinas reais)",
+        "**Longo prazo**: otimização contra múltiplas espécies-praga + formação de adjuvantes"
+      ],
+      "image_theme": "future_direction"
+    }
+  ]
+}
