@@ -16,6 +16,9 @@ __pycache__/
 # Conda
 .conda/
 
+# Canva (local API credentials & design IDs)
+.canva/
+
 # GROMACS
 *.xtc
 *.trr
