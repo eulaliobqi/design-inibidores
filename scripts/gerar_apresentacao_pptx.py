@@ -95,6 +95,50 @@ def add_content_slide(prs, title, bullets):
     image_placeholder.fill.fore_color.rgb = RGBColor(230, 230, 230)
     image_placeholder.line.color.rgb = RGBColor(200, 200, 200)
 
+def insert_figures(prs):
+    """Insert 4 PNG figures into slides 12, 13, 14, 18 and remove placeholders."""
+    figures_map = {
+        12: "outputs/figuras_artigo/fig4_fingerprint.png",
+        13: "outputs/figuras_artigo/fig1_replicas_md.png",
+        14: "outputs/figuras_artigo/fig2_ocupancia_s1.png",
+        18: "outputs/figuras_artigo/fig3_cross_species.png",
+    }
+
+    for slide_idx, (slide_num, fig_path) in enumerate(figures_map.items()):
+        # slide_idx 0-indexed, slide_num 1-indexed
+        # Slide 12 is at prs.slides[11], etc.
+        slide = prs.slides[slide_num - 1]
+        fig_full_path = Path(fig_path)
+
+        if not fig_full_path.exists():
+            print(f"  WARNING: {fig_path} not found, skipping Slide {slide_num}")
+            continue
+
+        # Remove placeholder rectangle (last shape, typically)
+        # Iterate backwards to avoid index shifts
+        for shape_idx in range(len(slide.shapes) - 1, -1, -1):
+            shape = slide.shapes[shape_idx]
+            # Check if it's the placeholder rectangle (has fill, no text)
+            if hasattr(shape, "fill") and not hasattr(shape, "text_frame"):
+                try:
+                    sp = shape.element
+                    sp.getparent().remove(sp)
+                    print(f"  Removed placeholder from Slide {slide_num}")
+                    break
+                except Exception as e:
+                    print(f"  Could not remove placeholder: {e}")
+
+        # Insert figure
+        try:
+            slide.shapes.add_picture(
+                str(fig_full_path),
+                Inches(6.8), Inches(1.1),
+                width=Inches(2.7)
+            )
+            print(f"  Inserted {fig_path} into Slide {slide_num}")
+        except Exception as e:
+            print(f"  ERROR inserting figure into Slide {slide_num}: {e}")
+
 def main():
     """Build all 22 slides."""
     prs = Presentation()
@@ -115,6 +159,10 @@ def main():
             add_title_slide(prs, title, subtitle)
         else:
             add_content_slide(prs, title, bullets)
+
+    # Insert figures into specific slides
+    print("\nInserting figures...")
+    insert_figures(prs)
 
     # Save
     output_path = Path("apresentacao_design_inibidores.pptx")
