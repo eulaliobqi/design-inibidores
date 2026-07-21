@@ -66,3 +66,94 @@ def add_markdown_table(document, headers: list, rows: list) -> None:
             cell = table.cell(i, j)
             cell.paragraphs[0].clear()
             add_inline_markdown(cell.paragraphs[0], val)
+
+
+from docx.shared import Inches
+
+
+import re
+
+_BULLET_RE = re.compile(r"^-\s+(.*)")
+_NUMBERED_RE = re.compile(r"^\d+\.\s+(.*)")
+
+
+def convert_markdown_body(document, lines: list, figure_after_heading: dict = None) -> None:
+    """Percorre linhas de um corpo Markdown real (##/### cabecalhos,
+    paragrafos, listas com marcador '- '/'N. ' (item por linha, sem quebra em
+    continuacao — formato real confirmado em artigo_resultados.md), tabelas
+    com legenda **Tabela N.**, '---' como separador ignorado) e monta o docx.
+    figure_after_heading insere uma imagem logo apos o primeiro paragrafo de
+    texto seguinte ao cabecalho indicado."""
+    figure_after_heading = figure_after_heading or {}
+    pending_figure = None
+    i = 0
+    n = len(lines)
+    while i < n:
+        line = lines[i].rstrip("\n")
+        stripped = line.strip()
+
+        if not stripped:
+            i += 1
+            continue
+
+        if stripped == "---":
+            i += 1
+            continue
+
+        if stripped.startswith("### "):
+            document.add_heading(stripped[4:].strip(), level=2)
+            pending_figure = figure_after_heading.get(stripped[4:].strip())
+            i += 1
+            continue
+
+        if stripped.startswith("## "):
+            document.add_heading(stripped[3:].strip(), level=1)
+            i += 1
+            continue
+
+        bullet_match = _BULLET_RE.match(stripped)
+        if bullet_match:
+            p = document.add_paragraph(style="List Bullet")
+            add_inline_markdown(p, bullet_match.group(1))
+            i += 1
+            continue
+
+        numbered_match = _NUMBERED_RE.match(stripped)
+        if numbered_match:
+            p = document.add_paragraph(style="List Number")
+            add_inline_markdown(p, numbered_match.group(1))
+            i += 1
+            continue
+
+        if stripped.startswith("**Tabela") or stripped.startswith("**Table"):
+            caption_p = document.add_paragraph()
+            add_inline_markdown(caption_p, stripped)
+            i += 1
+            # proxima linha nao-vazia deve ser a tabela
+            while i < n and not lines[i].strip():
+                i += 1
+            table_lines = []
+            while i < n and lines[i].strip().startswith("|"):
+                table_lines.append(lines[i])
+                i += 1
+            headers, rows = parse_markdown_table(table_lines)
+            add_markdown_table(document, headers, rows)
+            continue
+
+        # paragrafo normal: junta linhas contiguas nao-vazias, nao-tabela,
+        # nao-cabecalho, nao-lista (defensivo — no formato real observado,
+        # listas sempre tem linha em branco antes, mas nao custa garantir)
+        para_lines = [stripped]
+        i += 1
+        while (i < n and lines[i].strip()
+               and not lines[i].strip().startswith(("#", "|", "**Tabela", "**Table", "---"))
+               and not _BULLET_RE.match(lines[i].strip())
+               and not _NUMBERED_RE.match(lines[i].strip())):
+            para_lines.append(lines[i].strip())
+            i += 1
+        p = document.add_paragraph()
+        add_inline_markdown(p, " ".join(para_lines))
+
+        if pending_figure:
+            document.add_picture(pending_figure, width=Inches(6.0))
+            pending_figure = None
