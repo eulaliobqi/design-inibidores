@@ -98,5 +98,15 @@
     "confidence": 0.6279442310333252,
     "iptm": 0.7059796452522278,
     "plddt": 0.6084353923797607
+  },
+  "bovine__ApTI": {
+    "confidence": 0.9234,
+    "iptm": 0.8933,
+    "plddt": 0.9309
+  },
+  "sfrug__ApTI": {
+    "confidence": 0.85,
+    "iptm": 0.7754,
+    "plddt": 0.8687
   }
 }

@@ -1,0 +1,18 @@
+{
+  "bovine__BPTI": -17.616,
+  "bovine__SFTI1": -31.609,
+  "bovine__SKTI": -26.167,
+  "bovine__BBI": -11.578,
+  "bovine__EcTI": -20.891,
+  "sfrug__BPTI": -25.817,
+  "sfrug__SFTI1": -27.664,
+  "sfrug__SKTI": -58.455,
+  "sfrug__BBI": -22.252,
+  "sfrug__EcTI": -57.971,
+  "_meta": {
+    "unidade": "score HADDOCK rigidbody (nao kcal/mol, combinacao ponderada vdw+elec+desolv+AIR)",
+    "sampling": 48,
+    "restricoes": "residuos ativos verificados nesta sessao via estruturas experimentais reais (1SFI, 1AVX, 1D6R, 4J2Y) ou sitio classico confirmado na estrutura (BPTI Lys15-Ala16)",
+    "decoys": "nao rodados neste rung ainda - HADDOCK3 completo so p/ os 5 inibidores reais x 2 receptores"
+  }
+}
