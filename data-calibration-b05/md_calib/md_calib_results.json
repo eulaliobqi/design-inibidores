@@ -1,0 +1,200 @@
+{
+  "bovine__SFTI1": {
+    "rmsd_avg_nm": 0.7436,
+    "rmsd_std_nm": 0.8127,
+    "hbond_avg": 172.599,
+    "hbond_max": 188,
+    "rg_avg_nm": 1.6527,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__ApTI": {
+    "rmsd_avg_nm": 0.1483,
+    "rmsd_std_nm": 0.029,
+    "hbond_avg": 270.289,
+    "hbond_max": 293,
+    "rg_avg_nm": 2.2156,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__BBI": {
+    "rmsd_avg_nm": 0.1786,
+    "rmsd_std_nm": 0.1424,
+    "hbond_avg": 189.968,
+    "hbond_max": 209,
+    "rg_avg_nm": 1.9783,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__BBI_decoy": {
+    "rmsd_avg_nm": 1.8616,
+    "rmsd_std_nm": 0.4424,
+    "hbond_avg": 188.374,
+    "hbond_max": 203,
+    "rg_avg_nm": 2.7441,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__BPTI": {
+    "rmsd_avg_nm": 0.2285,
+    "rmsd_std_nm": 0.0802,
+    "hbond_avg": 188.958,
+    "hbond_max": 206,
+    "rg_avg_nm": 2.6239,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__BPTI_decoy": {
+    "rmsd_avg_nm": 0.2206,
+    "rmsd_std_nm": 0.0401,
+    "hbond_avg": 182.182,
+    "hbond_max": 198,
+    "rg_avg_nm": 1.8243,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__EcTI": {
+    "rmsd_avg_nm": 0.1031,
+    "rmsd_std_nm": 0.0137,
+    "hbond_avg": 270.888,
+    "hbond_max": 286,
+    "rg_avg_nm": 2.2081,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__EcTI_decoy": {
+    "rmsd_avg_nm": 0.2123,
+    "rmsd_std_nm": 0.0504,
+    "hbond_avg": 268.337,
+    "hbond_max": 289,
+    "rg_avg_nm": 2.2257,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__SFTI1_decoy": {
+    "rmsd_avg_nm": 0.3061,
+    "rmsd_std_nm": 0.5317,
+    "hbond_avg": 155.594,
+    "hbond_max": 170,
+    "rg_avg_nm": 1.6417,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__SKTI": {
+    "rmsd_avg_nm": 0.115,
+    "rmsd_std_nm": 0.0147,
+    "hbond_avg": 271.027,
+    "hbond_max": 288,
+    "rg_avg_nm": 2.22,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "bovine__SKTI_decoy": {
+    "rmsd_avg_nm": 0.1681,
+    "rmsd_std_nm": 0.0219,
+    "hbond_avg": 270.464,
+    "hbond_max": 295,
+    "rg_avg_nm": 2.0995,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__ApTI": {
+    "rmsd_avg_nm": 0.4598,
+    "rmsd_std_nm": 0.8015,
+    "hbond_avg": 311.319,
+    "hbond_max": 341,
+    "rg_avg_nm": 2.2662,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__BBI": {
+    "rmsd_avg_nm": 0.2827,
+    "rmsd_std_nm": 0.5738,
+    "hbond_avg": 228.404,
+    "hbond_max": 247,
+    "rg_avg_nm": 2.0436,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__BBI_decoy": {
+    "rmsd_avg_nm": 0.5226,
+    "rmsd_std_nm": 0.5525,
+    "hbond_avg": 237.454,
+    "hbond_max": 256,
+    "rg_avg_nm": 2.6014,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__BPTI": {
+    "rmsd_avg_nm": 0.2124,
+    "rmsd_std_nm": 0.2132,
+    "hbond_avg": 225.701,
+    "hbond_max": 242,
+    "rg_avg_nm": 1.9518,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__BPTI_decoy": {
+    "rmsd_avg_nm": 0.2069,
+    "rmsd_std_nm": 0.3268,
+    "hbond_avg": 227.304,
+    "hbond_max": 249,
+    "rg_avg_nm": 1.8889,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__EcTI": {
+    "rmsd_avg_nm": 0.4672,
+    "rmsd_std_nm": 0.202,
+    "hbond_avg": 308.411,
+    "hbond_max": 332,
+    "rg_avg_nm": 4.2415,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__EcTI_decoy": {
+    "rmsd_avg_nm": 1.6519,
+    "rmsd_std_nm": 1.6876,
+    "hbond_avg": 300.219,
+    "hbond_max": 322,
+    "rg_avg_nm": 3.0221,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__SFTI1": {
+    "rmsd_avg_nm": 0.505,
+    "rmsd_std_nm": 0.7017,
+    "hbond_avg": 199.387,
+    "hbond_max": 221,
+    "rg_avg_nm": 1.7701,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__SFTI1_decoy": {
+    "rmsd_avg_nm": 0.1646,
+    "rmsd_std_nm": 0.0258,
+    "hbond_avg": 202.272,
+    "hbond_max": 220,
+    "rg_avg_nm": 1.749,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__SKTI": {
+    "rmsd_avg_nm": 4.4487,
+    "rmsd_std_nm": 2.4336,
+    "hbond_avg": 314.833,
+    "hbond_max": 339,
+    "rg_avg_nm": 4.2441,
+    "method": "gromacs",
+    "status": "OK"
+  },
+  "sfrug__SKTI_decoy": {
+    "rmsd_avg_nm": 0.2165,
+    "rmsd_std_nm": 0.0323,
+    "hbond_avg": 298.606,
+    "hbond_max": 326,
+    "rg_avg_nm": 2.2118,
+    "method": "gromacs",
+    "status": "OK"
+  }
+}
