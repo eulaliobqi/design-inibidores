@@ -263,3 +263,61 @@ não teve seu `complex_clean.pdb` da rep1 preservado — suas réplicas rep2/rep
 pré-MD (`outputs/md/complex_md_SARESIKKAY.pdb`) em vez da estrutura já equilibrada, ponto de
 partida menos ideal que o dos outros 12 candidatos (ainda assim dado real de simulação completa,
 não fabricado — ressalva registrada na Tabela 9n).
+
+## 2.13 Replanejamento V2 — Painel de Calibração e Verificação de Especificidade (2026-09-18)
+
+O resultado negativo consolidado do V1 (Seção 2.12/Resultados Seção 4) motivou substituir o
+critério de scoring por uma escada calibrada contra controles reais antes de qualquer nova
+campanha de design (`docs/PLANO_V2_GENERATIVO.md`, Bloco B0.5 — "sem ele nenhuma métrica de
+scoring usada depois é confiável").
+
+**Curadoria do painel de tripsinas-alvo.** Busca UniProt REST (`reviewed:true` +
+`keyword:KW-0224`) nas 9 espécies de Lepidoptera do plano mostrou cobertura curada quase nula
+fora de *Manduca sexta* (única com `cc_tissue_specificity=Midgut` real). Diante disso, adotou-se
+heurística de homologia + estrutura modelada (decisão do usuário): reaproveitamento de 10
+estruturas AlphaFoldDB de sessão anterior, com **verificação de especificidade tipo-tripsina por
+resíduo Asp189-equivalente** — offset de 6 resíduos N-terminais ao Ser catalítico, calibrado
+contra tripsina bovina real (UniProt P00760, feature `Active site` em Ser200/precursor;
+resíduo em `200−6=194` = Asp confirmado) e quimotripsina bovina real (P00766, Ser195/precursor;
+resíduo em `195−6=189` = Ser confirmado), aplicado então às 9 sequências do painel via busca
+direta do motivo conservado `G[DN]SGG[PT]` (Ser catalítico) em cada sequência.
+
+**Painel de calibração (controles reais + decoys).** Seis inibidores de tripsina com estrutura
+e/ou caracterização publicada: BPTI (PDB 1BPI), SFTI-1 (PDB 1SFI — complexo real com tripsina
+bovina, usado também como fonte do centro real do sítio ativo), SKTI (PDB 1AVU), Bowman-Birk
+(PDB 1BBI), EcTI (PDB 4J2K, cadeia única — a estrutura depositada tem 2 cópias cristalográficas
+do monômero sob as mesmas etiquetas de cadeia A/B, corrigido para usar só uma cópia) e ApTI
+(P09941+P09942, sem estrutura experimental depositada, modelado nesta sessão). Cinco decoys
+(mesma composição de aminoácidos dos 5 primeiros controles, ordem embaralhada por
+`random.seed(42)`) serviram de controle negativo.
+
+**Docking rígido — Vina substituído por HADDOCK3 após incidente de memória.** A tentativa de
+reusar AutoDock Vina (protocolo idêntico ao da Seção 2.7, ligante rígido `TORSDOF=0`) para os
+controles de calibração — proteínas dobradas inteiras de 58–172 resíduos, ordens de grandeza
+maiores que os peptídeos de 5–20 aa do V1 — resultou em consumo de 97 GB de RAM (processo
+terminado por segurança antes de causar OOM no servidor de 188 GB). Diagnosticado como
+limitação de escala do build de Vina para ligantes desse tamanho, não bug de configuração
+(um controle de 14 aa, SFTI-1, rodou normalmente). Substituído por **HADDOCK3 v2026.7.0**
+(`haddock3-restraints active_passive_to_ambig`, `[topoaa]`+`[rigidbody]`, `sampling=48`),
+apropriado para docking proteína-proteína. Resíduos ativos de interface identificados por
+**contato direto (<6 Å) ao Ser catalítico em complexos experimentais reais** baixados do RCSB
+(1SFI, 1AVX, 1D6R, 4J2Y) — não citações de literatura não conferidas nesta sessão.
+
+**Co-dobramento — Boltz-2.** `boltz predict` (checkpoint `boltz2_conf.ckpt`,
+`--use_msa_server`, `--diffusion_samples 1`, `--recycling_steps 3`) para os 22 pares
+ligante-receptor (6 controles + 5 decoys pareados × 2 receptores + 2 ApTI), sem restrição de
+interface (co-dobramento nativo a partir só da sequência). MSA real via servidor público
+MMseqs2 (~50s/predição). Métricas de confiança nativas do Boltz-2 (`confidence_score`, `iptm`,
+`complex_plddt`) usadas como critério de separação real/decoy.
+
+**MD curta.** Reaproveitamento direto de `MDAgent._run_gromacs()` (idêntico à Seção 2.8/2.12),
+partindo dos complexos preditos pelo Boltz-2 (`*_model_0.pdb`) em vez de estruturas construídas
+por `PeptideBuilder`. Protonação real por `pdb2pqr30`/propka com **pH diferenciado por
+receptor**: 8,0 para tripsina bovina (fisiológico de mamífero) vs. 10,0 para *S. frugiperda*
+(intestino alcalino real de Lepidoptera, já usado nas Seções 2.11/2.12 para os receptores
+nativos). Produção de 2 ns por sistema (mais curta que os 10 ns da Seção 2.8/2.12, adequada à
+finalidade de calibração/triagem, não de produção final). Achado de engenharia: o ambiente conda
+`md-gromacs` tem uma instalação de `pandas` quebrada que impede importar o pacote
+`scripts.agents` completo (necessário para `MDAgent`) — contornado executando o orquestrador
+Python em `protein_design_env` (pandas funcional), já que `MDAgent._find_gmx()` localiza o
+binário `gmx_mpi` por caminho absoluto, independente do ambiente conda ativo do processo Python.

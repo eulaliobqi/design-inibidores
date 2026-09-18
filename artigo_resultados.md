@@ -1205,45 +1205,130 @@ A susceptibilidade proteolítica universal (0/20 resistentes) é a principal lim
 
 ---
 
+## 5. Replanejamento V2 — Contrasseleção e Calibração da Escada de Scoring (2026-09-17/18)
+
+O resultado negativo consolidado na Seção 4 (0/21-23 candidatos com margem de seletividade real,
+Seção 3.11) motivou um replanejamento completo do projeto (`docs/PLANO_V2_GENERATIVO.md`,
+commit `3a8add2`): a causa do fracasso do V1 foi julgada estrutural — o sítio S1 de tripsina é
+conservado entre lagarta/humano/abelha, e o Vina rígido nunca havia sido calibrado contra
+inibidores conhecidos antes de ser usado como fonte de verdade. O V2 recentraliza o projeto em
+torno de dois pilares ainda não executados no V1: contrasseleção como objetivo de geração (não
+checagem pós-hoc) e calibração explícita da escada de scoring contra controles reais — Bloco
+B0.5 do plano, relatado nesta seção.
+
+### 5.1 Painel de tripsinas-alvo de Lepidoptera por heurística de homologia
+
+Busca sistemática no UniProt (reviewed + anotação funcional `keyword:KW-0224`) mostrou que,
+das 9 espécies-alvo do plano, **apenas *Manduca sexta* tem tripsinas digestivas curadas com
+evidência experimental de expressão em midgut** (P35045/P35046/P35047, `cc_tissue_specificity
+= Midgut`). As demais espécies — incluindo *Spodoptera frugiperda*, alvo principal do projeto —
+não têm nenhuma entrada revisada no UniProt para tripsina digestiva, apenas anotação automática
+(TrEMBL) sem evidência tecidual curada.
+
+Diante disso, foi adotada uma heurística de homologia + estrutura modelada (decisão do usuário,
+2026-09-18): reaproveitaram-se 10 estruturas AlphaFoldDB já obtidas em sessão anterior
+(2026-07-18) para *S. frugiperda*, *S. litura*, *Ostrinia nubilalis*, *Diatraea saccharalis*,
+*Heliothis virescens*, *Plutella xylostella*, *Chrysodeixis includens*, *Bombyx mori* e
+*M. sexta*. A especificidade de substrato tipo-tripsina (não quimotripsina, apesar do nome
+automático "Chymotrypsin" atribuído pelo UniProt à maioria das entradas) foi **confirmada por
+verificação direta do resíduo de especificidade clássico (Asp189-equivalente)**: o offset de
+6 resíduos N-terminais ao Ser catalítico foi validado contra tripsina bovina real (P00760,
+Asp194=Asp) e quimotripsina bovina real (P00766, Ser189=Ser), e então aplicado às 9 sequências
+do painel — **todas apresentam Asp nessa posição**, confirmando especificidade tripsina real em
+100% do painel. *Bombyx mori* foi realocada do painel de alvos para o painel negativo de
+contrasseleção (B1.2), por ser inseto benéfico de valor econômico (sericicultura), não praga —
+decisão de escopo, não de especificidade molecular (também apresenta Asp na posição de
+especificidade).
+
+### 5.2 Calibração da escada de scoring (B0.5) — controles reais vs. decoys
+
+Seis inibidores de tripsina bem caracterizados na literatura foram usados como painel de
+calibração: BPTI (P00974), SFTI-1 (Q4GWU5), SKTI (P01070), Bowman-Birk (P01055), EcTI (P86451,
+Meriño-Cabrera... — ver Seção 5.1 e referências) e ApTI (P09941+P09942, Meriño-Cabrera et al.
+2020). Cinco decoys (mesma composição de aminoácidos, sequência embaralhada — controle negativo
+padrão) foram gerados por embaralhamento. O painel foi avaliado contra tripsina bovina (receptor
+real do complexo experimental PDB 1SFI, que também fornece o centro real do sítio ativo a partir
+da pose de SFTI-1 genuinamente ligada) e contra *S. frugiperda* (alvo primário).
+
+**Vina — incidente e substituição por HADDOCK3.** A tentativa inicial de usar AutoDock Vina
+(mesma ferramenta e build do V1, f458505-mod) para o docking rígido dos controles resultou em
+consumo anômalo de 97 GB de RAM (processo terminado por segurança) ao dockar um controle de 58
+resíduos — o Vina não é adequado para ligantes do tamanho de uma proteína dobrada inteira. O
+docking rígido foi refeito com **HADDOCK3** (v2026.7.0), usando restrições ambíguas de interface
+com resíduos ativos identificados por contato direto (<6 Å) em complexos experimentais reais
+(1SFI, 1AVX, 1D6R, 4J2Y) — não citações de literatura não conferidas: Lys15/Ala16 (BPTI),
+Lys5 (SFTI-1), Arg63 (SKTI), Lys16 (Bowman-Birk), Arg64 (EcTI). As 10 corridas (5 controles × 2
+receptores) completaram sem incidente (~20 s cada), com scores na direção biologicamente
+esperada, mas amostra pequena demais (sem decoys neste rung) para declarar go/no-go isolado.
+
+**Boltz-2 — separação real de decoy em 10/10 pares.** Co-dobramento nativo (sem restrição de
+interface) via Boltz-2, 22 predições reais (6 controles + 5 decoys pareados × 2 receptores + 2
+ApTI). **Resultado principal: `confidence_score` e pLDDT do complexo separam inibidor real de
+decoy em 10/10 pares testados**, incluindo contra o alvo primário real *S. frugiperda* (não só a
+referência bovina) — critério de go/no-go do plano satisfeito para essas métricas. `ipTM`
+isolado foi limítrofe em 1/10 pares (SKTI × *S. frugiperda*, Δ=0,005, dentro do ruído),
+não devendo ser usado como critério de corte único.
+
+**MD curta (2 ns) — sinal misto, causa raiz identificada.** Complexos preditos pelo Boltz-2
+foram usados como estrutura de partida para MD real (GROMACS, AMBER99SB-ILDN, TIP3P, pH real por
+receptor: 8,0 para tripsina bovina, 10,0 para o intestino alcalino de *S. frugiperda*). Ao
+contrário do Boltz-2, o **RMSD do complexo em 2 ns não separou real de decoy de forma
+consistente**: direção esperada (real mais estável) em 3/5 pares testados (SKTI, Bowman-Birk,
+EcTI), empate em 1/5 (BPTI) e direção invertida em 1/5 (SFTI-1, RMSD real 2,4× maior que o
+decoy). Inspeção do código (`MDAgent._analyze_trajectory`) revelou a causa provável: o RMSD é
+calculado sobre o backbone do complexo inteiro, sem separar cadeias no ajuste — não isola a
+estabilidade da interface receptor-ligante, o que pode inflar o RMSD de ligantes pequenos (como
+o SFTI-1, 14 resíduos) por rotação/deslizamento relativo ao receptor maior, mesmo permanecendo
+ligados. **Limitação herdada do protocolo do V1 (Seção 2.8), não introduzida nesta sessão.**
+MM-PBSA (energia de ligação real, último degrau da escada) ainda não foi executado até o
+fechamento desta seção.
+
+**Estado do painel ao fechamento desta seção:** Boltz-2 completo (6/6 controles); HADDOCK3
+completo para os 5 controles com sítio reativo verificado (sem decoys ainda); MD curta em
+andamento (12/22 sistemas concluídos no corte de 2026-09-18); MM-PBSA pendente.
+
 ## Referências
 
 **Alvo biológico e caracterização das tripsinas:**
-- Paulo et al. (2026) Peptides derived from reactive center loops inhibit digestive trypsin-like enzymes in Lepidopteran pests. *Arch Insect Biochem Physiol*, DOI: 10.1002/arch.70123
-- Oliveira et al. (2017) Kinetic characterization of *Anticarsia gemmatalis* digestive serine-proteases. PubMed 28925864
-- Leite et al. (2024) Inhibitory efficacy of tripeptides on trypsin-like activity in *A. gemmatalis*. *Phytoparasitica*, DOI: 10.1007/s12600-024-01125-x
-- Boaventura et al. (2023) Soybean trypsin inhibitor reduces resistance to transgenic maize in *S. frugiperda*. *J Econ Entomol* 116(6):2146
-- Brito et al. (2013) Insensitive trypsins are differentially transcribed during *S. frugiperda* adaptation against plant protease inhibitors. PubMed 23466403
-- Spit et al. (2016) Comparative analysis of trypsin/chymotrypsin gene expression in Lepidoptera with different inhibitor sensitivities. PubMed 26944308
-- Oliveira et al. (2020) Noncompetitive tight-binding inhibition of *A. gemmatalis* trypsins by *Adenanthera pavonina* inhibitor. PubMed 32342573
-- Hedstrom L (2002) Serine protease mechanism and specificity. *Chem Rev*, 102, 4501–4524.
-- Lopes AR et al. (2004) Comparative studies of digestive enzymes and midgut cells of *Spodoptera frugiperda*. *Comp Biochem Physiol*, 137, 119–129.
+- Paulo et al. (2026) Peptides derived from reactive center loops inhibit digestive trypsin-like enzymes in Lepidopteran pests. *Arch Insect Biochem Physiol*, DOI: 10.1002/arch.70123 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- Patarroyo-Vargas et al. (2017) Kinetic Characterization of *Anticarsia gemmatalis* Digestive Serine-Proteases and the Inhibitory Effect of Synthetic Peptides. *Protein Pept Lett* 24(11):1040-1047, DOI: 10.2174/0929866524666170918103146, PMID 28925864 — ✅ verificado via PubMed 2026-09-18 (nome do 1º autor corrigido: era citado como "Oliveira et al."; de Almeida Oliveira é coautora sênior, não 1ª autora)
+- Leite et al. (2024) Inhibitory efficacy of tripeptides on trypsin-like activity in *A. gemmatalis*. *Phytoparasitica*, DOI: 10.1007/s12600-024-01125-x — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- Boaventura et al. (2023) Soybean trypsin inhibitor reduces resistance to transgenic maize in *S. frugiperda*. *J Econ Entomol* 116(6):2146 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- ⚠️ **REMOVIDO 2026-09-18 — CITAÇÃO FABRICADA/ERRADA**: a entrada anterior ("Brito et al. (2013)... PubMed 23466403") tinha PMID **incorreto** — verificado via PubMed nesta sessão: PMID 23466403 é na verdade um artigo francês sobre síndrome do bebê sacudido (Lind et al. 2013, *Arch Pediatr*, DOI: 10.1016/j.arcped.2012.04.019), sem nenhuma relação com tripsinas de inseto. Não localizei via busca PubMed nesta sessão nenhum artigo real de "Brito et al. 2013" sobre tripsinas insensíveis em *S. frugiperda* com os termos tentados (ver `docs/bench/b11_curadoria_lepidoptera.md`). **Não usar esta citação até localizar e verificar a referência correta.**
+- Souza et al. (2016) Comparative analysis of expression profiling of the trypsin and chymotrypsin genes from Lepidoptera species with different levels of sensitivity to soybean peptidase inhibitors. *Comp Biochem Physiol B* 196-197:67-73, DOI: 10.1016/j.cbpb.2016.02.007, PMID 26944308 — ✅ verificado via PubMed 2026-09-18 (nome do 1º autor corrigido: era citado como "Spit et al.", que não é nenhum dos autores reais)
+- Meriño-Cabrera et al. (2020) Noncompetitive tight-binding inhibition of *Anticarsia gemmatalis* trypsins by *Adenanthera pavonina* protease inhibitor affects larvae survival. *Arch Insect Biochem Physiol* 104(3):e21687, DOI: 10.1002/arch.21687, PMID 32342573 — ✅ verificado via PubMed 2026-09-18 (nome do 1º autor corrigido: era citado como "Oliveira et al."; de Almeida Oliveira é coautora sênior). **Esta é a caracterização real de ApTI usada como controle positivo em B0.5 nesta sessão.**
+- Hedstrom L (2002) Serine protease mechanism and specificity. *Chem Rev*, 102, 4501–4524. — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- Lopes AR et al. (2004) Comparative studies of digestive enzymes and midgut cells of *Spodoptera frugiperda*. *Comp Biochem Physiol*, 137, 119–129. — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
 
 **Estrutura de inibidores e mecanismo:**
-- Tabosa et al. (2020) EcTI impairs *Aedes aegypti* development and enhances Bt toxins. *Pest Mgmt Sci*, PMID 32453460
-- PMC3633903. Crystal structures of EcTI and complex with bovine trypsin.
-- Dutta et al. (2021) Structure-activity relationship and molecular docking of Kunitzin-AH. PMC8309051
+- Tabosa et al. (2020) Trypsin inhibitor from *Enterolobium contortisiliquum* seeds impairs *Aedes aegypti* development and enhances the activity of *Bacillus thuringiensis* toxins. *Pest Manag Sci* 76(11):3693-3701, DOI: 10.1002/ps.5918, PMID 32453460 — ✅ verificado via PubMed 2026-09-18, corresponde exatamente
+- PMC3633903. Crystal structures of EcTI and complex with bovine trypsin. — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO (ID PMC, não conferido via PubMed nesta sessão)
+- Dutta et al. (2021) Structure-activity relationship and molecular docking of Kunitzin-AH. PMC8309051 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
 
 **Resistência proteolítica:**
-- Sivaramakrishnan et al. (2019) Phyto-inspired cyclic peptides from Pin-II RCLs for crop protection. *Phytomedicine*, PMID 31077794
-- PMC7688903. D- and unnatural amino acid peptides with improved proteolytic resistance.
-- biorXiv (2025) D-amino acid substitution and cyclisation in arginine-rich peptides. DOI: 10.1101/2025.06.17.660067
+- Saikhedkar et al. (2019) Phyto-inspired cyclic peptides derived from plant Pin-II type protease inhibitor reactive center loops for crop protection from insect pests. *Biochim Biophys Acta Gen Subj* 1863(8):1254-1262, DOI: 10.1016/j.bbagen.2019.05.003, PMID 31077794 — ✅ verificado via PubMed 2026-09-18 (nome do 1º autor corrigido: era citado como "Sivaramakrishnan et al.", que não é nenhum dos autores reais; revista também corrigida — era citada como "Phytomedicine", real é *Biochim Biophys Acta*)
+- PMC7688903. D- and unnatural amino acid peptides with improved proteolytic resistance. — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- biorXiv (2025) D-amino acid substitution and cyclisation in arginine-rich peptides. DOI: 10.1101/2025.06.17.660067 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
 
 **Expressão heteróloga:**
-- Springer (2014) Trypsin inhibitor expression in *P. pastoris* vs *Mamestra brassicae*. DOI: 10.1007/s11033-014-3760-y
-- ScienceDirect (2022) ChTI + Cry co-expression reduces resistance in *H. armigera*. DOI: 10.1016/j.indcrop.2022.115780
-- PMC9982021. Soybean trypsin inhibitor in transgenic plants reduces *H. zea* defoliation.
+- Springer (2014) Trypsin inhibitor expression in *P. pastoris* vs *Mamestra brassicae*. DOI: 10.1007/s11033-014-3760-y — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- ScienceDirect (2022) ChTI + Cry co-expression reduces resistance in *H. armigera*. DOI: 10.1016/j.indcrop.2022.115780 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- PMC9982021. Soybean trypsin inhibitor in transgenic plants reduces *H. zea* defoliation. — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
 
-**Ferramentas computacionais:**
-- Chaudhury S et al. (2010) PyRosetta. *Bioinformatics*, 26, 689–691.
-- Dauparas J et al. (2022) ProteinMPNN. *Science*, 378, 49–56.
-- Raveh B et al. (2011) FlexPepDock. *PLoS Comput Biol*, 7, e1002110.
-- Trott O & Olson AJ (2010) AutoDock Vina. *J Comput Chem*, 31, 455–461.
-- Van der Spoel D et al. (2005) GROMACS. *J Comput Chem*, 26, 1701–1718.
-- Watson JL et al. (2023) RFdiffusion. *Nature*, 620, 1089–1100.
-- Nature Chem Biol (2025) RFpeptides macrocyclic binders. DOI: 10.1038/s41589-025-01929-w
+**Ferramentas computacionais:** (referências canônicas conhecidas, mas não reconferidas nesta sessão — ⚠️ ver nota abaixo)
+- Chaudhury S et al. (2010) PyRosetta. *Bioinformatics*, 26, 689–691. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Dauparas J et al. (2022) ProteinMPNN. *Science*, 378, 49–56. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Raveh B et al. (2011) FlexPepDock. *PLoS Comput Biol*, 7, e1002110. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Trott O & Olson AJ (2010) AutoDock Vina. *J Comput Chem*, 31, 455–461. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Van der Spoel D et al. (2005) GROMACS. *J Comput Chem*, 26, 1701–1718. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Watson JL et al. (2023) RFdiffusion. *Nature*, 620, 1089–1100. — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- Nature Chem Biol (2025) RFpeptides macrocyclic binders. DOI: 10.1038/s41589-025-01929-w — ⚠️ NÃO VERIFICADA NESTA SESSÃO
+- **Novas ferramentas usadas em B0.5 (2026-09-18), ainda sem referência formal adicionada:** HADDOCK3 (Honorato et al., v2026.7.0), Boltz-2 (Wohlwend/Passaro et al.), gmx_MMPBSA — DOIs citados em `docs/PLANO_V2_GENERATIVO.md` como "sem DOI verificado", pendente antes de entrar no artigo formal.
 
 **Formulação e regulatório:**
-- Molecules (2026) Nanopesticides delivery platforms. DOI: 10.3390/molecules31030453
-- Nature Comm (2025) Azadirachtin nano-assemblies vs *S. frugiperda*. DOI: 10.1038/s41467-025-57028-w
-- ACS Omega (2024) IPM sustainability update. PMC11465254
-- Frontiers (2025) Biopesticides sustainable agriculture. DOI: 10.3389/fsufs.2025.1657000
+- Molecules (2026) Nanopesticides delivery platforms. DOI: 10.3390/molecules31030453 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- Nature Comm (2025) Azadirachtin nano-assemblies vs *S. frugiperda*. DOI: 10.1038/s41467-025-57028-w — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- ACS Omega (2024) IPM sustainability update. PMC11465254 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+- Frontiers (2025) Biopesticides sustainable agriculture. DOI: 10.3389/fsufs.2025.1657000 — ⚠️ CITAÇÃO NÃO VERIFICADA NESTA SESSÃO
+
+**Nota de auditoria (2026-09-18):** desta lista de ~27 referências, **6 foram verificadas nesta sessão** via PubMed (5 confirmadas reais, com 3 correções de nome de 1º autor; 1 confirmada **fabricada/errada** e removida). As demais ~21 **não foram reconferidas nesta sessão** — permanecem como estavam de sessões anteriores, sem validação renovada. Ver `docs/bench/` desta sessão (2026-09-18) para o registro completo da verificação.
