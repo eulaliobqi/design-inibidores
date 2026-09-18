@@ -1,16 +1,17 @@
 {
   "_meta": {
     "created": "2026-09-18",
+    "updated": "2026-09-18 (especificidade tripsina confirmada, ver docs/bench/b1x_confirmacao_especificidade_tripsina.md)",
     "method": "heuristica_homologia_modelada",
     "descricao": "Painel de tripsinas digestivas de Lepidoptera, adotado por heuristica de homologia + modelagem estrutural (AlphaFoldDB), na ausencia de evidencia experimental de expressao em midgut consultavel por API para a maioria das especies (ver docs/bench/b11_curadoria_lepidoptera.md). Reaproveita estruturas ja baixadas em 2026-07-18 (V1, servidor:~/design-inibidores/data-nontargets/), reverificadas nesta sessao.",
     "criterio_heuristico": [
       "sequencia com motivo catalitico canonico de serino-protease GDSGG[PT] confirmado por busca direta na sequencia (nao apenas herdado do nome UniProt)",
       "identidade de sequencia (BLOSUM62, alinhamento global Biopython) contra referencia real Manduca sexta P35046 (Trypsin alkaline B, midgut confirmado por UniProt reviewed)",
       "estrutura AlphaFoldDB existente (nao gerada por nos), pLDDT medio reportado",
-      "deteccao de triade catalitica + Asp de bolso S1 via scripts/agents/structure_agent.py (metodo ja usado nos 4 receptores primarios de V1)"
+      "ESPECIFICIDADE TRIPSINA CONFIRMADA: Asp na posicao classica 189-equivalente (Ser catalitico - 6), offset verificado contra tripsina bovina P00760 (D194=D real) e quimotripsina bovina P00766 (S189=S real). Todas as 9 sequencias do painel (8 alvos + M. sexta) tem Asp nessa posicao -> especificidade tripsina real, apesar do nome automatico 'Chymotrypsin' que o UniProt atribui a quase todas (artefato de anotacao automatica TrEMBL, nao especificidade real)."
     ],
-    "caveat_especificidade_nome": "O nome automatico atual no UniProt para a maioria destas entradas e 'Chymotrypsin', nao 'trypsin' (a busca original de V1 em 2026-07-18 as encontrou como 'trypsin'; a reanotacao automatica do UniProt mudou desde entao). Isso e uma ambiguidade conhecida na anotacao de serino-proteases digestivas de inseto (alta similaridade de sequencia entre familias trypsin-like e chymotrypsin-like). A evidencia estrutural de Asp no bolso S1 (quando detectada) e o sinal mais confiavel de especificidade tipo-tripsina, nao o campo de nome.",
-    "caveat_fabricacao": "NENHUM destes registros e evidencia experimental de expressao em midgut (exceto Manduca sexta, ver referencia UniProt reviewed). Todos os demais sao heuristica de homologia + estrutura modelada. Nao reportar como 'digestive trypsin confirmada' sem esta ressalva."
+    "caveat_geometria_structure_agent": "scripts/agents/structure_agent.py (_find_catalytic_triad, criterio 'HIS-ASP-SER a <=15A') erra o Ser catalitico em 8/9 especies (offset sistematico de +15/+16 residuos vs. a posicao real via motivo de sequencia) - nao e bug isolado de H. virescens como se pensava antes, e mais amplo. Nao usar outputs/structure_multi/summary.json para geometria fina de bolso S1 (B1.4) sem corrigir o script antes.",
+    "caveat_fabricacao": "NENHUM destes registros e evidencia experimental de expressao em midgut (exceto Manduca sexta, ver referencia UniProt reviewed). Todos os demais sao heuristica de homologia + estrutura modelada + especificidade de sequencia confirmada. Nao reportar como 'digestive trypsin experimentalmente confirmada' sem esta ressalva."
   },
   "referencia_verificada": {
     "Msexta": {
@@ -20,7 +21,7 @@
       "evidencia": "UniProt reviewed/Swiss-Prot, cc_tissue_specificity=Midgut (confirmado 2026-09-18)",
       "pident_vs_ref": "P35045=96.1%, P35047=93.8% (paralogos, referencia = P35046)",
       "mean_pLDDT": 92.2,
-      "triad_qc": "OK (HIS70/ASP115/SER228, s1_asp=113)",
+      "especificidade_tripsina": "CONFIRMADA - Asp na posicao 207 (Ser catalitico real=213, contexto DVGGRDQCQGD)",
       "papel": "referencia positiva verificada + candidato do painel (especie nao-praga, mas trypsin digestiva real)"
     }
   },
@@ -30,29 +31,30 @@
       "species": "Spodoptera frugiperda",
       "pident_vs_Msexta": 50.6,
       "mean_pLDDT": 89.8,
-      "triad_qc": "OK, mas geometria atipica (SER=236, s1_asp=219 vs ~112-116 nas outras especies) - flag para revisao manual em B1.3/B1.4",
-      "motivo_catalitico_confirmado_manual": "GDSGGP na posicao 218 (verificado por busca direta na sequencia)",
-      "papel": "alvo primario do projeto - PRIORIDADE MAXIMA apesar da baixa identidade e geometria atipica"
+      "especificidade_tripsina": "CONFIRMADA - Asp na posicao 214 (Ser catalitico real=220, contexto DVGGKDACQGD)",
+      "nota_geometria_antiga": "A geometria 'atipica' reportada por structure_agent.py (SER=236) era o script errando o Ser catalitico, nao uma anomalia biologica real - resolvido pela confirmacao via sequencia.",
+      "papel": "alvo primario do projeto - PRIORIDADE MAXIMA"
     },
-    "Slitura": {"accession": "B3F884", "species": "Spodoptera litura", "pident_vs_Msexta": 67.3, "mean_pLDDT": 90.1, "triad_qc": "OK (HIS69/ASP114/SER226, s1_asp=112)", "papel": "alvo primario"},
-    "Onubilalis": {"accession": "Q6R561", "species": "Ostrinia nubilalis", "pident_vs_Msexta": 66.7, "mean_pLDDT": 89.7, "triad_qc": "OK (HIS69/ASP114/SER228, s1_asp=112)", "papel": "alvo primario"},
-    "Dsaccharalis": {"accession": "T1QDI0", "species": "Diatraea saccharalis", "pident_vs_Msexta": 65.5, "mean_pLDDT": 91.0, "triad_qc": "OK (HIS69/ASP114/SER228, s1_asp=112)", "papel": "alvo primario"},
-    "Cincludens": {"accession": "A0A9P0BRD5", "species": "Chrysodeixis includens", "pident_vs_Msexta": 71.0, "mean_pLDDT": 90.4, "triad_qc": "OK (HIS69/ASP114/SER227, s1_asp=112)", "papel": "alvo primario"},
+    "Slitura": {"accession": "B3F884", "species": "Spodoptera litura", "pident_vs_Msexta": 67.3, "mean_pLDDT": 90.1, "especificidade_tripsina": "CONFIRMADA - Asp na posicao 205 (Ser catalitico real=211, contexto PTGGRDQCQGD)", "papel": "alvo primario"},
+    "Onubilalis": {"accession": "Q6R561", "species": "Ostrinia nubilalis", "pident_vs_Msexta": 66.7, "mean_pLDDT": 89.7, "especificidade_tripsina": "CONFIRMADA - Asp na posicao 207 (Ser catalitico real=213, contexto DVGGRDQCQGD)", "papel": "alvo primario"},
+    "Dsaccharalis": {"accession": "T1QDI0", "species": "Diatraea saccharalis", "pident_vs_Msexta": 65.5, "mean_pLDDT": 91.0, "especificidade_tripsina": "CONFIRMADA - Asp na posicao 207 (Ser catalitico real=213, contexto DVGGRDQCQGD)", "papel": "alvo primario"},
+    "Cincludens": {"accession": "A0A9P0BRD5", "species": "Chrysodeixis includens", "pident_vs_Msexta": 71.0, "mean_pLDDT": 90.4, "especificidade_tripsina": "CONFIRMADA - Asp na posicao 206 (Ser catalitico real=212, contexto DVGGRDQCQGD)", "papel": "alvo primario"},
     "Hvirescens": {
       "accession": "I7D523",
       "species": "Heliothis virescens",
       "pident_vs_Msexta": 48.8,
       "mean_pLDDT": 89.9,
-      "triad_qc": "FALHOU no script automatico (bug conhecido, ja registrado em memoria de projeto anterior) - mas motivo catalitico GDSGGP confirmado MANUALMENTE por busca direta na sequencia na posicao 217. Estrutura tem pLDDT normal (89.9), nao e problema de qualidade de modelo.",
-      "papel": "alvo primario, incluido com ressalva - QC estrutural automatico (Asp do bolso S1) precisa ser refeito com o bug do structure_agent corrigido antes de B1.4/B1.5"
+      "especificidade_tripsina": "CONFIRMADA - Asp na posicao 213 (Ser catalitico real=219, contexto DVGGKDACQGD)",
+      "triad_qc_automatico": "FALHOU no script structure_agent.py (bug conhecido) - motivo catalitico e resto da geometria confirmados manualmente via sequencia.",
+      "papel": "alvo primario"
     },
     "Pxylostella": {
       "accession": "E2IGY7",
       "species": "Plutella xylostella",
       "pident_vs_Msexta": 44.8,
       "mean_pLDDT": 90.6,
-      "triad_qc": "OK (HIS70/ASP116/SER226, s1_asp=114)",
-      "papel": "alvo primario, confianca menor (identidade mais baixa entre as especies com QC OK)"
+      "especificidade_tripsina": "CONFIRMADA - Asp na posicao 205 (Ser catalitico real=211, contexto DVGGKDACQGD)",
+      "papel": "alvo primario, confianca menor (identidade mais baixa entre as especies do painel)"
     }
   },
   "reclassificados_para_painel_negativo_B1_2": {
@@ -61,7 +63,7 @@
       "species": "Bombyx mori",
       "pident_vs_Msexta": 68.7,
       "mean_pLDDT": 88.9,
-      "triad_qc": "OK (HIS70/ASP115/SER227, s1_asp=113)",
+      "especificidade_tripsina": "CONFIRMADA - Asp na posicao 206 (Ser catalitico real=212, contexto DVGGRDSCTGD) - tambem e tripsina real, mas fica fora do painel de alvos por motivo de escopo (ver abaixo), nao por especificidade.",
       "motivo_reclassificacao": "Bombyx mori e inseto domesticado de valor economico (industria da seda), nao praga agricola. Por [[feedback_prioridade_especificidade]] (nunca tratar especificidade como checagem pos-hoc), deve entrar como especie a PROTEGER na contrasselecao (B1.2, categoria analoga a polinizadores), nao como alvo primario de design."
     }
   },
