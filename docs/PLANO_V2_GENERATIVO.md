@@ -168,6 +168,9 @@ Solubilidade/agregação, imunogenicidade, toxicidade (ToxinPred3/AllerTOP), com
 **B2.7 — LOOP DE CONTRASSELEÇÃO** ★ *núcleo metodológico e novidade publicável*
 Objetivo por sequência: `margem = score_alvo − max(score_painel_núcleo) − penalidades`.
 Implementação realista em 1 GPU: otimização evolutiva/recozimento sobre a sequência (mutação guiada por MPNN + crossover — o V1 já mostrou que crossover produz diversidade útil), avaliando a margem com o scorer mais barato que **passou na calibração B0.5**, em 2–4 ciclos. Só sequências com margem positiva avançam.
+**Decisão do usuário (2026-09-18, pós-B0.5):** scorer = **só Boltz-2** (`confidence_score`/pLDDT).
+RMSD de MD curta e MM-PBSA de trajetória única não passaram na calibração (ver
+`docs/bench/b05_mmpbsa_completo.md`) — não entram na margem do B2.7.
 **Decisão honesta declarada:** *não* faremos RL de ProGen2 do zero (premissa do prompt LNCC, escrita para 8× H200). O ganho científico está na **função objetivo com contrasseleção**, não em o otimizador ser RL.
 Saída: população final + curva de margem por ciclo — se a margem não melhorar, é resultado negativo real e vai para o artigo.
 
