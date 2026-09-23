@@ -277,7 +277,7 @@ def main():
                 print(f"{species} x {tag}: FALHOU ({err})")
                 continue
 
-            t_index = index_to_resnum(target_pdb, "A")
+            t_index = index_to_resnum(target_pdb, ref_defs[tag]["trypsin_chain_id"])
             t_lookup = resnum_lookup(t_index)
             mapping = build_correspondence(aln, t_index, q_index)
 
