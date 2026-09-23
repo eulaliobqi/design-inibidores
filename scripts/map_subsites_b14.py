@@ -151,7 +151,7 @@ def get_subsite_definitions(tag: str, cfg: dict) -> dict:
     return {
         "subsites": subsites,
         "catalytic_ser": f"{catalytic_ser.get_resname()}{catalytic_ser.id[1]}",
-        "catalytic_ser_p1_dist_A": round(dist, 2),
+        "catalytic_ser_p1_dist_A": round(float(dist), 2),
         "trypsin_chain_pdb": str(pdb_path),
         "trypsin_chain_id": cfg["trypsin_chain"],
     }
