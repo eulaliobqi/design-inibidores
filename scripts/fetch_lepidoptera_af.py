@@ -1,7 +1,13 @@
 """Baixa estruturas reais do AlphaFold DB para tripsinas de Lepidoptera bem documentadas.
 
-Roda no servidor. Accessions escolhidos via UniProt REST real (busca 2026-07-18),
-priorizando entradas com padrao de tripsina digestiva (~250-270aa) e AlphaFoldDB=True.
+So precisa de acesso a internet (API publica da AlphaFold DB) — roda em qualquer maquina.
+Accessions escolhidos via UniProt REST real (busca 2026-07-18), priorizando entradas com
+padrao de tripsina digestiva (~250-270aa) e AlphaFoldDB=True.
+
+Salva em data-lepidoptera-panel/ (versionado em git, ver panel_v2.json) em vez de
+data-nontargets/ (convencao antiga do V1, nunca versionada — ver PLANO_V2 Passo 1 /
+feedback de risco de dados: as 10 estruturas de 2026-07-18 so existiam no filesystem
+do servidor, fora de controle de versao).
 """
 import urllib.request
 from pathlib import Path
@@ -18,7 +24,7 @@ SPECIES = {
     "Cincludens": ("A0A9P0BRD5", "Chrysodeixis includens", "trypsin (TrEMBL)"),
 }
 
-OUT_DIR = Path("data-nontargets")
+OUT_DIR = Path("data-lepidoptera-panel")
 OUT_DIR.mkdir(exist_ok=True)
 
 for tag, (acc, species, desc) in SPECIES.items():
