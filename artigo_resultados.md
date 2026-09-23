@@ -1283,9 +1283,49 @@ ligados. **Limitação herdada do protocolo do V1 (Seção 2.8), não introduzid
 MM-PBSA (energia de ligação real, último degrau da escada) ainda não foi executado até o
 fechamento desta seção.
 
-**Estado do painel ao fechamento desta seção:** Boltz-2 completo (6/6 controles); HADDOCK3
-completo para os 5 controles com sítio reativo verificado (sem decoys ainda); MD curta em
-andamento (12/22 sistemas concluídos no corte de 2026-09-18); MM-PBSA pendente.
+**Estado do painel ao fechamento desta subseção (corte 2026-09-18):** Boltz-2 completo (6/6
+controles); HADDOCK3 completo para os 5 controles com sítio reativo verificado (sem decoys
+ainda); MD curta em andamento (12/22 sistemas concluídos); MM-PBSA pendente.
+
+### 5.3 Fechamento do B0.5 — MD/MM-PBSA completos e decisão de scorer (2026-09-18/22)
+
+A campanha de MD curta foi concluída nos 22 sistemas do painel de calibração (2 receptores × 6
+inibidores reais + 10 decoys pareados), confirmando o padrão observado no corte parcial: RMSD do
+complexo inteiro em 2 ns separa real de decoy em apenas **5/10 pares** — equivalente a acaso —
+pela mesma limitação estrutural identificada na Seção 5.2 (backbone ajustado sem isolar a
+interface). MM-PBSA (GB, trajetória única) foi então executado nos mesmos 22 sistemas, após
+correção de três bugs de protocolo (grupos de índice, PBC/centralização, seleção de frames — ver
+`docs/bench/b05_mmpbsa_completo.md`): o resultado é **4/10**, pior que acaso como discriminador
+real-vs-decoy (o decoy "vence" por até +144,8 kcal/mol em 1 par).
+
+**Resultado consolidado da escada de calibração (`docs/bench/b05_consolidado_final.md`,
+figura+tabela em `outputs/b05_figs/`):**
+
+| Método | Separação real-vs-decoy (n=10 pares) |
+|---|---|
+| Boltz-2 (`confidence_score`/pLDDT) | **10/10 — único método validado** |
+| RMSD (MD 2 ns, complexo inteiro) | 5/10 — equivalente a acaso |
+| MM-PBSA (GB, trajetória única) | 4/10 — pior que acaso |
+
+**Decisão registrada (usuário, 2026-09-18):** o loop de contrasseleção B2.7 usa **apenas Boltz-2**
+como scorer da margem de seletividade (`margem = score_alvo − max(score_painel_negativo) −
+penalidades`), já refletida em `docs/PLANO_V2_GENERATIVO.md` §B2.7 (commit `425db5a`). RMSD e
+MM-PBSA de trajetória única permanecem descartados como critério de *go/no-go* — pendência
+sinalizada e ainda não resolvida: os critérios de sucesso S1/S3 do plano original ainda listam
+ΔG MM-PBSA e RMSD/ocupância (n=3 réplicas) como validação *final*, e precisam de revisão à luz
+deste resultado antes de serem reaplicados.
+
+Com B0.5 fechado, o próprio plano define o caminho crítico seguinte: **B1.4** (geometria real do
+bolso S1, hoje ainda heurística) → **B1.2** (painel negativo completo) → **B1.5** (determinantes
+de seletividade) — todos bloqueando qualquer geração generativa (RFdiffusion) contra o painel
+novo de 7 alvos (Seção 5.1), sob risco de repetir o mecanismo que já produziu o resultado 0/23
+da Seção 4 (bolso S1 tratado como conservado entre espécies, hotspot heurístico incorreto).
+
+A Figura 5 (`outputs/figuras_artigo/fig5_especificidade_SI.png`, commit `d8cad3e`) amplia o
+achado de especificidade da Seção 4 para um universo maior de candidatos testados (n=35, SI vs.
+tripsina humana × *A. mellifera*): **0/35 aprovados** (SI ≥ 2,0 kcal/mol em ambos os não-alvos),
+com vários candidatos em SI negativo (ligam-se de fato melhor ao não-alvo que ao alvo-primário).
+Consistente com o 0/21-23 já reportado na Seção 4 sobre um subconjunto menor.
 
 ## Referências
 
