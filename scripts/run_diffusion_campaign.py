@@ -142,7 +142,11 @@ def run_for_species(species: str, args) -> None:
         return
 
     mpnn_config = dict(config)
-    mpnn_config["proteinmpnn"] = {**config.get("proteinmpnn", {}), "num_seq_per_target": args.num_seq_per_target}
+    mpnn_config["proteinmpnn"] = {
+        **config.get("proteinmpnn", {}),
+        "num_seq_per_target": args.num_seq_per_target,
+        "batch_size": args.batch_size,
+    }
     mpnn_agent = ProteinMPNNAgent("ProteinMPNNAgent", mpnn_config, out_base / "proteinmpnn")
     mpnn_agent.run(backbones, str(receptor_pdb))
 
@@ -161,6 +165,12 @@ def main():
                      help="Comprimentos de macrociclo (aa), faixa Trilha A do plano é 8-16")
     ap.add_argument("--num-designs", type=int, default=10)
     ap.add_argument("--num-seq-per-target", type=int, default=30)
+    ap.add_argument("--batch-size", type=int, default=6,
+                     help="ProteinMPNN batch_size. BUG REAL confirmado 2026-09-23: o default "
+                          "de produção (25, config.yaml) causa CUDA OOM sob a contenção de GPU "
+                          "atual (~4.7GB livres, ver B0.4) para o complexo completo receptor+"
+                          "peptídeo (~250-280 resíduos) — falhou 100% das vezes na campanha real. "
+                          "6 foi testado e funciona nas mesmas condições de contenção.")
     args = ap.parse_args()
 
     species_list = ALL_PRIMARY_SPECIES if args.species == "all7" else [args.species]

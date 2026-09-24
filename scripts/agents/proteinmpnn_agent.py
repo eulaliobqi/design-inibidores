@@ -339,10 +339,18 @@ class ProteinMPNNAgent(BaseAgent):
         out_dir = self.workdir / "mpnn_out" / f"len{length}_{pdb.stem}"
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        fasta_files = (
-            list((out_dir / "seqs").glob("*.fa")) +
-            list((out_dir / "seqs").glob("*.fasta"))
-        )
+        fasta_files = [
+            f for f in (
+                list((out_dir / "seqs").glob("*.fa")) +
+                list((out_dir / "seqs").glob("*.fasta"))
+            )
+            if f.stat().st_size > 0
+        ]
+        # BUG REAL confirmado 2026-09-23 (campanha B2.3, OOM sob contenção de GPU):
+        # protein_mpnn_run.py cria o .fa vazio ANTES de crashar (CUDA OOM no meio da
+        # geração) — um arquivo de 0 bytes ficava marcado como "já rodou" e a próxima
+        # tentativa pulava o subprocess de novo, sem nunca reexecutar. Exigir
+        # st_size > 0 garante que uma falha real sempre seja retentada.
 
         # Só roda ProteinMPNN se os FASTAs ainda não existem (evita re-execução demorada)
         if not fasta_files:

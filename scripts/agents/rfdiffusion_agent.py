@@ -86,6 +86,20 @@ class RFdiffusionAgent(BaseAgent):
             out_dir = self.workdir / f"len_{length}"
             out_dir.mkdir(exist_ok=True)
 
+            # Resumo real: se este comprimento ja tem num_designs backbones finais
+            # (nao trajetoria) de uma corrida anterior, nao gerar de novo. Ganho
+            # de robustez confirmado necessario na campanha B2.3 (2026-09-23):
+            # sem isso, reiniciar apos falha de OOM no ProteinMPNN (etapa seguinte)
+            # obrigava a regerar horas de backbones ja prontos.
+            existing = [p for p in out_dir.glob("design_*.pdb") if "_traj" not in p.stem]
+            if len(existing) >= num_designs:
+                self.logger.info(
+                    f"RFdiffusion — comprimento {length} aa: {len(existing)} backbones "
+                    f"ja existem em {out_dir}, pulando geracao"
+                )
+                results[length] = existing
+                continue
+
             contig = f"A1-{n_res}/0 {length}-{length}"
 
             cmd = [
