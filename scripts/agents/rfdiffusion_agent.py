@@ -57,6 +57,7 @@ class RFdiffusionAgent(BaseAgent):
                          hotspots: list, lengths: list, num_designs: int) -> dict:
         cfg = self.config.get("rfdiffusion", {})
         results = {}
+        cyclic = cfg.get("cyclic", False)
 
         # Formatar hotspots para RFdiffusion: "A5,A10,A20"
         hotspot_str = ",".join(f"A{h}" for h in hotspots[:8])
@@ -98,8 +99,16 @@ class RFdiffusionAgent(BaseAgent):
                 f"denoiser.noise_scale_frame={cfg.get('noise_scale_frame', 0.1)}",
                 f"inference.output_prefix={out_dir.resolve()}/design",
             ]
+            if cyclic:
+                # Validado em B0.2 (docs/bench/rfdiff_sm120.md): liga N-C real (1.241A vs
+                # ~1.33A esperado) — ciclizacao cabeca-cauda real, nao so flag ignorada.
+                # Nao confundir com design_cyclic_oligos.sh (simetria C_n entre cadeias).
+                cmd += ["inference.cyclic=True", "inference.cyc_chains=a"]
 
-            self.logger.info(f"RFdiffusion — comprimento {length} aa | contig={contig}")
+            self.logger.info(
+                f"RFdiffusion — comprimento {length} aa | contig={contig}"
+                + (" | ciclico (macrociclo cabeca-cauda)" if cyclic else "")
+            )
             # cwd=rfd_path: Hydra encontra config/inference/ no repo clonado
             proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(rfd_path))
             if proc.returncode != 0:
