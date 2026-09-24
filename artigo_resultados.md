@@ -1298,8 +1298,10 @@ correção de três bugs de protocolo (grupos de índice, PBC/centralização, s
 `docs/bench/b05_mmpbsa_completo.md`): o resultado é **4/10**, pior que acaso como discriminador
 real-vs-decoy (o decoy "vence" por até +144,8 kcal/mol em 1 par).
 
-**Resultado consolidado da escada de calibração (`docs/bench/b05_consolidado_final.md`,
-figura+tabela em `outputs/b05_figs/`):**
+**Resultado consolidado da escada de calibração** (`docs/bench/b05_consolidado_final.md`,
+figura+tabela em `outputs/b05_figs/`):
+
+**Tabela 10.** Taxa de separação real-vs-decoy por método na calibração B0.5 (n=10 pares/método).
 
 | Método | Separação real-vs-decoy (n=10 pares) |
 |---|---|
@@ -1326,6 +1328,55 @@ achado de especificidade da Seção 4 para um universo maior de candidatos testa
 tripsina humana × *A. mellifera*): **0/35 aprovados** (SI ≥ 2,0 kcal/mol em ambos os não-alvos),
 com vários candidatos em SI negativo (ligam-se de fato melhor ao não-alvo que ao alvo-primário).
 Consistente com o 0/21-23 já reportado na Seção 4 sobre um subconjunto menor.
+
+### 5.4 B1.4 — Mapeamento real dos subsítios S1-S4/S1'-S3' e exossítio (2026-09-23)
+
+A heurística de geometria usada até aqui (`structure_agent.py::_find_catalytic_triad`, critério
+"HIS-ASP-SER ≤15 Å") tem um offset sistemático de +15/+16 resíduos confirmado em 8/9 espécies do
+painel — não é um bug isolado, como se pensava antes. Para substituí-la, os subsítios reais foram
+redefinidos a partir de dois complexos cristalográficos de referência do RCSB (2PTC,
+tripsina bovina–BPTI; 1SFI, tripsina bovina–SFTI-1): o resíduo P1 de cada inibidor foi
+identificado por geometria real (resíduo cujo carbono carbonila fica mais próximo do OG de uma
+Ser da própria tripsina — não citado de literatura sem verificação), e os subsítios S4–S1'–S3'
+mais o exossítio foram definidos por contato físico real (≤4,5 Å) entre os sete resíduos do
+inibidor em torno da ligação cindível (P4...P3', nomenclatura Schechter-Berger) e a tripsina. Em
+ambos os complexos a Ser catalítica identificada foi Ser195 (numeração bovina clássica) e o S1
+real incluiu Asp189/Gly216/Gly226/Ser190/Ser214/Trp215 — bolso de especificidade canônico,
+obtido aqui por geometria pura, não citação.
+
+A transferência dessa definição para os 9 receptores do painel usou equivalência estrutural real
+via **foldseek TMalign** (`--alignment-type 1`), não offset de sequência assumido. Resultado:
+**18/18 combinações espécie×template aprovadas** (TMscore 0,946–0,957, RMSD 1,18–1,41 Å, 100%
+dos resíduos de subsítio transferidos), nenhum receptor excluído do painel. Validação cruzada
+forte: a posição Asp189-equivalente encontrada por este método bate **exatamente** (9/9 espécies)
+com a encontrada independentemente por offset de sequência (Seção 5.1) — dois métodos totalmente
+diferentes convergindo no mesmo resultado. Saída completa em
+`data-lepidoptera-panel/subsites_by_receptor.json` (script: `scripts/map_subsites_b14.py`,
+documentação: `docs/bench/b14_subsites_reais.md`).
+
+### 5.5 Pivô: geração por difusão sem contrasseleção (2026-09-23, em andamento)
+
+O usuário decidiu pausar temporariamente a linha de contrasseleção (B1.2 painel negativo e B1.5
+determinantes de seletividade, Seção 5.3) e redirecionar o projeto para **descobrir os melhores
+peptídeos contra Lepidoptera em geral** — potência ampla contra o painel de 7 pragas-alvo, sem
+objetivo de seletividade nesta fase. B1.2/B1.5 ficam arquivados para retomada futura em separado;
+isso não contradiz a prioridade permanente de especificidade do projeto, apenas reorganiza o
+trabalho em módulos.
+
+Escolhida a **Trilha A** (macrociclo via RFdiffusion cíclico, `inference.cyclic=True`, validado
+geometricamente na Seção anterior/B0.2 — fechamento N-C real de 1,24 Å), ancorada nos hotspots
+reais de B1.4 (resíduos de contato S1+S2). Um piloto técnico (2 designs, *S. frugiperda*)
+confirmou o pipeline de ponta a ponta: macrociclo real (N-C = 1,26–1,31 Å) e redesenho de
+sequência via ProteinMPNN funcionando em código de produção — revelando e corrigindo dois bugs
+reais no processo (QC medindo a cadeia errada do complexo receptor-peptídeo; ProteinMPNN falhando
+silenciosamente quando `batch_size` excede `num_seq_per_target`).
+
+Uma campanha real foi então lançada contra os 7 alvos primários do painel (comprimentos 8–16 aa,
+10 macrociclos por comprimento/espécie, 30 sequências ProteinMPNN por macrociclo — 350 backbones
+no total), em execução no servidor no momento do fechamento desta seção
+(`scripts/run_diffusion_campaign.py --species all7`). Resultados finais e triagem por Boltz-2
+(único scorer validado na calibração da Seção 5.2/5.3) ficam para a próxima atualização deste
+documento.
 
 ## Referências
 

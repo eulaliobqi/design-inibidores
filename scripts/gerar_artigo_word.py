@@ -137,7 +137,11 @@ def main():
     convert_markdown_body(document, metodologia_lines[2:])  # pula titulo (linha 1) + linha em branco
 
     resultados_all = Path("artigo_resultados.md").read_text(encoding="utf-8").splitlines()
-    resultados_body = resultados_all[19:1206]  # linhas 20-1206 (1-indexed) = corpo real, sem changelog/refs embutidas
+    # Corpo real = da linha 20 (## 3. Resultados) até a linha anterior a "## Referências"
+    # (achado dinamicamente — hardcode antigo [19:1206] parava antes da Seção 5 inteira,
+    # que nunca chegou a entrar no Word até esta correção, 2026-09-23).
+    ref_idx = next(i for i, l in enumerate(resultados_all) if l.strip() == "## Referências")
+    resultados_body = resultados_all[19:ref_idx]
     convert_markdown_body(document, resultados_body, figure_after_heading=FIGURE_AFTER_HEADING)
 
     document.add_heading("Conclusões", level=1)
