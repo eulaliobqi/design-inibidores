@@ -105,21 +105,38 @@ def find_cleavage_sites(seq: str, rule: dict) -> list[int]:
     return sites
 
 
-def classify_trypsin_sites(seq: str, sites: list[int]) -> dict:
+def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | None = None) -> dict:
     """
     Classifica sítios de clivagem de tripsina em:
-      - p1_anchor : sítio mais C-terminal → posição de ancoramento desejada
+      - p1_anchor : posição de ancoramento desejada (isenta da contagem de susceptibilidade)
       - internal  : todos os outros → susceptíveis a auto-digestão
+
+    Dois modos, conforme geometric_p1_idx (0-based):
+      - None (default, peptídeo LINEAR — comportamento original do V1): p1_anchor = sítio
+        de tripsina mais C-terminal da sequência.
+      - fornecido (macrociclo, sem terminal real — ver compute_geometric_p1.py / A2 do plano
+        de retomada 2026-09-24): p1_anchor = a posição geometricamente mais próxima da Ser
+        catalítica na pose prevista do RFdiffusion, MAS só conta como âncora se essa posição
+        for de fato um sítio de clivagem de tripsina (K/R) nesta sequência — caso contrário
+        não há âncora real e todos os sítios de tripsina contam como internos/susceptíveis.
     """
     if not sites:
-        return {"p1_anchor": None, "internal": [], "n_internal": 0}
+        return {"p1_anchor": None, "internal": [], "n_internal": 0, "p1_source": "none"}
 
-    p1_anchor = max(sites)   # sítio mais C-terminal = P1 de ancoramento
-    internal  = [s for s in sites if s != p1_anchor]
+    if geometric_p1_idx is not None:
+        if geometric_p1_idx in sites:
+            p1_anchor, source = geometric_p1_idx, "geometric"
+        else:
+            p1_anchor, source = None, "geometric_not_KR"
+    else:
+        p1_anchor, source = max(sites), "linear_cterm"   # sítio mais C-terminal = P1 de ancoramento
+
+    internal = [s for s in sites if s != p1_anchor] if p1_anchor is not None else list(sites)
     return {
         "p1_anchor": p1_anchor,
         "internal":  internal,
         "n_internal": len(internal),
+        "p1_source": source,
     }
 
 
@@ -180,9 +197,10 @@ def suggest_modifications(seq: str, trypsin_internal: list[int]) -> list[str]:
     return suggestions
 
 
-def analyze_sequence(seq: str) -> dict:
+def analyze_sequence(seq: str, geometric_p1_1based: int | None = None) -> dict:
     seq = seq.strip().upper()
     n   = len(seq)
+    geometric_p1_idx = (geometric_p1_1based - 1) if geometric_p1_1based is not None else None
 
     by_protease = {}
     for protease, rule in CLEAVAGE_RULES.items():
@@ -192,7 +210,7 @@ def analyze_sequence(seq: str) -> dict:
             "positions": [s + 1 for s in sites],  # 1-based para leitura
         }
         if protease == "Trypsin":
-            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites)
+            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites, geometric_p1_idx)
         by_protease[protease] = entry
 
     n_internal = by_protease["Trypsin"]["trypsin_classification"]["n_internal"]
