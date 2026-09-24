@@ -97,21 +97,18 @@ def check_cyclic_geometry(pdb_path: Path):
         return None
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--species", default="Sfrugiperda", choices=sorted(RECEPTOR_FILES))
-    ap.add_argument("--template", default="1SFI_SFTI1", choices=["1SFI_SFTI1", "2PTC_BPTI"])
-    ap.add_argument("--subsites", nargs="+", default=["S1", "S2"],
-                     help="Subsítios de B1.4 usados como hotspot (default: S1 S2)")
-    ap.add_argument("--lengths", nargs="+", type=int, default=[10, 12, 14],
-                     help="Comprimentos de macrociclo (aa), faixa Trilha A do plano é 8-16")
-    ap.add_argument("--num-designs", type=int, default=5)
-    ap.add_argument("--num-seq-per-target", type=int, default=8)
-    args = ap.parse_args()
+# 7 alvos primários do painel (panel_v2.json) — exclui Msexta (referência) e Bmori
+# (painel negativo B1.2, fora de escopo desta fase de potência ampla).
+ALL_PRIMARY_SPECIES = [
+    "Sfrugiperda", "Slitura", "Onubilalis", "Dsaccharalis",
+    "Cincludens", "Hvirescens", "Pxylostella",
+]
 
-    receptor_pdb = PANEL_DIR / RECEPTOR_FILES[args.species]
-    hotspots = load_hotspots(args.species, args.template, tuple(args.subsites))
-    print(f"Alvo: {args.species} ({receptor_pdb.name})")
+
+def run_for_species(species: str, args) -> None:
+    receptor_pdb = PANEL_DIR / RECEPTOR_FILES[species]
+    hotspots = load_hotspots(species, args.template, tuple(args.subsites))
+    print(f"\n{'='*60}\nAlvo: {species} ({receptor_pdb.name})")
     print(f"Hotspots reais (B1.4, {'+'.join(args.subsites)}, template {args.template}): {hotspots}")
     center = receptor_centroid(receptor_pdb, hotspots)
     print(f"Centroide: {center}")
@@ -124,7 +121,7 @@ def main():
         "cyclic": True,
     }
 
-    out_base = ROOT / "outputs" / f"b23_pilot_{args.species}"
+    out_base = ROOT / "outputs" / f"b23_campaign_{species}"
     rfd_agent = RFdiffusionAgent("RFdiffusionAgent", config, out_base / "rfdiffusion")
     binding_site = {"consensus_center_xyz": center, "hotspot_residues": hotspots}
     backbones = rfd_agent.run(str(receptor_pdb), binding_site)
@@ -141,7 +138,7 @@ def main():
     print(f"Macrociclos reais confirmados: {n_ok}/{total}")
 
     if total == 0:
-        print("Nenhum backbone gerado — abortando ProteinMPNN.")
+        print(f"{species}: nenhum backbone gerado — pulando ProteinMPNN.")
         return
 
     mpnn_config = dict(config)
@@ -149,7 +146,36 @@ def main():
     mpnn_agent = ProteinMPNNAgent("ProteinMPNNAgent", mpnn_config, out_base / "proteinmpnn")
     mpnn_agent.run(backbones, str(receptor_pdb))
 
-    print(f"\nPiloto concluído: {out_base}/")
+    print(f"{species} concluído: {out_base}/")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--species", default="Sfrugiperda",
+                     choices=sorted(RECEPTOR_FILES) + ["all7"],
+                     help="'all7' roda os 7 alvos primários do painel em sequência")
+    ap.add_argument("--template", default="1SFI_SFTI1", choices=["1SFI_SFTI1", "2PTC_BPTI"])
+    ap.add_argument("--subsites", nargs="+", default=["S1", "S2"],
+                     help="Subsítios de B1.4 usados como hotspot (default: S1 S2)")
+    ap.add_argument("--lengths", nargs="+", type=int, default=[8, 10, 12, 14, 16],
+                     help="Comprimentos de macrociclo (aa), faixa Trilha A do plano é 8-16")
+    ap.add_argument("--num-designs", type=int, default=10)
+    ap.add_argument("--num-seq-per-target", type=int, default=30)
+    args = ap.parse_args()
+
+    species_list = ALL_PRIMARY_SPECIES if args.species == "all7" else [args.species]
+    failed = []
+    for i, species in enumerate(species_list, 1):
+        print(f"\n### [{i}/{len(species_list)}] {species} ###")
+        try:
+            run_for_species(species, args)
+        except Exception as e:
+            print(f"ERRO em {species}: {e} — continuando com o próximo alvo")
+            failed.append(species)
+
+    print(f"\n{'='*60}\nCampanha concluída. {len(species_list) - len(failed)}/{len(species_list)} alvos OK.")
+    if failed:
+        print(f"Falharam: {failed}")
 
 
 if __name__ == "__main__":
