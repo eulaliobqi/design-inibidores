@@ -76,12 +76,19 @@ def receptor_centroid(pdb_path: Path, resnums: list[int]) -> list[float]:
 
 def check_cyclic_geometry(pdb_path: Path):
     """Distância N(res1)-C(resN) — QC do fechamento macrocíclico real.
-    Referência B0.2 (docs/bench/rfdiff_sm120.md): 1.241A observado, ~1.33A esperado."""
+    Referência B0.2 (docs/bench/rfdiff_sm120.md): 1.241A observado, ~1.33A esperado.
+
+    A saída do RFdiffusion em modo binder (Complex_base_ckpt) tem DUAS cadeias:
+    A = receptor (alvo, ~230-270aa), B = peptídeo desenhado (o macrociclo real) —
+    confirmado por inspeção direta (bug real encontrado no piloto B2.3: medir a
+    cadeia A por engano dá N-C ~90A, sem sentido nenhum pra ciclização)."""
     from Bio.PDB import PDBParser
 
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure("x", str(pdb_path))
-    residues = [r for r in structure[0]["A"] if r.id[0] == " "]
+    model = structure[0]
+    chain_id = "B" if "B" in model else list(model.child_dict.keys())[-1]
+    residues = [r for r in model[chain_id] if r.id[0] == " "]
     if len(residues) < 2:
         return None
     try:

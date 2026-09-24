@@ -349,12 +349,20 @@ class ProteinMPNNAgent(BaseAgent):
             # batch_size=1 (default antigo) subutiliza GPU real (RTX 5070 Ti 16GB, ~540MB
             # usados a 38% util. observado 2026-07-18) — configurável, default 25 mantém
             # margem segura de VRAM enquanto acelera bastante os 500 seqs/backbone.
-            batch_size = cfg.get("batch_size", 25)
+            #
+            # BUG REAL confirmado 2026-09-23 (piloto B2.3): se batch_size > num_seq_per_target,
+            # protein_mpnn_run.py termina com returncode 0 e "0 sequences ... generated em
+            # 0.0001s" — falha SILENCIOSA, sem stderr, indistinguível de sucesso sem checar o
+            # conteúdo do FASTA. Acontece sempre que num_seq_per_target é pequeno (ex.: piloto
+            # com 4-8 seqs/alvo) mas batch_size continua no default de produção (25, calibrado
+            # pra 500 seqs/alvo). Clampar aqui protege qualquer chamador futuro.
+            num_seq = cfg.get("num_seq_per_target", 500)
+            batch_size = min(cfg.get("batch_size", 25), num_seq)
             cmd = [
                 "python", str(mpnn_path / "protein_mpnn_run.py"),
                 "--pdb_path", str(pdb),
                 "--out_folder", str(out_dir),
-                "--num_seq_per_target", str(cfg.get("num_seq_per_target", 500)),
+                "--num_seq_per_target", str(num_seq),
                 "--sampling_temp", str(cfg.get("sampling_temp", 0.1)),
                 "--backbone_noise", str(cfg.get("backbone_noise", 0.05)),
                 "--omit_AAs", cfg.get("omit_aas", "CX"),
