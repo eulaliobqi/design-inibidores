@@ -39,3 +39,11 @@ Thumbs.db
 # Arquivos temporários de PyRosetta
 *.fasc
 *.sc
+
+# B2.7 scoring: yaml de entrada do Boltz-2 sao transitorios (regeneraveis a partir de
+# outputs/b23_cleavage_analysis.json + data-lepidoptera-panel/*.pdb + msa_cache/*.csv);
+# so o MSA real do receptor (msa_cache/*.csv, vem de chamada externa ao servidor MMseqs2)
+# e versionado.
+data-b23-scoring/boltz_yaml/
+data-b23-scoring/msa_cache/*_unpaired_tmp_env/
+data-b23-scoring/msa_cache/*_paired_tmp_env/
