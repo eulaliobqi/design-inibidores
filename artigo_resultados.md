@@ -1378,6 +1378,42 @@ no total), em execução no servidor no momento do fechamento desta seção
 (único scorer validado na calibração da Seção 5.2/5.3) ficam para a próxima atualização deste
 documento.
 
+### 5.6 Campanha completa, filtro de resistência a protease e scoring Boltz-2 (2026-09-28)
+
+A campanha de geração foi estendida para a faixa completa de 5–20 aa (rodada adicional para
+5–8/18–20 aa, complementando a cobertura inicial de 8–16 aa) e concluída sem erro nas 7
+espécies: **9.381 sequências (8–16 aa) + 9.846 sequências (5–8/18–20 aa) = 19.227 sequências
+reais geradas no total**, todas confirmadas como macrociclos reais por geometria (fechamento
+N-C 1,2–1,4 Å).
+
+O filtro real de resistência a protease (`analyze_cleavage.py`, com P1-âncora geométrico —
+o resíduo do peptídeo mais próximo da Ser catalítica real do receptor, resolvendo a
+inadequação da heurística linear "K/R mais C-terminal" do V1 para macrociclos sem terminal
+real) classificou **2.360/19.227 (12,3%) como RESISTENTE**, 4.388 (22,8%) MARGINAL e 12.479
+(64,9%) SUSCETÍVEL. A taxa de resistência é maior nesta faixa completa que no corte parcial
+inicial só de 8–16 aa (8,8%), consistente com peptídeos mais curtos (5–8 aa) terem menos
+sítios K/R internos disponíveis para clivagem por construção.
+
+Os 2.360 candidatos RESISTENTE foram então pontuados com Boltz-2 (único scorer validado na
+calibração da Seção 5.2/5.3, confidence_score/pLDDT separando inibidor real de decoy em
+10/10 pares) — decisão do usuário de ir direto ao scoring dos candidatos gerados em vez de
+uma etapa adicional de calibração contra inibidores naturais conhecidos, já que o objetivo
+desta fase é a capacidade da tecnologia generativa em si, não reproduzir peptídeos já
+existentes. Todos os 2.360 candidatos foram pontuados com sucesso (zero falhas), com
+confidence_score médio de 0,86 (mediana 0,865) e **nenhum candidato abaixo de 0,5** —
+89,9% acima de 0,8, na mesma faixa dos inibidores reais calibrados na Seção 5.2
+(0,81–0,95). O melhor candidato de cada espécie (confidence_score 0,90–0,96) foi
+selecionado para uma etapa adicional de dinâmica molecular real (1 réplica, 50 ns,
+amber99sb-ildn/TIP3P, pH 10,0 — intestino alcalino de Lepidoptera), partindo da estrutura
+completa (com cadeias laterais reais) prevista pelo próprio Boltz-2. **Ressalva
+metodológica real**: os PDBs preditos pelo Boltz-2 não registram a ligação N-C do
+macrociclo, e a topologia GROMACS gerada trata o peptídeo como linear (terminais livres)
+— o fechamento correto do anel na topologia é um desenvolvimento de engenharia ainda não
+implementado neste projeto. Os resultados desta MD, portanto, servem como sinal aproximado
+de estabilidade/interação, não como validação final da forma macrocíclica real; a correção
+da topologia fica como trabalho futuro antes de qualquer conclusão publicável baseada
+nesses dados de MD.
+
 ## Referências
 
 **Alvo biológico e caracterização das tripsinas:**
