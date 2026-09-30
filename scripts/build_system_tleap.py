@@ -21,8 +21,10 @@ Saidas em DIR: solv_ions.gro, topol.top, build_report.json (+ posre_*.itp ja inc
 import argparse
 import json
 import math
+import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import parmed as pmd
@@ -34,7 +36,12 @@ RENAME_STD = {"HID": "HIS", "HIE": "HIS", "HIP": "HIS", "CYX": "CYS", "CYM": "CY
 
 
 def run(cmd, **kw):
-    return subprocess.run(cmd, capture_output=True, text=True, **kw)
+    # funciona mesmo sem `conda activate`: tleap/AMBERHOME vem do prefixo do Python em uso
+    env = dict(os.environ)
+    prefix = Path(sys.executable).resolve().parent.parent
+    env["AMBERHOME"] = str(prefix)
+    env["PATH"] = f"{prefix / 'bin'}{os.pathsep}{env.get('PATH', '')}"
+    return subprocess.run(cmd, capture_output=True, text=True, env=env, **kw)
 
 
 def protonate(complex_pdb: Path, out: Path, ph: float, pdb2pqr: str) -> Path:
