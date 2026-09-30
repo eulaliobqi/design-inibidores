@@ -10,6 +10,8 @@ source ~/miniforge3/etc/profile.d/conda.sh
 SP8="Sfrugiperda Slitura Onubilalis Dsaccharalis Cincludens Hvirescens Pxylostella Agemmatalis"
 RES=data-b23-scoring/results
 BOLTZ_ROBUST="--model boltz2 --diffusion_samples 5 --recycling_steps 3 --sampling_steps 200 --use_potentials --output_format pdb --preprocessing-threads 4"
+# boltz predict com timeout e 1 nova tentativa (em 30/09 o pre-processamento travou 56 min sem erro; o Boltz retoma do que ja processou)
+bz() { timeout 3h boltz predict "$@" || { echo "[bz] falhou/timeout, nova tentativa: $*"; timeout 3h boltz predict "$@"; }; }
 rule_of() { [ "$1" = L ] && echo linear-strict-hard || echo circular-hard; }
 clv_of()  { [ "$1" = L ] && echo outputs/b23_cleavage_linear_hard.json || echo outputs/b23_cleavage_circular_hard.json; }
 
@@ -26,7 +28,7 @@ for F in L M; do
       n_yaml=$(ls $RES/boltz_yaml_E2_$F/$sp/*.yaml 2>/dev/null | wc -l)
       n_done=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
       [ "$n_yaml" -gt 0 ] && [ "$n_done" -lt "$n_yaml" ] && \
-        boltz predict $RES/boltz_yaml_E2_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
+        bz $RES/boltz_yaml_E2_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
     done
   done
   ( cd scripts && python rescore_boltz2_topk.py collect --front $F --tag E2 --seeds 1 2 3 )
@@ -65,14 +67,14 @@ for F in L M; do
       n_yaml=$(ls $RES/boltz_yaml_E3_$F/$sp/*.yaml 2>/dev/null | wc -l)
       n_done=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
       [ "$n_yaml" -gt 0 ] && [ "$n_done" -lt "$n_yaml" ] && \
-        boltz predict $RES/boltz_yaml_E3_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
+        bz $RES/boltz_yaml_E3_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
     done
   done
   ( cd scripts && python rescore_boltz2_topk.py collect --front $F --tag E3 --seeds 1 2 3 && python rescore_boltz2_topk.py delta --front $F )
   echo "[E4m:$F] $(date) matriz cruzada 8x8 (top-1)"
   ( cd scripts && python pose_qc.py matrix-prepare --candidates ../$RES/top_candidates_$F.json --front $F )
   for tsp in $SP8; do
-    [ -d $RES/boltz_yaml_matrix_$F/$tsp ] && boltz predict $RES/boltz_yaml_matrix_$F/$tsp --model boltz2 \
+    [ -d $RES/boltz_yaml_matrix_$F/$tsp ] && bz $RES/boltz_yaml_matrix_$F/$tsp --model boltz2 \
         --out_dir outputs/b23_boltz2_matrix_${F}_$tsp --output_format pdb --preprocessing-threads 4
   done
   ( cd scripts && python pose_qc.py matrix-collect --front $F )
