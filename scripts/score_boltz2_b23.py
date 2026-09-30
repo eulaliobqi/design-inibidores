@@ -34,6 +34,7 @@ SPECIES_PDB = {
     "Cincludens": "Cincludens-A0A9P0BRD5-AlphaFold.pdb",
     "Hvirescens": "Hvirescens-I7D523-AlphaFold.pdb",
     "Pxylostella": "Pxylostella-E2IGY7-AlphaFold.pdb",
+    "Agemmatalis": "Agemmatalis-A0A2U8NFD7-AlphaFold.pdb",
 }
 
 
@@ -144,7 +145,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p1 = sub.add_parser("write-yaml")
-    p1.add_argument("--species", required=True, choices=SPECIES_7)
+    p1.add_argument("--species", required=True, choices=SPECIES_7 + ["Agemmatalis"])
     p1.add_argument("--cleavage-json", default="outputs/b23_cleavage_analysis.json")
     p1.add_argument("--msa-cache-dir", default="data-b23-scoring/msa_cache")
     p1.add_argument("--yaml-dir", default="data-b23-scoring/boltz_yaml")
@@ -152,7 +153,7 @@ def main():
     p1.set_defaults(func=write_yaml)
 
     p2 = sub.add_parser("collect")
-    p2.add_argument("--species", required=True, choices=SPECIES_7)
+    p2.add_argument("--species", required=True, choices=SPECIES_7 + ["Agemmatalis"])
     p2.add_argument("--yaml-dir", default="data-b23-scoring/boltz_yaml")
     p2.add_argument("--boltz-out-prefix", default="outputs/b23_boltz2")
     p2.add_argument("--out", default="outputs/b23_boltz2_scores.json")

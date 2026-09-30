@@ -28,6 +28,7 @@ SPECIES_PDB = {
     "Cincludens": "Cincludens-A0A9P0BRD5-AlphaFold.pdb",
     "Hvirescens": "Hvirescens-I7D523-AlphaFold.pdb",
     "Pxylostella": "Pxylostella-E2IGY7-AlphaFold.pdb",
+    "Agemmatalis": "Agemmatalis-A0A2U8NFD7-AlphaFold.pdb",
 }
 
 
