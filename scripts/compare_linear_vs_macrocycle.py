@@ -1,29 +1,29 @@
 """
-compare_linear_vs_macrocycle.py -- bracos de comparacao (manuscrito em forma linear; o
-macrociclo e' o braco comparativo). Sem GPU. Le os resultados JA existentes:
-  linear     : outputs/b23_cleavage_linear_strict.json + data-b23-scoring/results/b23_boltz2_linear_scores.json
-  macrociclo : outputs/b23_cleavage_circular.json       + data-b23-scoring/results/b23_boltz2_scores.json
-                                                          (+ Agemmatalis, top_candidates_circular_all8.json)
-Saida: outputs/linear_vs_macrocycle.json com
-  - contagem de classes por especie nas duas regras e sobreposicao dos RESISTENTE;
-  - para sequencias RESISTENTE em ambas e pontuadas nos dois modos: correlacao de Spearman entre
-    confidence_score do Boltz-2 (peptideo ciclico vs linear), diferenca media, concordancia de top-k;
-  - top-1 por especie nos dois bracos.
+compare_linear_vs_macrocycle.py -- E8 do plano v3. Sem GPU. Compara as duas frentes (criterio duro de
+nao-clivabilidade) com os resultados de E1:
+  L = outputs/b23_cleavage_linear_hard.json   + data-b23-scoring/results/b23_boltz2_L_scores.json
+  M = outputs/b23_cleavage_circular_hard.json + data-b23-scoring/results/b23_boltz2_M_scores.json
+e, como teste de reprodutibilidade do Boltz-2, com as predicoes ciclicas antigas
+(data-b23-scoring/results/b23_boltz2_scores.json; mesma sequencia+backbone, mesmo protocolo).
+Saida: outputs/linear_vs_macrocycle.json
 """
 import json
+import statistics
 from pathlib import Path
 
 from scipy.stats import spearmanr
 
 ROOT = Path(__file__).parent.parent
+RES = ROOT / "data-b23-scoring" / "results"
 
 
 def load(p):
-    return json.loads((ROOT / p).read_text())
+    p = Path(p)
+    return json.loads(p.read_text()) if p.exists() else {}
 
 
-def keyed(scores_by_sp):
-    return {sp: {(r["backbone"], r["sequence"]): r for r in rows} for sp, rows in scores_by_sp.items()}
+def keyed(d):
+    return {sp: {(r["backbone"], r["sequence"]): r["confidence_score"] for r in rows} for sp, rows in d.items()}
 
 
 def resistant(clv):
@@ -31,36 +31,38 @@ def resistant(clv):
             for sp, e in clv["by_species"].items()}
 
 
-def main():
-    lin_clv, cir_clv = load("outputs/b23_cleavage_linear_strict.json"), load("outputs/b23_cleavage_circular.json")
-    lin_sc = keyed(load("data-b23-scoring/results/b23_boltz2_linear_scores.json"))
-    cir_sc = keyed(load("data-b23-scoring/results/b23_boltz2_scores.json"))
-    lin_res, cir_res = resistant(lin_clv), resistant(cir_clv)
+def corr(pairs):
+    if len(pairs) < 3:
+        return None
+    a, b = zip(*pairs)
+    return {"n": len(pairs), "spearman": float(spearmanr(a, b)[0]),
+            "mean_diff_b_minus_a": statistics.mean(y - x for x, y in pairs),
+            "mean_abs_diff": statistics.mean(abs(y - x) for x, y in pairs)}
 
+
+def main():
+    L = keyed(load(RES / "b23_boltz2_L_scores.json"))
+    M = keyed(load(RES / "b23_boltz2_M_scores.json"))
+    old = keyed(load(RES / "b23_boltz2_scores.json"))
+    rl = resistant(load(ROOT / "outputs/b23_cleavage_linear_hard.json"))
+    rm = resistant(load(ROOT / "outputs/b23_cleavage_circular_hard.json"))
     out = {"per_species": {}, "pooled": {}}
-    xs, ys = [], []
-    for sp in lin_res:
-        both = lin_res[sp] & cir_res.get(sp, set())
-        pair = [(cir_sc[sp][k]["confidence_score"], lin_sc[sp][k]["confidence_score"])
-                for k in both if k in cir_sc.get(sp, {}) and k in lin_sc.get(sp, {})]
-        e = {"n_linear_resistente": len(lin_res[sp]), "n_circular_resistente": len(cir_res.get(sp, ())),
-             "n_em_ambos": len(both), "n_pareados_boltz": len(pair)}
-        if len(pair) > 2:
-            c, l = zip(*pair)
-            e["spearman_cyc_vs_lin"] = float(spearmanr(c, l)[0])
-            e["media_dif_lin_menos_cyc"] = sum(b - a for a, b in pair) / len(pair)
-            xs += c; ys += l
-        for tag, sc, res in (("linear", lin_sc, lin_res), ("macrociclo", cir_sc, cir_res)):
-            rows = [r for k, r in sc.get(sp, {}).items() if k in res.get(sp, ())]
-            if rows:
-                b = max(rows, key=lambda r: r["confidence_score"])
-                e[f"top1_{tag}"] = {"sequence": b["sequence"], "confidence": b["confidence_score"]}
-        out["per_species"][sp] = e
-    if len(xs) > 2:
-        out["pooled"] = {"n_pareados": len(xs), "spearman_cyc_vs_lin": float(spearmanr(xs, ys)[0]),
-                         "media_dif_lin_menos_cyc": sum(b - a for a, b in zip(xs, ys)) / len(xs)}
+    lm, rep = [], []
+    for sp in rl:
+        common = rl[sp] & rm.get(sp, set())
+        pl = [(M[sp][k], L[sp][k]) for k in common if k in M.get(sp, {}) and k in L.get(sp, {})]
+        pr = [(old[sp][k], M[sp][k]) for k in rm.get(sp, ()) if k in old.get(sp, {}) and k in M.get(sp, {})]
+        lm += pl
+        rep += pr
+        out["per_species"][sp] = {
+            "n_L": len(rl[sp]), "n_M": len(rm.get(sp, ())), "n_em_ambos": len(common),
+            "L_vs_M_mesma_sequencia": corr(pl), "M_novo_vs_M_antigo": corr(pr),
+            "top3_L": sorted(((c, k[1]) for k, c in L.get(sp, {}).items() if k in rl[sp]), reverse=True)[:3],
+            "top3_M": sorted(((c, k[1]) for k, c in M.get(sp, {}).items() if k in rm.get(sp, ())), reverse=True)[:3]}
+    out["pooled"] = {"L_vs_M_mesma_sequencia": corr(lm),
+                     "reprodutibilidade_Boltz2_M_novo_vs_antigo": corr(rep)}
     (ROOT / "outputs/linear_vs_macrocycle.json").write_text(json.dumps(out, indent=2, ensure_ascii=False))
-    print(json.dumps(out, indent=2, ensure_ascii=False))
+    print(json.dumps(out["pooled"], indent=2))
 
 
 if __name__ == "__main__":

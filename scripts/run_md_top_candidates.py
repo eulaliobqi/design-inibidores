@@ -98,7 +98,8 @@ def main():
     if args.candidates:
         candidates = json.loads((ROOT / args.candidates).read_text())["candidates"]
     if args.species:
-        candidates = {k: v for k, v in candidates.items() if k in args.species}
+        candidates = {k: v for k, v in candidates.items()
+                      if k in args.species or v.get('species') in args.species}
 
     config = yaml.safe_load(open(ROOT / "config.yaml"))
     agent = MDAgent("MDAgent_top_candidates", config, str(workdir))
