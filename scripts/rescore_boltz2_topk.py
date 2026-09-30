@@ -4,6 +4,7 @@ rescore_boltz2_topk.py -- E2/E3 do plano v3 (docs/PLANO_LINEAR_2026-09-30.md).
 E2: re-pontua o top-k (por especie e frente) da triagem E1 com o protocolo robusto do grupo
     (5 amostras de difusao x N sementes, --use_potentials, 200 passos). Escore = media de todas as
     predicoes; o PDB de partida da MD e' a melhor amostra individual.
+pick-qc: troca o PDB inicial pela melhor amostra que passa no QC de pose (pos-E2).
 E3: controles pareados -- `n_decoys` embaralhamentos de cada candidato (mesma composicao, mesmo
     comprimento, semente fixa por sequencia), mesmo protocolo; Delta = escore(candidato) - media(controles).
     O Boltz-2 foi validado real-vs-decoy apenas em pares (calibracao B0.5): por isso Delta, nao o valor absoluto.
@@ -158,6 +159,47 @@ def delta(a):
               f"(mediana {statistics.median(allv):.3f})")
 
 
+def pick_qc(a):
+    """Estrutura inicial da MD = amostra de MAIOR confianca entre as que PASSAM no QC de pose (pose_qc.qc_pose,
+    limiares pre-registrados, inalterados), entre todas as amostras e sementes do E2. Se nenhuma passa, mantem a de
+    maior confianca e marca `pdb_qc_pass: false`. O escore do candidato (media) e o ranking nao mudam.
+    Roda em protein_design_env (pose_qc importa MDAnalysis)."""
+    from pose_qc import qc_pose
+    f = RES / f"b23_boltz2_E2_{a.front}_scores.json"
+    data = json.loads(f.read_text())
+    cyc = a.front == "M"
+    n_ok = n_tot = 0
+    for sp, rows in data.items():
+        for r in rows:
+            stem = r["stem"]
+            samples = []
+            for seed in a.seeds:
+                pdir = ROOT / f"outputs/b23_boltz2_E2_{a.front}_s{seed}_{sp}/boltz_results_{sp}/predictions/{stem}"
+                for cf in sorted(pdir.glob(f"confidence_{stem}_model_*.json")):
+                    m = int(cf.stem.rsplit("_", 1)[1])
+                    pdb = pdir / f"{stem}_model_{m}.pdb"
+                    if pdb.exists():
+                        samples.append((json.loads(cf.read_text())["confidence_score"], pdb))
+            samples.sort(key=lambda s: -s[0])
+            chosen, n_pass = None, 0
+            for conf, pdb in samples:
+                q = qc_pose(pdb, sp, cyc)
+                if q["qc_pass"]:
+                    n_pass += 1
+                    if chosen is None:
+                        chosen = (conf, pdb, q)
+            r["n_samples"] = len(samples)
+            r["n_samples_qc_pass"] = n_pass
+            r["pdb_qc_pass"] = chosen is not None
+            if chosen is not None:
+                r["pdb"] = str(chosen[1].relative_to(ROOT))
+                r["pdb_confidence"] = chosen[0]
+            n_tot += 1
+            n_ok += chosen is not None
+    f.write_text(json.dumps(data, indent=2))
+    print(f"pick-qc {a.front}: {n_ok}/{n_tot} candidatos com >=1 amostra aprovada no QC")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -171,6 +213,10 @@ def main():
     p.add_argument("--tag", choices=["E2", "E3"], required=True)
     p.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3])
     p.set_defaults(func=collect)
+    p = sub.add_parser("pick-qc")
+    p.add_argument("--front", choices=["L", "M"], required=True)
+    p.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3])
+    p.set_defaults(func=pick_qc)
     p = sub.add_parser("delta")
     p.add_argument("--front", choices=["L", "M"], required=True)
     p.set_defaults(func=delta)

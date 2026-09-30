@@ -36,6 +36,10 @@ done
 
 conda activate protein_design_env
 for F in L M; do
+  echo "[E2qc:$F] $(date) amostra inicial = melhor que passa no QC de pose"
+  ( cd scripts && python rescore_boltz2_topk.py pick-qc --front $F --seeds 1 2 3 )
+done
+for F in L M; do
   echo "[E2b:$F] $(date) top-3 por especie (maior confianca media, sequencias distintas)"
   python scripts/select_top_candidates.py --rule $(rule_of $F) --k 3 --cleavage $(clv_of $F) \
       --scores $RES/b23_boltz2_E2_${F}_scores.json --manifests $RES/manifests_E2_$F \
