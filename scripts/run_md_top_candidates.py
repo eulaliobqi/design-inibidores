@@ -10,7 +10,11 @@ config.yaml, ver comentario la: baseado em Manduca sexta). Complexo de partida =
 COMPLETA do Boltz-2 (com side-chains reais, nao o backbone-only do RFdiffusion).
 
 Uso: conda run -n protein_design_env python -m scripts.run_md_top_candidates
+Selecao corrigida (regra de clivagem circular, 2026-09-30):
+  python -m scripts.run_md_top_candidates --candidates data-b23-scoring/results/top_candidates_circular.json       --workdir outputs/md_top_candidates_circular [--species Slitura ...]
+Sem --candidates usa a tabela TOP_CANDIDATES abaixo (selecao ORIGINAL, regra linear, superada).
 """
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -79,17 +83,31 @@ TOP_CANDIDATES = {
 
 
 def main():
-    config = yaml.safe_load(open(ROOT / "config.yaml"))
-    agent = MDAgent("MDAgent_top_candidates", config, str(WORKDIR))
-    WORKDIR.mkdir(parents=True, exist_ok=True)
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--candidates", help="json de select_top_candidates.py (regra circular)")
+    ap.add_argument("--workdir", help="diretorio de saida (relativo a ROOT)")
+    ap.add_argument("--species", nargs="+", help="subconjunto de especies")
+    ap.add_argument("--ns", type=int, default=50)
+    args = ap.parse_args()
 
-    ns = 50
+    workdir = ROOT / args.workdir if args.workdir else WORKDIR
+    candidates = TOP_CANDIDATES
+    if args.candidates:
+        candidates = json.loads((ROOT / args.candidates).read_text())["candidates"]
+    if args.species:
+        candidates = {k: v for k, v in candidates.items() if k in args.species}
+
+    config = yaml.safe_load(open(ROOT / "config.yaml"))
+    agent = MDAgent("MDAgent_top_candidates", config, str(workdir))
+    workdir.mkdir(parents=True, exist_ok=True)
+
+    ns = args.ns
     temp = config.get("md", {}).get("temperature", 300)
 
-    summary_path = WORKDIR / "summary.json"
+    summary_path = workdir / "summary.json"
     summary = json.loads(summary_path.read_text()) if summary_path.exists() else {}
 
-    for species, meta in TOP_CANDIDATES.items():
+    for species, meta in candidates.items():
         if summary.get(species, {}).get("status") == "done":
             print(f"[{species}] ja concluido, pulando")
             continue
@@ -101,7 +119,7 @@ def main():
             summary_path.write_text(json.dumps(summary, indent=2))
             continue
 
-        out_dir = WORKDIR / species
+        out_dir = workdir / species
         out_dir.mkdir(parents=True, exist_ok=True)
         print(f"[{species}] iniciando MD 1x{ns}ns (seq={meta['sequence']}, "
               f"confidence_score={meta['confidence_score']:.4f})...")

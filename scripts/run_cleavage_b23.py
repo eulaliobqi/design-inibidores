@@ -32,7 +32,13 @@ def main():
     ap.add_argument("--campaign-dir", type=str, default="outputs/b23_campaign")
     ap.add_argument("--geometric-p1", type=str, default="data-lepidoptera-panel/geometric_p1_b23.json")
     ap.add_argument("--out", type=str, default="outputs/b23_cleavage_analysis.json")
+    ap.add_argument("--linear-rule", action="store_true",
+                     help="Reproduz o comportamento ANTERIOR (2026-09-24/28): trata a sequência como "
+                          "linear e ignora o sítio após o último resíduo. Os candidatos B2.3 são "
+                          "macrociclos cabeça-cauda, então o padrão agora é regra circular (o "
+                          "último resíduo também é P1 da ligação com o primeiro).")
     args = ap.parse_args()
+    circular = not args.linear_rule
 
     geo = json.loads((ROOT / args.geometric_p1).read_text())
 
@@ -61,7 +67,7 @@ def main():
                 else:
                     n_no_geo += 1
 
-                r = analyze_sequence(seq, geometric_p1_1based=p1_1based)
+                r = analyze_sequence(seq, geometric_p1_1based=p1_1based, circular=circular)
                 r["backbone"] = backbone_id
                 r["geometric_p1_1based"] = p1_1based
                 species_results.append(r)
@@ -76,7 +82,8 @@ def main():
 
     out_path = ROOT / args.out
     out_path.parent.mkdir(exist_ok=True, parents=True)
-    out_path.write_text(json.dumps({"summary_total": summary_total, "by_species": all_results},
+    out_path.write_text(json.dumps({"rule": "circular" if circular else "linear",
+                                     "summary_total": summary_total, "by_species": all_results},
                                     indent=2, ensure_ascii=False))
 
     total = sum(summary_total.values())

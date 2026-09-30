@@ -11,7 +11,15 @@ Metricas por especie (todas de trajetoria real, nenhuma predicao):
   - fracao de frames com qualquer contato peptideo-receptor <4.5 A (dissociacao)
   - distancia peptideo-Asp-S1 no inicio (0-2 ns) vs fim (48-50 ns)
 
-Uso (servidor): ~/miniforge3/envs/protein_design_env/bin/python -m scripts.analyze_md_top_candidates
+Robustez a PBC (correcao 2026-09-30): a trajetoria de entrada passa por `trjconv -pbc mol -center`,
+mas a cadeia do peptideo (molecula separada) ainda pode cair noutra imagem periodica do receptor
+em alguns quadros (ex.: D. saccharalis, 3/501 quadros a ~97 A). Por isso, em cada quadro os
+atomos do peptideo sao (i) tornados inteiros por imagem minima em relacao ao primeiro atomo e
+(ii) transladados para a imagem mais proxima do carboxilato do Asp-S1 antes do calculo de RMSD.
+As distancias usam distance_array(..., box=) (imagem minima) e nao dependem disso.
+
+Uso (servidor):
+  ~/miniforge3/envs/protein_design_env/bin/python -m scripts.analyze_md_top_candidates       [--md-dir outputs/md_top_candidates] [ESPECIE ...]
 """
 import json
 import subprocess
@@ -21,13 +29,12 @@ from pathlib import Path
 import MDAnalysis as mda
 import numpy as np
 from MDAnalysis.analysis import align
-from MDAnalysis.lib.distances import distance_array
+from MDAnalysis.lib.distances import distance_array, minimize_vectors
 
 GMX = "/home/eulalio/miniforge3/envs/md-gromacs/bin/gmx_mpi"
 ROOT = Path(__file__).parent.parent
-MD_DIR = ROOT / "outputs" / "md_top_candidates"
+MD_DIR = ROOT / "outputs" / "md_top_candidates"   # sobrescrito por --md-dir
 PANEL = ROOT / "data-lepidoptera-panel" / "subsites_by_receptor.json"
-OUT = MD_DIR / "analysis_summary.json"
 DT_PS = 100  # subamostra: 500 frames em 50 ns
 
 
@@ -79,19 +86,30 @@ def analyze(species: str, seq: str) -> dict:
     ser = get("SER195", "OG", "SER")
     his = get("HIS57", "NE2", "HI")
 
+    def unwrap_peptide(pos, anchor, box):
+        """Torna o peptideo inteiro (imagem minima relativa ao 1o atomo) e o traz para a imagem
+        mais proxima de `anchor` (centroide do carboxilato do Asp-S1)."""
+        whole = pos[0] + minimize_vectors(pos - pos[0], box)
+        offset = whole.mean(axis=0) - anchor
+        shift = minimize_vectors(offset[None, :], box)[0] - offset
+        return whole + shift
+
     rec_ca = rec.atoms.select_atoms("name CA")
     ref_rec = rec_ca.positions.copy()
     ref_c = ref_rec.mean(axis=0)
     pep_ca = pep.atoms.select_atoms("name CA")
-    ref_pep = pep_ca.positions.copy() - ref_c
+    u.trajectory[0]
+    ref_pep = unwrap_peptide(pep_ca.positions.copy(), asp.positions.mean(axis=0),
+                             u.trajectory.ts.dimensions) - ref_c
     pep_heavy = [r.atoms.select_atoms("not name H*") for r in pep]
     pep_all_heavy = pep.atoms.select_atoms("not name H*")
     rec_heavy = rec.atoms.select_atoms("not name H*")
 
-    d_res, t_ns, rmsd_loc, contact_any, d_ser, d_his = [], [], [], [], [], []
+    d_res, t_ns, rmsd_loc, contact_any, d_ser, d_his, d_com = [], [], [], [], [], [], []
     for ts in u.trajectory:
         box = ts.dimensions
         t_ns.append(ts.time / 1000.0)
+        d_com.append(float(np.linalg.norm(rec.atoms.center_of_mass() - pep.atoms.center_of_mass())))
         d_res.append([distance_array(h.positions, asp.positions, box=box).min() for h in pep_heavy])
         d_ser.append(distance_array(pep_all_heavy.positions, ser.positions, box=box).min())
         d_his.append(distance_array(pep_all_heavy.positions, his.positions, box=box).min())
@@ -99,7 +117,8 @@ def analyze(species: str, seq: str) -> dict:
                                                  box=box) < 4.5).any()))
         rot, _ = align.rotation_matrix(rec_ca.positions - rec_ca.positions.mean(axis=0),
                                        ref_rec - ref_c)
-        moved = (pep_ca.positions - rec_ca.positions.mean(axis=0)) @ rot.T
+        pep_pos = unwrap_peptide(pep_ca.positions, asp.positions.mean(axis=0), box)
+        moved = (pep_pos - rec_ca.positions.mean(axis=0)) @ rot.T
         rmsd_loc.append(float(np.sqrt(np.mean(np.sum((moved - ref_pep) ** 2, axis=1)))) / 10.0)
 
     d_res, t_ns = np.array(d_res), np.array(t_ns)
@@ -114,6 +133,8 @@ def analyze(species: str, seq: str) -> dict:
         "d_anchor_asp_mean_A": round(float(da.mean()), 2),
         "d_anchor_asp_ini_A": round(float(da[early].mean()), 2),
         "d_anchor_asp_fim_A": round(float(da[late].mean()), 2),
+        "com_dist_pep_rec_A_median": round(float(np.median(d_com)), 1),
+        "n_frames_image_jump_gt30A": int((np.array(d_com) > 30).sum()),
         "peptide_rmsd_local_nm_mean": round(float(rmsd_loc.mean()), 3),
         "peptide_rmsd_local_nm_last10ns": round(float(rmsd_loc[late].mean()), 3),
         "contact_any_frac_4.5A": round(float(np.mean(contact_any)), 3),
@@ -128,9 +149,15 @@ def analyze(species: str, seq: str) -> dict:
 
 
 def main():
+    global MD_DIR
+    args = sys.argv[1:]
+    if args[:1] == ["--md-dir"]:
+        MD_DIR = ROOT / args[1]
+        args = args[2:]
+    out_file = MD_DIR / "analysis_summary.json"
     summary = json.loads((MD_DIR / "summary.json").read_text())
-    species = sys.argv[1:] or list(summary)
-    res = json.loads(OUT.read_text()) if OUT.exists() else {}
+    species = args or list(summary)
+    res = json.loads(out_file.read_text()) if out_file.exists() else {}
     for sp in species:
         seq = summary[sp]["sequence"]
         try:
@@ -138,7 +165,7 @@ def main():
         except Exception as e:  # noqa: BLE001 - reporta por especie, nao aborta o lote
             res[sp] = {"sequence": seq, "error": f"{type(e).__name__}: {e}"}
         print(sp, json.dumps(res[sp]), flush=True)
-        OUT.write_text(json.dumps(res, indent=2))
+        out_file.write_text(json.dumps(res, indent=2))
 
 
 if __name__ == "__main__":

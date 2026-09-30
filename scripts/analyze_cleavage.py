@@ -79,33 +79,46 @@ CLEAVAGE_RULES = {
 }
 
 
-def find_cleavage_sites(seq: str, rule: dict) -> list[int]:
+def find_cleavage_sites(seq: str, rule: dict, circular: bool = False) -> list[int]:
     """
     Retorna lista de posições (0-based) onde ocorre clivagem.
     A clivagem é entre posição i e i+1, representada pelo índice i.
+
+    circular=False (padrão, peptídeo LINEAR): não conta clivagem após o último resíduo.
+    circular=True (macrociclo cabeça-cauda): a ligação peptídica entre o último e o primeiro
+    resíduo existe, então o resíduo i=n-1 tem como vizinho seq[0] (P1' = primeiro resíduo) e
+    também pode ser sítio de clivagem. Sem isso, um K/R (ou F/Y/W...) na última posição da
+    sequência do macrociclo passava despercebido — bug real corrigido em 2026-09-30.
     """
     sites = []
     not_before = set(rule.get("not_before", ""))
+    n = len(seq)
 
     if "cut_after" in rule:
         cut_set = set(rule["cut_after"])
-        for i, aa in enumerate(seq[:-1]):   # não conta clivagem após último resíduo
-            next_aa = seq[i + 1]
+        last = n if circular else n - 1     # linear: não conta clivagem após último resíduo
+        for i in range(last):
+            aa = seq[i]
+            next_aa = seq[(i + 1) % n]
             if aa in cut_set and next_aa not in not_before:
                 sites.append(i)
 
     elif "cut_before" in rule:
         cut_set = set(rule["cut_before"])
-        for i, aa in enumerate(seq[1:], start=1):
-            next_aa = seq[i] if i < len(seq) else ""
-            prev_aa = seq[i - 1]
+        # clivagem entre i-1 e i quando seq[i] está em cut_set; no circular o resíduo 0
+        # também tem vizinho anterior (seq[n-1]).
+        first = 0 if circular else 1
+        for i in range(first, n):
+            aa = seq[i]
+            next_aa = seq[i + 1] if i + 1 < n else (seq[0] if circular else "")
             if aa in cut_set and (not next_aa or next_aa not in not_before):
-                sites.append(i - 1)  # clivagem entre i-1 e i
+                sites.append((i - 1) % n)  # clivagem entre i-1 e i
 
     return sites
 
 
-def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | None = None) -> dict:
+def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | None = None,
+                           circular: bool = False) -> dict:
     """
     Classifica sítios de clivagem de tripsina em:
       - p1_anchor : posição de ancoramento desejada (isenta da contagem de susceptibilidade)
@@ -128,6 +141,10 @@ def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | N
             p1_anchor, source = geometric_p1_idx, "geometric"
         else:
             p1_anchor, source = None, "geometric_not_KR"
+    elif circular:
+        # macrociclo sem P1 geométrico: não há terminal real → nenhuma âncora presumida,
+        # todo sítio de tripsina conta como interno (pior caso, conservador).
+        p1_anchor, source = None, "circular_no_geometry"
     else:
         p1_anchor, source = max(sites), "linear_cterm"   # sítio mais C-terminal = P1 de ancoramento
 
@@ -197,20 +214,21 @@ def suggest_modifications(seq: str, trypsin_internal: list[int]) -> list[str]:
     return suggestions
 
 
-def analyze_sequence(seq: str, geometric_p1_1based: int | None = None) -> dict:
+def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
+                     circular: bool = False) -> dict:
     seq = seq.strip().upper()
     n   = len(seq)
     geometric_p1_idx = (geometric_p1_1based - 1) if geometric_p1_1based is not None else None
 
     by_protease = {}
     for protease, rule in CLEAVAGE_RULES.items():
-        sites = find_cleavage_sites(seq, rule)
+        sites = find_cleavage_sites(seq, rule, circular=circular)
         entry = {
             "n_sites": len(sites),
             "positions": [s + 1 for s in sites],  # 1-based para leitura
         }
         if protease == "Trypsin":
-            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites, geometric_p1_idx)
+            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites, geometric_p1_idx, circular)
         by_protease[protease] = entry
 
     n_internal = by_protease["Trypsin"]["trypsin_classification"]["n_internal"]
@@ -225,6 +243,7 @@ def analyze_sequence(seq: str, geometric_p1_1based: int | None = None) -> dict:
         "susceptibility_score":  susc_score,
         "trypsin_internal_sites": n_internal,
         "verdict":               verdict,
+        "circular":              circular,
         "suggested_modifications": mods,
     }
 

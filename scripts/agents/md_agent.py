@@ -570,22 +570,53 @@ class MDAgent(BaseAgent):
                     "rg_avg_nm": None, "error": str(e)}
 
     def _analyze_trajectory(self, out: Path, gmx: str) -> dict:
+        """Métricas globais de QC da trajetória (RMSD do backbone de TODA a proteína — receptor
+        + peptídeo —, H-bonds intra+inter-proteína, Rg).
+
+        BUG REAL corrigido em 2026-09-30: as versões anteriores chamavam `gmx rms` direto no
+        md.xtc bruto. O mdrun escreve as coordenadas empacotadas na caixa, então a cadeia do
+        peptídeo (molécula separada) pode ficar noutra imagem periódica do receptor: no
+        Cincludens a distância bruta entre centros de massa chegava a 95 Å (mediana 44,7 Å, caixa
+        de 116 Å) com o peptídeo em contato o tempo todo. O RMSD "global" inflava por salto de
+        imagem (1,67 nm), não por instabilidade. Agora o RMSD/H-bonds/Rg são calculados sobre a
+        trajetória com `trjconv -pbc mol -center` (md_pbc.xtc). Ainda assim, este RMSD NÃO mede a
+        estabilidade do peptídeo na fenda: para isso use scripts/analyze_md_top_candidates.py
+        (RMSD local do peptídeo após superposição no receptor, com desempacotamento por imagem
+        mínima, e ocupância do S1)."""
         def run_a(args, inp=""):
             return subprocess.run(
                 [gmx] + args, cwd=str(out),
-                input=inp, capture_output=True, text=True, timeout=120
+                input=inp, capture_output=True, text=True, timeout=1800
             )
 
-        # RMSD backbone peptídeo
-        run_a(["rms", "-s", "md.tpr", "-f", "md.xtc",
+        # Correção de PBC (mesmo procedimento validado para gmx_MMPBSA): centra na proteína e
+        # torna as moléculas inteiras; saída = System.
+        traj = "md.xtc"
+        # entrada por pipe de shell: subprocess input= não é confiável com gmx_mpi em screen
+        # (regra do projeto, ver feedback_gmx_mmpbsa_pbc_and_subprocess_gotchas)
+        subprocess.run(
+            ["bash", "-c",
+             f"printf 'Protein\\nSystem\\n' | {gmx} trjconv -s md.tpr -f md.xtc "
+             f"-o md_pbc.xtc -pbc mol -center"],
+            cwd=str(out), capture_output=True, text=True, timeout=1800,
+        )
+        pbc_xtc = out / "md_pbc.xtc"
+        if pbc_xtc.exists() and pbc_xtc.stat().st_size > 1000:
+            traj = "md_pbc.xtc"
+        else:
+            self.logger.warning("  trjconv -pbc mol -center falhou; RMSD calculado no xtc bruto "
+                                "(pode estar inflado por salto de imagem periódica)")
+
+        # RMSD backbone (proteína inteira)
+        run_a(["rms", "-s", "md.tpr", "-f", traj,
                 "-o", "rmsd.xvg", "-tu", "ns"], inp="Backbone\nBackbone\n")
 
-        # H-bonds interface
-        run_a(["hbond", "-s", "md.tpr", "-f", "md.xtc",
+        # H-bonds (Protein-Protein: intra + interface)
+        run_a(["hbond", "-s", "md.tpr", "-f", traj,
                 "-num", "hbond_num.xvg"], inp="Protein\nProtein\n")
 
         # Raio de giro
-        run_a(["gyrate", "-s", "md.tpr", "-f", "md.xtc",
+        run_a(["gyrate", "-s", "md.tpr", "-f", traj,
                 "-o", "rg.xvg"], inp="Protein\n")
 
         def parse_xvg(fname):
@@ -616,6 +647,7 @@ class MDAgent(BaseAgent):
             "hbond_max":    int(max(hb_vals)) if hb_vals else None,
             "rg_avg_nm":    round(float(np.mean(rg_vals)), 4) if rg_vals else None,
             "method":       "gromacs",
+            "rmsd_pbc_corrected": traj == "md_pbc.xtc",
         }
 
     def _heuristic_stability(self, rosetta_results: dict) -> dict:
