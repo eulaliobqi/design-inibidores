@@ -124,6 +124,7 @@ body_en = en.split("## 1 Introduction")[1].split("## Figure legends")[0]
 abs_pt = parts[0].split("## Resumo")[1].split("## 1 Introdução")[0]
 body_pt = "\n".join(parts[0].split("## 1 Introdução")[1:] + parts[1:4])
 title_en = en.split("\n")[0].lstrip("# ").strip()
+short_en = re.search(r"\*\*Running title:\*\* (.*)", en).group(1).strip()
 n_abs_en, n_body_en = words(abs_en.replace("---", "")), words(body_en)
 n_abs_pt, n_body_pt = words(abs_pt.replace("---", "")), words(body_pt)
 n_kw = len(re.search(r"\*\*Keywords:\*\* (.*)", en).group(1).split(","))
@@ -148,22 +149,22 @@ panel = f"""
 | Requisito | Limite / padrão | Situação atual | Estado |
 |---|---|---|---|
 | Tipo de artigo | Original Research (IMRaD: Resumo, Introdução, Material e métodos, Resultados, Discussão) | Estrutura cumprida | OK |
-| Extensão do texto principal | ≤ 12.000 palavras (Original Research) | {n_body_en:,} palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: {n_body_pt:,} | OK (há margem para a Seção 3.7) |
-| Resumo | ≤ 350 palavras | {n_abs_en} palavras no original em inglês (sem o trecho pendente); tradução: {n_abs_pt} | OK (a frase de MD acrescentará cerca de 30 palavras) |
-| Palavras-chave | 5–8 | {n_kw} | OK |
-| Título | informativo e conciso | {len(title_en)} caracteres | conferir limite no site |
-| Título curto | ≤ cerca de 50 caracteres | 50 caracteres | conferir no site |
-| Figuras | resolução mínima de 300 dpi, arquivos separados | {n_fig} figuras (PNG 300 dpi e PDF vetorial, largura 180 mm); {n_figs} suplementares; as figuras dos resultados pendentes (Seções 3.8–3.10) ainda serão geradas | pendente |
+| Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | {n_body_en:,} palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: {n_body_pt:,} | OK (há margem para as Seções 3.8–3.10) |
+| Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | {n_abs_en} palavras no original em inglês sem o trecho pendente (≈ {n_abs_en + 29} com ele preenchido); tradução: {n_abs_pt} | OK |
+| Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | {n_kw} | OK |
+| Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, {len(title_en)} caracteres | OK |
+| Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | {len(short_en)} caracteres | OK |
+| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as figuras dos resultados pendentes (Seções 3.8–3.10) ainda serão geradas | pendente |
 | Tabelas | editáveis, com legenda | {n_tab} tabelas | OK |
-| Referências | estilo Frontiers (autor-ano), com DOI | {len(cited)} referências, todas resolvidas no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
-| Declaração de disponibilidade de dados | obrigatória | código no repositório; falta confirmar visibilidade e DOI de arquivamento | pendente |
-| Contribuições dos autores, financiamento, conflito de interesses, agradecimentos | obrigatórios | não redigidos | pendente |
-| Declaração de uso de IA generativa | exigida pela Frontiers | não redigida | pendente |
-| Declaração de ética | quando aplicável | não se aplica (sem animais, humanos ou dados pessoais) | a declarar |
+| Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | {len(cited)} referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
+| Declaração de disponibilidade de dados | obrigatória | seção criada; falta confirmar visibilidade do repositório e DOI de arquivamento | pendente |
+| Contribuições dos autores, financiamento, conflito de interesses, agradecimentos | obrigatórios | seções criadas, conteúdo a completar pelos autores | pendente |
+| Declaração de uso de IA generativa | deve ser reconhecida nos agradecimentos (diretrizes da Frontiers) | rascunho factual na seção Agradecimentos, a ser confirmado pelos autores | pendente |
+| Declaração de ética | exigida para estudos com animais ou humanos | seção criada: não se aplica | OK |
 | Lista de autores e afiliações | obrigatória | não preenchida | pendente |
-| Adequação ao escopo | seção *Informatics and Computational Methods* existe na revista | trabalho computacional sobre inibidores de origem natural como controles | risco a verificar |
+| Adequação ao escopo | seção *Informatics and Computational Methods* existe na revista | o título destaca inibidores naturais como moldes e padrões de calibração, mas o trabalho projeta peptídeos *de novo* e é só computacional; a revista pode exigir validação experimental | risco a verificar com o editor |
 
-**Fonte e certeza dos limites.** Os limites acima vêm de páginas de tipos de artigo de outras revistas Frontiers e de resultados de busca sobre a *Frontiers in Natural Products* (existência da seção *Informatics and Computational Methods*, extensão de 12.000 palavras para Original Research). A página oficial de tipos de artigo da própria revista não pôde ser aberta nesta sessão; confira os limites de título, resumo e palavras-chave diretamente no site antes de submeter. **Risco de escopo:** a revista descreve a seção de atividades biológicas com "análise *in silico* acompanhada de validação experimental"; este trabalho é puramente computacional e não afirma atividade. Vale confirmar com a revista se um estudo puramente computacional é aceito nessa seção.
+**Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
 ## Pendências antes da submissão
 
@@ -179,6 +180,12 @@ full = panel + "\n" + src + "\n\n## Referências\n\n" + "\n\n".join(refs[k] for 
 
 # ---------- 5. pandoc
 out = HERE / "Manuscrito_PT_leitura.docx"
+try:  # se o arquivo estiver aberto no Word, grava com sufixo em vez de falhar
+    with open(out, "ab"):
+        pass
+except PermissionError:
+    out = HERE / "Manuscrito_PT_leitura_novo.docx"
+    print("AVISO: Manuscrito_PT_leitura.docx esta aberto em outro programa; gravando em", out.name)
 ref_doc = HERE / "_reference.docx"
 if not ref_doc.exists():
     subprocess.run(["pandoc", "-o", str(ref_doc), "--print-default-data-file", "reference.docx"], check=True)

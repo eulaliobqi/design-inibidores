@@ -18,7 +18,7 @@ from matplotlib.patches import FancyBboxPatch
 D, O, LG = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 O.mkdir(parents=True, exist_ok=True)
 EN = LG == "en"
-plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "figure.dpi": 150})
+plt.rcParams.update({"font.size": 10, "savefig.dpi": 300, "axes.spines.top": False, "axes.spines.right": False, "figure.dpi": 150})
 
 
 def T(en, pt):
@@ -99,7 +99,7 @@ def fig_pipeline(status_e1="run"):
                         "verde = concluído · amarelo = em execução · cinza = pendente.  E5 (contra-triagem com não-alvos) não construída; nenhuma seletividade é afirmada."),
             fontsize=7, color="#495057")
     ax.text(.05, 1.2, T("Validated: cyclic topology (tleap;\nC–N 1.34 Å, ω −179°); pH 10.0\n(Lepidoptera midgut)", "Validado: topologia cíclica (tleap;\nC–N 1,34 Å, ω −179°); pH 10,0\n(intestino de Lepidoptera)"), fontsize=7, color="#1b4332")
-    fig.savefig(O / T("Figure1_pipeline_v3.png", "fig1_pipeline_v3.png"), bbox_inches="tight", dpi=200)
+    fig.savefig(O / T("Figure1_pipeline_v3.png", "fig1_pipeline_v3.png"), bbox_inches="tight", dpi=300)
     fig.savefig(O / T("Figure1_pipeline_v3.pdf", "fig1_pipeline_v3.pdf"), bbox_inches="tight")
     plt.close()
 
@@ -134,10 +134,10 @@ def fig_funnel():
     ax[0].bar(x, [len(HL[s]) for s in SP], w, color="#457b9d", label=T("hard criterion, linear (front L)", "critério duro, linear (frente L)"))
     ax[0].bar(x + w, [len(HM[s]) for s in SP], w, color="#2a9d8f", label=T("hard criterion, circular (front M)", "critério duro, circular (frente M)"))
     for i, s in enumerate(SP):
-        ax[0].text(i, len(HL[s]) + 4, len(HL[s]), ha="center", fontsize=6.5)
-        ax[0].text(i + w, len(HM[s]) + 4, len(HM[s]), ha="center", fontsize=6.5)
+        ax[0].text(i, len(HL[s]) + 4, len(HL[s]), ha="center", fontsize=8)
+        ax[0].text(i + w, len(HM[s]) + 4, len(HM[s]), ha="center", fontsize=8)
     ax[0].set_xticks(x); ax[0].set_xticklabels(SHORT, rotation=35, ha="right", style="italic")
-    ax[0].set_ylabel(T("resistant-like sequences", "sequências RESISTENTE")); ax[0].legend(frameon=False, fontsize=7)
+    ax[0].set_ylabel(T("resistant-like sequences", "sequências RESISTENTE")); ax[0].set_ylim(0, 350); ax[0].legend(frameon=False, fontsize=8.5)
     ax[0].set_title(T("Candidates surviving each screen", "Candidatos que sobrevivem a cada filtro"))
     tot = [sum(soft), len(AL), len(AM)]
     ax[1].bar(range(3), tot, color=["#e9c46a", "#457b9d", "#2a9d8f"])
@@ -156,14 +156,14 @@ def fig_comp():
     aa = sorted(cA, key=lambda a: -cL[a]); xx = np.arange(20); w = .4
     ax[0].bar(xx - w / 2, [cA[a] for a in aa], w, color="#b0b0b0", label=T(f"all sequences ({num(nA)} residues)", f"todas as sequências ({num(nA)} res.)"))
     ax[0].bar(xx + w / 2, [cL[a] for a in aa], w, color="#457b9d", label=T(f"hard criterion, front L ({num(nL)} residues)", f"critério duro, frente L ({num(nL)} res.)"))
-    ax[0].set_xticks(xx); ax[0].set_xticklabels(aa); ax[0].set_ylabel(T("% of residues", "% dos resíduos")); ax[0].legend(frameon=False, fontsize=7)
+    ax[0].set_xticks(xx); ax[0].set_xticklabels(aa); ax[0].set_ylabel(T("% of residues", "% dos resíduos")); ax[0].legend(frameon=False, fontsize=8.5)
     ax[0].set_title(T("Composition of the resistant-like set", "Composição do conjunto resistente"))
     lens = sorted({r["length"] for r in ALL}); xs = np.arange(len(lens))
     for off, rs, c, l in ((-.2, ALL, "#b0b0b0", T("all", "todas")), (.2, AL, "#457b9d", T("hard L", "duro L"))):
         cnt = collections.Counter(r["length"] for r in rs); tt = sum(cnt.values())
         ax[1].bar(xs + off, [cnt[k] / tt * 100 for k in lens], .4, color=c, label=l)
     ax[1].set_xticks(xs); ax[1].set_xticklabels(lens, fontsize=7); ax[1].set_xlabel(T("length (residues)", "comprimento (aa)"))
-    ax[1].set_ylabel(T("% of sequences", "% das sequências")); ax[1].legend(frameon=False, fontsize=7); ax[1].set_title(T("Length", "Comprimento"))
+    ax[1].set_ylabel(T("% of sequences", "% das sequências")); ax[1].legend(frameon=False, fontsize=8.5); ax[1].set_title(T("Length", "Comprimento"))
     fig.tight_layout()
     fig.savefig(O / T("Figure6_hard_composition.png", "fig6_composicao.png")); fig.savefig(O / T("Figure6_hard_composition.pdf", "fig6_composicao.pdf")); plt.close()
 
@@ -210,7 +210,7 @@ def fig_s1():
         for i in x:
             ax.text(i + off, 101, lab[:3], ha="center", fontsize=6)
     ax.set_xticks(x); ax.set_xticklabels(SHORT, rotation=35, ha="right", style="italic"); ax.set_ylabel(T("% of sequences", "% das sequências")); ax.set_ylim(0, 108)
-    ax.legend(frameon=False, fontsize=7, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=3)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=3)
     ax.set_title(T("Motif-score screen, linear-strict vs circular rule", "Filtro por escore de motivo, regra linear-estrita vs circular"))
     fig.tight_layout(); fig.savefig(O / T("FigureS1_motif_screen_rules.png", "figS1_regras_motivo.png")); plt.close()
 
@@ -230,4 +230,9 @@ def fig_s2():
 
 if __name__ == "__main__":
     fig_pipeline(); fig_rule(); fig_funnel(); fig_comp(); n, mc = fig_boltz(); fig_s1(); fig_s2()
+    from PIL import Image
+    for f in list(O.glob("*.png")):
+        if not f.name.startswith("fig") and not f.name.startswith("Figure"):
+            continue
+        Image.open(f).convert("RGB").save(f.with_suffix(".tif"), compression="tiff_lzw", dpi=(300, 300))
     print("ok; boltz subset", n, round(mc, 3), "L", len(AL), "M", len(AM))
