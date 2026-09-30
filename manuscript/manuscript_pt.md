@@ -32,6 +32,28 @@
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
+## Estado dos cálculos (30/09/2026, noite)
+
+| Etapa | Estado | Resultado até aqui |
+|---|---|---|
+| Painel de 8 espécies e subsítios S1–S3' | concluído | TM-score 0,946–0,957 nos 20 pares |
+| Calibração da escada de escores | concluída | Boltz-2 10/10 pares; RMSD do ligante 9/10; MM-GBSA 4/10 (ρ = −0,93 com o tamanho da interface) |
+| Geração (RFdiffusion + ProteinMPNN) | concluída | 880 esqueletos, 22.066 sequências únicas |
+| Triagem por escore de motivos | concluída | 1.829 semelhantes a resistentes |
+| E0 · critério duro de não clivabilidade | concluído | 527 lineares (frente L) e 543 cíclicas (frente M) |
+| E1 · Boltz-2 nas duas frentes | concluído (1.070/1.070) | reprodutibilidade entre rodadas ρ = 0,57; linear × cíclico ρ = 0,50 (Seção 3.8, Figura 8) |
+| E2 · reescore dos 10 melhores por espécie (5 amostras × 3 sementes) | **em curso** | frente L: semente 1 completa, semente 2 em andamento; frente M ainda não iniciada |
+| Escolha da estrutura inicial (melhor amostra que passa no QC de pose) | pendente | implementada e testada; roda após o E2 |
+| E3 · controles embaralhados pareados | pendente | 234 controles por frente preparados |
+| E4 · QC de pose e matriz cruzada 8 × 8 | pendente | QC já testado nas predições do E1 (18% passam na amostra única) |
+| E6–E7 · MD de 10 ns (3 melhores por espécie e frente, 48 simulações) | pendente | topologia cíclica validada (C–N 1,34 Å; ω −179°) |
+| E8–E9 · comparação linear × macrociclo e lista para a MD longa | pendente | scripts prontos |
+| E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
+
+**Estimativa:** o restante do pipeline deve levar de 2 a 3 dias de GPU compartilhada; a MD de 10 ns das duas frentes (48 simulações) é a etapa mais longa.
+
+**Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida.
+
 ## Pendências antes da submissão
 
 1. Seções 3.8–3.10 (E1–E4 e dinâmica molecular de 10 ns nas duas frentes), frase correspondente no Resumo e na Seção 4.1: dependem de cálculos em andamento ou ainda não disparados no servidor.
