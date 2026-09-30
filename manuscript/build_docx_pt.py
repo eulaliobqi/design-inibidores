@@ -82,18 +82,26 @@ if unused:
 
 # ---------- 3. figuras inline (legendas extraidas de 'Legendas das figuras')
 leg_block = src.split("## Legendas das figuras")[1]
-legends = dict(re.findall(r"\*\*Figura (\d)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)", leg_block, flags=re.S))
+legends = dict(re.findall(r"\*\*Figura (S?\d)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)", leg_block, flags=re.S))
 src = src.split("\n---\n\n## Legendas das figuras")[0]
-FIG = {1: "Figure1_pipeline.png", 2: "Figure2_calibration.png", 3: "Figure3_motif_screen.png"}
+FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
+       "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_ciclica_fumaca.png"}
 
 
-def img(n):
-    return f"\n![**Figura {n}.** {legends[str(n)].strip()}](figures/{FIG[n]}){{width=16.5cm}}\n"
+def img(n, w="16.5cm"):
+    return f"\n![**Figura {n}.** {legends[n].strip()}]({FIG[n]}){{width={w}}}\n"
 
 
-src = src.replace("\n---\n\n## 2 Material e métodos", img(1) + "\n---\n\n## 2 Material e métodos")
-src = src.replace("\n### 3.4 A campanha de geração", img(2) + "\n### 3.4 A campanha de geração")
-src = src.replace("\n### 3.6 Confiança do Boltz-2", img(3) + "\n### 3.6 Confiança do Boltz-2")
+src = src.replace("\n---\n\n## 2 Material e métodos", img("1") + "\n---\n\n## 2 Material e métodos")
+src = src.replace("\n### 2.7 Co-dobramento", img("2") + "\n### 2.7 Co-dobramento")
+src = src.replace("\n### 3.4 A campanha de geração", img("3") + "\n### 3.4 A campanha de geração")
+src = src.replace("\n### 3.6 Um critério duro", img("4") + "\n### 3.6 Um critério duro")
+src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n### 3.7 Confiança do Boltz-2")
+src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
+for fid in ("1", "2", "3", "4", "5", "6", "7"):
+    assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
+src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
 
 # marcadores pendentes -> span com estilo
 src = re.sub(r"\[\[(.*?)\]\]", lambda m: '[' + m.group(1).replace("[", "(").replace("]", ")") + ']{custom-style="Pendente"}', src, flags=re.S)
@@ -121,6 +129,7 @@ n_abs_pt, n_body_pt = words(abs_pt.replace("---", "")), words(body_pt)
 n_kw = len(re.search(r"\*\*Keywords:\*\* (.*)", en).group(1).split(","))
 n_tab = len(re.findall(r"^\*\*Table \d\.", en, flags=re.M))
 n_fig = len(re.findall(r"^\*\*Figure \d\.", en, flags=re.M))
+n_figs = len(re.findall(r"^\*\*Figure S\d\.", en, flags=re.M))
 
 panel = f"""
 # Documento de leitura e avaliação manual
@@ -132,7 +141,7 @@ panel = f"""
 ## Como ler as marcações
 
 - Trechos em **amarelo** marcam o que ainda depende de simulações em andamento ou de informação dos autores.
-- Nada nesta versão foi inventado para preencher lacunas: os resultados de dinâmica molecular (Seção 3.7) e as frases que deles dependem estão pendentes.
+- Nada nesta versão foi inventado para preencher lacunas: os resultados do co-dobramento nas duas frentes e das simulações de 10 ns (Seções 3.8–3.10) e as frases que deles dependem estão pendentes.
 
 ## Painel de conformidade com as métricas da revista
 
@@ -144,7 +153,7 @@ panel = f"""
 | Palavras-chave | 5–8 | {n_kw} | OK |
 | Título | informativo e conciso | {len(title_en)} caracteres | conferir limite no site |
 | Título curto | ≤ cerca de 50 caracteres | 50 caracteres | conferir no site |
-| Figuras | resolução mínima de 300 dpi, arquivos separados | {n_fig} figuras (PNG 300 dpi e PDF vetorial, largura 180 mm); a Figura 4 (MD) depende da Seção 3.7 | pendente |
+| Figuras | resolução mínima de 300 dpi, arquivos separados | {n_fig} figuras (PNG 300 dpi e PDF vetorial, largura 180 mm); {n_figs} suplementares; as figuras dos resultados pendentes (Seções 3.8–3.10) ainda serão geradas | pendente |
 | Tabelas | editáveis, com legenda | {n_tab} tabelas | OK |
 | Referências | estilo Frontiers (autor-ano), com DOI | {len(cited)} referências, todas resolvidas no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
 | Declaração de disponibilidade de dados | obrigatória | código no repositório; falta confirmar visibilidade e DOI de arquivamento | pendente |
@@ -158,8 +167,8 @@ panel = f"""
 
 ## Pendências antes da submissão
 
-1. Seção 3.7 (dinâmica molecular de 50 ns dos melhores candidatos), frase de MD no Resumo e frase de MD na Seção 4.1: dependem de simulações em andamento no servidor.
-2. Figura 4 (ocupância de S1 por espécie), a gerar quando as simulações terminarem.
+1. Seções 3.8–3.10 (E1–E4 e dinâmica molecular de 10 ns nas duas frentes), frase correspondente no Resumo e na Seção 4.1: dependem de cálculos em andamento ou ainda não disparados no servidor.
+2. Figuras de ocupância de S1, de integridade do anel e da comparação linear × macrociclo, a gerar quando as simulações terminarem.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).
 

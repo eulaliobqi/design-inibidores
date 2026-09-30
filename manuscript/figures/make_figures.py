@@ -69,7 +69,7 @@ for i, (mk, fc, ec, t) in enumerate([("o", BLUE, BLUE, "real, bovine trypsin"), 
                                      ("o", "white", ORANGE, "decoy, bovine trypsin"), ("s", "white", ORANGE, "decoy, S. frugiperda")]):
     axE.scatter([0.03], [0.78 - 0.14 * i], s=20, marker=mk, facecolors=fc, edgecolors=ec, linewidths=1.1, transform=axE.transAxes)
     axE.text(0.10, 0.78 - 0.14 * i, t, va="center", transform=axE.transAxes)
-fig.savefig(OUT / "Figure2_calibration.png", dpi=300); fig.savefig(OUT / "Figure2_calibration.pdf")
+fig.savefig(OUT / "Figure3_calibration.png", dpi=300); fig.savefig(OUT / "Figure3_calibration.pdf")
 plt.close(fig)
 
 # ---------------- Figura 3
@@ -99,7 +99,7 @@ ax.bar(xx - 0.2, [fc["RESISTENTE"]["aa_composition_pct"][a] for a in aa], 0.4, c
 ax.bar(xx + 0.2, [fc["SUSCEPTIVEL"]["aa_composition_pct"][a] for a in aa], 0.4, color=RED, label="Susceptible")
 ax.set_xticks(xx); ax.set_xticklabels(list(aa)); ax.set_xlabel("Amino acid"); ax.set_ylabel("Composition (%)")
 ax.set_title("C", loc="left", fontweight="bold"); ax.legend(frameon=False, loc="upper right")
-fig.savefig(OUT / "Figure3_motif_screen.png", dpi=300); fig.savefig(OUT / "Figure3_motif_screen.pdf")
+fig.savefig(OUT / "Figure4_motif_screen.png", dpi=300); fig.savefig(OUT / "Figure4_motif_screen.pdf")
 print("figuras 2 e 3 geradas")
 
 # ---------------- Figura 1: fluxograma (contagens vindas dos arquivos de auditoria)

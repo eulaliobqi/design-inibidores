@@ -76,7 +76,7 @@ def fig_pipeline(status_e1="run"):
     box(.05, 2.25, 1.55, 1.1, T("8 receptors\n+ S1–S3' subsites\n(TM 0.946–0.957)", "8 receptores\n+ sub-sítios S1–S3'\n(TM 0,946–0,957)"), "done")
     box(1.8, 2.25, 1.55, 1.1, T("Calibration:\n6 inhibitors + decoys\n(Boltz-2 10/10 pairs)", "Calibração:\n6 inibidores + decoys\n(Boltz-2 10/10 pares)"), "done")
     box(3.55, 2.25, 1.55, 1.1, T("RFdiffusion + MPNN\n880 backbones\n22,066 sequences", "RFdiffusion + MPNN\n880 backbones\n22.066 sequências"), "done")
-    box(5.3, 2.25, 1.6, 1.1, T("E0  hard criterion\n(no K/R/F/Y/W/L/M/A/V\nat P1; Fig. 4)", "E0  critério duro\n(sem K/R/F/Y/W/L/M/A/V\nem P1; Fig. 4)"), "done")
+    box(5.3, 2.25, 1.6, 1.1, T("E0  hard criterion\n(no K/R/F/Y/W/L/M/A/V\nat P1; Fig. 2)", "E0  critério duro\n(sem K/R/F/Y/W/L/M/A/V\nem P1; Fig. 2)"), "done")
     for a, b in ((1.6, 1.8), (3.35, 3.55), (5.1, 5.3)):
         arr(a, 2.8, b, 2.8)
     box(7.1, 3.85, 2.0, 1.25, T(f"FRONT L (linear)\n{len(AL)} candidates\nE1 Boltz-2 cyclic:false", f"FRENTE L (linear)\n{len(AL)} candidatos\nE1 Boltz-2 cyclic:false"), status_e1)
@@ -122,7 +122,7 @@ def fig_rule():
     for s in ax.spines.values():
         s.set_visible(False)
     fig.tight_layout()
-    fig.savefig(O / T("Figure4_hard_rule.png", "fig4_regra_dura.png")); fig.savefig(O / T("Figure4_hard_rule.pdf", "fig4_regra_dura.pdf")); plt.close()
+    fig.savefig(O / T("Figure2_hard_rule.png", "fig2_regra_dura.png")); fig.savefig(O / T("Figure2_hard_rule.pdf", "fig2_regra_dura.pdf")); plt.close()
 
 
 # ---- Figura 5: funil -----------------------------------------------------------------------------
