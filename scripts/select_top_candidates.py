@@ -27,7 +27,7 @@ def main():
     ap.add_argument("--cleavage", required=True)
     ap.add_argument("--scores", default="data-b23-scoring/results/b23_boltz2_scores.json")
     ap.add_argument("--manifests", default="data-b23-scoring/boltz_yaml/_manifests")
-    ap.add_argument("--rule", default="linear-strict", choices=["linear-strict", "linear", "circular"])
+    ap.add_argument("--rule", default="linear-strict", choices=["linear-strict-hard", "circular-hard", "linear-strict", "linear", "circular"])
     ap.add_argument("--boltz-out-prefix", default="outputs/b23_boltz2")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()

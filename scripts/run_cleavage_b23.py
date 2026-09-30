@@ -39,8 +39,13 @@ def main():
     ap.add_argument("--anchor-exemption", action="store_true",
                      help="Isenta o P1 geométrico (se K/R) da contagem de sítios internos (critério "
                           "anterior). Padrão: critério ESTRITO, nenhum sítio isento.")
+    ap.add_argument("--criterion", choices=["hard", "score"], default="hard",
+                     help="hard (padrão): RESISTENTE = nenhum sítio para tripsina/quimotripsina-like/"
+                          "elastase-like de Lepidoptera (analyze_cleavage.HARD_P1); score: veredito "
+                          "ponderado anterior.")
     args = ap.parse_args()
     circular = args.circular
+    hard = args.criterion == "hard"
     strict = not args.anchor_exemption
 
     geo = json.loads((ROOT / args.geometric_p1).read_text())
@@ -70,7 +75,7 @@ def main():
                 else:
                     n_no_geo += 1
 
-                r = analyze_sequence(seq, geometric_p1_1based=p1_1based, circular=circular, strict=strict)
+                r = analyze_sequence(seq, geometric_p1_1based=p1_1based, circular=circular, strict=strict, hard=hard)
                 r["backbone"] = backbone_id
                 r["geometric_p1_1based"] = p1_1based
                 species_results.append(r)
@@ -85,7 +90,7 @@ def main():
 
     out_path = ROOT / args.out
     out_path.parent.mkdir(exist_ok=True, parents=True)
-    out_path.write_text(json.dumps({"rule": "circular" if circular else ("linear-strict" if strict else "linear"),
+    out_path.write_text(json.dumps({"rule": ("circular" if circular else ("linear-strict" if strict else "linear")) + ("-hard" if hard else ""),
                                      "summary_total": summary_total, "by_species": all_results},
                                     indent=2, ensure_ascii=False))
 

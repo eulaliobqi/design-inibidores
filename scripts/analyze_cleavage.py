@@ -79,6 +79,33 @@ CLEAVAGE_RULES = {
 }
 
 
+# ── Critério duro "não clivável por protease de Lepidoptera" (2026-09-30) ────────────────
+# Requisito do autor: o peptídeo não pode ser clivado por tripsina nem por proteases de
+# Lepidoptera. P1 proibidos no interior da cadeia (sem Pro em P1'):
+#   K,R            tripsina-like            (Patarroyo-Vargas 2017; Valaitis 1995 TLE)
+#   F,Y,W,L,M      quimotripsina-like / elastase-2-like (SAAPF/SAAPL-pNA; Valaitis 1995, 1999; Giri 2003)
+#   A,V            elastase-like de P1 pequeno alifático
+# Extremidades livres (peptídeo LINEAR): carboxipeptidases A/B do intestino médio removem o
+# resíduo C-terminal se ele pertence a este conjunto (ou é I); no macrociclo não há extremidade.
+# Aminopeptidase N atua em N-terminal livre (não eliminável por sequência; só sinalizada).
+HARD_P1 = "KRFYWLMAV"
+HARD_P1_SENSITIVITY = HARD_P1 + "I"   # análise de sensibilidade (elastase com P1 = Ile)
+
+
+def hard_cleavage_sites(seq: str, circular: bool = False, residues: str = HARD_P1) -> list[int]:
+    """Posições (0-based, ligação i -> i+1) clivaveis por endoproteases de Lepidoptera; no linear,
+    o último resíduo entra como sítio de carboxipeptidase se estiver em `residues` (ou for I)."""
+    n = len(seq)
+    sites = []
+    last = n if circular else n - 1
+    for i in range(last):
+        if seq[i] in residues and seq[(i + 1) % n] != "P":
+            sites.append(i)
+    if not circular and n and (seq[-1] in residues or seq[-1] == "I"):
+        sites.append(n - 1)
+    return sites
+
+
 def find_cleavage_sites(seq: str, rule: dict, circular: bool = False) -> list[int]:
     """
     Retorna lista de posições (0-based) onde ocorre clivagem.
@@ -237,7 +264,9 @@ def terminal_exopeptidase_flag(seq: str, circular: bool = False) -> list[str]:
 
 
 def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
-                     circular: bool = False, strict: bool = False) -> dict:
+                     circular: bool = False, strict: bool = False, hard: bool = False) -> dict:
+    """hard=True aplica o critério duro (ver HARD_P1): verdict = RESISTENTE só se não houver
+    nenhum sítio; o veredito por score fica em `verdict_score`."""
     seq = seq.strip().upper()
     n   = len(seq)
     geometric_p1_idx = (geometric_p1_1based - 1) if geometric_p1_1based is not None else None
@@ -262,7 +291,14 @@ def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
     verdict    = resistance_verdict(susc_score, n_internal)
     mods       = suggest_modifications(seq, by_protease["Trypsin"]["trypsin_classification"]["internal"])
 
+    hard_sites = hard_cleavage_sites(seq, circular)
+    verdict_score = verdict
+    if hard:
+        verdict = "RESISTENTE" if not hard_sites else "SUSCEPTIVEL"
     return {
+        "verdict_score":         verdict_score,
+        "hard_sites":            [h + 1 for h in hard_sites],
+        "hard_sites_with_ile":   [h + 1 for h in hard_cleavage_sites(seq, circular, HARD_P1_SENSITIVITY)],
         "sequence":              seq,
         "length":                n,
         "by_protease":           by_protease,

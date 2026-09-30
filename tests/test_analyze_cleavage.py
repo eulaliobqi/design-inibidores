@@ -112,3 +112,30 @@ def test_estrito_sem_KR_igual_ao_linear_legado_para_tripsina():
     for _ in range(500):
         seq = "".join(rng.choice(aas) for _ in range(rng.randint(3, 20)))
         assert analyze_sequence(seq, strict=True)["verdict"] == analyze_sequence(seq)["verdict"]
+
+
+# ── critério duro: nenhuma protease de Lepidoptera (tripsina, quimotripsina/elastase-like) ──
+from analyze_cleavage import hard_cleavage_sites  # noqa: E402
+
+
+def test_duro_proibe_KRFYWLMAV_no_interior():
+    for aa in "KRFYWLMAV":
+        assert hard_cleavage_sites("GG" + aa + "TG") != [], aa
+    assert hard_cleavage_sites("GGSTNDEQHG") == []
+
+
+def test_duro_prolina_em_P1_linha_protege():
+    assert hard_cleavage_sites("GGKPTG") == []
+    assert hard_cleavage_sites("GGAPTG") == []
+
+
+def test_duro_linear_cterminal_conta_carboxipeptidase_e_circular_nao_tem_extremidade():
+    assert hard_cleavage_sites("GGTDI") == [4]            # I C-terminal (CPA) no linear
+    assert hard_cleavage_sites("GGTDK") == [4]
+    assert hard_cleavage_sites("GGTDK", circular=True) == [4]   # vizinho G: ligação de fechamento clivável
+    assert hard_cleavage_sites("GGTDKP", circular=True) == []   # K seguido de P (resíduo 1 = G? nao: P no fim)
+
+
+def test_duro_veredito():
+    assert analyze_sequence("GGTSDE", hard=True)["verdict"] == "RESISTENTE"
+    assert analyze_sequence("GGLSDE", hard=True)["verdict"] == "SUSCEPTIVEL"
