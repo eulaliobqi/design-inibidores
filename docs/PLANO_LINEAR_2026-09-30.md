@@ -1,92 +1,98 @@
-# Plano final — manuscrito em forma LINEAR (v2, 30/09/2026)
+# Plano final v3 — duas frentes (linear + macrociclo), MD de triagem de 10 ns (30/09/2026)
 
-**Decisão do autor:** só peptídeos **lineares** no manuscrito (coerente com o grupo: GORE1–5,
-di/tripeptídeos, PEP-11). Resistência às enzimas digestivas = **ausência de resíduos clivaveis**.
-O macrociclo vira **braço de comparação** (resultados já obtidos, intocados) e **sugestão de
-otimização**. Nada foi disparado no servidor; este documento é o plano a executar.
+**Decisões do autor (30/09):** (1) manter **duas frentes** — peptídeos **lineares** e peptídeos
+**macrocíclicos**; (2) usar os insights válidos do V1; (3) **MD de 10 ns** como triagem; o autor roda MD longa
+nos melhores; (4) requisito duro: **o peptídeo não pode ser clivado por tripsina nem por proteases de
+Lepidoptera**. Nada foi disparado; este arquivo é o plano a executar.
 
-## 1. Insights das análises antigas (V1: AutoDock Vina, Rosetta, MD 10 ns, especificidade)
+## 1. Requisito duro e sua base na literatura (PubMed, conferido em 30/09)
 
-Uso: orientar a metodologia. Os números do V1 **não entram no manuscrito** (regra da revisão de
-30/09; o RMSD de MD do V1 é artefato de PBC).
+Critério de sequência (`analyze_cleavage.HARD_P1`, commit “criterio duro”): **nenhum** resíduo
+K, R, F, Y, W, L, M, A ou V no interior da cadeia, exceto quando o resíduo seguinte é Pro; no linear, o
+resíduo C-terminal também não pode estar nesse conjunto nem ser Ile (carboxipeptidases); no macrociclo não há
+extremidades, e o resíduo do fechamento é avaliado como os demais.
 
-| # | Insight (fonte) | Consequência no plano |
+| Protease do intestino médio | P1 proibido | Fonte verificada |
 |---|---|---|
-| I1 | **Vina melhora monotonicamente com o comprimento** (5 aa −10,3 → 15 aa −13,1; Tab. 9d) — o mesmo viés de tamanho do MM-GBSA (ρ = −0,93 com área de contato, 30/09) | Nenhum escore comparado entre comprimentos sem controle; Boltz-2 sempre **pareado** com controle embaralhado do mesmo comprimento/composição |
-| I2 | **Melhor escore ≠ complexo estável**: SARESIKKAYKTFLERYKKL (melhor Vina, −14,58) foi marginal em MD; GARKSIREYQKRVLERLKKK (melhor I_sc) instável | Top-1 por um único escore é frágil → MD obrigatória e **critério de S1 pré-declarado** (≥70% a 5 Å) |
-| I3 | Vina reproduz-se bem (DP ≤ 0,03 kcal/mol com exhaustiveness 16) mas falhou em ligante grande (97 GB de RAM), e **não foi validado na escada de calibração** (B0.5: só Boltz-2 separa 10/10) | **Vina fora da cadeia** (nem como escore nem como desempate); Boltz-2 é o único escore validado, e só pareado |
-| I4 | **Especificidade real: 0/35 aprovados** (SI ≥ 2,0 vs tripsina humana e *Apis*), alguns com SI negativo; o S1 é conservado; resultados anteriores ao fix de PDBQT eram falsos | Nenhuma afirmação de seletividade no texto; contra-triagem **exploratória** com Boltz-2 (Etapa E5), rotulada como não calibrada para seletividade |
-| I5 | **Âncora real ≠ P1 esperado**: nas réplicas, a âncora foi Pro, Gln, Glu, Val ou mudou de identidade entre réplicas (VRTRR, SARESIKKAYKTFLERYKKL); VRRPR tinha RMSD baixo e saía do bolso (67,6→0,15% a 6 Å) | Manter âncora definida empiricamente (já na Seção 2.9), cortes 4/5/6 Å lado a lado e **réplicas adaptativas** (E7) |
-| I6 | Só **VRYRR** (contém Arg) teve salt-bridge constante a 4 Å; SRTRR/HRPRRPR ocuparam S1 a 6 Å — candidatos com K/R foram os de S1 mais claro | O filtro estrito (zero sítios) elimina esse perfil. Dois mecanismos de mitigação, ambos pré-declarados: **estrato B** (K/R seguido de Pro, não clivável por tripsina: 61 sequências) e **braço de sensibilidade** (E6: custo do critério estrito) |
-| I7 | Peptídeos curtos (5 aa) foram uniformemente estáveis, 7 aa heterogêneos (RMSD do V1, inválido por PBC) | Tratar como hipótese: o 5–8 aa dominante no filtro não garante estabilidade; medir por ocupância |
-| I8 | Convenções do **projeto do grupo** (`GOREs-boltz`, `Milena-MD`): pH 8,2, K⁺ 0,10 M, caixa cúbica 2,0 nm, CHARMM36 (feb2026), detecção de plateau, Boltz-2 com 5 amostras de difusão + `--use_potentials` + sementes em réplica, **limiares de QC pré-registrados** (clash <2,2 Å, ω trans, quiralidade L, tríade mantida, P1 básico ≤4,5 Å de Asp189) | Harmonizar com o grupo (E3, E7); congelar critérios **antes** de abrir resultados (seção 4) |
-| I9 | A GPU está a **98%** por jobs do grupo (`gores-S`, `md-gore3-rep1-redo`, triplicatas dn2954) | Estimativas de tempo abaixo são para GPU livre; com compartilhamento, contar 1,5–2× |
+| Tripsina-like | K, R | Patarroyo-Vargas 2017 (corpus do grupo); Valaitis 1995 [10.1016/0965-1748(94)00033-e](https://doi.org/10.1016/0965-1748(94)00033-e) |
+| Quimotripsina-like | F, Y, W, L, M | Valaitis 1999 [10.1016/s0965-1748(99)00017-x](https://doi.org/10.1016/s0965-1748(99)00017-x) (hidrolisa SAAPF/SAAPL-pNA); Yang 2012 (*D. saccharalis*) [10.1111/j.1744-7917.2012.01514.x](https://doi.org/10.1111/j.1744-7917.2012.01514.x); Zhan 2010 (*S. litura*) [10.1002/arch.20353](https://doi.org/10.1002/arch.20353) |
+| Elastase-like | A, V (+L, M já incluídos) | Valaitis 1995 (elastase-2-like, substrato Suc-AAPL-pNA); Giri 2003 (*H. armigera* tem tripsina/quimotripsina/elastase-like) [10.1016/s0031-9422(03)00181-x](https://doi.org/10.1016/s0031-9422(03)00181-x) |
+| Carboxipeptidases A/B, aminopeptidases | C-terminal livre (linear) | Nakonieczny 2007 [10.1016/j.crvi.2006.12.002](https://doi.org/10.1016/j.crvi.2006.12.002); Simpson 2007 [10.1111/j.1365-2583.2007.00763.x](https://doi.org/10.1111/j.1365-2583.2007.00763.x) |
 
-## 2. Dados já calculados (filtro linear estrito, 8 espécies, 22.066 sequências)
+Limites que o texto declara: o critério é de **motivo** (predição, não medida); a especificidade P1 de cada
+enzima de cada espécie não está medida; K/R–Pro e demais exceções de Pro em P1′ são aproximações;
+**aminopeptidase N** age em N-terminal livre e não se elimina por sequência (só o macrociclo ou *capping* resolve);
+Ile está permitida no interior (sem evidência de P1 para essas enzimas) e há análise de sensibilidade sem Ile.
 
-RESISTENTE **2.542** (11,5%; 2.503 únicas), MARGINAL 4.968, SUSCEPTIVEL 14.556. Por espécie: Sf 227, Sl 301,
-On 323, Ds 326, Ci 318, Hv 300, Px 398, Ag 349. Comprimento médio 6,98 aa (5: 648; 6: 514; 7: 525; 8: 516; 10: 243;
-12: 82; ≥14: 14); 96,2% ≤10 aa. Só **61 (2,4%)** têm K/R — todos seguidos de Pro; 382 têm sinalizador de
-exopeptidase terminal (informativo). Braço macrocíclico: 1.829 RESISTENTE (8,3%). MARGINAL com exatamente 1 sítio
-de tripsina e K/R: 2.207 (base do braço de sensibilidade).
+**Consequência:** o conjunto RESISTENTE cai para **527 (linear; 41–86 por espécie)** e **543 (macrociclo; 41–87)**
+de 22.066 (2,4–2,5%). Composição do linear: G 49%, S 12%, P 10%, T 9%, D 6%, I 4%, N 4% (4.060 resíduos) — peptídeos ricos em Gly,
+flexíveis, **sem** resíduo favorável ao S1 (K/R aparece em apenas 9 resíduos no total, todos seguidos de Pro). É o custo do critério
+e entra como achado/limitação; não há garantia de que tais peptídeos se liguem.
 
-## 3. Metodologia final — etapas
+## 2. Insights válidos do V1 (Vina, Rosetta, MD 10 ns, especificidade) e como entram
 
-| Etapa | O quê | Escolhas (melhor metodologia) | Custo* | Estado |
+O V1 orienta o método; seus números **não** entram no manuscrito (RMSD do V1 é artefato de PBC).
+
+| # | Insight | Uso no plano |
+|---|---|---|
+| I1 | Vina melhora com o comprimento (5 aa −10,3 → 15 aa −13,1); MM-GBSA idem (ρ = −0,93 com área de contato) | Boltz-2 sempre **pareado** com controle embaralhado; nenhum escore comparado entre comprimentos sem controle |
+| I2 | Melhor escore ≠ complexo estável (melhor Vina marginal em MD; melhor I_sc instável) | Top-**3** por espécie (não top-1) segue para MD; critério de S1 pré-declarado |
+| I3 | Vina reproduzível (DP ≤0,03) mas fora da escada de calibração; travou em ligante grande | **Vina fora da cadeia**; Boltz-2 é o único escore validado (10/10, em pares) |
+| I4 | Especificidade real 0/35 aprovados (SI ≥2,0 vs tripsina humana e *Apis*); alguns SI negativo | Nenhuma afirmação de seletividade; contra-triagem **exploratória** (E5) |
+| I5 | Âncora real ≠ P1 esperado (Pro, Gln, Glu, Val; muda entre réplicas; VRRPR saía do bolso com RMSD baixo) | Âncora definida empiricamente; cortes 4/5/6 Å; em 10 ns reporta-se também se a âncora muda de identidade entre metades da trajetória |
+| I6 | Só VRYRR (Arg) teve salt-bridge constante a 4 Å | O requisito duro exclui esse perfil: declarar na Discussão como troca explícita (resistência × S1 canônico) |
+| I7 | Réplicas revelaram o que uma corrida esconde (DP de RMSD, âncora instável) | 10 ns × 1 réplica = **triagem descritiva**; decisão de avançar usa critérios pré-registrados; o autor replica/estende os melhores |
+| I8 | Convenções do grupo (`Milena-MD`: CHARMM36 feb2026, pH 8,2, KCl 0,10 M, caixa cúbica 2,0 nm; `GOREs-boltz`: QC de pose pré-registrado, 5 amostras + potentials + sementes) | QC de pose adotado; MD de triagem com o motor do `MDAgent` (idêntico nas duas frentes) e entrega dos melhores no formato do `Milena-MD` para a MD longa do autor |
+| I9 | GPU a 98% por jobs do grupo | Tempos ×1,5–2 |
+
+## 3. Metodologia final
+
+| Etapa | Frente L (linear) | Frente M (macrociclo) | Custo* | Estado |
 |---|---|---|---|---|
-| E0 | Filtro de clivagem linear estrito | zero sítios de qualquer regra com score <0,3; K/R C-terminal conta (CPB); sem isenção de âncora | feito | `outputs/b23_cleavage_linear_strict.json` |
-| E1 | **Triagem Boltz-2 linear** dos 2.542 | `cyclic:false`, 1 amostra, 3 recycles (mesmo protocolo do braço macrocíclico → comparação justa) | ~6 h | script pronto |
-| E2 | **Re-pontuação robusta** do top-20 por espécie (160 candidatos) | 5 amostras de difusão × 3 sementes, `--use_potentials`, 200 sampling steps (protocolo do grupo); escore = média das sementes | ~1,5 h | **a construir** |
-| E3 | **Controle pareado**: para cada um dos 160, 3 embaralhamentos (mesma composição, `seed` fixa) com o mesmo protocolo de E2 | Δ = escore(candidato) − média(controles); reporta a fração com Δ > 0; usado para **interpretar** (não para trocar a regra de seleção) | ~1,5 h | **a construir** |
-| E4 | **QC de pose** (limiares pré-registrados do grupo) + matriz cruzada 8×8 (top-1 de cada espécie contra os 8 receptores) | clash, ω, quiralidade, tríade, S1 (≤4,5 Å de Asp189); 64 predições | ~0,5 h | **a construir** |
-| E5 | **Contra-triagem exploratória** (seletividade) | top-1 por espécie contra receptores não-alvo já usados no V1 (1TRN humana, *Apis*) + tripsina bovina (1SFI); margem = escore alvo − máx. não-alvo; **rotulada exploratória**: Boltz-2 foi validado real×decoy, não alvo×não-alvo | ~0,5 h | **a construir** |
-| E6 | **Braço de sensibilidade** (custo do critério estrito) | amostra estratificada de 200 sequências MARGINAL com 1 sítio K/R; mesmo Boltz-2 de E1; compara Δ de confiança e fração com P1 básico em S1 | ~0,5 h | **a construir** |
-| E7 | **MD do top-1 por espécie** | primário: pipeline do grupo `Milena-MD` (CHARMM36 feb2026, pH 8,2, 0,10 M KCl, caixa cúbica 2,0 nm, plateau); 100 ns; partida = predição linear de E2; sem MM-GBSA (não validado, ver I1/B0.5). **Réplicas adaptativas:** *A. gemmatalis* ×3; demais ×1, e +2 réplicas só para quem atingir S1 ≥70% a 5 Å | 8 + 2 + até 2×(n aprovados) simulações, ~4 h cada → ≥ 40 h | **a construir** (samplesheet + módulo de análise S1) |
-| E8 | Análise MD | ocupância do S1 (4/5/6 Å, por metades), contato com Ser/His catalíticas, RMSD local com PBC, identidade da âncora por réplica | minutos | análise pronta, adaptar entrada |
-| E9 | **Comparação com o braço macrocíclico** | sobreposição dos RESISTENTE, ρ de Spearman da confiança cíclico×linear nas sequências comuns, top-1 nos dois braços | segundos | script pronto |
+| E0 | filtro duro linear → 527 | filtro duro circular → 543 | feito | `outputs/b23_cleavage_{linear,circular}_hard.json` |
+| E1 | Boltz-2 `cyclic:false` (1 amostra) | Boltz-2 `cyclic:true` (1 amostra; refaz 543 — 442 já existiam, serve de **teste de reprodutibilidade** do Boltz-2) | ~2,5 h | script pronto |
+| E2 | top-10/espécie (80): 5 amostras × 3 sementes, `--use_potentials` | idem (80) | ~2 h | a construir |
+| E3 | 3 controles embaralhados por candidato (Δ pareado) | idem | ~6 h (paralelo à MD) | a construir |
+| E4 | QC de pose (clash <2,2 Å, ω trans, quiralidade L, tríade) + matriz cruzada 8×8 do top-1 | idem (+ **fechamento do anel** C–N ≈1,33 Å) | ~0,5 h | a construir |
+| E5 | contra-triagem exploratória: top-3 vs receptores não-alvo do V1 (1TRN, *Apis*) e tripsina bovina | idem | ~0,5 h | a construir |
+| E6 | **MD 10 ns, top-3 por espécie** (24 sim.), topologia **linear** | **MD 10 ns, top-3 por espécie** (24 sim.), topologia **cíclica** (ligação C–N explícita) | 48 × ~35 min ≈ **28 h** | linear: pronto (ajustar runner); cíclica: **a construir e validar** |
+| E7 | análise: ocupância do S1 (4/5/6 Å, por metades), contato com Ser/His, RMSD local com PBC, identidade da âncora | idem + fechamento do anel e ω durante a trajetória | minutos | adaptar |
+| E8 | comparação L × M: sobreposição, ρ cíclico×linear, top-3 nos dois braços, ΔS1 | | segundos | script pronto |
+| E9 | **Lista de entrega ao autor** para a MD longa: candidatos que cumprem os critérios abaixo, em formato `Milena-MD` (complexo + samplesheet) | | minutos | a construir |
 
-*GPU livre. Com os jobs do grupo: multiplicar por 1,5–2. **Total estimado ≈ 50–55 h (GPU livre).**
+*GPU livre. **Total ≈ 40 h (GPU livre); contar 60–80 h com os jobs do grupo.**
 
-Observações de método:
-- **Seleção do top-1 (regra declarada, não muda):** maior confiança do Boltz-2 entre os RESISTENTE; em E2 a
-  confiança passa a ser a média das sementes. E3 só informa se o top-1 supera os controles; se não superar, o texto
-  diz isso, e a regra não é alterada depois de ver os dados.
-- **Por que MD do grupo e não o `MDAgent` antigo:** campo de força moderno (CHARMM36) para peptídeos curtos e
-  desordenados, parâmetros iguais aos do grupo (comparabilidade com GORE), e partida/topologia lineares coerentes.
-  Alternativa descartada por custo de mudança: manter AMBER99SB-ILDN/pH 10 (já codificado, 50 ns).
-- **pH:** o grupo fixou 8,2; o manuscrito atual usa 10,0 (intestino alcalino de Lepidoptera). Recomendo 8,2 para o
-  MD (harmonização) e citar a faixa alcalina na Discussão; a diferença afeta sobretudo His57.
+**Topologia cíclica (risco técnico principal):** `pdb2gmx` não fecha o anel. Caminho preferido: `-ter` sem
+terminais + `specbond.dat` com a ligação C(n)–N(1) e remoção dos H/OXT terminais, validado num peptídeo-teste (1 ns:
+distância C–N, ω trans, sem explosão da dinâmica — a falha do dissulfeto de julho foi exatamente geometria de partida
+incompatível); alternativa: `tleap`/`parmed` (AmberTools) com `bond`. A partida é a predição Boltz-2 **cíclica**
+(anel já fechado), portanto a geometria é compatível. Se a validação falhar, a frente M fica só com E0–E5 e a MD
+cíclica vai para pendência declarada.
 
-## 4. Critérios congelados antes de abrir qualquer resultado (pré-registro)
+**Critérios pré-registrados para entrar na lista de MD longa (E9):** (a) RESISTENTE pelo critério duro; (b) QC de
+pose aprovado; (c) ocupância do S1 ≥70% a 5 Å na **segunda metade** dos 10 ns; (d) âncora com a mesma identidade nas
+duas metades; (e) Δ pareado (E3) > 0; (f) no macrociclo, anel íntegro (C–N ≤1,5 Å e ω ≥150° em toda a trajetória).
+Se nenhum candidato cumprir (c)–(d) numa espécie, a espécie é reportada como “sem candidato ancorado em 10 ns”.
+Nenhum limiar é alterado depois de ver os dados (emendas ficam neste arquivo).
 
-1. Conjunto candidato: RESISTENTE do filtro linear estrito (E0). Sem mais cortes.
-2. Top-1 = maior confiança média (E2) entre os RESISTENTE da espécie.
-3. "S1 ancorado" = ocupância ≥70% a 5 Å do Asp189-equivalente, âncora definida empiricamente; 4 e 6 Å reportados.
-4. QC de pose: clash <2,2 Å = 0 pares; ω |≥150°|; quiralidade L; tríade mantida; contato com P1 básico ≤4,5 Å só é
-   exigido quando há K/R (não é critério de exclusão para os demais).
-5. Nenhum limiar é alterado depois de ver dados; qualquer mudança vai registrada em "emendas" neste arquivo.
+**Seleção:** os top-3 por espécie/frente são pela maior confiança média do Boltz-2 (E2) entre os RESISTENTE; E3 só
+interpreta.
 
-## 5. Reescrita do manuscrito (em paralelo ao servidor)
+## 4. Escrita do manuscrito (em paralelo)
 
-Título/Abstract/Palavras-chave → linear; Introdução reenquadrada no grupo e na tensão P1 básico × clivagem; Métodos
-2.4–2.9 (sementes cíclicas, filtro estrito, Boltz-2 linear, E2–E7); Resultados 3.4–3.8 (3.8 = comparação com o
-macrociclo) e Discussão (4.3 defende o critério e expõe seu custo com os dados de E6; 4.5 macrociclização, D-aa/Nle/Orn,
-*capping*); Limitações (exopeptidases, backbones sob fechamento, ProteinMPNN sem receptor fixo, Boltz-2 não validado em
-5–8 aa, seletividade exploratória); Fig. 3 recalculada; Fig. 1; versão PT.
+Título/Abstract: “linear and macrocyclic peptides” (duas frentes, comparação como resultado). Introdução: grupo (GORE),
+tensão P1 básico × clivagem, e o requisito de não-clivabilidade por proteases de Lepidoptera (tabela da seção 1).
+Métodos 2.6: critério duro e suas exceções; 2.7: Boltz-2 nas duas modalidades; 2.8–2.9: MD de triagem 10 ns, topologias
+linear e cíclica, análise. Resultados: composição do conjunto resistente (Gly-rico), Boltz-2, QC, MD 10 ns por frente,
+comparação L × M. Discussão: custo do critério duro, flexibilidade, aminopeptidases/*capping*, o que a MD de 10 ns não
+permite concluir. Figuras 1 e 3 recalculadas; versão PT; referências novas conferidas (PubMed: as sete acima; RAG do
+grupo: Saikhedkar 2019, Kelly 2005, Schultz 2026, Paulo 2026, Severi-Castro 2026 ainda a conferir no Crossref).
 
-## 6. Literatura (nenhuma referência sem Crossref/PubMed)
+## 5. Decisões pendentes
 
-RAG (servidor): Saikhedkar 2019, Kelly 2005, Laskowski 2000, Patarroyo-Vargas 2017/2020, Almeida 2021/2022,
-Meriño-Cabrera 2022, Schultz 2026; novas candidatas: Paulo 2026 (GORE3), Severi-Castro 2026 (PEP-11). A verificar:
-SFTI-1 acíclico; carboxi/aminopeptidases do intestino médio de Lepidoptera; exceções da regra K/R–Pro da tripsina;
-hidrólise lenta em inibidores canônicos; sequências e Ki de GORE1–5 (extrair dos PDFs do corpus).
-
-## 7. Decisões pendentes do autor (recomendação em negrito)
-
-1. Disparar E1 já (6 h, independente das demais) enquanto as etapas a construir são escritas? **Sim.**
-2. MD final: pipeline do grupo CHARMM36 pH 8,2 (**recomendado**) ou `MDAgent` antigo (AMBER99SB-ILDN, pH 10)?
-3. Incluir GORE1/GORE2 como pontos de referência descritivos (não calibração) nos mesmos receptores? O autor já
-   cortou a calibração de potência contra a série GORE em 28/09; **padrão: não incluir**.
-4. Extremidades livres (carregadas, como nos ensaios do grupo — **recomendado**) ou protegidas (Ac/NH₂)?
-5. E5 (contra-triagem exploratória): manter no texto como exploratória (**recomendado**, dado o peso permanente da
-   especificidade) ou omitir?
+1. **Ile** no interior: permitida (**padrão**; 527/543) ou proibida (393 linear)?
+2. pH do MD de triagem: **8,2** (grupo; recomendado) ou 10,0 (texto atual do manuscrito)?
+3. Extremidades do linear: **carregadas** (recomendado; como nos ensaios do grupo) ou acetil/amida?
+4. Topologia cíclica: aprovar o caminho `specbond` (com fallback `tleap`)?
+5. Manter E5 (contra-triagem) como exploratória? **Sim** (recomendado).
+6. Disparar já a E1 das duas frentes (~2,5 h, independe do resto)? **Sim.**
