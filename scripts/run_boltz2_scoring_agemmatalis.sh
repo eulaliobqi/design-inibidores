@@ -7,7 +7,7 @@ set -e
 cd ~/design-inibidores
 source ~/miniforge3/etc/profile.d/conda.sh
 sp=Agemmatalis
-CLV=outputs/b23_cleavage_analysis_Agemmatalis.json
+CLV=outputs/b23_cleavage_circular.json   # regra circular (2026-09-30); o json linear antigo foi superado
 
 conda activate boltz2-env
 echo "[$sp] $(date) -- MSA receptor"
