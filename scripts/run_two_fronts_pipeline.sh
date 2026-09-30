@@ -9,9 +9,10 @@ cd ~/design-inibidores
 source ~/miniforge3/etc/profile.d/conda.sh
 SP8="Sfrugiperda Slitura Onubilalis Dsaccharalis Cincludens Hvirescens Pxylostella Agemmatalis"
 RES=data-b23-scoring/results
-BOLTZ_ROBUST="--model boltz2 --diffusion_samples 5 --recycling_steps 3 --sampling_steps 200 --use_potentials --output_format pdb --preprocessing-threads 4"
-# boltz predict com timeout e 1 nova tentativa (em 30/09 o pre-processamento travou 56 min sem erro; o Boltz retoma do que ja processou)
-bz() { timeout 3h boltz predict "$@" || { echo "[bz] falhou/timeout, nova tentativa: $*"; timeout 3h boltz predict "$@"; }; }
+BOLTZ_ROBUST="--model boltz2 --diffusion_samples 5 --recycling_steps 3 --sampling_steps 200 --use_potentials --output_format pdb --preprocessing-threads 1"
+# boltz predict com timeout de 50 min (um lote leva ~7-25 min) e 1 nova tentativa. Em 30/09 o pre-processamento com 4 threads travou sem erro
+# (E1 por 56 min; E2 por 20 min, GPU a 0%): agora 1 thread (sem pool de processos) e timeout curto; o Boltz retoma do que ja processou
+bz() { timeout 50m boltz predict "$@" || { echo "[bz] falhou/timeout, nova tentativa: $*"; timeout 50m boltz predict "$@"; }; }
 # repete o boltz ate 3x enquanto faltarem predicoes (em 30/09 o pre-processamento falhou de forma intermitente num YAML e o
 # Boltz sai com codigo 0 pulando o exemplo; a repeticao funcionou no E1). Uso: bzfill YAML_DIR ESPECIE OUT_DIR args...
 bzfill() {
