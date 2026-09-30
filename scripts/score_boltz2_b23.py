@@ -69,8 +69,7 @@ def write_yaml(args):
     manifest_dir = ROOT / args.yaml_dir / "_manifests"
     manifest_dir.mkdir(parents=True, exist_ok=True)
 
-    cyc = "      cyclic: true
-" if args.cyclic else ""   # padrão linear desde 2026-09-30
+    cyc = "      cyclic: true\n" if args.cyclic else ""   # padrão linear desde 2026-09-30
     manifest = {}
     for idx, cand in enumerate(candidates):
         stem = f"{args.species}__{cand['backbone']}__{idx}"
