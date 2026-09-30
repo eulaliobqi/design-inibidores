@@ -12,6 +12,22 @@ RES=data-b23-scoring/results
 BOLTZ_ROBUST="--model boltz2 --diffusion_samples 5 --recycling_steps 3 --sampling_steps 200 --use_potentials --output_format pdb --preprocessing-threads 4"
 # boltz predict com timeout e 1 nova tentativa (em 30/09 o pre-processamento travou 56 min sem erro; o Boltz retoma do que ja processou)
 bz() { timeout 3h boltz predict "$@" || { echo "[bz] falhou/timeout, nova tentativa: $*"; timeout 3h boltz predict "$@"; }; }
+# repete o boltz ate 3x enquanto faltarem predicoes (em 30/09 o pre-processamento falhou de forma intermitente num YAML e o
+# Boltz sai com codigo 0 pulando o exemplo; a repeticao funcionou no E1). Uso: bzfill YAML_DIR ESPECIE OUT_DIR args...
+bzfill() {
+  local ydir=$1 sp=$2 out=$3; shift 3
+  local ny nd try
+  ny=$(ls $ydir/*.yaml 2>/dev/null | wc -l)
+  for try in 1 2 3; do
+    nd=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
+    if [ "$ny" -le 0 ] || [ "$nd" -ge "$ny" ]; then return 0; fi
+    [ "$try" -gt 1 ] && echo "[bzfill] $(date) $out: $nd/$ny, tentativa $try"
+    bz "$ydir" "$@" --out_dir "$out"
+  done
+  nd=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
+  [ "$nd" -lt "$ny" ] && echo "[bzfill] AVISO $out: $nd/$ny predicoes apos 3 tentativas"
+  return 0
+}
 rule_of() { [ "$1" = L ] && echo linear-strict-hard || echo circular-hard; }
 clv_of()  { [ "$1" = L ] && echo outputs/b23_cleavage_linear_hard.json || echo outputs/b23_cleavage_circular_hard.json; }
 
@@ -25,10 +41,7 @@ for F in L M; do
   for seed in 1 2 3; do
     for sp in $SP8; do
       out=outputs/b23_boltz2_E2_${F}_s${seed}_$sp
-      n_yaml=$(ls $RES/boltz_yaml_E2_$F/$sp/*.yaml 2>/dev/null | wc -l)
-      n_done=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
-      [ "$n_yaml" -gt 0 ] && [ "$n_done" -lt "$n_yaml" ] && \
-        bz $RES/boltz_yaml_E2_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
+      bzfill $RES/boltz_yaml_E2_$F/$sp $sp $out $BOLTZ_ROBUST --seed $seed
     done
   done
   ( cd scripts && python rescore_boltz2_topk.py collect --front $F --tag E2 --seeds 1 2 3 )
@@ -68,10 +81,7 @@ for F in L M; do
   for seed in 1 2 3; do
     for sp in $SP8; do
       out=outputs/b23_boltz2_E3_${F}_s${seed}_$sp
-      n_yaml=$(ls $RES/boltz_yaml_E3_$F/$sp/*.yaml 2>/dev/null | wc -l)
-      n_done=$(ls $out/boltz_results_$sp/predictions 2>/dev/null | wc -l)
-      [ "$n_yaml" -gt 0 ] && [ "$n_done" -lt "$n_yaml" ] && \
-        bz $RES/boltz_yaml_E3_$F/$sp $BOLTZ_ROBUST --seed $seed --out_dir $out
+      bzfill $RES/boltz_yaml_E3_$F/$sp $sp $out $BOLTZ_ROBUST --seed $seed
     done
   done
   ( cd scripts && python rescore_boltz2_topk.py collect --front $F --tag E3 --seeds 1 2 3 && python rescore_boltz2_topk.py delta --front $F )
