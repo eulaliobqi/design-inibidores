@@ -88,6 +88,9 @@ def main():
     ap.add_argument("--workdir", help="diretorio de saida (relativo a ROOT)")
     ap.add_argument("--species", nargs="+", help="subconjunto de especies")
     ap.add_argument("--ns", type=int, default=50)
+    ap.add_argument("--front", choices=["L", "M"], default=None,
+                    help="L = peptideo linear, M = macrociclo cabeca-cauda: monta o sistema via "
+                         "tleap/parmed (ver build_system_tleap.py). Sem --front: pdb2gmx (legado).")
     args = ap.parse_args()
 
     workdir = ROOT / args.workdir if args.workdir else WORKDIR
@@ -124,7 +127,8 @@ def main():
         print(f"[{species}] iniciando MD 1x{ns}ns (seq={meta['sequence']}, "
               f"confidence_score={meta['confidence_score']:.4f})...")
         try:
-            result = agent._run_gromacs(str(src), out_dir, ns, temp, meta["sequence"])
+            result = agent._run_gromacs(str(src), out_dir, ns, temp, meta["sequence"],
+                                        cyclic=None if args.front is None else args.front == "M")
             summary[species] = {
                 "status": "done",
                 "sequence": meta["sequence"],
@@ -132,6 +136,8 @@ def main():
                 "confidence_score": meta["confidence_score"],
                 "source_pdb": meta["pdb"],
                 "ns": ns,
+                "cyclic": None if args.front is None else args.front == "M",
+                "front": args.front,
                 **result,
             }
             print(f"[{species}] concluido: {result}")

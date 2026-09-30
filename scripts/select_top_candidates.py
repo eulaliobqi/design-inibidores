@@ -29,6 +29,7 @@ def main():
     ap.add_argument("--manifests", default="data-b23-scoring/boltz_yaml/_manifests")
     ap.add_argument("--rule", default="linear-strict", choices=["linear-strict-hard", "circular-hard", "linear-strict", "linear", "circular"])
     ap.add_argument("--boltz-out-prefix", default="outputs/b23_boltz2")
+    ap.add_argument("--k", type=int, default=1, help="top-k por especie; chave = especie__r{rank} se k>1")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -51,24 +52,33 @@ def main():
                       "resistentes_sem_score": not_scored}
         if not kept:
             continue
-        best = max(kept, key=lambda c: c["confidence_score"])
+        ranked, seen = [], set()
+        for c in sorted(kept, key=lambda c: c["confidence_score"], reverse=True):
+            if c["sequence"] in seen:          # mesma sequencia de outro backbone: conta uma vez
+                continue
+            seen.add(c["sequence"])
+            ranked.append(c)
+            if len(ranked) == args.k:
+                break
         manifest = json.loads((ROOT / args.manifests / f"{sp}.json").read_text())
-        stems = [k for k, v in manifest.items()
-                 if v["backbone"] == best["backbone"] and v["sequence"] == best["sequence"]]
-        if len(stems) != 1:
-            raise RuntimeError(f"{sp}: esperado 1 stem no manifest para {best['backbone']}/"
-                               f"{best['sequence']}, achei {stems}")
-        stem = stems[0]
-        pdb = (f"{args.boltz_out_prefix}_{sp}/boltz_results_{sp}/predictions/{stem}/"
-               f"{stem}_model_0.pdb")
-        out[sp] = {"sequence": best["sequence"], "backbone": best["backbone"],
-                   "confidence_score": best["confidence_score"],
-                   "complex_plddt": best["complex_plddt"], "iptm": best["iptm"], "pdb": pdb}
+        for rank, best in enumerate(ranked, start=1):
+            stems = [k for k, v in manifest.items()
+                     if v["backbone"] == best["backbone"] and v["sequence"] == best["sequence"]]
+            if len(stems) != 1:
+                raise RuntimeError(f"{sp}: esperado 1 stem no manifest para {best['backbone']}/"
+                                   f"{best['sequence']}, achei {stems}")
+            stem = stems[0]
+            pdb = best.get("pdb") or (f"{args.boltz_out_prefix}_{sp}/boltz_results_{sp}/predictions/"
+                                      f"{stem}/{stem}_model_0.pdb")
+            key = sp if args.k == 1 else f"{sp}__r{rank}"
+            out[key] = {"species": sp, "rank": rank, "sequence": best["sequence"],
+                        "backbone": best["backbone"], "confidence_score": best["confidence_score"],
+                        "complex_plddt": best["complex_plddt"], "iptm": best["iptm"], "pdb": pdb}
     (ROOT / args.out).parent.mkdir(parents=True, exist_ok=True)
     (ROOT / args.out).write_text(json.dumps({"rule": args.rule, "candidates": out,
                                              "report": report}, indent=2))
     for sp, v in out.items():
-        print(f"{sp:13s} {v['sequence']:12s} {v['confidence_score']:.4f}  {v['backbone']}")
+        print(f"{sp:18s} {v['sequence']:12s} {v['confidence_score']:.4f}  {v['backbone']}")
     print(json.dumps(report, indent=1))
 
 

@@ -35,7 +35,7 @@ GMX = "/home/eulalio/miniforge3/envs/md-gromacs/bin/gmx_mpi"
 ROOT = Path(__file__).parent.parent
 MD_DIR = ROOT / "outputs" / "md_top_candidates"   # sobrescrito por --md-dir
 PANEL = ROOT / "data-lepidoptera-panel" / "subsites_by_receptor.json"
-DT_PS = 100  # subamostra: 500 frames em 50 ns
+DT_PS = 20   # subamostra (md.xtc a cada 5 ps): 500 frames em 10 ns
 
 
 def receptor_residues(species: str) -> dict:
@@ -64,9 +64,10 @@ def pbc_traj(sp_dir: Path) -> Path:
     return out
 
 
-def analyze(species: str, seq: str) -> dict:
+def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
+    """`species` pode ser a chave composta "{especie}__r{rank}" (top-k por especie)."""
     sp_dir = MD_DIR / species
-    res_map = receptor_residues(species)
+    res_map = receptor_residues(species.split("__")[0])
     u = mda.Universe(str(sp_dir / "md.tpr"), str(pbc_traj(sp_dir)))
     prot = u.select_atoms("protein")
     n_rec = len(prot.residues) - len(seq)
@@ -106,11 +107,24 @@ def analyze(species: str, seq: str) -> dict:
     rec_heavy = rec.atoms.select_atoms("not name H*")
 
     d_res, t_ns, rmsd_loc, contact_any, d_ser, d_his, d_com = [], [], [], [], [], [], []
+    ring_cn, ring_omega = [], []
+    pep_n = pep[0].atoms.select_atoms("name N")[0]
+    pep_c = pep[-1].atoms.select_atoms("name C")[0]
+    pep_ca1 = pep[0].atoms.select_atoms("name CA")[0]
+    pep_can = pep[-1].atoms.select_atoms("name CA")[0]
     for ts in u.trajectory:
         box = ts.dimensions
         t_ns.append(ts.time / 1000.0)
         d_com.append(float(np.linalg.norm(rec.atoms.center_of_mass() - pep.atoms.center_of_mass())))
         d_res.append([distance_array(h.positions, asp.positions, box=box).min() for h in pep_heavy])
+        if cyclic:
+            q = unwrap_peptide(np.vstack([pep_c.position, pep_n.position, pep_ca1.position,
+                                          pep_can.position]), asp.positions.mean(axis=0), box)
+            ring_cn.append(float(np.linalg.norm(q[0] - q[1])))
+            b1, b2, b3 = q[0] - q[3], q[1] - q[0], q[2] - q[1]
+            n1, n2 = np.cross(b1, b2), np.cross(b2, b3)
+            ring_omega.append(float(np.degrees(np.arctan2(
+                np.dot(np.cross(n1, n2), b2 / np.linalg.norm(b2)), np.dot(n1, n2)))))
         d_ser.append(distance_array(pep_all_heavy.positions, ser.positions, box=box).min())
         d_his.append(distance_array(pep_all_heavy.positions, his.positions, box=box).min())
         contact_any.append(bool((distance_array(pep_all_heavy.positions, rec_heavy.positions,
@@ -125,7 +139,7 @@ def analyze(species: str, seq: str) -> dict:
     anchor = int(d_res.mean(axis=0).argmin())
     da = d_res[:, anchor]
     half = t_ns < t_ns.max() / 2
-    late, early = t_ns >= t_ns.max() - 10, t_ns <= 2
+    late, early = t_ns >= 0.8 * t_ns.max(), t_ns <= max(0.04 * t_ns.max(), t_ns.min())
     rmsd_loc = np.array(rmsd_loc)
     out = {
         "n_frames": int(len(t_ns)), "receptor_residues": int(n_rec),
@@ -141,10 +155,20 @@ def analyze(species: str, seq: str) -> dict:
         "ser195_contact_frac_4.5A": round(float((np.array(d_ser) < 4.5).mean()), 3),
         "his57_contact_frac_4.5A": round(float((np.array(d_his) < 4.5).mean()), 3),
     }
+    a_h1, a_h2 = int(d_res[half].mean(axis=0).argmin()), int(d_res[~half].mean(axis=0).argmin())
+    out.update({"anchor_idx_h1": a_h1, "anchor_idx_h2": a_h2, "anchor_same_in_halves": a_h1 == a_h2})
+    if cyclic:
+        om = np.abs(np.array(ring_omega))
+        out.update({"ring_CN_max_A": round(max(ring_cn), 3), "ring_omega_abs_min_deg": round(float(om.min()), 1),
+                    "ring_intact": bool(max(ring_cn) <= 1.5 and om.min() >= 150)})
     for c in (4, 5, 6):
         out[f"occ_{c}A"] = round(float((da < c).mean()), 3)
         out[f"occ_{c}A_h1"] = round(float((da[half] < c).mean()), 3)
         out[f"occ_{c}A_h2"] = round(float((da[~half] < c).mean()), 3)
+    # triagem pre-registrada (plano v3, criterios c, d, f): S1 >=70% a 5 A na 2a metade, mesma ancora
+    # nas duas metades e, no macrociclo, anel integro. Descritivo: 10 ns x 1 replica nao e' inferencia.
+    out["passes_screen"] = bool(out["occ_5A_h2"] >= 0.7 and out["anchor_same_in_halves"]
+                                and (not cyclic or out.get("ring_intact", False)))
     return out
 
 
@@ -160,8 +184,9 @@ def main():
     res = json.loads(out_file.read_text()) if out_file.exists() else {}
     for sp in species:
         seq = summary[sp]["sequence"]
+        cyc = summary[sp].get("cyclic")
         try:
-            res[sp] = {"sequence": seq, **analyze(sp, seq)}
+            res[sp] = {"sequence": seq, "cyclic": cyc, **analyze(sp, seq, cyc)}
         except Exception as e:  # noqa: BLE001 - reporta por especie, nao aborta o lote
             res[sp] = {"sequence": seq, "error": f"{type(e).__name__}: {e}"}
         print(sp, json.dumps(res[sp]), flush=True)

@@ -7,6 +7,7 @@ Executa MD curta (10 ns padrão) para verificar:
 """
 import json
 import re
+import os
 import subprocess
 from pathlib import Path
 
@@ -445,7 +446,7 @@ class MDAgent(BaseAgent):
             return clean_pdb
 
     def _run_gromacs(self, complex_pdb: str, out: Path, ns: int,
-                     temp: int, seq: str) -> dict:
+                     temp: int, seq: str, cyclic: bool | None = None) -> dict:
         gmx = self._find_gmx()
         self.logger.info(f"  gmx executável: {gmx}")
         ff = self.config.get("md", {}).get("forcefield", "amber99sb-ildn")
@@ -496,37 +497,57 @@ class MDAgent(BaseAgent):
             clean_pdb.write_text("".join(lines_clean) + "\nEND\n")
             self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
 
-            # pH do intestino de Lepidoptera (alcalino, 8-11) — ajusta estado de
-            # protonação real via pdb2pqr/propka antes do pdb2gmx (Fase 5+, 2026-07-17)
-            protonated_pdb = self._apply_ph_protonation(clean_pdb, out)
+            if cyclic is None:
+                # pH do intestino de Lepidoptera (alcalino, 8-11) — ajusta estado de
+                # protonação real via pdb2pqr/propka antes do pdb2gmx (Fase 5+, 2026-07-17)
+                protonated_pdb = self._apply_ph_protonation(clean_pdb, out)
 
-            # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
-            self.logger.info("  pdb2gmx...")
-            p = gmx_run(["pdb2gmx", "-f", protonated_pdb.name, "-o", "processed.gro",
-                          "-p", "topol.top", "-i", "posre.itp",
-                          "-ff", ff, "-water", water, "-ignh"],
-                         input="1\n", timeout=120)
-            check(p, "pdb2gmx")
+                # pdb2gmx — usa só o nome do arquivo pois cwd já é `out`
+                self.logger.info("  pdb2gmx...")
+                p = gmx_run(["pdb2gmx", "-f", protonated_pdb.name, "-o", "processed.gro",
+                              "-p", "topol.top", "-i", "posre.itp",
+                              "-ff", ff, "-water", water, "-ignh"],
+                             input="1\n", timeout=120)
+                check(p, "pdb2gmx")
 
-            # editconf
-            self.logger.info("  editconf...")
-            check(gmx_run(["editconf", "-f", "processed.gro", "-o", "box.gro",
-                            "-bt", "dodecahedron", "-d", "1.2"], timeout=60), "editconf")
+                # editconf
+                self.logger.info("  editconf...")
+                check(gmx_run(["editconf", "-f", "processed.gro", "-o", "box.gro",
+                                "-bt", "dodecahedron", "-d", "1.2"], timeout=60), "editconf")
 
-            # solvate
-            self.logger.info("  solvate...")
-            check(gmx_run(["solvate", "-cp", "box.gro", "-cs", "spc216.gro",
-                            "-o", "solv.gro", "-p", "topol.top"], timeout=60), "solvate")
+                # solvate
+                self.logger.info("  solvate...")
+                check(gmx_run(["solvate", "-cp", "box.gro", "-cs", "spc216.gro",
+                                "-o", "solv.gro", "-p", "topol.top"], timeout=60), "solvate")
 
-            # genion
-            self.logger.info("  genion...")
-            check(gmx_run(["grompp", "-f", "minim.mdp", "-c", "solv.gro",
-                            "-p", "topol.top", "-o", "ions.tpr", "-maxwarn", "2"], timeout=60),
-                  "grompp_ions")
-            check(gmx_run(["genion", "-s", "ions.tpr", "-o", "solv_ions.gro",
-                            "-p", "topol.top", "-pname", "NA", "-nname", "CL",
-                            "-neutral", "-conc", "0.15"],
-                           input="SOL\n", timeout=60), "genion")
+                # genion
+                self.logger.info("  genion...")
+                check(gmx_run(["grompp", "-f", "minim.mdp", "-c", "solv.gro",
+                                "-p", "topol.top", "-o", "ions.tpr", "-maxwarn", "2"], timeout=60),
+                      "grompp_ions")
+                check(gmx_run(["genion", "-s", "ions.tpr", "-o", "solv_ions.gro",
+                                "-p", "topol.top", "-pname", "NA", "-nname", "CL",
+                                "-neutral", "-conc", "0.15"],
+                               input="SOL\n", timeout=60), "genion")
+
+            else:
+                # Montagem via tleap/parmed (2026-09-30): peptideo LINEAR (cyclic=False) ou
+                # MACROCICLO cabeca-cauda (cyclic=True, ligacao C-N explicita), mesmo campo de
+                # forca ff99SB-ILDN/TIP3P; protonacao PROPKA no pH md.gut_ph. Ver build_system_tleap.py
+                import shutil
+                md_cfg = self.config.get("md", {})
+                py = os.path.expanduser(md_cfg.get("tleap_python", "~/miniforge3/envs/mmgbsa-env/bin/python"))
+                pqr = shutil.which("pdb2pqr30") or os.path.expanduser(
+                    "~/miniforge3/envs/protein_design_env/bin/pdb2pqr30")
+                cmd = [py, str(Path(__file__).resolve().parents[1] / "build_system_tleap.py"),
+                       "--complex", str(complex_pdb), "--out", str(out),
+                       "--ph", str(md_cfg.get("gut_ph", 10.0)), "--pdb2pqr", pqr]
+                if cyclic:
+                    cmd.append("--cyclic")
+                self.logger.info("  build_system_tleap (%s)...", "ciclico" if cyclic else "linear")
+                bp = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+                if bp.returncode != 0:
+                    raise RuntimeError(f"build_system_tleap rc={bp.returncode}: {(bp.stderr or bp.stdout)[-600:]}")
 
             # Minimização
             self.logger.info("  minimização...")
