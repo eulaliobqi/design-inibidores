@@ -103,7 +103,8 @@ def build(complex_pdb: Path, out: Path, ph: float, cyclic: bool, pdb2pqr: str,
 
     def leap(extra, save):
         s = ("source oldff/leaprc.ff99SB\nloadamberparams frcmod.ff99SBildn\nsource leaprc.water.tip3p\n"
-             f"mol = loadPdbUsingSeq heavy.pdb {{ {' '.join(seq)} }}\n")
+             "mol = loadPdbUsingSeq heavy.pdb {\n" +
+             "\n".join(" ".join(seq[i:i + 12]) for i in range(0, len(seq), 12)) + "\n}\n")
         for a, b in ss:
             s += f"bond mol.{a}.SG mol.{b}.SG\n"
         if cyclic:
