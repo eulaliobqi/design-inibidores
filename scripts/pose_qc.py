@@ -69,7 +69,7 @@ def qc_pose(pdb: Path, species: str, cyclic: bool) -> dict:
         if r.get_resname() == "GLY":
             continue
         n, ca, c, cb = (r[k].coord for k in ("N", "CA", "C", "CB"))
-        if np.dot(np.cross(n - ca, c - ca), cb - ca) > 0:   # convencao: L => produto misto < 0
+        if np.dot(np.cross(n - ca, c - ca), cb - ca) < 0:   # L => produto misto > 0 (validado nos 236 CA L do receptor de uma predicao Boltz-2)
             n_nonL += 1
     his = rec_by[resnum(rmap["HIS57"])]["NE2"].coord
     ser = rec_by[resnum(rmap["SER195"])]["OG"].coord
