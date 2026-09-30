@@ -86,7 +86,7 @@ legends = dict(re.findall(r"\*\*Figura (S?\d)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)",
 src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
        "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_ciclica_fumaca.png"}
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_ciclica_fumaca.png"}
 
 
 def img(n, w="16.5cm"):
@@ -99,7 +99,8 @@ src = src.replace("\n### 3.4 A campanha de geração", img("3") + "\n### 3.4 A c
 src = src.replace("\n### 3.6 Um critério duro", img("4") + "\n### 3.6 Um critério duro")
 src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n### 3.7 Confiança do Boltz-2")
 src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
-for fid in ("1", "2", "3", "4", "5", "6", "7"):
+src = src.replace("\n### 3.9 Simulações", img("8") + "\n### 3.9 Simulações")
+for fid in ("1", "2", "3", "4", "5", "6", "7", "8"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
 
@@ -150,7 +151,7 @@ panel = f"""
 |---|---|---|---|
 | Tipo de artigo | Original Research (IMRaD: Resumo, Introdução, Material e métodos, Resultados, Discussão) | Estrutura cumprida | OK |
 | Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | {n_body_en:,} palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: {n_body_pt:,} | OK (há margem para as Seções 3.8–3.10) |
-| Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | {n_abs_en} palavras no original em inglês sem o trecho pendente (≈ {n_abs_en + 29} com ele preenchido); tradução: {n_abs_pt} | OK |
+| Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | {n_abs_en} palavras no original em inglês sem o trecho pendente (≈ {n_abs_en + 9} com ele preenchido); tradução: {n_abs_pt} | OK |
 | Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | {n_kw} | OK |
 | Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, {len(title_en)} caracteres | OK |
 | Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | {len(short_en)} caracteres | OK |

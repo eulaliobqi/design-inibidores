@@ -197,6 +197,36 @@ def fig_boltz():
     return n, float(np.mean([r["confidence_score"] for r in allr]))
 
 
+
+# ---- Figura 8: E1 -- reprodutibilidade do Boltz-2 e linear x ciclico ---------------------------------
+def fig_e1():
+    from scipy.stats import spearmanr
+    for n in ("b23_boltz2_L_scores.json", "b23_boltz2_M_scores.json"):
+        if not (D / n).exists():
+            return None
+    Ls, Ms = load("b23_boltz2_L_scores.json"), load("b23_boltz2_M_scores.json")
+    key = lambda d: {sp: {(r["backbone"], r["sequence"]): r["confidence_score"] for r in rows} for sp, rows in d.items()}
+    Lk, Mk, Ok = key(Ls), key(Ms), key(scores)
+    rl = {sp: {(r["backbone"], r["sequence"]) for r in HL[sp]} for sp in SP}
+    rm = {sp: {(r["backbone"], r["sequence"]) for r in HM[sp]} for sp in SP}
+    rep, lm = [], []
+    for sp in SP:
+        rep += [(Ok[sp][k], Mk[sp][k]) for k in rm[sp] if k in Ok.get(sp, {}) and k in Mk.get(sp, {})]
+        lm += [(Mk[sp][k], Lk[sp][k]) for k in rl[sp] & rm[sp] if k in Mk.get(sp, {}) and k in Lk.get(sp, {})]
+    fig, ax = plt.subplots(1, 2, figsize=(9.5, 4.3))
+    for a, pairs, xl, yl, ttl, c in (
+            (ax[0], rep, T("cyclic, first round", "cíclico, 1ª rodada"), T("cyclic, repeated", "cíclico, repetido"), T("Same input, two runs", "Mesma entrada, duas rodadas"), "#2a9d8f"),
+            (ax[1], lm, T("cyclic", "cíclico"), T("linear", "linear"), T("Same sequence, two modalities", "Mesma sequência, duas modalidades"), "#457b9d")):
+        x, y = zip(*pairs)
+        a.scatter(x, y, s=9, alpha=.5, color=c, edgecolor="none")
+        a.plot([.6, 1], [.6, 1], ls=":", c="gray", lw=1)
+        rho = spearmanr(x, y)[0]
+        a.text(.62, .95, f"n = {len(pairs)}" + chr(10) + f"Spearman ρ = {rho:.2f}" + chr(10) + T("mean |Δ| = ", "|Δ| médio = ") + f"{np.mean(np.abs(np.array(y) - np.array(x))):.3f}", fontsize=9, va="top")
+        a.set_xlim(.6, 1); a.set_ylim(.6, 1); a.set_xlabel(T("Boltz-2 confidence, ", "Confiança do Boltz-2, ") + xl); a.set_ylabel(T("Boltz-2 confidence, ", "Confiança do Boltz-2, ") + yl); a.set_title(ttl)
+    fig.tight_layout()
+    fig.savefig(O / T("Figure8_boltz2_reproducibility.png", "fig8_reprodutibilidade.png")); fig.savefig(O / T("Figure8_boltz2_reproducibility.pdf", "fig8_reprodutibilidade.pdf")); plt.close()
+    return len(rep), len(lm)
+
 # ---- Suplementares -------------------------------------------------------------------------------
 def fig_s1():
     fig, ax = plt.subplots(figsize=(8.5, 3.8))
@@ -229,7 +259,7 @@ def fig_s2():
 
 
 if __name__ == "__main__":
-    fig_pipeline(); fig_rule(); fig_funnel(); fig_comp(); n, mc = fig_boltz(); fig_s1(); fig_s2()
+    fig_pipeline(); fig_rule(); fig_funnel(); fig_comp(); n, mc = fig_boltz(); print('E1 fig', fig_e1()); fig_s1(); fig_s2()
     from PIL import Image
     for f in list(O.glob("*.png")):
         if not f.name.startswith("fig") and not f.name.startswith("Figure"):
