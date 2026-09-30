@@ -105,12 +105,16 @@ def find_cleavage_sites(seq: str, rule: dict, circular: bool = False) -> list[in
 
     elif "cut_before" in rule:
         cut_set = set(rule["cut_before"])
-        # clivagem entre i-1 e i quando seq[i] está em cut_set; no circular o resíduo 0
-        # também tem vizinho anterior (seq[n-1]).
+        # clivagem entre i-1 e i quando seq[i] está em cut_set. No circular o resíduo 0 também
+        # tem vizinho anterior (seq[n-1]).
+        # NOTA (comportamento LEGADO preservado de propósito, para que o modo linear reproduza
+        # bit a bit os resultados já produzidos): a exclusão "not_before" compara o PRÓPRIO
+        # resíduo i, não o vizinho. Para a regra da pepsina (F/L, not_before="P") isso é um
+        # no-op, pois F/L nunca é P.
         first = 0 if circular else 1
         for i in range(first, n):
             aa = seq[i]
-            next_aa = seq[i + 1] if i + 1 < n else (seq[0] if circular else "")
+            next_aa = seq[i]
             if aa in cut_set and (not next_aa or next_aa not in not_before):
                 sites.append((i - 1) % n)  # clivagem entre i-1 e i
 

@@ -39,3 +39,49 @@ def test_circular_sem_geometria_nao_presume_ancora():
 
 def test_circular_sem_KR_igual_ao_linear_para_tripsina():
     assert analyze_sequence("GGDDG", circular=True)["trypsin_internal_sites"] == 0
+
+
+# ── regressão: o modo linear tem que reproduzir EXATAMENTE a implementação original ──────────
+def _legacy_find_cleavage_sites(seq, rule):
+    """Cópia literal da implementação anterior à correção circular (2026-09-30)."""
+    sites = []
+    not_before = set(rule.get("not_before", ""))
+    if "cut_after" in rule:
+        cut_set = set(rule["cut_after"])
+        for i, aa in enumerate(seq[:-1]):
+            next_aa = seq[i + 1]
+            if aa in cut_set and next_aa not in not_before:
+                sites.append(i)
+    elif "cut_before" in rule:
+        cut_set = set(rule["cut_before"])
+        for i, aa in enumerate(seq[1:], start=1):
+            next_aa = seq[i] if i < len(seq) else ""
+            if aa in cut_set and (not next_aa or next_aa not in not_before):
+                sites.append(i - 1)
+    return sites
+
+
+def test_modo_linear_identico_ao_legado_em_sequencias_aleatorias():
+    import random
+    rng = random.Random(0)
+    aas = "ACDEFGHIKLMNPQRSTVWY"
+    for _ in range(3000):
+        seq = "".join(rng.choice(aas) for _ in range(rng.randint(2, 20)))
+        for name, rule in CLEAVAGE_RULES.items():
+            assert find_cleavage_sites(seq, rule) == _legacy_find_cleavage_sites(seq, rule), (seq, name)
+
+
+def test_circular_so_acrescenta_o_sitio_do_fechamento():
+    import random
+    rng = random.Random(1)
+    aas = "ACDEFGHIKLMNPQRSTVWY"
+    for _ in range(2000):
+        seq = "".join(rng.choice(aas) for _ in range(rng.randint(3, 20)))
+        n = len(seq)
+        for name, rule in CLEAVAGE_RULES.items():
+            lin = set(find_cleavage_sites(seq, rule))
+            cir = set(find_cleavage_sites(seq, rule, circular=True))
+            assert lin <= cir, (seq, name)
+            # o único sítio novo possível é o do fechamento (i = n-1 para cut_after;
+            # para pepsina (cut_before), o resíduo 0 gera o sítio n-1)
+            assert cir - lin <= {n - 1}, (seq, name, cir - lin)
