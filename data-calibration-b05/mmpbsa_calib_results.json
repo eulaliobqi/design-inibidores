@@ -1,0 +1,200 @@
+{
+  "bovine__ApTI": {
+    "status": "real",
+    "delta_g_total_kcal": -69.29,
+    "sd_prop": 55.72,
+    "sd": 7.21,
+    "sem_prop": 8.31,
+    "sem": 1.07,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__ApTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__BBI": {
+    "status": "real",
+    "delta_g_total_kcal": -66.11,
+    "sd_prop": 39.29,
+    "sd": 4.65,
+    "sem_prop": 5.86,
+    "sem": 0.69,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__BBI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__BBI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -68.47,
+    "sd_prop": 35.37,
+    "sd": 7.26,
+    "sem_prop": 5.27,
+    "sem": 1.08,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__BBI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__BPTI": {
+    "status": "real",
+    "delta_g_total_kcal": -68.8,
+    "sd_prop": 27.37,
+    "sd": 5.86,
+    "sem_prop": 4.08,
+    "sem": 0.87,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__BPTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__BPTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -52.49,
+    "sd_prop": 24.44,
+    "sd": 8.0,
+    "sem_prop": 3.64,
+    "sem": 1.19,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__BPTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__EcTI": {
+    "status": "real",
+    "delta_g_total_kcal": -72.66,
+    "sd_prop": 31.97,
+    "sd": 4.89,
+    "sem_prop": 4.77,
+    "sem": 0.73,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__EcTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__EcTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -78.97,
+    "sd_prop": 38.41,
+    "sd": 5.91,
+    "sem_prop": 5.73,
+    "sem": 0.88,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__EcTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__SFTI1": {
+    "status": "real",
+    "delta_g_total_kcal": -70.24,
+    "sd_prop": 24.52,
+    "sd": 6.36,
+    "sem_prop": 3.66,
+    "sem": 0.95,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__SFTI1/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__SFTI1_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -64.76,
+    "sd_prop": 27.94,
+    "sd": 5.0,
+    "sem_prop": 4.16,
+    "sem": 0.74,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__SFTI1_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__SKTI": {
+    "status": "real",
+    "delta_g_total_kcal": -77.36,
+    "sd_prop": 29.13,
+    "sd": 6.04,
+    "sem_prop": 4.34,
+    "sem": 0.9,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__SKTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "bovine__SKTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -103.0,
+    "sd_prop": 44.18,
+    "sd": 6.8,
+    "sem_prop": 6.59,
+    "sem": 1.01,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/bovine__SKTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__ApTI": {
+    "status": "real",
+    "delta_g_total_kcal": -92.56,
+    "sd_prop": 51.68,
+    "sd": 5.78,
+    "sem_prop": 7.7,
+    "sem": 0.86,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__ApTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__BBI": {
+    "status": "real",
+    "delta_g_total_kcal": -88.64,
+    "sd_prop": 19.62,
+    "sd": 5.65,
+    "sem_prop": 2.93,
+    "sem": 0.84,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__BBI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__BBI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -151.2,
+    "sd_prop": 34.6,
+    "sd": 7.9,
+    "sem_prop": 5.16,
+    "sem": 1.18,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__BBI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__BPTI": {
+    "status": "real",
+    "delta_g_total_kcal": -112.71,
+    "sd_prop": 46.06,
+    "sd": 6.69,
+    "sem_prop": 6.87,
+    "sem": 1.0,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__BPTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__BPTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -131.58,
+    "sd_prop": 34.01,
+    "sd": 7.64,
+    "sem_prop": 5.07,
+    "sem": 1.14,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__BPTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__EcTI": {
+    "status": "real",
+    "delta_g_total_kcal": -78.89,
+    "sd_prop": 37.67,
+    "sd": 7.36,
+    "sem_prop": 5.62,
+    "sem": 1.1,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__EcTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__EcTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -223.69,
+    "sd_prop": 39.02,
+    "sd": 10.48,
+    "sem_prop": 5.82,
+    "sem": 1.56,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__EcTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__SFTI1": {
+    "status": "real",
+    "delta_g_total_kcal": -86.05,
+    "sd_prop": 15.8,
+    "sd": 6.47,
+    "sem_prop": 2.36,
+    "sem": 0.96,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__SFTI1/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__SFTI1_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -83.95,
+    "sd_prop": 13.81,
+    "sd": 5.25,
+    "sem_prop": 2.06,
+    "sem": 0.78,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__SFTI1_decoy/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__SKTI": {
+    "status": "real",
+    "delta_g_total_kcal": -129.2,
+    "sd_prop": 38.17,
+    "sd": 8.01,
+    "sem_prop": 5.69,
+    "sem": 1.19,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__SKTI/FINAL_RESULTS_MMPBSA.dat"
+  },
+  "sfrug__SKTI_decoy": {
+    "status": "real",
+    "delta_g_total_kcal": -128.62,
+    "sd_prop": 51.81,
+    "sd": 10.13,
+    "sem_prop": 7.72,
+    "sem": 1.51,
+    "raw_path": "/home/eulalio/design-inibidores/data-calibration-b05/md_calib/sfrug__SKTI_decoy/FINAL_RESULTS_MMPBSA.dat"
+  }
+}

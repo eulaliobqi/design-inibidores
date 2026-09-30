@@ -1,0 +1,290 @@
+{
+  "Sfrugiperda": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.89,
+    "nc_max_A": 1.36,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 266,
+    "hotspots_in_trb": [
+      [
+        "A69",
+        "A111",
+        "A214",
+        "A215",
+        "A216",
+        "A217",
+        "A218",
+        "A219"
+      ]
+    ],
+    "sequences_rows": 2731,
+    "sequences_unique": 2731,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Slitura": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.83,
+    "nc_max_A": 1.34,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 254,
+    "hotspots_in_trb": [
+      [
+        "A69",
+        "A111",
+        "A205",
+        "A206",
+        "A207",
+        "A208",
+        "A209",
+        "A210"
+      ]
+    ],
+    "sequences_rows": 2706,
+    "sequences_unique": 2706,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Onubilalis": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.76,
+    "nc_max_A": 1.36,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 256,
+    "hotspots_in_trb": [
+      [
+        "A69",
+        "A111",
+        "A207",
+        "A208",
+        "A209",
+        "A210",
+        "A211",
+        "A212"
+      ]
+    ],
+    "sequences_rows": 2739,
+    "sequences_unique": 2739,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Dsaccharalis": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.89,
+    "nc_max_A": 1.36,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 257,
+    "hotspots_in_trb": [
+      [
+        "A69",
+        "A111",
+        "A207",
+        "A208",
+        "A209",
+        "A210",
+        "A211",
+        "A212"
+      ]
+    ],
+    "sequences_rows": 2807,
+    "sequences_unique": 2807,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Cincludens": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.8,
+    "nc_max_A": 1.34,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 255,
+    "hotspots_in_trb": [
+      [
+        "A69",
+        "A111",
+        "A206",
+        "A207",
+        "A208",
+        "A209",
+        "A210",
+        "A211"
+      ]
+    ],
+    "sequences_rows": 2778,
+    "sequences_unique": 2778,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Hvirescens": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.81,
+    "nc_max_A": 1.37,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 263,
+    "hotspots_in_trb": [
+      [
+        "A68",
+        "A110",
+        "A213",
+        "A214",
+        "A215",
+        "A216",
+        "A217",
+        "A218"
+      ]
+    ],
+    "sequences_rows": 2774,
+    "sequences_unique": 2774,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Pxylostella": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.78,
+    "nc_max_A": 1.36,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 255,
+    "hotspots_in_trb": [
+      [
+        "A70",
+        "A113",
+        "A205",
+        "A206",
+        "A207",
+        "A208",
+        "A209",
+        "A210"
+      ]
+    ],
+    "sequences_rows": 2692,
+    "sequences_unique": 2692,
+    "seq_len_vs_length_mismatch": 0
+  },
+  "Agemmatalis": {
+    "backbones": 110,
+    "per_length": {
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "10": 10,
+      "12": 10,
+      "14": 10,
+      "16": 10,
+      "18": 10,
+      "19": 10,
+      "20": 10
+    },
+    "chain_B_length_mismatch": 0,
+    "nc_min_A": 0.91,
+    "nc_max_A": 1.4,
+    "nc_n_gt_2A": 0,
+    "receptor_residues_chainA": 260,
+    "hotspots_in_trb": [
+      [
+        "A71",
+        "A113",
+        "A211",
+        "A212",
+        "A213",
+        "A214",
+        "A215",
+        "A216"
+      ]
+    ],
+    "sequences_rows": 2839,
+    "sequences_unique": 2839,
+    "seq_len_vs_length_mismatch": 0
+  }
+}

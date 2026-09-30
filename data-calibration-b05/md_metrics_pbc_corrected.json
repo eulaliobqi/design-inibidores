@@ -1,0 +1,271 @@
+{
+  "summary": {
+    "pairs_valid": 10,
+    "rmsd_real_lower_than_decoy": 9,
+    "contact_real_higher_than_decoy": 2
+  },
+  "verdicts": {
+    "bovine__SFTI1": {
+      "rmsd_ok": true,
+      "contact_ok": true
+    },
+    "bovine__BBI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "bovine__BPTI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "bovine__EcTI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "bovine__SKTI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "sfrug__SFTI1": {
+      "rmsd_ok": true,
+      "contact_ok": true
+    },
+    "sfrug__BBI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "sfrug__BPTI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    },
+    "sfrug__EcTI": {
+      "rmsd_ok": false,
+      "contact_ok": false
+    },
+    "sfrug__SKTI": {
+      "rmsd_ok": true,
+      "contact_ok": false
+    }
+  },
+  "systems": {
+    "bovine__SFTI1": {
+      "n_frames": 401,
+      "n_ligand_residues": 14,
+      "ligand_rmsd_nm_mean": 0.082,
+      "ligand_rmsd_nm_last_third": 0.084,
+      "receptor_residues_in_contact_mean": 25.1,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 15.8,
+      "com_dist_A_max": 16.4
+    },
+    "bovine__SFTI1_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 14,
+      "ligand_rmsd_nm_mean": 0.179,
+      "ligand_rmsd_nm_last_third": 0.206,
+      "receptor_residues_in_contact_mean": 23.5,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 15.0,
+      "com_dist_A_max": 15.4
+    },
+    "bovine__BBI": {
+      "n_frames": 401,
+      "n_ligand_residues": 71,
+      "ligand_rmsd_nm_mean": 0.401,
+      "ligand_rmsd_nm_last_third": 0.372,
+      "receptor_residues_in_contact_mean": 22.1,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 27.4,
+      "com_dist_A_max": 29.3
+    },
+    "bovine__BBI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 71,
+      "ligand_rmsd_nm_mean": 0.451,
+      "ligand_rmsd_nm_last_third": 0.452,
+      "receptor_residues_in_contact_mean": 28.1,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 23.5,
+      "com_dist_A_max": 24.3
+    },
+    "bovine__BPTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 58,
+      "ligand_rmsd_nm_mean": 0.311,
+      "ligand_rmsd_nm_last_third": 0.38,
+      "receptor_residues_in_contact_mean": 24.4,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 26.1,
+      "com_dist_A_max": 26.9
+    },
+    "bovine__BPTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 58,
+      "ligand_rmsd_nm_mean": 0.518,
+      "ligand_rmsd_nm_last_third": 0.643,
+      "receptor_residues_in_contact_mean": 25.6,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 23.5,
+      "com_dist_A_max": 24.3
+    },
+    "bovine__EcTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 168,
+      "ligand_rmsd_nm_mean": 0.169,
+      "ligand_rmsd_nm_last_third": 0.181,
+      "receptor_residues_in_contact_mean": 31.3,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 30.7,
+      "com_dist_A_max": 31.3
+    },
+    "bovine__EcTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 168,
+      "ligand_rmsd_nm_mean": 0.424,
+      "ligand_rmsd_nm_last_third": 0.537,
+      "receptor_residues_in_contact_mean": 31.4,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 31.1,
+      "com_dist_A_max": 32.3
+    },
+    "bovine__SKTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 172,
+      "ligand_rmsd_nm_mean": 0.23,
+      "ligand_rmsd_nm_last_third": 0.275,
+      "receptor_residues_in_contact_mean": 29.6,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 30.8,
+      "com_dist_A_max": 31.4
+    },
+    "bovine__SKTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 172,
+      "ligand_rmsd_nm_mean": 0.326,
+      "ligand_rmsd_nm_last_third": 0.364,
+      "receptor_residues_in_contact_mean": 36.3,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 27.3,
+      "com_dist_A_max": 27.7
+    },
+    "bovine__ApTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 176,
+      "ligand_rmsd_nm_mean": 0.306,
+      "ligand_rmsd_nm_last_third": 0.398,
+      "receptor_residues_in_contact_mean": 33.9,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 30.2,
+      "com_dist_A_max": 30.7
+    },
+    "sfrug__SFTI1": {
+      "n_frames": 401,
+      "n_ligand_residues": 14,
+      "ligand_rmsd_nm_mean": 0.107,
+      "ligand_rmsd_nm_last_third": 0.129,
+      "receptor_residues_in_contact_mean": 35.8,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 12.6,
+      "com_dist_A_max": 13.3
+    },
+    "sfrug__SFTI1_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 14,
+      "ligand_rmsd_nm_mean": 0.255,
+      "ligand_rmsd_nm_last_third": 0.274,
+      "receptor_residues_in_contact_mean": 31.0,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 12.0,
+      "com_dist_A_max": 12.9
+    },
+    "sfrug__BBI": {
+      "n_frames": 401,
+      "n_ligand_residues": 71,
+      "ligand_rmsd_nm_mean": 0.32,
+      "ligand_rmsd_nm_last_third": 0.349,
+      "receptor_residues_in_contact_mean": 37.3,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 25.7,
+      "com_dist_A_max": 27.0
+    },
+    "sfrug__BBI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 71,
+      "ligand_rmsd_nm_mean": 0.884,
+      "ligand_rmsd_nm_last_third": 1.167,
+      "receptor_residues_in_contact_mean": 68.7,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 17.9,
+      "com_dist_A_max": 18.6
+    },
+    "sfrug__BPTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 58,
+      "ligand_rmsd_nm_mean": 0.255,
+      "ligand_rmsd_nm_last_third": 0.317,
+      "receptor_residues_in_contact_mean": 40.7,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 22.6,
+      "com_dist_A_max": 63.8
+    },
+    "sfrug__BPTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 58,
+      "ligand_rmsd_nm_mean": 0.32,
+      "ligand_rmsd_nm_last_third": 0.342,
+      "receptor_residues_in_contact_mean": 52.2,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 20.3,
+      "com_dist_A_max": 20.9
+    },
+    "sfrug__EcTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 168,
+      "ligand_rmsd_nm_mean": 0.348,
+      "ligand_rmsd_nm_last_third": 0.366,
+      "receptor_residues_in_contact_mean": 38.0,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 29.9,
+      "com_dist_A_max": 30.7
+    },
+    "sfrug__EcTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 168,
+      "ligand_rmsd_nm_mean": 0.313,
+      "ligand_rmsd_nm_last_third": 0.347,
+      "receptor_residues_in_contact_mean": 66.9,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 25.8,
+      "com_dist_A_max": 26.3
+    },
+    "sfrug__SKTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 172,
+      "ligand_rmsd_nm_mean": 0.187,
+      "ligand_rmsd_nm_last_third": 0.2,
+      "receptor_residues_in_contact_mean": 50.7,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 28.1,
+      "com_dist_A_max": 28.6
+    },
+    "sfrug__SKTI_decoy": {
+      "n_frames": 401,
+      "n_ligand_residues": 172,
+      "ligand_rmsd_nm_mean": 0.412,
+      "ligand_rmsd_nm_last_third": 0.466,
+      "receptor_residues_in_contact_mean": 54.4,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 26.5,
+      "com_dist_A_max": 27.2
+    },
+    "sfrug__ApTI": {
+      "n_frames": 401,
+      "n_ligand_residues": 176,
+      "ligand_rmsd_nm_mean": 0.266,
+      "ligand_rmsd_nm_last_third": 0.301,
+      "receptor_residues_in_contact_mean": 48.0,
+      "contact_frac": 1.0,
+      "com_dist_A_median": 28.5,
+      "com_dist_A_max": 28.9
+    }
+  }
+}
