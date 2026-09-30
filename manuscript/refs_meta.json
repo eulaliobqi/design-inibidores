@@ -285,9 +285,10 @@
  },
  "zhang2005": {
   "fam": [
-   "Zhang"
+   "Zhang",
+   "Skolnick"
   ],
-  "n": 1,
+  "n": 2,
   "year": 2005
  },
  "abraham2015": {
@@ -396,9 +397,10 @@
  },
  "berman2000": {
   "fam": [
-   "Berman"
+   "Berman",
+   "Westbrook"
   ],
-  "n": 1,
+  "n": 8,
   "year": 2000
  },
  "gasteiger2005": {

@@ -15,15 +15,19 @@ def paren(k):
     used.append(k); return f"{auth(k)}, {meta[k]['year']}"
 def narr(k):
     used.append(k); return f"{auth(k)} ({meta[k]['year']})"
+def bare(k):
+    used.append(k); return f"{auth(k)}, {meta[k]['year']}"
 def sub(mo):
     body = mo.group(1)
     if body.startswith("@"):
         return narr(body[1:])
+    if body.startswith("#"):
+        return bare(body[1:])
     keys = [x.strip() for x in body.split(";")]
     for k in keys:
         if k not in meta: raise SystemExit(f"citacao sem referencia: {k}")
     return "(" + "; ".join(paren(k) for k in keys) + ")"
-out = re.sub(r"\{(@?[a-z0-9]+(?:;[a-z0-9 ]+)*)\}", sub, src)
+out = re.sub(r"\{([@#]?[a-z0-9]+(?:;[a-z0-9 ]+)*)\}", sub, src)
 left = re.findall(r"\{[^}]*\}", out)
 if left: print("AVISO chaves restantes:", left[:5])
 cited = sorted(set(used), key=lambda k: (meta[k]["fam"][0].lower(), meta[k]["year"]))

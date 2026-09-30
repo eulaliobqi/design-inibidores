@@ -28,6 +28,9 @@ for key, doi in refs.items():
     jn = (m.get("container-title") or [""])[0].replace("&amp;", "&")
     vol, pg, art = m.get("volume", ""), m.get("page", ""), m.get("article-number", "")
     loc = f" {vol}" + (f", {pg}" if pg else (f", {art}" if art else ""))
+    AUTH_FIX = {"zhang2005": ("Zhang Y, Skolnick J", ["Zhang", "Skolnick"], 2),          # PubMed PMID 15849316
+                "berman2000": ("Berman HM, Westbrook J, Feng Z, Gilliland G, Bhat TN, Weissig H, et al.", ["Berman", "Westbrook"], 8)}  # PMID 10592235
+    if key in AUTH_FIX: astr = AUTH_FIX[key][0]
     if key == "patarroyo2017": loc, pr = " 24, 1040-1047", 2017
     TITLE_FIX = {"almeida2021": "Small peptides inhibit gut trypsin-like proteases and impair Anticarsia gemmatalis (Lepidoptera: Noctuidae) survival and development"}
     title = TITLE_FIX.get(key, title)
@@ -35,6 +38,7 @@ for key, doi in refs.items():
     fam = [x.get("family", x.get("name", "?")) for x in au]
     if fam and fam[0].startswith("The UniProt"): fam = ["UniProt Consortium"]
     meta[key] = {"fam": fam[:2], "n": len(fam) if fam[0] != "UniProt Consortium" else 1, "year": pr}
+    if key in AUTH_FIX: meta[key].update({"fam": AUTH_FIX[key][1], "n": AUTH_FIX[key][2]})
     if key == "patarroyo2017":   # ano/paginas conforme PubMed (PMID 28925864: Protein Pept Lett 2017;24(11):1040-1047)
         pr = 2017; meta[key]["year"] = 2017
         out_over = True

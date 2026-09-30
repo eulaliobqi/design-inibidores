@@ -1,0 +1,111 @@
+{
+  "rule": "circular",
+  "candidates": {
+    "Sfrugiperda": {
+      "sequence": "PISYTGG",
+      "backbone": "len7_design_5",
+      "confidence_score": 0.9424970746040344,
+      "complex_plddt": 0.9390575289726257,
+      "iptm": 0.9562549591064453,
+      "pdb": "outputs/b23_boltz2_Sfrugiperda/boltz_results_Sfrugiperda/predictions/Sfrugiperda__len7_design_5__254/Sfrugiperda__len7_design_5__254_model_0.pdb"
+    },
+    "Slitura": {
+      "sequence": "NSNPNNPN",
+      "backbone": "len8_design_1",
+      "confidence_score": 0.8976302146911621,
+      "complex_plddt": 0.9062789082527161,
+      "iptm": 0.8630353212356567,
+      "pdb": "outputs/b23_boltz2_Slitura/boltz_results_Slitura/predictions/Slitura__len8_design_1__6/Slitura__len8_design_1__6_model_0.pdb"
+    },
+    "Onubilalis": {
+      "sequence": "GASNG",
+      "backbone": "len5_design_7",
+      "confidence_score": 0.9160940051078796,
+      "complex_plddt": 0.9225874543190002,
+      "iptm": 0.8901203274726868,
+      "pdb": "outputs/b23_boltz2_Onubilalis/boltz_results_Onubilalis/predictions/Onubilalis__len5_design_7__128/Onubilalis__len5_design_7__128_model_0.pdb"
+    },
+    "Dsaccharalis": {
+      "sequence": "GHMDD",
+      "backbone": "len5_design_8",
+      "confidence_score": 0.9533107876777649,
+      "complex_plddt": 0.9543028473854065,
+      "iptm": 0.9493423700332642,
+      "pdb": "outputs/b23_boltz2_Dsaccharalis/boltz_results_Dsaccharalis/predictions/Dsaccharalis__len5_design_8__183/Dsaccharalis__len5_design_8__183_model_0.pdb"
+    },
+    "Cincludens": {
+      "sequence": "NNGGG",
+      "backbone": "len5_design_2",
+      "confidence_score": 0.9478680491447449,
+      "complex_plddt": 0.9517682790756226,
+      "iptm": 0.9322673082351685,
+      "pdb": "outputs/b23_boltz2_Cincludens/boltz_results_Cincludens/predictions/Cincludens__len5_design_2__150/Cincludens__len5_design_2__150_model_0.pdb"
+    },
+    "Hvirescens": {
+      "sequence": "GTSIY",
+      "backbone": "len5_design_7",
+      "confidence_score": 0.9157277345657349,
+      "complex_plddt": 0.9289743304252625,
+      "iptm": 0.8627413511276245,
+      "pdb": "outputs/b23_boltz2_Hvirescens/boltz_results_Hvirescens/predictions/Hvirescens__len5_design_7__143/Hvirescens__len5_design_7__143_model_0.pdb"
+    },
+    "Pxylostella": {
+      "sequence": "GGHTGA",
+      "backbone": "len6_design_8",
+      "confidence_score": 0.9313074350357056,
+      "complex_plddt": 0.9320492744445801,
+      "iptm": 0.9283401370048523,
+      "pdb": "outputs/b23_boltz2_Pxylostella/boltz_results_Pxylostella/predictions/Pxylostella__len6_design_8__331/Pxylostella__len6_design_8__331_model_0.pdb"
+    },
+    "Agemmatalis": {
+      "sequence": "GGKPGEP",
+      "backbone": "len7_design_9",
+      "confidence_score": 0.9393599629402161,
+      "complex_plddt": 0.9301666617393494,
+      "iptm": 0.9761332869529724,
+      "pdb": "outputs/b23_boltz2_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len7_design_9__172/Agemmatalis__len7_design_9__172_model_0.pdb"
+    }
+  },
+  "report": {
+    "Sfrugiperda": {
+      "n_resistente_circular": 147,
+      "n_pontuados_no_conjunto": 147,
+      "resistentes_sem_score": 0
+    },
+    "Slitura": {
+      "n_resistente_circular": 205,
+      "n_pontuados_no_conjunto": 205,
+      "resistentes_sem_score": 0
+    },
+    "Onubilalis": {
+      "n_resistente_circular": 238,
+      "n_pontuados_no_conjunto": 238,
+      "resistentes_sem_score": 0
+    },
+    "Dsaccharalis": {
+      "n_resistente_circular": 247,
+      "n_pontuados_no_conjunto": 247,
+      "resistentes_sem_score": 0
+    },
+    "Cincludens": {
+      "n_resistente_circular": 235,
+      "n_pontuados_no_conjunto": 235,
+      "resistentes_sem_score": 0
+    },
+    "Hvirescens": {
+      "n_resistente_circular": 189,
+      "n_pontuados_no_conjunto": 189,
+      "resistentes_sem_score": 0
+    },
+    "Pxylostella": {
+      "n_resistente_circular": 287,
+      "n_pontuados_no_conjunto": 287,
+      "resistentes_sem_score": 0
+    },
+    "Agemmatalis": {
+      "n_resistente_circular": 281,
+      "n_pontuados_no_conjunto": 281,
+      "resistentes_sem_score": 0
+    }
+  }
+}
