@@ -5121,6 +5121,554 @@
           }
         }
       }
+    },
+    "Agemmatalis": {
+      "templates": {
+        "2PTC_BPTI": {
+          "status": "go",
+          "rmsd_A": 1.256,
+          "tmscore": 0.953,
+          "prob": 0.981,
+          "residuos_transferidos": "48/48",
+          "catalytic_ser_receptor": {
+            "ref": "SER195",
+            "receptor": "SER217",
+            "status": "ok"
+          },
+          "subsites": {
+            "S4": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              }
+            ],
+            "S3": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              }
+            ],
+            "S2": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "LEU99",
+                "receptor": "ASN113",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              },
+              {
+                "ref": "SER214",
+                "receptor": "SER232",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              }
+            ],
+            "S1": [
+              {
+                "ref": "ASP189",
+                "receptor": "ASP211",
+                "status": "ok"
+              },
+              {
+                "ref": "ASP194",
+                "receptor": "ASP216",
+                "status": "ok"
+              },
+              {
+                "ref": "CYS191",
+                "receptor": "CYS213",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY219",
+                "receptor": "GLY236",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY226",
+                "receptor": "GLY244",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "SER190",
+                "receptor": "GLN212",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              },
+              {
+                "ref": "SER214",
+                "receptor": "SER232",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              },
+              {
+                "ref": "VAL213",
+                "receptor": "CYS231",
+                "status": "ok"
+              }
+            ],
+            "S1'": [
+              {
+                "ref": "CYS42",
+                "receptor": "CYS56",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "PHE41",
+                "receptor": "ARG55",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              }
+            ],
+            "S2'": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS40",
+                "receptor": "GLN54",
+                "status": "ok"
+              },
+              {
+                "ref": "PHE41",
+                "receptor": "ARG55",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR151",
+                "receptor": "SER164",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR39",
+                "receptor": "TRP53",
+                "status": "ok"
+              }
+            ],
+            "S3'": [
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "PHE41",
+                "receptor": "ARG55",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR39",
+                "receptor": "TRP53",
+                "status": "ok"
+              }
+            ],
+            "exosite": [
+              {
+                "ref": "ASN97",
+                "receptor": "TRP111",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "LEU99",
+                "receptor": "ASN113",
+                "status": "ok"
+              },
+              {
+                "ref": "SER96",
+                "receptor": "ARG110",
+                "status": "ok"
+              },
+              {
+                "ref": "THR98",
+                "receptor": "THR112",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR151",
+                "receptor": "SER164",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR39",
+                "receptor": "TRP53",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR94",
+                "receptor": "TYR108",
+                "status": "ok"
+              }
+            ]
+          }
+        },
+        "1SFI_SFTI1": {
+          "status": "go",
+          "rmsd_A": 1.27,
+          "tmscore": 0.952,
+          "prob": 0.981,
+          "residuos_transferidos": "49/49",
+          "catalytic_ser_receptor": {
+            "ref": "SER195",
+            "receptor": "SER217",
+            "status": "ok"
+          },
+          "subsites": {
+            "S4": [
+              {
+                "ref": "ASN97",
+                "receptor": "TRP111",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN175",
+                "receptor": "THR194",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "SER217",
+                "receptor": "ILE235",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              }
+            ],
+            "S3": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              }
+            ],
+            "S2": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "LEU99",
+                "receptor": "ASN113",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              },
+              {
+                "ref": "SER214",
+                "receptor": "SER232",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              }
+            ],
+            "S1": [
+              {
+                "ref": "ASP189",
+                "receptor": "ASP211",
+                "status": "ok"
+              },
+              {
+                "ref": "ASP194",
+                "receptor": "ASP216",
+                "status": "ok"
+              },
+              {
+                "ref": "CYS191",
+                "receptor": "CYS213",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY219",
+                "receptor": "GLY236",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY226",
+                "receptor": "GLY244",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "SER190",
+                "receptor": "GLN212",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              },
+              {
+                "ref": "SER214",
+                "receptor": "SER232",
+                "status": "ok"
+              },
+              {
+                "ref": "TRP215",
+                "receptor": "PHE233",
+                "status": "ok"
+              },
+              {
+                "ref": "VAL213",
+                "receptor": "CYS231",
+                "status": "ok"
+              }
+            ],
+            "S1'": [
+              {
+                "ref": "CYS42",
+                "receptor": "CYS56",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "PHE41",
+                "receptor": "ARG55",
+                "status": "ok"
+              },
+              {
+                "ref": "SER195",
+                "receptor": "SER217",
+                "status": "ok"
+              }
+            ],
+            "S2'": [
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY193",
+                "receptor": "GLY215",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS40",
+                "receptor": "GLN54",
+                "status": "ok"
+              },
+              {
+                "ref": "PHE41",
+                "receptor": "ARG55",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR151",
+                "receptor": "SER164",
+                "status": "ok"
+              },
+              {
+                "ref": "TYR39",
+                "receptor": "TRP53",
+                "status": "ok"
+              }
+            ],
+            "S3'": [],
+            "exosite": [
+              {
+                "ref": "ASN97",
+                "receptor": "TRP111",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN175",
+                "receptor": "THR194",
+                "status": "ok"
+              },
+              {
+                "ref": "GLN192",
+                "receptor": "GLN214",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY216",
+                "receptor": "GLY234",
+                "status": "ok"
+              },
+              {
+                "ref": "GLY219",
+                "receptor": "GLY236",
+                "status": "ok"
+              },
+              {
+                "ref": "HIS57",
+                "receptor": "HIS71",
+                "status": "ok"
+              },
+              {
+                "ref": "LEU99",
+                "receptor": "ASN113",
+                "status": "ok"
+              },
+              {
+                "ref": "SER217",
+                "receptor": "ILE235",
+                "status": "ok"
+              },
+              {
+                "ref": "SER96",
+                "receptor": "ARG110",
+                "status": "ok"
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }
