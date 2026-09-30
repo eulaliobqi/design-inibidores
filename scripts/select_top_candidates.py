@@ -27,11 +27,13 @@ def main():
     ap.add_argument("--cleavage", required=True)
     ap.add_argument("--scores", default="data-b23-scoring/results/b23_boltz2_scores.json")
     ap.add_argument("--manifests", default="data-b23-scoring/boltz_yaml/_manifests")
+    ap.add_argument("--rule", default="linear-strict", choices=["linear-strict", "linear", "circular"])
+    ap.add_argument("--boltz-out-prefix", default="outputs/b23_boltz2")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     clv = json.loads((ROOT / args.cleavage).read_text())
-    assert clv.get("rule") == "circular", "json de clivagem nao foi gerado com a regra circular"
+    assert clv.get("rule") == args.rule, f"json de clivagem tem regra {clv.get('rule')!r}, esperado {args.rule!r}"
     scores = json.loads((ROOT / args.scores).read_text())
 
     out, report = {}, {}
@@ -40,12 +42,12 @@ def main():
                      for r in entry["results"] if r["verdict"] == "RESISTENTE"}
         sc = scores.get(sp)
         if not sc:
-            report[sp] = {"n_resistente_circular": len(resistant), "n_pontuados": 0,
+            report[sp] = {"n_resistente": len(resistant), "n_pontuados": 0,
                           "nota": "sem scores Boltz-2 para esta especie"}
             continue
         kept = [c for c in sc if (c["backbone"], c["sequence"]) in resistant]
         not_scored = len(resistant) - len(kept)
-        report[sp] = {"n_resistente_circular": len(resistant), "n_pontuados_no_conjunto": len(kept),
+        report[sp] = {"n_resistente": len(resistant), "n_pontuados_no_conjunto": len(kept),
                       "resistentes_sem_score": not_scored}
         if not kept:
             continue
@@ -57,13 +59,13 @@ def main():
             raise RuntimeError(f"{sp}: esperado 1 stem no manifest para {best['backbone']}/"
                                f"{best['sequence']}, achei {stems}")
         stem = stems[0]
-        pdb = (f"outputs/b23_boltz2_{sp}/boltz_results_{sp}/predictions/{stem}/"
+        pdb = (f"{args.boltz_out_prefix}_{sp}/boltz_results_{sp}/predictions/{stem}/"
                f"{stem}_model_0.pdb")
         out[sp] = {"sequence": best["sequence"], "backbone": best["backbone"],
                    "confidence_score": best["confidence_score"],
                    "complex_plddt": best["complex_plddt"], "iptm": best["iptm"], "pdb": pdb}
     (ROOT / args.out).parent.mkdir(parents=True, exist_ok=True)
-    (ROOT / args.out).write_text(json.dumps({"rule": "circular", "candidates": out,
+    (ROOT / args.out).write_text(json.dumps({"rule": args.rule, "candidates": out,
                                              "report": report}, indent=2))
     for sp, v in out.items():
         print(f"{sp:13s} {v['sequence']:12s} {v['confidence_score']:.4f}  {v['backbone']}")

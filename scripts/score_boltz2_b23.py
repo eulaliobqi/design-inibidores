@@ -4,8 +4,8 @@ decoy) os candidatos RESISTENTE a protease da campanha B2.3 (outputs/b23_cleavag
 
 Usa MSA real pre-calculado do receptor (precompute_receptor_msa.py, uma vez por especie --
 evita 2.360 chamadas repetidas ao servidor MMseqs2 pro mesmo receptor fixo) e msa: empty
-(single-sequence) pro peptideo desenhado (de novo, sem homologos reais). cyclic: true no
-peptideo, mesma geometria validada em B0.2/B2.3.
+(single-sequence) pro peptideo desenhado (de novo, sem homologos reais). Peptideo LINEAR por
+padrao desde 2026-09-30 (--cyclic reproduz o cyclic: true usado ate 2026-09-29).
 
 Uso:
   # 1) gerar os yaml de entrada (rapido, sem GPU)
@@ -69,6 +69,8 @@ def write_yaml(args):
     manifest_dir = ROOT / args.yaml_dir / "_manifests"
     manifest_dir.mkdir(parents=True, exist_ok=True)
 
+    cyc = "      cyclic: true
+" if args.cyclic else ""   # padrão linear desde 2026-09-30
     manifest = {}
     for idx, cand in enumerate(candidates):
         stem = f"{args.species}__{cand['backbone']}__{idx}"
@@ -81,8 +83,7 @@ sequences:
   - protein:
       id: B
       sequence: {cand['sequence']}
-      cyclic: true
-      msa: empty
+{cyc}      msa: empty
 """
         (out_dir / f"{stem}.yaml").write_text(yaml_text)
         manifest[stem] = {
@@ -150,6 +151,9 @@ def main():
     p1.add_argument("--msa-cache-dir", default="data-b23-scoring/msa_cache")
     p1.add_argument("--yaml-dir", default="data-b23-scoring/boltz_yaml")
     p1.add_argument("--limit", type=int, default=0)
+    p1.add_argument("--cyclic", action="store_true",
+                    help="Declara o peptideo como macrociclo cabeca-cauda (comportamento ate 2026-09-29). "
+                         "Padrao: peptideo linear.")
     p1.set_defaults(func=write_yaml)
 
     p2 = sub.add_parser("collect")

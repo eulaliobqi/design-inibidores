@@ -122,7 +122,7 @@ def find_cleavage_sites(seq: str, rule: dict, circular: bool = False) -> list[in
 
 
 def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | None = None,
-                           circular: bool = False) -> dict:
+                           circular: bool = False, strict: bool = False) -> dict:
     """
     Classifica sítios de clivagem de tripsina em:
       - p1_anchor : posição de ancoramento desejada (isenta da contagem de susceptibilidade)
@@ -140,7 +140,11 @@ def classify_trypsin_sites(seq: str, sites: list[int], geometric_p1_idx: int | N
     if not sites:
         return {"p1_anchor": None, "internal": [], "n_internal": 0, "p1_source": "none"}
 
-    if geometric_p1_idx is not None:
+    if strict:
+        # critério estrito (peptídeo LINEAR, 2026-09-30): resistência = ausência de resíduos
+        # clivaveis; nenhum sítio de tripsina é isentado como "âncora P1".
+        p1_anchor, source = None, "strict_no_anchor"
+    elif geometric_p1_idx is not None:
         if geometric_p1_idx in sites:
             p1_anchor, source = geometric_p1_idx, "geometric"
         else:
@@ -218,8 +222,22 @@ def suggest_modifications(seq: str, trypsin_internal: list[int]) -> list[str]:
     return suggestions
 
 
+def terminal_exopeptidase_flag(seq: str, circular: bool = False) -> list[str]:
+    """Descritivo (não entra no veredicto): extremidades livres de um peptídeo LINEAR são
+    substrato de exopeptidases do intestino (carboxipeptidase B: K/R C-terminal;
+    carboxipeptidase A: resíduo aromático/alifático C-terminal). Macrociclo não tem extremidades."""
+    if circular or not seq:
+        return []
+    flags = []
+    if seq[-1] in "KR":
+        flags.append("C-term K/R (carboxipeptidase B)")
+    elif seq[-1] in "FYWLIMV":
+        flags.append("C-term aromático/alifático (carboxipeptidase A)")
+    return flags
+
+
 def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
-                     circular: bool = False) -> dict:
+                     circular: bool = False, strict: bool = False) -> dict:
     seq = seq.strip().upper()
     n   = len(seq)
     geometric_p1_idx = (geometric_p1_1based - 1) if geometric_p1_1based is not None else None
@@ -227,12 +245,16 @@ def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
     by_protease = {}
     for protease, rule in CLEAVAGE_RULES.items():
         sites = find_cleavage_sites(seq, rule, circular=circular)
+        if strict and not circular and protease == "Trypsin" and seq[-1] in "KR" and (n - 1) not in sites:
+            # critério estrito, peptídeo linear: K/R C-terminal livre é removido por
+            # carboxipeptidase B (exopeptidase) -> conta como resíduo clivável
+            sites.append(n - 1)
         entry = {
             "n_sites": len(sites),
             "positions": [s + 1 for s in sites],  # 1-based para leitura
         }
         if protease == "Trypsin":
-            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites, geometric_p1_idx, circular)
+            entry["trypsin_classification"] = classify_trypsin_sites(seq, sites, geometric_p1_idx, circular, strict)
         by_protease[protease] = entry
 
     n_internal = by_protease["Trypsin"]["trypsin_classification"]["n_internal"]
@@ -248,6 +270,8 @@ def analyze_sequence(seq: str, geometric_p1_1based: int | None = None,
         "trypsin_internal_sites": n_internal,
         "verdict":               verdict,
         "circular":              circular,
+        "strict":                strict,
+        "terminal_exopeptidase_flag": terminal_exopeptidase_flag(seq, circular),
         "suggested_modifications": mods,
     }
 

@@ -85,3 +85,30 @@ def test_circular_so_acrescenta_o_sitio_do_fechamento():
             # o único sítio novo possível é o do fechamento (i = n-1 para cut_after;
             # para pepsina (cut_before), o resíduo 0 gera o sítio n-1)
             assert cir - lin <= {n - 1}, (seq, name, cir - lin)
+
+
+# ── critério estrito, peptídeo linear (decisão de escopo do manuscrito, 2026-09-30) ──────────
+def test_estrito_nao_isenta_ancora_geometrica():
+    # K interno (seguido de T) com P1 geométrico: o critério anterior isentava; o estrito não
+    assert analyze_sequence("GGKTGG", geometric_p1_1based=3)["trypsin_internal_sites"] == 0
+    assert analyze_sequence("GGKTGG", geometric_p1_1based=3, strict=True)["trypsin_internal_sites"] == 1
+
+
+def test_estrito_K_seguido_de_P_segue_sem_sitio():
+    assert analyze_sequence("GGKPGG", strict=True)["trypsin_internal_sites"] == 0
+
+
+def test_estrito_KR_cterminal_conta_como_sitio_de_carboxipeptidase_B():
+    assert analyze_sequence("TGISGK")["trypsin_internal_sites"] == 0
+    r = analyze_sequence("TGISGK", strict=True)
+    assert r["trypsin_internal_sites"] == 1 and r["verdict"] == "MARGINAL"
+    assert r["terminal_exopeptidase_flag"]
+
+
+def test_estrito_sem_KR_igual_ao_linear_legado_para_tripsina():
+    import random
+    rng = random.Random(2)
+    aas = "ACDEFGHILMNPQSTVWY"   # sem K/R
+    for _ in range(500):
+        seq = "".join(rng.choice(aas) for _ in range(rng.randint(3, 20)))
+        assert analyze_sequence(seq, strict=True)["verdict"] == analyze_sequence(seq)["verdict"]
