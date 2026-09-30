@@ -90,7 +90,7 @@ for F in L M; do
   ( cd scripts && python pose_qc.py matrix-prepare --candidates ../$RES/top_candidates_$F.json --front $F )
   for tsp in $SP8; do
     [ -d $RES/boltz_yaml_matrix_$F/$tsp ] && bz $RES/boltz_yaml_matrix_$F/$tsp --model boltz2 \
-        --out_dir outputs/b23_boltz2_matrix_${F}_$tsp --output_format pdb --preprocessing-threads 4
+        --out_dir outputs/b23_boltz2_matrix_${F}_$tsp --output_format pdb --preprocessing-threads 1
   done
   ( cd scripts && python pose_qc.py matrix-collect --front $F )
 done
