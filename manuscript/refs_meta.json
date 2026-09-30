@@ -1,0 +1,475 @@
+{
+ "carpane2022": {
+  "fam": [
+   "Carpane",
+   "Llebaria"
+  ],
+  "n": 4,
+  "year": 2022
+ },
+ "almeida2021": {
+  "fam": [
+   "de Almeida Barros",
+   "Meriño-Cabrera"
+  ],
+  "n": 9,
+  "year": 2021
+ },
+ "silvajunior2020": {
+  "fam": [
+   "da Silva Júnior",
+   "Vital"
+  ],
+  "n": 9,
+  "year": 2020
+ },
+ "silvajunior2021": {
+  "fam": [
+   "Silva-Júnior",
+   "Cabrera"
+  ],
+  "n": 8,
+  "year": 2021
+ },
+ "dow1992": {
+  "fam": [
+   "Dow"
+  ],
+  "n": 1,
+  "year": 1992
+ },
+ "terra1994": {
+  "fam": [
+   "Terra",
+   "Ferreira"
+  ],
+  "n": 2,
+  "year": 1994
+ },
+ "jongsma1997": {
+  "fam": [
+   "Jongsma",
+   "Bolter"
+  ],
+  "n": 2,
+  "year": 1997
+ },
+ "jongsma1995": {
+  "fam": [
+   "Jongsma",
+   "Bakker"
+  ],
+  "n": 5,
+  "year": 1995
+ },
+ "kuwar2015": {
+  "fam": [
+   "Kuwar",
+   "Pauchet"
+  ],
+  "n": 4,
+  "year": 2015
+ },
+ "lomate2018": {
+  "fam": [
+   "Lomate",
+   "Dewangan"
+  ],
+  "n": 9,
+  "year": 2018
+ },
+ "souza2016": {
+  "fam": [
+   "Souza",
+   "Dias"
+  ],
+  "n": 6,
+  "year": 2016
+ },
+ "merino2020apti": {
+  "fam": [
+   "Meriño-Cabrera",
+   "de Oliveira Mendes"
+  ],
+  "n": 6,
+  "year": 2020
+ },
+ "merino2020rational": {
+  "fam": [
+   "Meriño-Cabrera",
+   "Severiche Castro"
+  ],
+  "n": 6,
+  "year": 2020
+ },
+ "merino2022": {
+  "fam": [
+   "Meriño-Cabrera",
+   "Castro"
+  ],
+  "n": 6,
+  "year": 2022
+ },
+ "almeida2022bpti": {
+  "fam": [
+   "de Almeida Barros",
+   "Meriño-Cabrera"
+  ],
+  "n": 9,
+  "year": 2022
+ },
+ "almeida2022tri": {
+  "fam": [
+   "de Almeida Barros",
+   "Meriño-Cabrera"
+  ],
+  "n": 9,
+  "year": 2022
+ },
+ "saikhedkar2018": {
+  "fam": [
+   "Saikhedkar",
+   "Joshi"
+  ],
+  "n": 8,
+  "year": 2018
+ },
+ "saikhedkar2019": {
+  "fam": [
+   "Saikhedkar",
+   "Joshi"
+  ],
+  "n": 6,
+  "year": 2019
+ },
+ "paulo2026": {
+  "fam": [
+   "Paulo",
+   "Schneider"
+  ],
+  "n": 14,
+  "year": 2026
+ },
+ "schultz2026": {
+  "fam": [
+   "Schultz",
+   "Paulo"
+  ],
+  "n": 10,
+  "year": 2026
+ },
+ "patarroyo2017": {
+  "fam": [
+   "Patarroyo-Vargas",
+   "Merino-Cabrera"
+  ],
+  "n": 6,
+  "year": 2017
+ },
+ "laskowski1980": {
+  "fam": [
+   "Laskowski",
+   "Kato"
+  ],
+  "n": 2,
+  "year": 1980
+ },
+ "laskowski2000": {
+  "fam": [
+   "Laskowski",
+   "Qasim"
+  ],
+  "n": 2,
+  "year": 2000
+ },
+ "kelly2005": {
+  "fam": [
+   "Kelly",
+   "Laskowski Jr."
+  ],
+  "n": 3,
+  "year": 2005
+ },
+ "perona1995": {
+  "fam": [
+   "Perona",
+   "Craik"
+  ],
+  "n": 2,
+  "year": 1995
+ },
+ "schechter1967": {
+  "fam": [
+   "Schechter",
+   "Berger"
+  ],
+  "n": 2,
+  "year": 1967
+ },
+ "luckett1999": {
+  "fam": [
+   "Luckett",
+   "Garcia"
+  ],
+  "n": 7,
+  "year": 1999
+ },
+ "watson2023": {
+  "fam": [
+   "Watson",
+   "Juergens"
+  ],
+  "n": 28,
+  "year": 2023
+ },
+ "dauparas2022": {
+  "fam": [
+   "Dauparas",
+   "Anishchenko"
+  ],
+  "n": 22,
+  "year": 2022
+ },
+ "rettie2025": {
+  "fam": [
+   "Rettie",
+   "Juergens"
+  ],
+  "n": 26,
+  "year": 2025
+ },
+ "passaro2025": {
+  "fam": [
+   "Passaro"
+  ],
+  "n": 9,
+  "year": 2025
+ },
+ "wohlwend2024": {
+  "fam": [
+   "Wohlwend"
+  ],
+  "n": 9,
+  "year": 2024
+ },
+ "jumper2021": {
+  "fam": [
+   "Jumper",
+   "Evans"
+  ],
+  "n": 34,
+  "year": 2021
+ },
+ "varadi2024": {
+  "fam": [
+   "Varadi",
+   "Bertoni"
+  ],
+  "n": 23,
+  "year": 2024
+ },
+ "uniprot2025": {
+  "fam": [
+   "UniProt Consortium"
+  ],
+  "n": 1,
+  "year": 2025
+ },
+ "vankempen2024": {
+  "fam": [
+   "van Kempen",
+   "Kim"
+  ],
+  "n": 8,
+  "year": 2024
+ },
+ "zhang2005": {
+  "fam": [
+   "Zhang"
+  ],
+  "n": 1,
+  "year": 2005
+ },
+ "abraham2015": {
+  "fam": [
+   "Abraham",
+   "Murtola"
+  ],
+  "n": 7,
+  "year": 2015
+ },
+ "lindorff2010": {
+  "fam": [
+   "Lindorff-Larsen",
+   "Piana"
+  ],
+  "n": 7,
+  "year": 2010
+ },
+ "jorgensen1983": {
+  "fam": [
+   "Jorgensen",
+   "Chandrasekhar"
+  ],
+  "n": 5,
+  "year": 1983
+ },
+ "olsson2011": {
+  "fam": [
+   "Olsson",
+   "Søndergaard"
+  ],
+  "n": 4,
+  "year": 2011
+ },
+ "dolinsky2007": {
+  "fam": [
+   "Dolinsky",
+   "Czodrowski"
+  ],
+  "n": 7,
+  "year": 2007
+ },
+ "michaud2011": {
+  "fam": [
+   "Michaud-Agrawal",
+   "Denning"
+  ],
+  "n": 4,
+  "year": 2011
+ },
+ "gowers2016": {
+  "fam": [
+   "Gowers",
+   "Linke"
+  ],
+  "n": 11,
+  "year": 2016
+ },
+ "valdes2021": {
+  "fam": [
+   "Valdés-Tresanco",
+   "Valdés-Tresanco"
+  ],
+  "n": 4,
+  "year": 2021
+ },
+ "cock2009": {
+  "fam": [
+   "Cock",
+   "Antao"
+  ],
+  "n": 11,
+  "year": 2009
+ },
+ "mirdita2022": {
+  "fam": [
+   "Mirdita",
+   "Schütze"
+  ],
+  "n": 6,
+  "year": 2022
+ },
+ "bussi2007": {
+  "fam": [
+   "Bussi",
+   "Donadio"
+  ],
+  "n": 3,
+  "year": 2007
+ },
+ "parrinello1981": {
+  "fam": [
+   "Parrinello",
+   "Rahman"
+  ],
+  "n": 2,
+  "year": 1981
+ },
+ "essmann1995": {
+  "fam": [
+   "Essmann",
+   "Perera"
+  ],
+  "n": 6,
+  "year": 1995
+ },
+ "berman2000": {
+  "fam": [
+   "Berman"
+  ],
+  "n": 1,
+  "year": 2000
+ },
+ "gasteiger2005": {
+  "fam": [
+   "Gasteiger",
+   "Hoogland"
+  ],
+  "n": 7,
+  "year": 2005
+ },
+ "genheden2015": {
+  "fam": [
+   "Genheden",
+   "Ryde"
+  ],
+  "n": 2,
+  "year": 2015
+ },
+ "hou2011": {
+  "fam": [
+   "Hou",
+   "Wang"
+  ],
+  "n": 4,
+  "year": 2011
+ },
+ "xu2025": {
+  "fam": [
+   "Xu",
+   "Zhou"
+  ],
+  "n": 6,
+  "year": 2025
+ },
+ "zhou2013": {
+  "fam": [
+   "Zhou",
+   "Lobo"
+  ],
+  "n": 7,
+  "year": 2013
+ },
+ "hedstrom2002": {
+  "fam": [
+   "Hedstrom"
+  ],
+  "n": 1,
+  "year": 2002
+ },
+ "parkin1996": {
+  "fam": [
+   "Parkin",
+   "Rupp"
+  ],
+  "n": 3,
+  "year": 1996
+ },
+ "song1998": {
+  "fam": [
+   "Song",
+   "Suh"
+  ],
+  "n": 2,
+  "year": 1998
+ },
+ "werner1992": {
+  "fam": [
+   "Werner",
+   "Wemmer"
+  ],
+  "n": 2,
+  "year": 1992
+ }
+}
