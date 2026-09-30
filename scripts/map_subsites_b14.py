@@ -49,6 +49,7 @@ RECEPTORS = {
     "Pxylostella": "Pxylostella-E2IGY7-AlphaFold.pdb",
     "Msexta": "Msexta-P35045-AlphaFold.pdb",
     "Bmori": "Bmori-A0A8R2C8B0-AlphaFold.pdb",
+    "Agemmatalis": "Agemmatalis-A0A2U8NFD7-AlphaFold.pdb",
 }
 
 PANEL_DIR = Path("data-lepidoptera-panel")

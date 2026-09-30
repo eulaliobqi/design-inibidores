@@ -55,6 +55,14 @@
       "mean_pLDDT": 90.6,
       "especificidade_tripsina": "CONFIRMADA - Asp na posicao 205 (Ser catalitico real=211, contexto DVGGKDACQGD)",
       "papel": "alvo primario, confianca menor (identidade mais baixa entre as especies do painel)"
+    },
+    "Agemmatalis": {
+      "accession": "A0A2U8NFD7",
+      "species": "Anticarsia gemmatalis",
+      "pident_vs_Msexta": 63.3,
+      "mean_pLDDT": 90.89,
+      "especificidade_tripsina": "CONFIRMADA - motivo catalitico GDSGGP encontrado por busca direta na sequencia (verificado 2026-09-29, re-download do mesmo accession AlphaFoldDB v6 bate com pLDDT 90.9 ja registrado em V1)",
+      "papel": "alvo primario - PROMOVIDA de fora_do_escopo_desta_sessao a pedido do usuario em 2026-09-29 (praga real e economicamente relevante da soja no Brasil, lagarta-da-soja). Ainda nao passou por B1.4 (subsitios)/B2.3 (geracao) nesta promocao - ver docs/bench para status."
     }
   },
   "reclassificados_para_painel_negativo_B1_2": {
@@ -67,13 +75,5 @@
       "motivo_reclassificacao": "Bombyx mori e inseto domesticado de valor economico (industria da seda), nao praga agricola. Por [[feedback_prioridade_especificidade]] (nunca tratar especificidade como checagem pos-hoc), deve entrar como especie a PROTEGER na contrasselecao (B1.2, categoria analoga a polinizadores), nao como alvo primario de design."
     }
   },
-  "fora_do_escopo_desta_sessao": {
-    "Agemmatalis": {
-      "accession": "A0A2U8NFD7",
-      "species": "Anticarsia gemmatalis (accession nova, nao e nenhum dos 4 receptores legados aposentados)",
-      "pident_vs_Msexta": 63.3,
-      "mean_pLDDT": 90.9,
-      "nota": "Baixado em V1 mas fora das 9 especies do PLANO_V2 B1.1. Nao verificar identidade de especie com os receptores legados ACR157/QCL936/XP273/XP352 (ver [[feedback_especies_receptores_indefinida]]) - accession/estrutura completamente separada e nova."
-    }
-  }
+  "fora_do_escopo_desta_sessao": {}
 }

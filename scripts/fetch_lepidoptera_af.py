@@ -22,6 +22,7 @@ SPECIES = {
     "Dsaccharalis": ("T1QDI0", "Diatraea saccharalis", "Trypsin 2 (TrEMBL)"),
     "Hvirescens": ("I7D523", "Heliothis virescens", "Trypsin (TrEMBL)"),
     "Cincludens": ("A0A9P0BRD5", "Chrysodeixis includens", "trypsin (TrEMBL)"),
+    "Agemmatalis": ("A0A2U8NFD7", "Anticarsia gemmatalis", "trypsin (TrEMBL) — promovida a alvo primario em 2026-09-29, ver panel_v2.json"),
 }
 
 OUT_DIR = Path("data-lepidoptera-panel")
