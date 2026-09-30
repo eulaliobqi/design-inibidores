@@ -88,11 +88,24 @@ comparação L × M. Discussão: custo do critério duro, flexibilidade, aminope
 permite concluir. Figuras 1 e 3 recalculadas; versão PT; referências novas conferidas (PubMed: as sete acima; RAG do
 grupo: Saikhedkar 2019, Kelly 2005, Schultz 2026, Paulo 2026, Severi-Castro 2026 ainda a conferir no Crossref).
 
-## 5. Decisões pendentes
+## 5. Decisões do autor (resolvidas em 30/09) e estado de execução
 
-1. **Ile** no interior: permitida (**padrão**; 527/543) ou proibida (393 linear)?
-2. pH do MD de triagem: **8,2** (grupo; recomendado) ou 10,0 (texto atual do manuscrito)?
-3. Extremidades do linear: **carregadas** (recomendado; como nos ensaios do grupo) ou acetil/amida?
-4. Topologia cíclica: aprovar o caminho `specbond` (com fallback `tleap`)?
-5. Manter E5 (contra-triagem) como exploratória? **Sim** (recomendado).
-6. Disparar já a E1 das duas frentes (~2,5 h, independe do resto)? **Sim.**
+| Decisão | Resolução |
+|---|---|
+| pH da MD | **Mais compatível com o intestino de Lepidoptera: 10,0** para todas as espécies (faixa 9,5–11). Base: intestino de *H. virescens* 9,56–10,0 (Karumbaiah 2007, [10.1016/j.cbpb.2006.10.104](https://doi.org/10.1016/j.cbpb.2006.10.104)); 10–11 em *H. armigera* (Lokya 2020, corpus do grupo); Dow 1992 (maior pH luminal conhecido; já citado). O pH 8,2 do projeto do grupo fica para a MD longa só se o autor quiser comparar. |
+| Protonação | PROPKA 3 via PDB2PQR **no pH 10,0** define HID/HIE/HIP, LYN, ASH, GLH, CYM/CYX de cada cadeia lateral (automático em `build_system_tleap.py`). **Limitação:** o campo AMBER só oferece extremidades NH₃⁺/COO⁻; no pH 10 o α-amino (pKa ≈ 8) seria majoritariamente neutro. Só afeta o **linear**; no macrociclo não há extremidades. Alternativa a avaliar pelo autor: extremidades protegidas (Ac/NHMe), que também bloqueiam exopeptidases. |
+| Topologia cíclica | **Aprovada e validada.** Construída via tleap/parmed (ligação C–N explícita, ff99SB-ILDN + TIP3P, o mesmo campo do `MDAgent`). Teste em complexo real de 10 resíduos: minimização convergiu, NVT de 20 ps estável, **C–N = 1,34 Å, ω = −179°**, ligação presente na topologia; o linear equivalente tem extremidades livres (C…N = 3,4 Å). |
+| Ile | Permitida no interior (padrão); sensibilidade sem Ile = 393 (linear). |
+
+**Estado de execução (30/09, ~16 h):**
+- **E1 em andamento** no servidor (`screen e1-two-fronts`; ~1.070 predições, ~8 s cada com a GPU compartilhada).
+- **Construído e testado em partes:** filtro duro (16 testes); Boltz-2 linear/cíclico; `build_system_tleap.py`; integração no `MDAgent`
+  (`_run_gromacs(..., cyclic=)`, runner `--front L|M`); análise de MD com ancoragem por metades, integridade do anel e
+  critério `passes_screen`; `rescore_boltz2_topk.py` (E2/E3); `pose_qc.py` (E4 + matriz 8×8); `deliver_md_long.py` (E9);
+  `compare_linear_vs_macrocycle.py` (E8).
+- **Ainda não testado de ponta a ponta:** a cadeia `scripts/run_two_fronts_pipeline.sh` (ela própria espera o E1 terminar);
+  E5 (contra-triagem com receptores não-alvo) **não construída** — exige baixar/estruturar 1TRN, o modelo de *Apis* e
+  tripsina bovina e calcular MSAs; fica fora da primeira rodada.
+
+**Para disparar tudo:** `screen -S two-fronts; bash scripts/run_two_fronts_pipeline.sh` (espera o E1; ≈ 40 h com a GPU livre,
+60–80 h com os jobs do grupo).
