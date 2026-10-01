@@ -131,7 +131,9 @@ def main():
             result = agent._run_gromacs(str(src), out_dir, ns, temp, meta["sequence"],
                                         cyclic=None if args.front is None else args.front == "M")
             summary[species] = {
-                "status": "done",
+                # `_run_gromacs` captura as excecoes e devolve {"error": ...}: nao marcar como concluido
+                # (senao a reexecucao pularia a especie e a falha passaria despercebida)
+                "status": "erro" if result.get("error") else "done",
                 "sequence": meta["sequence"],
                 "backbone": meta["backbone"],
                 "confidence_score": meta["confidence_score"],
