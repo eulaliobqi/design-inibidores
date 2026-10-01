@@ -109,3 +109,9 @@ grupo: Saikhedkar 2019, Kelly 2005, Schultz 2026, Paulo 2026, Severi-Castro 2026
 
 **Para disparar tudo:** `screen -S two-fronts; bash scripts/run_two_fronts_pipeline.sh` (espera o E1; ≈ 40 h com a GPU livre,
 60–80 h com os jobs do grupo).
+
+## 6. Emendas e observações (01/10/2026)
+
+- Nenhum limiar foi alterado. Observação descritiva sobre o critério (f): nos 3 anéis simulados, C–N ≤ 1,45 Å e |ω| ≥ 150° em 99,6–99,8% dos quadros (mínimo 144,5–149,0°); o critério exige 150° em todos os quadros e foi aplicado como registrado. Qualquer mudança seria emenda posterior aos dados e cabe aos autores.
+- Critérios (c)–(d) aplicados pela análise E7 (`passes_screen`); resultado provisório em `docs/ESTADO_CONSOLIDADO_2026-10-01.md`.
+- Correção de código do E7 (resnames CHARMM36, `GLUP`) e gravação de séries temporais; sem efeito sobre a seleção dos candidatos.

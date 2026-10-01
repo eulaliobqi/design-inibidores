@@ -82,11 +82,11 @@ if unused:
 
 # ---------- 3. figuras inline (legendas extraidas de 'Legendas das figuras')
 leg_block = src.split("## Legendas das figuras")[1]
-legends = dict(re.findall(r"\*\*Figura (S?\d)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)", leg_block, flags=re.S))
+legends = dict(re.findall(r"\*\*Figura (S?\d+)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)", leg_block, flags=re.S))
 src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
        "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_ciclica_fumaca.png"}
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
 
 
 def img(n, w="16.5cm"):
@@ -99,8 +99,9 @@ src = src.replace("\n### 3.4 A campanha de geração", img("3") + "\n### 3.4 A c
 src = src.replace("\n### 3.6 Um critério duro", img("4") + "\n### 3.6 Um critério duro")
 src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n### 3.7 Confiança do Boltz-2")
 src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
-src = src.replace("\n### 3.9 Simulações", img("8") + "\n### 3.9 Simulações")
-for fid in ("1", "2", "3", "4", "5", "6", "7", "8"):
+src = src.replace("\n### 3.9 Simulações", img("8") + img("9") + img("10") + "\n### 3.9 Simulações")
+src = src.replace("\n### 3.10 Frente linear", img("11") + "\n### 3.10 Frente linear")
+for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
 
@@ -130,7 +131,7 @@ n_abs_en, n_body_en = words(abs_en.replace("---", "")), words(body_en)
 n_abs_pt, n_body_pt = words(abs_pt.replace("---", "")), words(body_pt)
 n_kw = len(re.search(r"\*\*Keywords:\*\* (.*)", en).group(1).split(","))
 n_tab = len(re.findall(r"^\*\*Table \d\.", en, flags=re.M))
-n_fig = len(re.findall(r"^\*\*Figure \d\.", en, flags=re.M))
+n_fig = len(re.findall(r"^\*\*Figure \d+\.", en, flags=re.M))
 n_figs = len(re.findall(r"^\*\*Figure S\d\.", en, flags=re.M))
 
 panel = f"""
@@ -167,7 +168,7 @@ panel = f"""
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
-## Estado dos cálculos (30/09/2026, noite)
+## Estado dos cálculos (01/10/2026, tarde)
 
 | Etapa | Estado | Resultado até aqui |
 |---|---|---|
@@ -177,22 +178,22 @@ panel = f"""
 | Triagem por escore de motivos | concluída | 1.829 semelhantes a resistentes |
 | E0 · critério duro de não clivabilidade | concluído | 527 lineares (frente L) e 543 cíclicas (frente M) |
 | E1 · Boltz-2 nas duas frentes | concluído (1.070/1.070) | reprodutibilidade entre rodadas ρ = 0,57; linear × cíclico ρ = 0,50 (Seção 3.8, Figura 8) |
-| E2 · reescore dos 10 melhores por espécie (5 amostras × 3 sementes) | **em curso** | frente L: semente 1 completa, semente 2 em andamento; frente M ainda não iniciada |
-| Escolha da estrutura inicial (melhor amostra que passa no QC de pose) | pendente | implementada e testada; roda após o E2 |
-| E3 · controles embaralhados pareados | pendente | 234 controles por frente preparados |
-| E4 · QC de pose e matriz cruzada 8 × 8 | pendente | QC já testado nas predições do E1 (18% passam na amostra única) |
-| E6–E7 · MD de 10 ns (3 melhores por espécie e frente, 48 simulações) | pendente | topologia cíclica validada (C–N 1,34 Å; ω −179°) |
+| E2 · reescore dos 10 melhores por espécie (5 amostras × 3 sementes) | concluído (L e M) | confiança média 0,900 (L) e 0,888 (M); ρ com o E1 de 0,80 e 0,74; ordem dentro do top 10 não resolvida (Seção 3.8, Figura 9) |
+| Escolha da estrutura inicial (melhor amostra que passa no QC de pose) | concluída | 48 de 48 passam; tríade íntegra em todas (Figura 10) |
+| E3 · controles embaralhados pareados | pendente (roda depois das MDs) | 234 controles por frente preparados |
+| E4 · QC de pose e matriz cruzada 8 × 8 | QC concluído; matriz pendente | 80/80 candidatos com ao menos uma amostra aprovada em cada frente |
+| E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **em curso: 11/48 concluídas** | triagem pré-registrada: 1 de 8 lineares passa (NGGRPDAP); 0 de 3 cíclicas (GGKPGEP falha só no ω do anel: 144,5° contra 150°); resultado provisório (Seção 3.9, Figura 11) |
 | E8–E9 · comparação linear × macrociclo e lista para a MD longa | pendente | scripts prontos |
 | E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Estimativa:** o restante do pipeline deve levar de 2 a 3 dias de GPU compartilhada; a MD de 10 ns das duas frentes (48 simulações) é a etapa mais longa.
+**Estimativa:** faltam cerca de 37 simulações (40–55 min cada com a GPU compartilhada), ou aproximadamente 25 h; depois vêm E3, matriz 8 × 8, E8 e E9.
 
-**Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida.
+**Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida. (iii) a análise de MD não reconhecia o resíduo GLUP do CHARMM36 (o seletor `protein` do MDAnalysis o ignora) e falhou numa simulação; corrigido e todas as simulações concluídas foram reanalisadas; (iv) o RMSD global de controle usava o `md.tpr` (receptor partido pela caixa) como referência; corrigido antes de qualquer uso nos resultados.
 
 ## Pendências antes da submissão
 
 1. Seções 3.8–3.10 (E1–E4 e dinâmica molecular de 10 ns nas duas frentes), frase correspondente no Resumo e na Seção 4.1: dependem de cálculos em andamento ou ainda não disparados no servidor.
-2. Figuras de ocupância de S1, de integridade do anel e da comparação linear × macrociclo, a gerar quando as simulações terminarem.
+2. Figuras 9–11 geradas com dados provisórios (11 de 48 MDs); reexecutar `make_figures_e2_md.py` quando as 48 terminarem e acrescentar a figura da comparação linear × macrociclo e a Figura S2 com CHARMM36.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).
 
