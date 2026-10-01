@@ -14,8 +14,11 @@ Fluxo (mesmo do grupo: PREPARE_PH -> TOPOLOGY -> BOX_SOLVATE_IONS):
      todos os residuos, com os parametros do proprio CHARMM36). `verify_ring` confere o anel no itp e
      aborta se estiver aberto -- nunca segue com um linear sem terminais;
   4. editconf -> solvate -> genion (KCl 0,10 M por padrao, hemolinfa/intestino de inseto, igual ao grupo).
-Extremidades do peptideo LINEAR: NH3+ / COO- (padrao do CHARMM36); no pH 10 o pKa do alfa-amino (~8)
-indicaria forma majoritariamente neutra -- limitacao declarada (opcao NH2 existe no menu, nao usada).
+Extremidades do peptideo LINEAR (decisao de 01/10/2026, modelo biologico): C-terminal COO- (pKa 3,3) e N-terminal
+NEUTRO (NH2 / GLY-NH2) quando pH - 7,7 >= 2 (pKa medio do N-terminal em proteinas dobradas 7,7 +- 0,5; Grimsley,
+Scholtz e Pace 2009, Protein Sci 18:247, doi 10.1002/pro.19) -- no pH 10 do intestino medio, <1% protonado. O 1o
+residuo Pro nao tem patch neutro no campo (so PRO-NH2+): fica carregado e e' registrado em build_report.json.
+So o peptideo (cadeia B); o N-terminal do receptor continua NH3+. (As 8 MDs lineares anteriores usaram NH3+.)
 No macrociclo nao ha extremidades.
 
 Saidas em OUT: solv_ions.gro, topol.top (+ itp/posre por cadeia, link simbolico do .ff), build_report.json.
@@ -101,7 +104,7 @@ def _pick(items, wanted, kind):
     raise RuntimeError(f"terminal {wanted} ausente do menu {kind}: {items}")
 
 
-def pdb2gmx(gmx, out: Path, ff_name: str, water: str, cyclic: bool, log_name="pdb2gmx.log"):
+def pdb2gmx(gmx, out: Path, ff_name: str, water: str, cyclic: bool, log_name="pdb2gmx.log", nterm_neutral: bool = False):
     """pdb2gmx -ter conduzido de forma interativa: le cada menu de terminal e escolhe PELO NOME
     (NH3+ / COO- nas pontas do receptor e do peptideo linear; PRO-NH2+ se o 1o residuo e' Pro). No
     macrociclo fechado o pdb2gmx nao pergunta os terminais do peptideo (so' os 2 menus do receptor).
@@ -141,7 +144,13 @@ def pdb2gmx(gmx, out: Path, ff_name: str, water: str, cyclic: bool, log_name="pd
             chain = answered // 2
             if kind == "start":
                 # Pro precisa do patch proprio (PRO-NH2+); o NH3+ generico quebra o grompp (sem ligacoes N-CD)
-                idx = _pick(items, ["PRO-NH2+"] if res.startswith("PRO") else ["NH3+"], f"{kind} {res}")
+                if res.startswith("PRO"):
+                    want = ["PRO-NH2+"]                     # sem patch neutro para Pro no campo
+                elif nterm_neutral and chain == 1:          # peptideo (cadeia B), N-terminal neutro
+                    want = ["GLY-NH2"] if res.startswith("GLY") else ["NH2"]
+                else:
+                    want = ["NH3+"]
+                idx = _pick(items, want, f"{kind} {res}")
             else:
                 idx = _pick(items, ["COO-"], f"{kind} {res}")
             chosen.append({"chain": "AB"[chain] if chain < 2 else chain, "terminus": kind, "residue": res,
@@ -234,9 +243,12 @@ def peptide_itp(out: Path) -> Path:
     return out / inc[1]
 
 
+NTERM_PKA = 7.7   # Grimsley, Scholtz e Pace 2009 (doi 10.1002/pro.19): N-terminal 7,7 +- 0,5 em proteinas dobradas
+
+
 # --------------------------------------------------------------------------------------------- build
 def build(complex_pdb, out, ph=10.0, cyclic=False, gmx="gmx_mpi", pdb2pqr="pdb2pqr30", ff_dir=DEFAULT_FF_DIR,
-          water="tip3p", cation="K", salt_m=0.10, box_type="dodecahedron", box_d=1.2) -> dict:
+          water="tip3p", cation="K", salt_m=0.10, box_type="dodecahedron", box_d=1.2, nterm="auto") -> dict:
     complex_pdb, out = Path(complex_pdb).resolve(), Path(out).resolve()
     ff_dir = Path(os.path.expanduser(str(ff_dir))).resolve()
     if not (ff_dir / "forcefield.itp").exists():
@@ -254,7 +266,9 @@ def build(complex_pdb, out, ph=10.0, cyclic=False, gmx="gmx_mpi", pdb2pqr="pdb2p
     if cyclic and cn > 2.0:
         raise RuntimeError(f"macrociclo com distancia C(n)-N(1) = {cn:.2f} A (> 2,0): a predicao nao esta "
                            f"fechada e o pdb2gmx nao formaria a ligacao")
-    answers = pdb2gmx(gmx, out, ff_name, water, cyclic)
+    # N-terminal do peptideo linear: neutro se o pH esta >= 2 unidades acima do pKa medio (7,7; Grimsley 2009)
+    nterm_neutral = (not cyclic) and (nterm == "neutral" or (nterm == "auto" and ph - NTERM_PKA >= 2.0))
+    answers = pdb2gmx(gmx, out, ff_name, water, cyclic, nterm_neutral=nterm_neutral)
     ring = verify_ring(peptide_itp(out)) if cyclic else None
     if ring:
         ring["cn_distance_A"] = round(cn, 3)
@@ -274,6 +288,7 @@ def build(complex_pdb, out, ph=10.0, cyclic=False, gmx="gmx_mpi", pdb2pqr="pdb2p
                    "-pname", cation, "-nname", "CL", "-neutral", "-conc", str(salt_m)], stdin="SOL\n")
     report = {"forcefield": ff_name, "water": water, "ph": ph, "cyclic": cyclic, "n_receptor_res": n_rec,
               "peptide": pep, "n_peptide_res": len(pep), "terminals": answers, "ring": ring,
+              "nterm_neutral": nterm_neutral, "nterm_pka_ref": NTERM_PKA,
               "cation": cation, "salt_M": salt_m, "box": f"{box_type} d={box_d} nm"}
     (out / "build_report.json").write_text(json.dumps(report, indent=2))
     return report
