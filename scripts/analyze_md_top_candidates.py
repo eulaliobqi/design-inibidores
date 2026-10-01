@@ -48,6 +48,16 @@ def receptor_residues(species: str) -> dict:
     return m
 
 
+# nomes de residuo do CHARMM36 (GROMACS) -> padrao de 3 letras (His, Lys e Cys por estado de protonacao)
+_STD_RES = {"HSD": "HIS", "HSE": "HIS", "HSP": "HIS", "HID": "HIS", "HIE": "HIS", "HIP": "HIS",
+            "LSN": "LYS", "LYN": "LYS", "ASPP": "ASP", "ASH": "ASP", "GLUP": "GLU", "GLH": "GLU",
+            "CYS2": "CYS", "CYM": "CYS", "CYX": "CYS"}
+
+
+def std_resname(name: str) -> str:
+    return _STD_RES.get(name, name)
+
+
 def resnum(name: str) -> int:
     return int("".join(c for c in name if c.isdigit()))
 
@@ -72,13 +82,13 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
     prot = u.select_atoms("protein")
     n_rec = len(prot.residues) - len(seq)
     rec, pep = prot.residues[:n_rec], prot.residues[n_rec:]
-    if "".join(mda.lib.util.convert_aa_code(r.resname) for r in pep) != seq:
+    if "".join(mda.lib.util.convert_aa_code(std_resname(r.resname)) for r in pep) != seq:
         return {"error": "sequencia do peptideo na trajetoria != sequencia esperada"}
 
     def get(refname, atoms, expect_resname):
         num = resnum(res_map[refname])
         sel = rec[rec.resids == num]
-        if len(sel) != 1 or not sel[0].resname.startswith(expect_resname):
+        if len(sel) != 1 or not std_resname(sel[0].resname).startswith(expect_resname):
             found = sel[0].resname if len(sel) else None
             raise ValueError(f"{refname}->{res_map[refname]}: resid {num} = {found}")
         return sel.atoms.select_atoms(f"name {atoms}")
