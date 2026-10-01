@@ -32,6 +32,7 @@ def main():
     ap.add_argument("--ph", type=float, required=True)
     ap.add_argument("--species", nargs="+")
     ap.add_argument("--ns", type=int, default=10)
+    ap.add_argument("--nterm", choices=["auto", "charged", "neutral"], default="auto")
     args = ap.parse_args()
 
     workdir = ROOT / args.workdir
@@ -41,6 +42,8 @@ def main():
 
     config = yaml.safe_load(open(ROOT / "config.yaml"))
     config.setdefault("md", {})["gut_ph"] = args.ph
+    # "auto": N-terminal do linear neutro quando pH - 7,7 >= 2 (neutro em pH 10, NH3+ em pH 8,2).
+    config["md"]["nterm"] = args.nterm
     agent = MDAgent("MDAgent_ph_campaign", config, str(workdir))
     workdir.mkdir(parents=True, exist_ok=True)
     temp = config["md"].get("temperature", 300)
@@ -70,7 +73,7 @@ def main():
                 "sequence": meta["sequence"], "backbone": meta["backbone"],
                 "confidence_score": meta["confidence_score"], "source_pdb": meta["pdb"],
                 "ns": args.ns, "cyclic": args.front == "M", "front": args.front,
-                "ph": args.ph, "nterm_neutral": nn, **result,
+                "ph": args.ph, "nterm_mode": args.nterm, "nterm_neutral": nn, **result,
             }
             print(f"[{key}] concluido: {result}")
         except Exception as e:  # noqa: BLE001

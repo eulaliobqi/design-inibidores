@@ -248,7 +248,7 @@ NTERM_PKA = 7.7   # Grimsley, Scholtz e Pace 2009 (doi 10.1002/pro.19): N-termin
 
 # --------------------------------------------------------------------------------------------- build
 def build(complex_pdb, out, ph=10.0, cyclic=False, gmx="gmx_mpi", pdb2pqr="pdb2pqr30", ff_dir=DEFAULT_FF_DIR,
-          water="tip3p", cation="K", salt_m=0.10, box_type="dodecahedron", box_d=1.2, nterm="auto") -> dict:
+          water="tip3p", cation="K", salt_m=0.10, box_type="dodecahedron", box_d=1.2, nterm="charged") -> dict:
     complex_pdb, out = Path(complex_pdb).resolve(), Path(out).resolve()
     ff_dir = Path(os.path.expanduser(str(ff_dir))).resolve()
     if not (ff_dir / "forcefield.itp").exists():
@@ -266,7 +266,9 @@ def build(complex_pdb, out, ph=10.0, cyclic=False, gmx="gmx_mpi", pdb2pqr="pdb2p
     if cyclic and cn > 2.0:
         raise RuntimeError(f"macrociclo com distancia C(n)-N(1) = {cn:.2f} A (> 2,0): a predicao nao esta "
                            f"fechada e o pdb2gmx nao formaria a ligacao")
-    # N-terminal do peptideo linear: neutro se o pH esta >= 2 unidades acima do pKa medio (7,7; Grimsley 2009)
+    # N-terminal do peptideo linear. Default "charged" DE PROPOSITO: o conjunto de MDs em curso foi montado
+    # com NH3+ e um default "auto" mudaria o protocolo no meio do conjunto assim que um processo novo
+    # reimportasse este modulo. Quem quer o estado dependente do pH pede "auto" explicitamente (md.nterm).
     nterm_neutral = (not cyclic) and (nterm == "neutral" or (nterm == "auto" and ph - NTERM_PKA >= 2.0))
     answers = pdb2gmx(gmx, out, ff_name, water, cyclic, nterm_neutral=nterm_neutral)
     ring = verify_ring(peptide_itp(out)) if cyclic else None

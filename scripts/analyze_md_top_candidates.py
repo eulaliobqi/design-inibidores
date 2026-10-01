@@ -87,16 +87,22 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
         return {"error": "sequencia do peptideo na trajetoria != sequencia esperada"}
 
     def get(refname, atoms, expect_resname):
+        """`expect_resname` e' comparado por igualdade apos std_resname: "AS" casaria ASN (que tem OD1
+        mas nao OD2) e devolveria um carboxilato pela metade sem erro. Confere tambem o numero de atomos."""
         num = resnum(res_map[refname])
         sel = rec[rec.resids == num]
-        if len(sel) != 1 or not std_resname(sel[0].resname).startswith(expect_resname):
+        if len(sel) != 1 or std_resname(sel[0].resname) != expect_resname:
             found = sel[0].resname if len(sel) else None
-            raise ValueError(f"{refname}->{res_map[refname]}: resid {num} = {found}")
-        return sel.atoms.select_atoms(f"name {atoms}")
+            raise ValueError(f"{refname}->{res_map[refname]}: resid {num} = {found} (esperado {expect_resname})")
+        got = sel.atoms.select_atoms(f"name {atoms}")
+        want = len(atoms.split())
+        if len(got) != want:
+            raise ValueError(f"{refname} (resid {num}, {sel[0].resname}): {len(got)} de {want} atomos '{atoms}'")
+        return got
 
-    asp = get("ASP189", "OD1 OD2", "AS")
+    asp = get("ASP189", "OD1 OD2", "ASP")
     ser = get("SER195", "OG", "SER")
-    his = get("HIS57", "NE2", "HI")
+    his = get("HIS57", "NE2", "HIS")
 
     def unwrap_peptide(pos, anchor, box):
         """Torna o peptideo inteiro (imagem minima relativa ao 1o atomo) e o traz para a imagem
@@ -161,7 +167,11 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
         "com_dist_pep_rec_A_median": round(float(np.median(d_com)), 1),
         "n_frames_image_jump_gt30A": int((np.array(d_com) > 30).sum()),
         "peptide_rmsd_local_nm_mean": round(float(rmsd_loc.mean()), 3),
-        "peptide_rmsd_local_nm_last10ns": round(float(rmsd_loc[late].mean()), 3),
+        # `late` = ultimos 20% da trajetoria (2 ns numa corrida de 10 ns), `early` = primeiros 4% (0,4 ns).
+        # A chave antiga chamava-se "last10ns", nome correto so' para as corridas de 50 ns.
+        "peptide_rmsd_local_nm_final20pct": round(float(rmsd_loc[late].mean()), 3),
+        "window_early_ns": [round(float(t_ns[early].min()), 2), round(float(t_ns[early].max()), 2)],
+        "window_late_ns": [round(float(t_ns[late].min()), 2), round(float(t_ns[late].max()), 2)],
         "contact_any_frac_4.5A": round(float(np.mean(contact_any)), 3),
         "ser195_contact_frac_4.5A": round(float((np.array(d_ser) < 4.5).mean()), 3),
         "his57_contact_frac_4.5A": round(float((np.array(d_his) < 4.5).mean()), 3),

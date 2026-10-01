@@ -88,7 +88,17 @@ gen_temp    = {temp}
 gen_seed    = -1
 """
 
-_NPT_MDP = """; npt.mdp — 500 ps Berendsen (validado em MD-gromacs prod)
+# DESVIO CONHECIDO E MEDIDO (auditoria de 01/10/2026, docs/AUDITORIA_2026-10-01.md):
+#   (a) a equilibracao NPT usa Parrinello-Rahman, embora o cabecalho antigo dissesse "Berendsen". A pratica
+#       padrao e' um barostato de relaxacao na equilibracao (hoje C-rescale, Bernetti e Bussi 2020,
+#       doi 10.1063/5.0020514) e Parrinello-Rahman so' na producao;
+#   (b) falta refcoord_scaling = com, exigido com position restraints + acoplamento de pressao.
+# Medido nas corridas prontas: densidade 1022-1033 kg/m3 com RMSD ~2 kg/m3 (0,2%) e deriva < 1,2 kg/m3;
+# volume com RMSD ~0,2%. Ou seja, NAO houve oscilacao de caixa nem artefato mensuravel.
+# NAO corrigir enquanto o conjunto de MDs do manuscrito nao fechar: trocar agora deixaria parte das
+# simulacoes num protocolo e parte noutro (e confundiria a comparacao de pH, cuja unica variavel deve ser
+# o pH/N-terminal). Aplicar (a) e (b) na MD longa e em trabalhos futuros.
+_NPT_MDP = """; npt.mdp — 500 ps de equilibracao com restricoes de posicao
 define      = -DPOSRES
 integrator  = md
 nsteps      = 250000
@@ -525,7 +535,8 @@ class MDAgent(BaseAgent):
                     complex_pdb, out, ph=md_cfg.get("gut_ph", 10.0), cyclic=bool(cyclic), gmx=gmx, pdb2pqr=pqr,
                     ff_dir=md_cfg.get("forcefield_dir", DEFAULT_FF_DIR), water=water,
                     cation=md_cfg.get("cation", "K"), salt_m=md_cfg.get("salt_m", 0.10),
-                    box_type=md_cfg.get("box_type", "dodecahedron"), box_d=md_cfg.get("box_d", 1.2))
+                    box_type=md_cfg.get("box_type", "dodecahedron"), box_d=md_cfg.get("box_d", 1.2),
+                    nterm=md_cfg.get("nterm", "charged"))
                 self.logger.info("  sistema montado: %s", {k: rep[k] for k in ("peptide", "ring") if k in rep})
 
             elif cyclic is None:
