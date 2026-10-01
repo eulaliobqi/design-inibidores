@@ -176,7 +176,9 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
     out.update({"anchor_idx_h1": a_h1, "anchor_idx_h2": a_h2, "anchor_same_in_halves": a_h1 == a_h2})
     if cyclic:
         om = np.abs(np.array(ring_omega))
-        out.update({"ring_CN_max_A": round(max(ring_cn), 3), "ring_omega_abs_min_deg": round(float(om.min()), 1),
+        # secundario, pos-dados (emenda 01/10/2026): fracao de quadros com |omega| >= 150; NAO substitui o criterio primario
+        out.update({"ring_omega_frac_ge150": round(float((om >= 150).mean()), 4),
+                    "ring_CN_max_A": round(max(ring_cn), 3), "ring_omega_abs_min_deg": round(float(om.min()), 1),
                     "ring_intact": bool(max(ring_cn) <= 1.5 and om.min() >= 150)})
     for c in (4, 5, 6):
         out[f"occ_{c}A"] = round(float((da < c).mean()), 3)
