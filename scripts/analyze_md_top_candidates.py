@@ -79,7 +79,8 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
     sp_dir = MD_DIR / species
     res_map = receptor_residues(species.split("__")[0])
     u = mda.Universe(str(sp_dir / "md.tpr"), str(pbc_traj(sp_dir)))
-    prot = u.select_atoms("protein")
+    # o seletor "protein" do MDAnalysis nao reconhece alguns nomes CHARMM36 (ex.: GLUP): inclui-os explicitamente
+    prot = u.select_atoms("protein or resname " + " ".join(sorted(_STD_RES)))
     n_rec = len(prot.residues) - len(seq)
     rec, pep = prot.residues[:n_rec], prot.residues[n_rec:]
     if "".join(mda.lib.util.convert_aa_code(std_resname(r.resname)) for r in pep) != seq:
