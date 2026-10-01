@@ -165,6 +165,12 @@ def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
         "ser195_contact_frac_4.5A": round(float((np.array(d_ser) < 4.5).mean()), 3),
         "his57_contact_frac_4.5A": round(float((np.array(d_his) < 4.5).mean()), 3),
     }
+    # series temporais por quadro (para as figuras do manuscrito)
+    ts_out = {"t_ns": t_ns, "d_res_asp": d_res, "rmsd_local_nm": rmsd_loc, "d_ser_A": np.array(d_ser),
+              "d_his_A": np.array(d_his), "d_com_A": np.array(d_com), "contact_any": np.array(contact_any)}
+    if cyclic:
+        ts_out.update({"ring_CN_A": np.array(ring_cn), "ring_omega_deg": np.array(ring_omega)})
+    np.savez_compressed(sp_dir / "analysis_timeseries.npz", **ts_out)
     a_h1, a_h2 = int(d_res[half].mean(axis=0).argmin()), int(d_res[~half].mean(axis=0).argmin())
     out.update({"anchor_idx_h1": a_h1, "anchor_idx_h2": a_h2, "anchor_same_in_halves": a_h1 == a_h2})
     if cyclic:

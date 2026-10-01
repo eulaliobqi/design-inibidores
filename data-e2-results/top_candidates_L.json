@@ -1,0 +1,287 @@
+{
+  "rule": "linear-strict-hard",
+  "candidates": {
+    "Sfrugiperda__r1": {
+      "species": "Sfrugiperda",
+      "rank": 1,
+      "sequence": "GPGGGTG",
+      "backbone": "len7_design_2",
+      "confidence_score": 0.9234249949455261,
+      "complex_plddt": 0.9331578612327576,
+      "iptm": 0.8844934542973836,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Sfrugiperda/boltz_results_Sfrugiperda/predictions/Sfrugiperda__len7_design_2__7/Sfrugiperda__len7_design_2__7_model_0.pdb"
+    },
+    "Sfrugiperda__r2": {
+      "species": "Sfrugiperda",
+      "rank": 2,
+      "sequence": "GTDTG",
+      "backbone": "len5_design_9",
+      "confidence_score": 0.9178672234217325,
+      "complex_plddt": 0.9343805432319641,
+      "iptm": 0.8518139004707337,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Sfrugiperda/boltz_results_Sfrugiperda/predictions/Sfrugiperda__len5_design_9__8/Sfrugiperda__len5_design_9__8_model_0.pdb"
+    },
+    "Sfrugiperda__r3": {
+      "species": "Sfrugiperda",
+      "rank": 3,
+      "sequence": "GGTSE",
+      "backbone": "len5_design_7",
+      "confidence_score": 0.9145316878954569,
+      "complex_plddt": 0.9402444124221802,
+      "iptm": 0.8116807341575623,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Sfrugiperda/boltz_results_Sfrugiperda/predictions/Sfrugiperda__len5_design_7__1/Sfrugiperda__len5_design_7__1_model_0.pdb"
+    },
+    "Slitura__r1": {
+      "species": "Slitura",
+      "rank": 1,
+      "sequence": "GISGS",
+      "backbone": "len5_design_0",
+      "confidence_score": 0.8656783938407898,
+      "complex_plddt": 0.8914551297823589,
+      "iptm": 0.7625714143117269,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Slitura/boltz_results_Slitura/predictions/Slitura__len5_design_0__7/Slitura__len5_design_0__7_model_0.pdb"
+    },
+    "Slitura__r2": {
+      "species": "Slitura",
+      "rank": 2,
+      "sequence": "QAPDFPTGPNNS",
+      "backbone": "len12_design_7",
+      "confidence_score": 0.8648983836174011,
+      "complex_plddt": 0.8710615555445353,
+      "iptm": 0.8402455806732178,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Slitura/boltz_results_Slitura/predictions/Slitura__len12_design_7__5/Slitura__len12_design_7__5_model_0.pdb"
+    },
+    "Slitura__r3": {
+      "species": "Slitura",
+      "rank": 3,
+      "sequence": "GTPESNES",
+      "backbone": "len8_design_0",
+      "confidence_score": 0.8643351991971334,
+      "complex_plddt": 0.8930890758832296,
+      "iptm": 0.7493196169535319,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Slitura/boltz_results_Slitura/predictions/Slitura__len8_design_0__1/Slitura__len8_design_0__1_model_0.pdb"
+    },
+    "Onubilalis__r1": {
+      "species": "Onubilalis",
+      "rank": 1,
+      "sequence": "GSNIN",
+      "backbone": "len5_design_9",
+      "confidence_score": 0.9264683127403259,
+      "complex_plddt": 0.9259187817573548,
+      "iptm": 0.928666353225708,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Onubilalis/boltz_results_Onubilalis/predictions/Onubilalis__len5_design_9__2/Onubilalis__len5_design_9__2_model_0.pdb"
+    },
+    "Onubilalis__r2": {
+      "species": "Onubilalis",
+      "rank": 2,
+      "sequence": "GQNDS",
+      "backbone": "len5_design_9",
+      "confidence_score": 0.9085963169733683,
+      "complex_plddt": 0.9142579992612203,
+      "iptm": 0.8859495441118876,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Onubilalis/boltz_results_Onubilalis/predictions/Onubilalis__len5_design_9__1/Onubilalis__len5_design_9__1_model_0.pdb"
+    },
+    "Onubilalis__r3": {
+      "species": "Onubilalis",
+      "rank": 3,
+      "sequence": "GDNSD",
+      "backbone": "len5_design_9",
+      "confidence_score": 0.8907459696133931,
+      "complex_plddt": 0.9155252814292908,
+      "iptm": 0.7916286826133728,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Onubilalis/boltz_results_Onubilalis/predictions/Onubilalis__len5_design_9__5/Onubilalis__len5_design_9__5_model_0.pdb"
+    },
+    "Dsaccharalis__r1": {
+      "species": "Dsaccharalis",
+      "rank": 1,
+      "sequence": "PTTTQT",
+      "backbone": "len6_design_9",
+      "confidence_score": 0.943760347366333,
+      "complex_plddt": 0.9435562332471211,
+      "iptm": 0.9445767720540365,
+      "pdb": "outputs/b23_boltz2_E2_L_s3_Dsaccharalis/boltz_results_Dsaccharalis/predictions/Dsaccharalis__len6_design_9__1/Dsaccharalis__len6_design_9__1_model_0.pdb"
+    },
+    "Dsaccharalis__r2": {
+      "species": "Dsaccharalis",
+      "rank": 2,
+      "sequence": "GGDINPG",
+      "backbone": "len7_design_5",
+      "confidence_score": 0.932581114768982,
+      "complex_plddt": 0.9426271200180054,
+      "iptm": 0.8923971017201742,
+      "pdb": "outputs/b23_boltz2_E2_L_s3_Dsaccharalis/boltz_results_Dsaccharalis/predictions/Dsaccharalis__len7_design_5__2/Dsaccharalis__len7_design_5__2_model_0.pdb"
+    },
+    "Dsaccharalis__r3": {
+      "species": "Dsaccharalis",
+      "rank": 3,
+      "sequence": "SGIDG",
+      "backbone": "len5_design_3",
+      "confidence_score": 0.9287514170010884,
+      "complex_plddt": 0.9459784309069316,
+      "iptm": 0.8598433017730713,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Dsaccharalis/boltz_results_Dsaccharalis/predictions/Dsaccharalis__len5_design_3__8/Dsaccharalis__len5_design_3__8_model_0.pdb"
+    },
+    "Cincludens__r1": {
+      "species": "Cincludens",
+      "rank": 1,
+      "sequence": "TDETG",
+      "backbone": "len5_design_5",
+      "confidence_score": 0.9171869079271953,
+      "complex_plddt": 0.9425445357958476,
+      "iptm": 0.815756360689799,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Cincludens/boltz_results_Cincludens/predictions/Cincludens__len5_design_5__5/Cincludens__len5_design_5__5_model_0.pdb"
+    },
+    "Cincludens__r2": {
+      "species": "Cincludens",
+      "rank": 2,
+      "sequence": "STTDGG",
+      "backbone": "len6_design_8",
+      "confidence_score": 0.9115340550740559,
+      "complex_plddt": 0.9394543051719666,
+      "iptm": 0.7998530228932699,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Cincludens/boltz_results_Cincludens/predictions/Cincludens__len6_design_8__1/Cincludens__len6_design_8__1_model_0.pdb"
+    },
+    "Cincludens__r3": {
+      "species": "Cincludens",
+      "rank": 3,
+      "sequence": "GGPSTG",
+      "backbone": "len6_design_4",
+      "confidence_score": 0.9092857559521993,
+      "complex_plddt": 0.9353655735651653,
+      "iptm": 0.8049664497375488,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Cincludens/boltz_results_Cincludens/predictions/Cincludens__len6_design_4__9/Cincludens__len6_design_4__9_model_0.pdb"
+    },
+    "Hvirescens__r1": {
+      "species": "Hvirescens",
+      "rank": 1,
+      "sequence": "GGPSPES",
+      "backbone": "len7_design_5",
+      "confidence_score": 0.9264661073684692,
+      "complex_plddt": 0.9298515478769939,
+      "iptm": 0.9129242221514384,
+      "pdb": "outputs/b23_boltz2_E2_L_s3_Hvirescens/boltz_results_Hvirescens/predictions/Hvirescens__len7_design_5__4/Hvirescens__len7_design_5__4_model_0.pdb"
+    },
+    "Hvirescens__r2": {
+      "species": "Hvirescens",
+      "rank": 2,
+      "sequence": "SGPIG",
+      "backbone": "len5_design_1",
+      "confidence_score": 0.9113090872764588,
+      "complex_plddt": 0.9210624774297078,
+      "iptm": 0.8722954948743185,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Hvirescens/boltz_results_Hvirescens/predictions/Hvirescens__len5_design_1__7/Hvirescens__len5_design_1__7_model_0.pdb"
+    },
+    "Hvirescens__r3": {
+      "species": "Hvirescens",
+      "rank": 3,
+      "sequence": "NGGTT",
+      "backbone": "len5_design_2",
+      "confidence_score": 0.9069839914639791,
+      "complex_plddt": 0.9239700754483541,
+      "iptm": 0.8390395840009054,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Hvirescens/boltz_results_Hvirescens/predictions/Hvirescens__len5_design_2__2/Hvirescens__len5_design_2__2_model_0.pdb"
+    },
+    "Pxylostella__r1": {
+      "species": "Pxylostella",
+      "rank": 1,
+      "sequence": "GHHGGG",
+      "backbone": "len6_design_7",
+      "confidence_score": 0.9335197687149048,
+      "complex_plddt": 0.9479357878367106,
+      "iptm": 0.8758556405703227,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Pxylostella/boltz_results_Pxylostella/predictions/Pxylostella__len6_design_7__2/Pxylostella__len6_design_7__2_model_0.pdb"
+    },
+    "Pxylostella__r2": {
+      "species": "Pxylostella",
+      "rank": 2,
+      "sequence": "GSGGPS",
+      "backbone": "len6_design_1",
+      "confidence_score": 0.9315814177195231,
+      "complex_plddt": 0.9421012878417969,
+      "iptm": 0.8895018657048543,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Pxylostella/boltz_results_Pxylostella/predictions/Pxylostella__len6_design_1__1/Pxylostella__len6_design_1__1_model_0.pdb"
+    },
+    "Pxylostella__r3": {
+      "species": "Pxylostella",
+      "rank": 3,
+      "sequence": "HGGGGSG",
+      "backbone": "len7_design_6",
+      "confidence_score": 0.9234226465225219,
+      "complex_plddt": 0.9478018720944722,
+      "iptm": 0.82590571641922,
+      "pdb": "outputs/b23_boltz2_E2_L_s1_Pxylostella/boltz_results_Pxylostella/predictions/Pxylostella__len7_design_6__4/Pxylostella__len7_design_6__4_model_0.pdb"
+    },
+    "Agemmatalis__r1": {
+      "species": "Agemmatalis",
+      "rank": 1,
+      "sequence": "GGSQSS",
+      "backbone": "len6_design_4",
+      "confidence_score": 0.9369060317675273,
+      "complex_plddt": 0.9411452015240988,
+      "iptm": 0.9199492454528808,
+      "pdb": "outputs/b23_boltz2_E2_L_s2_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len6_design_4__2/Agemmatalis__len6_design_4__2_model_0.pdb"
+    },
+    "Agemmatalis__r2": {
+      "species": "Agemmatalis",
+      "rank": 2,
+      "sequence": "NGGRPDAP",
+      "backbone": "len8_design_0",
+      "confidence_score": 0.9366043289502461,
+      "complex_plddt": 0.931578266620636,
+      "iptm": 0.9567085425059001,
+      "pdb": "outputs/b23_boltz2_E2_L_s3_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len8_design_0__6/Agemmatalis__len8_design_0__6_model_0.pdb"
+    },
+    "Agemmatalis__r3": {
+      "species": "Agemmatalis",
+      "rank": 3,
+      "sequence": "GTDEN",
+      "backbone": "len5_design_8",
+      "confidence_score": 0.9297599196434021,
+      "complex_plddt": 0.9305476387341817,
+      "iptm": 0.926608943939209,
+      "pdb": "outputs/b23_boltz2_E2_L_s3_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len5_design_8__4/Agemmatalis__len5_design_8__4_model_0.pdb"
+    }
+  },
+  "report": {
+    "Sfrugiperda": {
+      "n_resistente": 41,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 31
+    },
+    "Slitura": {
+      "n_resistente": 58,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 48
+    },
+    "Onubilalis": {
+      "n_resistente": 65,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 55
+    },
+    "Dsaccharalis": {
+      "n_resistente": 70,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 60
+    },
+    "Cincludens": {
+      "n_resistente": 77,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 67
+    },
+    "Hvirescens": {
+      "n_resistente": 57,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 47
+    },
+    "Pxylostella": {
+      "n_resistente": 86,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 76
+    },
+    "Agemmatalis": {
+      "n_resistente": 73,
+      "n_pontuados_no_conjunto": 10,
+      "resistentes_sem_score": 63
+    }
+  }
+}

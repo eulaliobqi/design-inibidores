@@ -1,0 +1,53 @@
+{
+  "Agemmatalis__r1": {
+    "status": "done",
+    "sequence": "GGSQSS",
+    "backbone": "len6_design_4",
+    "confidence_score": 0.9320329546928405,
+    "source_pdb": "outputs/b23_boltz2_E2_M_s2_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len6_design_4__1/Agemmatalis__len6_design_4__1_model_0.pdb",
+    "ns": 10,
+    "cyclic": true,
+    "front": "M",
+    "rmsd_avg_nm": 0.9308,
+    "rmsd_std_nm": 0.2877,
+    "hbond_avg": 166.681,
+    "hbond_max": 196,
+    "rg_avg_nm": 2.0801,
+    "method": "gromacs",
+    "rmsd_pbc_corrected": true
+  },
+  "Agemmatalis__r2": {
+    "status": "done",
+    "sequence": "GGKPGEP",
+    "backbone": "len7_design_9",
+    "confidence_score": 0.9232480645179748,
+    "source_pdb": "outputs/b23_boltz2_E2_M_s3_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len7_design_9__2/Agemmatalis__len7_design_9__2_model_0.pdb",
+    "ns": 10,
+    "cyclic": true,
+    "front": "M",
+    "rmsd_avg_nm": 0.4917,
+    "rmsd_std_nm": 0.0869,
+    "hbond_avg": 180.627,
+    "hbond_max": 202,
+    "rg_avg_nm": 1.8261,
+    "method": "gromacs",
+    "rmsd_pbc_corrected": true
+  },
+  "Agemmatalis__r3": {
+    "status": "done",
+    "sequence": "GGSDHT",
+    "backbone": "len6_design_4",
+    "confidence_score": 0.9084356307983399,
+    "source_pdb": "outputs/b23_boltz2_E2_M_s2_Agemmatalis/boltz_results_Agemmatalis/predictions/Agemmatalis__len6_design_4__9/Agemmatalis__len6_design_4__9_model_0.pdb",
+    "ns": 10,
+    "cyclic": true,
+    "front": "M",
+    "rmsd_avg_nm": 0.3822,
+    "rmsd_std_nm": 0.113,
+    "hbond_avg": 175.116,
+    "hbond_max": 196,
+    "rg_avg_nm": 1.9725,
+    "method": "gromacs",
+    "rmsd_pbc_corrected": true
+  }
+}
