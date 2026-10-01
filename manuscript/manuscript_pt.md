@@ -15,14 +15,14 @@
 | Requisito | Limite / padrão | Situação atual | Estado |
 |---|---|---|---|
 | Tipo de artigo | Original Research (IMRaD: Resumo, Introdução, Material e métodos, Resultados, Discussão) | Estrutura cumprida | OK |
-| Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | 7,105 palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: 7,698 | OK (há margem para as Seções 3.8–3.10) |
+| Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | 7,166 palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: 7,776 | OK (há margem para as Seções 3.8–3.10) |
 | Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | 337 palavras no original em inglês sem o trecho pendente (≈ 346 com ele preenchido); tradução: 382 | OK |
 | Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | 8 | OK |
 | Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, 113 caracteres | OK |
 | Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | 43 caracteres | OK |
 | Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | 8 figuras + 2 suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as figuras dos resultados pendentes (Seções 3.8–3.10) ainda serão geradas | pendente |
 | Tabelas | editáveis, com legenda | 4 tabelas | OK |
-| Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | 68 referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
+| Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | 69 referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
 | Declaração de disponibilidade de dados | obrigatória | seção criada; falta confirmar visibilidade do repositório e DOI de arquivamento | pendente |
 | Contribuições dos autores, financiamento, conflito de interesses, agradecimentos | obrigatórios | seções criadas, conteúdo a completar pelos autores | pendente |
 | Declaração de uso de IA generativa | deve ser reconhecida nos agradecimentos (diretrizes da Frontiers) | rascunho factual na seção Agradecimentos, a ser confirmado pelos autores | pendente |
@@ -144,7 +144,7 @@ Duas triagens foram aplicadas às 22.066 sequências. *(i) Triagem por escore de
 
 ### 2.8 Dinâmica molecular de triagem (10 ns)
 
-Cada um dos três melhores candidatos por espécie e frente (24 complexos lineares e 24 cíclicos) foi simulado por 10 ns como etapa de triagem; os autores rodam simulações mais longas nos candidatos que passarem. A partir do complexo do Boltz-2, a protonação das cadeias laterais em pH 10,0 foi atribuída com o PROPKA 3 (Olsson et al., 2011) por meio do PDB2PQR 3.6.2 (Dolinsky et al., 2007). Esse valor foi escolhido por ser o mais compatível com o intestino médio de lagartas de lepidópteros: extratos do intestino de *H. virescens* tiveram pH 9,56–10,0 (Karumbaiah et al., 2007), e o intestino médio de lepidópteros atinge o maior pH luminal conhecido (Dow, 1992). Os sistemas foram montados com tleap e ParmEd do AmberTools (AMBER99SB-ILDN, Lindorff-Larsen et al., 2010; água TIP3P, Jorgensen et al., 1983) em uma caixa octaédrica truncada com 12 Å de margem e NaCl a 0,15 M, e exportados para o GROMACS 2025.4 (Abraham et al., 2015). O peptídeo linear tem extremidades NH~3~^+^ e COO^−^ livres, porque o campo de força não oferece N-terminal neutro; em pH 10 o grupo α-amino (pKa ≈ 8) seria majoritariamente neutro, de modo que isso é uma limitação que afeta apenas a frente linear. O macrociclo foi construído com ligação C(n)–N(1) explícita na topologia, de modo que não tem extremidades; a montagem foi validada em um complexo de 10 resíduos (minimização convergiu, NVT estável, C–N de fechamento 1,34 Å, ω −179°; Figura S2), e a geometria inicial é compatível com o anel porque vem da predição cíclica do Boltz-2. As etapas e os controles foram idênticos nas duas frentes: minimização por máxima descida, 200 ps de equilibração NVT e 500 ps de NPT com restrições de posição nos átomos pesados da proteína (1.000 kJ mol^−1^ nm^−2^), depois 10 ns de produção a 300 K e 1 bar com o termostato de reescalonamento de velocidades (τ = 0,1 ps; Bussi et al., 2007), o barostato de Parrinello–Rahman (τ = 2 ps; Parrinello e Rahman, 1981), eletrostática por Ewald de malha de partículas (Essmann et al., 1995), corte de 1,0 nm para Coulomb e van der Waals, ligações a hidrogênio restritas (LINCS) e passo de 2 fs. Cada sistema foi simulado uma vez, com semente aleatória para as velocidades iniciais; dez nanossegundos com uma réplica são uma triagem descritiva e não se faz inferência estatística.
+Cada um dos três melhores candidatos por espécie e frente (24 complexos lineares e 24 cíclicos) foi simulado por 10 ns como etapa de triagem; os autores rodam simulações mais longas nos candidatos que passarem. A partir do complexo do Boltz-2, a protonação das cadeias laterais em pH 10,0 foi atribuída com o PROPKA 3 (Olsson et al., 2011) por meio do PDB2PQR 3.6.2 (Dolinsky et al., 2007). Esse valor foi escolhido por ser o mais compatível com o intestino médio de lagartas de lepidópteros: extratos do intestino de *H. virescens* tiveram pH 9,56–10,0 (Karumbaiah et al., 2007), e o intestino médio de lepidópteros atinge o maior pH luminal conhecido (Dow, 1992). Os sistemas foram montados com o GROMACS 2025.4 (Abraham et al., 2015) e o campo de força aditivo CHARMM36 para proteínas (Huang e MacKerell, 2013) (porte para o GROMACS de fevereiro de 2026 gerado com o charmm2gmx (Wacha e Lemkul, 2023), o mesmo campo de força usado nas demais simulações de complexos tripsina–peptídeo do nosso grupo) com água TIP3P (Jorgensen et al., 1983), em caixa dodecaédrica com 1,2 nm de margem e KCl a 0,10 M (o potássio é o cátion dominante da hemolinfa de insetos). O peptídeo linear tem extremidades NH~3~^+^ e COO^−^, o padrão do CHARMM36; em pH 10 o grupo α-amino (pKa ≈ 8) seria majoritariamente neutro, de modo que isso é uma limitação que afeta apenas a frente linear. O macrociclo não tem extremidades: o GROMACS 2024 e posteriores (pdb2gmx) forma a ligação cabeça–cauda quando a distância C(n)–N(1) da predição do Boltz-2 é de ligação, e gera os termos de ângulo, diedro, par 1–4, impróprio e CMAP do anel com os mesmos parâmetros do CHARMM36 das ligações peptídicas internas. O script de montagem confere que a ligação C(n)–N(1) e o termo CMAP de cada resíduo estão presentes e para caso contrário, de modo que um anel nunca roda como cadeia linear aberta. [PENDENTE: relato da distância C–N de fechamento e da integridade do anel (ω) no teste com CHARMM36 e nos 48 sistemas; a Figura S2 precisa ser refeita com este campo de força.]{custom-style="Pendente"} As etapas e os controles foram idênticos nas duas frentes: minimização por máxima descida, 200 ps de equilibração NVT e 500 ps de NPT com restrições de posição nos átomos pesados da proteína (1.000 kJ mol^−1^ nm^−2^), depois 10 ns de produção a 300 K e 1 bar com o termostato de reescalonamento de velocidades (τ = 0,1 ps; Bussi et al., 2007), o barostato de Parrinello–Rahman (τ = 2 ps; Parrinello e Rahman, 1981), eletrostática por Ewald de malha de partículas (Essmann et al., 1995), corte de Coulomb de 1,2 nm, forças de van der Waals desligadas suavemente entre 1,0 e 1,2 nm (force-switch, sem correção de dispersão, como a parametrização do CHARMM36 exige), ligações a hidrogênio restritas (LINCS) e passo de 2 fs. Cada sistema foi simulado uma vez, com semente aleatória para as velocidades iniciais; dez nanossegundos com uma réplica são uma triagem descritiva e não se faz inferência estatística.
 
 ### 2.9 Análise das trajetórias
 
@@ -343,7 +343,7 @@ Não se aplica. É um estudo computacional; não envolveu animais, participantes
 
 ![**Figura S1.** Triagem por escore de motivos por espécie sob a regra linear-estrita e a circular (porcentagem das sequências de cada espécie por classe).](figures/pt/figS1_regras_motivo.png){width=13cm}
 
-![**Figura S2.** Teste de fumaça da topologia cíclica: RMSD do esqueleto e número de ligações de hidrogênio do sistema durante 50 ps de simulação de um macrociclo de 10 resíduos (GRPGIQAAPI) com um modelo de receptor de *A. gemmatalis* em pH 10,0. O teste verifica a montagem (C–N de fechamento 1,34 Å, ω −179°) e nada diz sobre estabilidade.](figures/pt/figS2_ciclica_fumaca.png){width=11cm}
+![**Figura S2.** [PENDENTE: teste de fumaça da topologia cíclica com CHARMM36 (RMSD do esqueleto e número de ligações de hidrogênio em uma simulação curta de um macrociclo; distância C–N de fechamento e ω). A versão anterior desta figura usava outro campo de força e foi retirada.]{custom-style="Pendente"}](figures/pt/figS2_ciclica_fumaca.png){width=11cm}
 
 
 ## Referências
@@ -364,9 +364,9 @@ Dauparas J, Anishchenko I, Bennett N, Bai H, Ragotte RJ, Milles LF, et al. (2022
 
 de Almeida Barros R, Meriño-Cabrera Y, Vital CE, da Silva Júnior NR, de Oliveira CN, Lessa Barbosa S, et al. (2021). Small peptides inhibit gut trypsin-like proteases and impair Anticarsia gemmatalis (Lepidoptera: Noctuidae) survival and development. Pest Management Science 77, 1714-1723. doi: 10.1002/ps.6191
 
-de Almeida Barros R, Meriño-Cabrera Y, Castro JS, da Silva Junior NR, de Oliveira JVA, Schultz H, et al. (2022). Bovine pancreatic trypsin inhibitor and soybean Kunitz trypsin inhibitor: Differential effects on proteases and larval development of the soybean pest Anticarsia gemmatalis (Lepidoptera: Noctuidae). Pesticide Biochemistry and Physiology 187, 105188. doi: 10.1016/j.pestbp.2022.105188
-
 de Almeida Barros R, Meriño-Cabrera Y, Severiche Castro JG, Rodrigues da Silva Júnior N, Schultz H, de Andrade RJ, et al. (2022). Inhibition constant and stability of tripeptide inhibitors of gut trypsin-like enzyme of the soybean pest Anticarsia gemmatalis. Archives of Insect Biochemistry and Physiology 110, e21887. doi: 10.1002/arch.21887
+
+de Almeida Barros R, Meriño-Cabrera Y, Castro JS, da Silva Junior NR, de Oliveira JVA, Schultz H, et al. (2022). Bovine pancreatic trypsin inhibitor and soybean Kunitz trypsin inhibitor: Differential effects on proteases and larval development of the soybean pest Anticarsia gemmatalis (Lepidoptera: Noctuidae). Pesticide Biochemistry and Physiology 187, 105188. doi: 10.1016/j.pestbp.2022.105188
 
 Dolinsky TJ, Czodrowski P, Li H, Nielsen JE, Jensen JH, Klebe G, et al. (2007). PDB2PQR: expanding and upgrading automated preparation of biomolecular structures for molecular simulations. Nucleic Acids Research 35, W522-W525. doi: 10.1093/nar/gkm276
 
@@ -383,6 +383,8 @@ Gowers R, Linke M, Barnoud J, Reddy T, Melo M, Seyler S, et al. (2016). MDAnalys
 Hedstrom L (2002). Serine Protease Mechanism and Specificity. Chemical Reviews 102, 4501-4524. doi: 10.1021/cr000033x
 
 Hou T, Wang J, Li Y, Wang W (2011). Assessing the Performance of the MM/PBSA and MM/GBSA Methods. 1. The Accuracy of Binding Free Energy Calculations Based on Molecular Dynamics Simulations. Journal of Chemical Information and Modeling 51, 69-82. doi: 10.1021/ci100275a
+
+Huang J, MacKerell AD (2013). CHARMM36 all-atom additive protein force field: Validation based on comparison to NMR data. Journal of Computational Chemistry 34, 2135-2145. doi: 10.1002/jcc.23354
 
 Jongsma MA, Bakker PL, Peters J, Bosch D, Stiekema WJ (1995). Adaptation of Spodoptera exigua larvae to plant proteinase inhibitors by induction of gut proteinase activity insensitive to inhibition. Proceedings of the National Academy of Sciences 92, 8041-8045. doi: 10.1073/pnas.92.17.8041
 
@@ -401,8 +403,6 @@ Kuwar SS, Pauchet Y, Vogel H, Heckel DG (2015). Adaptive regulation of digestive
 Laskowski M, Kato I (1980). Protein Inhibitors of Proteinases. Annual Review of Biochemistry 49, 593-626. doi: 10.1146/annurev.bi.49.070180.003113
 
 Laskowski M, Qasim M (2000). What can the structures of enzyme-inhibitor complexes tell us about the structures of enzyme substrate complexes?. Biochimica et Biophysica Acta (BBA) - Protein Structure and Molecular Enzymology 1477, 324-337. doi: 10.1016/s0167-4838(99)00284-8
-
-Lindorff-Larsen K, Piana S, Palmo K, Maragakis P, Klepeis JL, Dror RO, et al. (2010). Improved side-chain torsion potentials for the Amber ff99SB protein force field. Proteins: Structure, Function, and Bioinformatics 78, 1950-1958. doi: 10.1002/prot.22711
 
 Lomate PR, Dewangan V, Mahajan NS, Kumar Y, Kulkarni A, Wang L, et al. (2018). Integrated Transcriptomic and Proteomic Analyses Suggest the Participation of Endogenous Protease Inhibitors in the Regulation of Protease Gene Expression in Helicoverpa armigera. Molecular & Cellular Proteomics 17, 1324-1336. doi: 10.1074/mcp.ra117.000533
 
@@ -467,6 +467,8 @@ Valdés-Tresanco MS, Valdés-Tresanco ME, Valiente PA, Moreno E (2021). gmx_MMPB
 van Kempen M, Kim SS, Tumescheit C, Mirdita M, Lee J, Gilchrist CLM, et al. (2024). Fast and accurate protein structure search with Foldseek. Nature Biotechnology 42, 243-246. doi: 10.1038/s41587-023-01773-0
 
 Varadi M, Bertoni D, Magana P, Paramval U, Pidruchna I, Radhakrishnan M, et al. (2024). AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences. Nucleic Acids Research 52, D368-D375. doi: 10.1093/nar/gkad1011
+
+Wacha AF, Lemkul JA (2023). charmm2gmx: An Automated Method to Port the CHARMM Additive Force Field to GROMACS. Journal of Chemical Information and Modeling 63, 4246-4252. doi: 10.1021/acs.jcim.3c00860
 
 Watson JL, Juergens D, Bennett NR, Trippe BL, Yim J, Eisenach HE, et al. (2023). De novo design of protein structure and function with RFdiffusion. Nature 620, 1089-1100. doi: 10.1038/s41586-023-06415-8
 

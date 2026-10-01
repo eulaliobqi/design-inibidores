@@ -9,7 +9,7 @@ Criterios pre-registrados (plano v3): QC de pose aprovado; passes_screen da MD (
 a 5 A na 2a metade, ancora igual nas duas metades, anel integro no macrociclo); Delta pareado > 0.
 Um candidato entra na lista se cumpre todos; os demais ficam no relatorio com o criterio que falhou.
 Nota: a topologia cíclica do Milena-MD (CHARMM36) nao existe; a MD longa do macrociclo deve usar
-scripts/build_system_tleap.py (AMBER ff99SB-ILDN), nao o samplesheet do Milena-MD.
+scripts/build_system_charmm.py (CHARMM36), nao o samplesheet do Milena-MD.
 """
 import json
 from pathlib import Path

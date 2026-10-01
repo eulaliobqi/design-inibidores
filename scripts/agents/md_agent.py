@@ -30,8 +30,8 @@ constraint_algorithm = lincs
 constraints  = h-bonds
 cutoff-scheme = Verlet
 nstlist      = 10
-rcoulomb     = 1.0
-rvdw         = 1.0
+rcoulomb     = {rc}
+{vdw}
 coulombtype  = PME
 pme_order    = 4
 fourierspacing = 0.16
@@ -45,7 +45,7 @@ tau_p        = 2.0
 ref_p        = 1.0
 compressibility = 4.5e-5
 pbc          = xyz
-DispCorr     = EnerPres
+{dispcorr}
 gen_vel      = no
 """
 
@@ -56,8 +56,8 @@ emstep      = 0.01
 nsteps      = 50000
 cutoff-scheme = Verlet
 nstlist     = 10
-rcoulomb    = 1.0
-rvdw        = 1.0
+rcoulomb    = {rc}
+{vdw}
 coulombtype = PME
 pbc         = xyz
 """
@@ -74,8 +74,8 @@ constraint_algorithm = lincs
 constraints = h-bonds
 cutoff-scheme = Verlet
 nstlist     = 10
-rcoulomb    = 1.0
-rvdw        = 1.0
+rcoulomb    = {rc}
+{vdw}
 coulombtype = PME
 tcoupl      = V-rescale
 tc-grps     = Protein Non-Protein
@@ -100,8 +100,8 @@ constraint_algorithm = lincs
 constraints = h-bonds
 cutoff-scheme = Verlet
 nstlist     = 10
-rcoulomb    = 1.0
-rvdw        = 1.0
+rcoulomb    = {rc}
+{vdw}
 coulombtype = PME
 tcoupl      = V-rescale
 tc-grps     = Protein Non-Protein
@@ -115,6 +115,19 @@ compressibility = 4.5e-5
 pbc         = xyz
 gen_vel     = no
 """
+
+
+# vdW/Coulomb por campo de forca. CHARMM36 exige vdW com force-switch 1,0-1,2 nm e sem DispCorr (mesmo
+# protocolo do grupo, ~/gromacs/Milena-MD/modules/local/*/main.nf); o corte simples e' so' para AMBER.
+_VDW_AMBER = "vdwtype      = Cut-off\nrvdw         = 1.0"
+_VDW_CHARMM = ("vdwtype      = Cut-off\nvdw-modifier = Force-switch\nrvdw-switch  = 1.0\n"
+               "rvdw         = 1.2")
+
+
+def _ff_mdp_params(is_charmm: bool) -> dict:
+    if is_charmm:
+        return {"rc": 1.2, "vdw": _VDW_CHARMM, "dispcorr": "DispCorr     = no"}
+    return {"rc": 1.0, "vdw": _VDW_AMBER, "dispcorr": "DispCorr     = EnerPres"}
 
 
 class MDAgent(BaseAgent):
@@ -454,10 +467,13 @@ class MDAgent(BaseAgent):
 
         # Escrever mdp files
         nsteps = int(ns * 500000)
-        (out / "md.mdp").write_text(_MDP_TEMPLATE.format(nsteps=nsteps, temp=temp))
-        (out / "minim.mdp").write_text(_MINIM_MDP)
-        (out / "nvt.mdp").write_text(_NVT_MDP.format(temp=temp))
-        (out / "npt.mdp").write_text(_NPT_MDP.format(temp=temp))
+        md_cfg = self.config.get("md", {})
+        is_charmm = str(ff).lower().startswith("charmm36")
+        fp = _ff_mdp_params(is_charmm)
+        (out / "md.mdp").write_text(_MDP_TEMPLATE.format(nsteps=nsteps, temp=temp, **fp))
+        (out / "minim.mdp").write_text(_MINIM_MDP.format(**fp))
+        (out / "nvt.mdp").write_text(_NVT_MDP.format(temp=temp, **fp))
+        (out / "npt.mdp").write_text(_NPT_MDP.format(temp=temp, **fp))
 
         use_mpirun = "mpi" in Path(gmx).name
         # mpirun do mesmo env do gmx (garante versão OpenMPI compatível)
@@ -497,7 +513,22 @@ class MDAgent(BaseAgent):
             clean_pdb.write_text("".join(lines_clean) + "\nEND\n")
             self.logger.info(f"  PDB limpo: {len(lines_clean)} linhas ATOM/TER")
 
-            if cyclic is None:
+            if is_charmm:
+                # CHARMM36 (feb2026, o mesmo .ff do grupo) + TIP3P: linear (cyclic falsy) ou macrociclo
+                # cabeca-cauda (cyclic=True; o pdb2gmx >= 2024 fecha o anel). Ver build_system_charmm.py
+                import shutil
+                from ..build_system_charmm import build as build_charmm, DEFAULT_FF_DIR
+                pqr = shutil.which("pdb2pqr30") or os.path.expanduser(
+                    "~/miniforge3/envs/protein_design_env/bin/pdb2pqr30")
+                self.logger.info("  build_system_charmm (%s, %s)...", ff, "ciclico" if cyclic else "linear")
+                rep = build_charmm(
+                    complex_pdb, out, ph=md_cfg.get("gut_ph", 10.0), cyclic=bool(cyclic), gmx=gmx, pdb2pqr=pqr,
+                    ff_dir=md_cfg.get("forcefield_dir", DEFAULT_FF_DIR), water=water,
+                    cation=md_cfg.get("cation", "K"), salt_m=md_cfg.get("salt_m", 0.10),
+                    box_type=md_cfg.get("box_type", "dodecahedron"), box_d=md_cfg.get("box_d", 1.2))
+                self.logger.info("  sistema montado: %s", {k: rep[k] for k in ("peptide", "ring") if k in rep})
+
+            elif cyclic is None:
                 # pH do intestino de Lepidoptera (alcalino, 8-11) — ajusta estado de
                 # protonação real via pdb2pqr/propka antes do pdb2gmx (Fase 5+, 2026-07-17)
                 protonated_pdb = self._apply_ph_protonation(clean_pdb, out)

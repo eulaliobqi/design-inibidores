@@ -75,7 +75,7 @@ Two screens were applied to the 22,066 sequences. *(i) Motif-score screen (first
 
 ### 2.8 Molecular dynamics of screening (10 ns)
 
-Each of the three top candidates per species and front (24 linear and 24 cyclic complexes) was simulated for 10 ns as a screening step; the authors run longer simulations on the candidates that pass. Starting from the Boltz-2 complex, protonation of side chains at pH 10.0 was assigned with PROPKA 3 (Olsson et al., 2011) through PDB2PQR 3.6.2 (Dolinsky et al., 2007). This value was chosen because it is the most compatible with the midgut of lepidopteran larvae: extracts of the *H. virescens* gut had pH 9.56–10.0 (Karumbaiah et al., 2007), and lepidopteran midguts reach the highest luminal pH known (Dow, 1992). Systems were assembled with tleap and ParmEd from AmberTools (AMBER99SB-ILDN, Lindorff-Larsen et al., 2010; TIP3P water, Jorgensen et al., 1983) in a truncated octahedral box with a 12-Å buffer and 0.15 M NaCl, and exported to GROMACS 2025.4 (Abraham et al., 2015). The linear peptide has free NH~3~^+^ and COO^−^ termini, because the force field offers no neutral N-terminus; at pH 10 the α-amino group (pKa ≈ 8) would be mostly neutral, so this is a limitation that affects only the linear front. The macrocycle was built with an explicit C(n)–N(1) bond in the topology, so that it has no termini; the set-up was validated on a 10-residue complex (minimization converged, NVT stable, closing C–N 1.34 Å, ω −179°; Figure S2), and the same start geometry is compatible with the ring because it comes from the cyclic Boltz-2 prediction. Steps and controls were identical in both fronts: steepest-descent minimization, 200 ps of NVT and 500 ps of NPT equilibration with position restraints on protein heavy atoms (1,000 kJ mol^−1^ nm^−2^), then 10 ns of production at 300 K and 1 bar with the velocity-rescaling thermostat (τ = 0.1 ps; Bussi et al., 2007), the Parrinello–Rahman barostat (τ = 2 ps; Parrinello and Rahman, 1981), particle-mesh Ewald electrostatics (Essmann et al., 1995), a 1.0-nm cutoff for Coulomb and van der Waals interactions, constrained bonds to hydrogen (LINCS) and a 2-fs time step. Each system was simulated once with a random seed for the initial velocities; ten nanoseconds with one replicate is a descriptive screen and no statistical inference is made.
+Each of the three top candidates per species and front (24 linear and 24 cyclic complexes) was simulated for 10 ns as a screening step; the authors run longer simulations on the candidates that pass. Starting from the Boltz-2 complex, protonation of side chains at pH 10.0 was assigned with PROPKA 3 (Olsson et al., 2011) through PDB2PQR 3.6.2 (Dolinsky et al., 2007). This value was chosen because it is the most compatible with the midgut of lepidopteran larvae: extracts of the *H. virescens* gut had pH 9.56–10.0 (Karumbaiah et al., 2007), and lepidopteran midguts reach the highest luminal pH known (Dow, 1992). Systems were assembled with GROMACS 2025.4 (Abraham et al., 2015) and the CHARMM36 additive protein force field (Huang and MacKerell, 2013) (GROMACS port of February 2026 generated with charmm2gmx (Wacha and Lemkul, 2023), the same force field used in the other trypsin–peptide simulations of our group) with TIP3P water (Jorgensen et al., 1983), in a dodecahedral box with a 1.2-nm buffer and 0.10 M KCl (potassium is the dominant cation of insect hemolymph). The linear peptide has NH~3~^+^ and COO^−^ termini, the CHARMM36 default; at pH 10 the α-amino group (pKa ≈ 8) would be mostly neutral, so this is a limitation that affects only the linear front. The macrocycle has no termini: GROMACS 2024 and later (pdb2gmx) forms the head-to-tail bond when the C(n)–N(1) distance of the Boltz-2 prediction is a bond length, and generates the angle, dihedral, 1–4 pair, improper and CMAP terms of the ring with the same CHARMM36 parameters as the internal peptide bonds. The assembly script checks that the C(n)–N(1) bond and the CMAP term of every residue are present and stops otherwise, so that a ring never runs as an open linear chain. [[PENDING: report of the closing C–N distance and ring integrity (ω) in the CHARMM36 test and in the 48 systems; Figure S2 must be regenerated with this force field.]] Steps and controls were identical in both fronts: steepest-descent minimization, 200 ps of NVT and 500 ps of NPT equilibration with position restraints on protein heavy atoms (1,000 kJ mol^−1^ nm^−2^), then 10 ns of production at 300 K and 1 bar with the velocity-rescaling thermostat (τ = 0.1 ps; Bussi et al., 2007), the Parrinello–Rahman barostat (τ = 2 ps; Parrinello and Rahman, 1981), particle-mesh Ewald electrostatics (Essmann et al., 1995), a 1.2-nm Coulomb cutoff, van der Waals forces switched off between 1.0 and 1.2 nm (force-switch, without dispersion correction, as the CHARMM36 parametrization requires), constrained bonds to hydrogen (LINCS) and a 2-fs time step. Each system was simulated once with a random seed for the initial velocities; ten nanoseconds with one replicate is a descriptive screen and no statistical inference is made.
 
 ### 2.9 Trajectory analysis
 
@@ -275,7 +275,7 @@ Not applicable. This is a computational study; it involved no animals, human par
 
 **Figure S1.** Motif-score screen by species under the linear-strict and the circular rule (percentage of the sequences of each species per class).
 
-**Figure S2.** Smoke test of the cyclic topology: backbone RMSD and number of hydrogen bonds of the system during a 50-ps simulation of a 10-residue macrocycle (GRPGIQAAPI) with an *A. gemmatalis* receptor model at pH 10.0. The test verifies the set-up (closing C–N 1.34 Å, ω −179°) and says nothing about stability.
+**Figure S2.** [[PENDING: smoke test of the cyclic topology with CHARMM36 (backbone RMSD and number of hydrogen bonds during a short simulation of a macrocycle; closing C–N distance and ω). The earlier version of this figure used another force field and was withdrawn.]]
 
 
 ---
@@ -298,9 +298,9 @@ Dauparas J, Anishchenko I, Bennett N, Bai H, Ragotte RJ, Milles LF, et al. (2022
 
 de Almeida Barros R, Meriño-Cabrera Y, Vital CE, da Silva Júnior NR, de Oliveira CN, Lessa Barbosa S, et al. (2021). Small peptides inhibit gut trypsin-like proteases and impair Anticarsia gemmatalis (Lepidoptera: Noctuidae) survival and development. Pest Management Science 77, 1714-1723. doi: 10.1002/ps.6191
 
-de Almeida Barros R, Meriño-Cabrera Y, Severiche Castro JG, Rodrigues da Silva Júnior N, Schultz H, de Andrade RJ, et al. (2022). Inhibition constant and stability of tripeptide inhibitors of gut trypsin-like enzyme of the soybean pest Anticarsia gemmatalis. Archives of Insect Biochemistry and Physiology 110, e21887. doi: 10.1002/arch.21887
-
 de Almeida Barros R, Meriño-Cabrera Y, Castro JS, da Silva Junior NR, de Oliveira JVA, Schultz H, et al. (2022). Bovine pancreatic trypsin inhibitor and soybean Kunitz trypsin inhibitor: Differential effects on proteases and larval development of the soybean pest Anticarsia gemmatalis (Lepidoptera: Noctuidae). Pesticide Biochemistry and Physiology 187, 105188. doi: 10.1016/j.pestbp.2022.105188
+
+de Almeida Barros R, Meriño-Cabrera Y, Severiche Castro JG, Rodrigues da Silva Júnior N, Schultz H, de Andrade RJ, et al. (2022). Inhibition constant and stability of tripeptide inhibitors of gut trypsin-like enzyme of the soybean pest Anticarsia gemmatalis. Archives of Insect Biochemistry and Physiology 110, e21887. doi: 10.1002/arch.21887
 
 Dolinsky TJ, Czodrowski P, Li H, Nielsen JE, Jensen JH, Klebe G, et al. (2007). PDB2PQR: expanding and upgrading automated preparation of biomolecular structures for molecular simulations. Nucleic Acids Research 35, W522-W525. doi: 10.1093/nar/gkm276
 
@@ -317,6 +317,8 @@ Gowers R, Linke M, Barnoud J, Reddy T, Melo M, Seyler S, et al. (2016). MDAnalys
 Hedstrom L (2002). Serine Protease Mechanism and Specificity. Chemical Reviews 102, 4501-4524. doi: 10.1021/cr000033x
 
 Hou T, Wang J, Li Y, Wang W (2011). Assessing the Performance of the MM/PBSA and MM/GBSA Methods. 1. The Accuracy of Binding Free Energy Calculations Based on Molecular Dynamics Simulations. Journal of Chemical Information and Modeling 51, 69-82. doi: 10.1021/ci100275a
+
+Huang J, MacKerell AD (2013). CHARMM36 all-atom additive protein force field: Validation based on comparison to NMR data. Journal of Computational Chemistry 34, 2135-2145. doi: 10.1002/jcc.23354
 
 Jongsma MA, Bakker PL, Peters J, Bosch D, Stiekema WJ (1995). Adaptation of Spodoptera exigua larvae to plant proteinase inhibitors by induction of gut proteinase activity insensitive to inhibition. Proceedings of the National Academy of Sciences 92, 8041-8045. doi: 10.1073/pnas.92.17.8041
 
@@ -336,15 +338,13 @@ Laskowski M, Kato I (1980). Protein Inhibitors of Proteinases. Annual Review of 
 
 Laskowski M, Qasim M (2000). What can the structures of enzyme-inhibitor complexes tell us about the structures of enzyme substrate complexes?. Biochimica et Biophysica Acta (BBA) - Protein Structure and Molecular Enzymology 1477, 324-337. doi: 10.1016/s0167-4838(99)00284-8
 
-Lindorff-Larsen K, Piana S, Palmo K, Maragakis P, Klepeis JL, Dror RO, et al. (2010). Improved side-chain torsion potentials for the Amber ff99SB protein force field. Proteins: Structure, Function, and Bioinformatics 78, 1950-1958. doi: 10.1002/prot.22711
-
 Lomate PR, Dewangan V, Mahajan NS, Kumar Y, Kulkarni A, Wang L, et al. (2018). Integrated Transcriptomic and Proteomic Analyses Suggest the Participation of Endogenous Protease Inhibitors in the Regulation of Protease Gene Expression in Helicoverpa armigera. Molecular & Cellular Proteomics 17, 1324-1336. doi: 10.1074/mcp.ra117.000533
 
 Luckett S, Garcia R, Barker J, Konarev A, Shewry P, Clarke A, et al. (1999). High-resolution structure of a potent, cyclic proteinase inhibitor from sunflower seeds. Journal of Molecular Biology 290, 525-533. doi: 10.1006/jmbi.1999.2891
 
-Meriño-Cabrera Y, Severiche Castro JG, Rios Diez JD, Rodrigues Macedo ML, de Oliveira Mendes TA, Goreti de Almeida Oliveira M (2020). Rational design of mimetic peptides based on the interaction between Inga laurina inhibitor and trypsins for Spodoptera cosmioides pest control. Insect Biochemistry and Molecular Biology 122, 103390. doi: 10.1016/j.ibmb.2020.103390
-
 Meriño-Cabrera Y, de Oliveira Mendes TA, Castro JGS, Barbosa SL, Macedo MLR, de Almeida Oliveira MG (2020). Noncompetitive tight-binding inhibition of Anticarsia gemmatalis trypsins by Adenanthera pavonina protease inhibitor affects larvae survival. Archives of Insect Biochemistry and Physiology 104, e21687. doi: 10.1002/arch.21687
+
+Meriño-Cabrera Y, Severiche Castro JG, Rios Diez JD, Rodrigues Macedo ML, de Oliveira Mendes TA, Goreti de Almeida Oliveira M (2020). Rational design of mimetic peptides based on the interaction between Inga laurina inhibitor and trypsins for Spodoptera cosmioides pest control. Insect Biochemistry and Molecular Biology 122, 103390. doi: 10.1016/j.ibmb.2020.103390
 
 Meriño-Cabrera Y, Castro JS, de Almeida Barros R, da Silva Junior NR, de Oliveira Ramos H, de Almeida Oliveira MG (2022). Arginine-containing dipeptides decrease affinity of gut trypsins and compromise soybean pest development. Pesticide Biochemistry and Physiology 184, 105107. doi: 10.1016/j.pestbp.2022.105107
 
@@ -401,6 +401,8 @@ Valdés-Tresanco MS, Valdés-Tresanco ME, Valiente PA, Moreno E (2021). gmx_MMPB
 van Kempen M, Kim SS, Tumescheit C, Mirdita M, Lee J, Gilchrist CLM, et al. (2024). Fast and accurate protein structure search with Foldseek. Nature Biotechnology 42, 243-246. doi: 10.1038/s41587-023-01773-0
 
 Varadi M, Bertoni D, Magana P, Paramval U, Pidruchna I, Radhakrishnan M, et al. (2024). AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences. Nucleic Acids Research 52, D368-D375. doi: 10.1093/nar/gkad1011
+
+Wacha AF, Lemkul JA (2023). charmm2gmx: An Automated Method to Port the CHARMM Additive Force Field to GROMACS. Journal of Chemical Information and Modeling 63, 4246-4252. doi: 10.1021/acs.jcim.3c00860
 
 Watson JL, Juergens D, Bennett NR, Trippe BL, Yim J, Eisenach HE, et al. (2023). De novo design of protein structure and function with RFdiffusion. Nature 620, 1089-1100. doi: 10.1038/s41586-023-06415-8
 

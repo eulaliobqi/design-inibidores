@@ -5,7 +5,7 @@ Complementa `PLANO_LINEAR_2026-09-30.md` (plano v3). Nada aqui altera limiares p
 ## 1. O que está decidido
 - **Título oficial (EN):** *From Natural Protease Inhibitors to De Novo Peptide Inhibitors Targeting Digestive Trypsins of Lepidopteran Pests*. Título curto: *De novo peptide inhibitors of pest trypsins*.
 - **Duas frentes:** L (peptídeo linear) e M (macrociclo cabeça-cauda), as mesmas 22.066 sequências; o critério duro de não clivabilidade define 527 (L) e 543 (M) candidatos.
-- **MD de triagem:** 10 ns, pH 10,0 (intestino médio de Lepidoptera), AMBER99SB-ILDN + TIP3P via tleap/parmed; topologia cíclica validada.
+- **MD de triagem:** 10 ns, pH 10,0 (intestino médio de Lepidoptera), **CHARMM36 (fev/2026, o mesmo `.ff` do grupo) + TIP3P** (decisão do autor, 30/09 noite; substitui AMBER99SB-ILDN/tleap): KCl 0,10 M, caixa dodecaédrica 1,2 nm, vdW force-switch 1,0–1,2 nm sem DispCorr. Macrociclo: o `pdb2gmx` do GROMACS 2025.4 fecha o anel sozinho; `build_system_charmm.py` confere o anel e aborta se aberto (ver §7).
 - **Estrutura inicial da MD:** a amostra de maior confiança **que passa no QC de pose** (limiares inalterados); se nenhuma passa, a de maior confiança, marcada `pdb_qc_pass: false`.
 - **Foco:** geração; sem HADDOCK3 de confirmação; nenhuma afirmação de seletividade (E5 não construída).
 
@@ -46,3 +46,11 @@ Complementa `PLANO_LINEAR_2026-09-30.md` (plano v3). Nada aqui altera limiares p
 - Conferir no texto completo as citações de Valaitis 1995/1999, Yang 2012, Zhan 2010 e Severiche-Castro 2026 (verificadas só por título/metadados).
 - Decisão dos autores: extremidades do peptídeo linear em pH 10 (NH₃⁺/COO⁻ como limitação ou Ac/NHMe).
 - Risco de escopo: título destaca inibidores naturais, mas o trabalho é de desenho *de novo* e só computacional; a revista pode exigir validação experimental.
+
+## 7. Troca do campo de força: AMBER99SB-ILDN -> CHARMM36 (30/09 noite)
+- **Código:** `scripts/build_system_charmm.py` (novo), `scripts/agents/md_agent.py` (mdp por campo de força + ramo CHARMM), `config.yaml` (`md.forcefield`, `forcefield_dir`, `cation`, `salt_m`). `build_system_tleap.py` fica só como histórico.
+- **Armadilhas resolvidas:** (a) o item 0 do menu de terminal do `pdb2gmx` é um patch específico do resíduo (ex.: `MET1`) e quebra; a escolha é por nome (`NH3+`, `PRO-NH2+`, `COO-`) via pty (com pipe o `gmx_mpi` não imprime o menu e trava para sempre); (b) PROPKA em pH 10 devolve CYM/LYN, mapeados para CYM/LSN; (c) o macrociclo fechado não gera menu de terminal para a cadeia B; (d) o anel fechado pelo `pdb2gmx` traz CMAP em todos os resíduos (5 em 5), conferido no itp.
+- **Teste de fumaça** (`~/scratch_charmm_test` no servidor, fora do pipeline; sequência GDGDG, C–N 1,30 Å): linear e cíclico montam; o cíclico passou minimização, NVT 200 ps e NPT 500 ps. Produção curta: ver nota no fim.
+- **Manuscrito:** Seção de MD reescrita para CHARMM36 (EN + PT; refs `huang2013` e `wacha2023` conferidas no Crossref; `lindorff2010` removida). A **Figura S2 (teste AMBER) foi retirada** e virou `[[PENDING]]`: refazer com CHARMM36.
+- **Histórico não alterado:** a calibração B0.5 / MM-GBSA citada no manuscrito foi feita antes, com AMBER (gmx_MMPBSA/AmberTools).
+- **Servidor:** o checkout em `~/design-inibidores` ainda NÃO recebeu estes arquivos (pipeline em curso). `run_two_fronts_pipeline.sh` ainda cita tleap em comentário; não foi editado de propósito (script em execução).

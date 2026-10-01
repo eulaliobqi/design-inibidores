@@ -299,14 +299,6 @@
   "n": 7,
   "year": 2015
  },
- "lindorff2010": {
-  "fam": [
-   "Lindorff-Larsen",
-   "Piana"
-  ],
-  "n": 7,
-  "year": 2010
- },
  "jorgensen1983": {
   "fam": [
    "Jorgensen",
@@ -536,5 +528,21 @@
   ],
   "n": 3,
   "year": 2026
+ },
+ "huang2013": {
+  "fam": [
+   "Huang",
+   "MacKerell"
+  ],
+  "n": 2,
+  "year": 2013
+ },
+ "wacha2023": {
+  "fam": [
+   "Wacha",
+   "Lemkul"
+  ],
+  "n": 2,
+  "year": 2023
  }
 }

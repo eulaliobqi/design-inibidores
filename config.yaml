@@ -101,12 +101,17 @@ md:
   tool: "gromacs"
   simulation_ns: 10
   temperature: 300                  # K
-  forcefield: "amber99sb-ildn"
+  # 2026-09-30: CHARMM36 (port charmm2gmx fev/2026, o mesmo .ff do grupo) no lugar de AMBER99SB-ILDN.
+  # vdW force-switch 1,0-1,2 nm e sem DispCorr (exigencia do CHARMM36); KCl 0,10 M como no grupo.
+  forcefield: "charmm36-feb2026_cgenff-5.0"
+  forcefield_dir: "~/gromacs/Milena-MD/ff/charmm36-feb2026_cgenff-5.0.ff"
   water_model: "tip3p"
+  cation: "K"
+  salt_m: 0.10
   # Fase 5+ (2026-07-17): intestino de Lepidoptera é fortemente alcalino (pH 8-11;
   # Manduca sexta trypsin ótimo pH 10,5, atividade máx. registrada pH 11,5 em outra espécie).
   # MD padrão assume protonação ~neutra — pdb2pqr/propka corrige estado de protonação real
-  # de His/Lys/Asp/Glu antes do pdb2gmx (amber99sb-ildn.ff já tem HID/HIE/HIP/LYN/ASH/GLH/CYX).
+  # de His/Lys/Asp/Glu (nomes remapeados p/ CHARMM: HSD/HSE/HSP, LSN, ASPP, GLUP, CYS2).
   gut_ph: 10.0
   use_propka: true
   # Para produção: aumentar para 100+ ns

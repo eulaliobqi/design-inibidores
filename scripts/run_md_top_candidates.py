@@ -4,7 +4,7 @@ run_md_top_candidates.py -- MD real (1 replica, 50ns producao) para o melhor can
 de cada uma das 7 especies da campanha B2.3.
 
 Reusa MDAgent._run_gromacs() direto (mesmo protocolo validado em B0.5: pdb2gmx->editconf->
-solvate->genion->minim->NVT->NPT->producao), forcefield amber99sb-ildn/tip3p (default do
+solvate->genion->minim->NVT->NPT->producao), forcefield do config.yaml (CHARMM36 desde 30/09/2026; antes amber99sb-ildn; default do
 projeto, config.yaml), pH real do intestino alcalino de Lepidoptera (gut_ph=10.0,
 config.yaml, ver comentario la: baseado em Manduca sexta). Complexo de partida = predicao
 COMPLETA do Boltz-2 (com side-chains reais, nao o backbone-only do RFdiffusion).
@@ -90,7 +90,7 @@ def main():
     ap.add_argument("--ns", type=int, default=50)
     ap.add_argument("--front", choices=["L", "M"], default=None,
                     help="L = peptideo linear, M = macrociclo cabeca-cauda: monta o sistema via "
-                         "tleap/parmed (ver build_system_tleap.py). Sem --front: pdb2gmx (legado).")
+                         "build_system_charmm.py (CHARMM36). Sem --front: linear.")
     args = ap.parse_args()
 
     workdir = ROOT / args.workdir if args.workdir else WORKDIR
