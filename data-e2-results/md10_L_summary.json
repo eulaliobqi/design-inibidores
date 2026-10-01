@@ -134,5 +134,22 @@
     "rg_avg_nm": 1.9071,
     "method": "gromacs",
     "rmsd_pbc_corrected": true
+  },
+  "Slitura__r3": {
+    "status": "done",
+    "sequence": "GTPESNES",
+    "backbone": "len8_design_0",
+    "confidence_score": 0.8643351991971334,
+    "source_pdb": "outputs/b23_boltz2_E2_L_s2_Slitura/boltz_results_Slitura/predictions/Slitura__len8_design_0__1/Slitura__len8_design_0__1_model_0.pdb",
+    "ns": 10,
+    "cyclic": false,
+    "front": "L",
+    "rmsd_avg_nm": 0.615,
+    "rmsd_std_nm": 0.1615,
+    "hbond_avg": 170.471,
+    "hbond_max": 188,
+    "rg_avg_nm": 2.1033,
+    "method": "gromacs",
+    "rmsd_pbc_corrected": true
   }
 }

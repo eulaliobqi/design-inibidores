@@ -4,7 +4,7 @@ Complementa `ESTADO_CONSOLIDADO_2026-09-30.md` e `PLANO_LINEAR_2026-09-30.md`. N
 
 ## 1. O que aconteceu desde 30/09
 - **E2 concluído** (frentes L e M; 5 amostras × 3 sementes, com potenciais), **E2qc/E2b/E4 concluídos** às 01:17; **E6 (MD 10 ns, CHARMM36) em curso** desde 01:17 (`screen two-fronts`, log `outputs/e1_fix_pipeline.log`).
-- Às 13:44: 11 de 48 MDs concluídas, nenhuma com erro (L: *A. gemmatalis* ×3, *S. frugiperda* ×3, *S. litura* ×2; M: *A. gemmatalis* ×3). Faltam ~37 (≈ 25 h, GPU compartilhada).
+- Às 13:44: 12 de 48 MDs concluídas às 15:48, nenhuma com erro (L: *A. gemmatalis*, *S. frugiperda* e *S. litura* ×3 cada; M: *A. gemmatalis* ×3). Faltam 36 (≈ 25 h, GPU compartilhada).
 - **E7 testado pela primeira vez em trajetória CHARMM real** (CPU, fora do pipeline): funciona; achou e corrigiu um bug (§4).
 - Figuras novas 9, 10, 11 e S2 (CHARMM36); manuscrito EN e PT atualizados; laço incremental de análise ligado no servidor.
 
@@ -18,9 +18,9 @@ Complementa `ESTADO_CONSOLIDADO_2026-09-30.md` e `PLANO_LINEAR_2026-09-30.md`. N
 | Top-3 por espécie (48) | 48/48 passam o QC; tríade íntegra (His57–Ser195 2,4–3,4 Å); distância inicial ao Asp189 ≤ 5 Å em 9/24 (L) e 18/24 (M) |
 | K/R nos 48 finais | só 3: NGGRPDAP (L), PISQIDSGSR e GGKPGEP (M) |
 | Sequências iguais nos dois top-3 | 3/24: GQNDS (*O. nubilalis*), NGGTT (*H. virescens*), GGSQSS (*A. gemmatalis*) |
-| **MD 10 ns, triagem pré-registrada (provisório, 11/48)** | **L: 1/8 passa** (NGGRPDAP, Arg4 em S1 a 2,7 Å, ocupância 1,00/1,00); GTDEN 0,61/0,63 falha na ocupância; demais ≤ 0,07. **M: 0/3** (GGKPGEP, Lys3 em S1, ocupância 1,00/1,00, falha só no critério do anel) |
+| **MD 10 ns, triagem pré-registrada (provisório, 12/48)** | **L: 1/9 passa** (NGGRPDAP, Arg4 em S1 a 2,7 Å, ocupância 1,00/1,00); GTDEN 0,61/0,63 falha na ocupância; demais ≤ 0,07 (inclui *S. litura* r3, GTPESNES: 0,00). **M: 0/3** (GGKPGEP, Lys3 em S1, ocupância 1,00/1,00, falha só no critério do anel) |
 | Anel (M, 3 simulações) | C–N máx 1,43–1,45 Å (≤ 1,5); ω mínimo 144,5° / 147,7° / 149,0° (critério: ≥ 150° em todos os quadros); **\|ω\| ≥ 150° em 99,6–99,8% dos quadros, nunca < 140°** |
-| Dissociação | nenhuma: em 11/11 o peptídeo ficou < 4,5 Å do receptor em todos os quadros (sair de S1 ≠ dissociar) |
+| Dissociação | nenhuma: em 12/12 o peptídeo ficou < 4,5 Å do receptor em todos os quadros (sair de S1 ≠ dissociar) |
 | Contato com Ser195/His57 | 0,70–1,00 / 0,54–1,00 mesmo com a âncora longe de S1: **não discrimina** candidatos |
 | Rg ~2 nm (pendência de 30/09) | Rg inicial de receptor + peptídeo = 1,67–1,86 nm em 3 sistemas, receptores de 259–268 resíduos: compatível com tripsina-like; **sem anomalia** |
 
