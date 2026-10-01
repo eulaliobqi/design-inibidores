@@ -659,8 +659,17 @@ class MDAgent(BaseAgent):
             self.logger.warning("  trjconv -pbc mol -center falhou; RMSD calculado no xtc bruto "
                                 "(pode estar inflado por salto de imagem periódica)")
 
-        # RMSD backbone (proteína inteira)
-        run_a(["rms", "-s", "md.tpr", "-f", traj,
+        # RMSD backbone (proteína inteira). Referência = 1º quadro JÁ corrigido por PBC (e não o md.tpr:
+        # as coordenadas do tpr vêm do .gro do NPT, com o receptor partido pela caixa — no teste CHARMM
+        # de 30/09 o RMSD contra o tpr deu 1,62 nm já no quadro 0; contra o quadro 0 corrigido, 0,12 nm).
+        ref = "md.tpr"
+        if traj == "md_pbc.xtc":
+            subprocess.run(["bash", "-c",
+                            f"printf 'System\\n' | {gmx} trjconv -s md.tpr -f md_pbc.xtc -o md_ref0.gro -dump 0"],
+                           cwd=str(out), capture_output=True, text=True, timeout=600)
+            if (out / "md_ref0.gro").exists():
+                ref = "md_ref0.gro"
+        run_a(["rms", "-s", ref, "-f", traj,
                 "-o", "rmsd.xvg", "-tu", "ns"], inp="Backbone\nBackbone\n")
 
         # H-bonds (Protein-Protein: intra + interface)
