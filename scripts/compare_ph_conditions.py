@@ -53,11 +53,28 @@ def main():
         p = root / d / "analysis_summary.json"
         if p.exists():
             data[c] = {k: v for k, v in json.load(open(p)).items() if "error" not in v and "occ_5A_h2" in v}
+    import re
+
+    def perf(d):
+        """ns/dia medio das simulacoes da condicao (linha 'Performance:' do md.log); custo computacional"""
+        vals = []
+        for lg in (root / d).glob("*__r*/md.log"):
+            m = re.findall(r"Performance:\s+([\d.]+)", lg.read_text(errors="replace"))
+            if m:
+                vals.append(float(m[-1]))
+        return round(float(np.mean(vals)), 1) if vals else None
+
     res = {"conditions": {}, "pairs": {}}
     for c, d in data.items():
         v = list(d.values())
-        res["conditions"][c] = {"label": LAB[c], "n": len(v), "n_pass": sum(x["passes_screen"] for x in v),
-                                "mean_occ5_h2": round(float(np.mean([x["occ_5A_h2"] for x in v])), 3) if v else None}
+        n_pass = sum(x["passes_screen"] for x in v)
+        ns_day = perf(COND[c][1])
+        res["conditions"][c] = {"label": LAB[c], "n": len(v), "n_pass": n_pass,
+                                "pass_rate": round(n_pass / len(v), 3) if v else None,
+                                "mean_occ5_h2": round(float(np.mean([x["occ_5A_h2"] for x in v])), 3) if v else None,
+                                "mean_ns_per_day": ns_day,
+                                # eficiencia: candidatos aprovados por 100 ns simulados (10 ns por candidato)
+                                "pass_per_100ns": round(n_pass / (10 * len(v)) * 100, 1) if v else None}
     from scipy.stats import spearmanr, wilcoxon
     paired = {}
     for y, x in PAIRS:
@@ -99,7 +116,9 @@ def main():
     cs = [c for c in COND if c in data]
     ax[0, 2].bar(range(len(cs)), [res["conditions"][c]["n_pass"] for c in cs], color=[COL[c] for c in cs])
     for i, c in enumerate(cs):
-        ax[0, 2].text(i, res["conditions"][c]["n_pass"] + .05, f"{res['conditions'][c]['n_pass']}/{res['conditions'][c]['n']}", ha="center", fontsize=8)
+        rc = res["conditions"][c]
+        lab_bar = f"{rc['n_pass']}/{rc['n']}" + (chr(10) + f"{rc['mean_ns_per_day']} ns/d" if rc["mean_ns_per_day"] else "")
+        ax[0, 2].text(i, rc["n_pass"] + .05, lab_bar, ha="center", fontsize=7)
     ax[0, 2].set_xticks(range(len(cs))); ax[0, 2].set_xticklabels([LAB[c].replace(", ", "\n") for c in cs], fontsize=6.5)
     ax[0, 2].set_ylabel(T("candidates passing the screen", "candidatos que passam na triagem")); ax[0, 2].set_title(T("Pre-registered screen", "Triagem pré-registrada"), fontsize=10)
     # D-F: dispersoes pareadas
