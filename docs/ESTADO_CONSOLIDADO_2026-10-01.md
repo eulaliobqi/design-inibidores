@@ -43,7 +43,7 @@ Complementa `ESTADO_CONSOLIDADO_2026-09-30.md` e `PLANO_LINEAR_2026-09-30.md`. N
 | 2 | Análise E7 incremental de cada MD ao terminar | laço `/tmp/e7_incremental.sh` (CPU, `nice`); para sozinho quando o pipeline chegar ao `[E7]` | **ligado** |
 | 3 | E7 final, E3 (controles), matriz 8 × 8, E8 (L × M), E9 (lista para a MD longa) | pipeline | após o E6 |
 | 4 | Reexecutar `make_figures_e2_md.py` com os dados completos (copiar `outputs/` → `data-e2-results/`); figura L × M; fechar 3.8–3.10, Resumo, 4.1/4.3 | local | após o item 3 |
-| 5 | Decisões de viabilidade (01/10, a pedido do autor): critério do anel **mantido** + fração de quadros com \|ω\| ≥ 150° como secundário pós-dados; réplicas com pose inicial alternativa **depois do E6**, só para quem falhou sem chegar a S1; extremidades do linear **NH₃⁺/COO⁻ como limitação declarada** | decidido | em vigor |
+| 5 | Decisões de viabilidade (01/10, a pedido do autor): critério do anel **mantido** + fração de quadros com \|ω\| ≥ 150° como secundário pós-dados; réplicas com pose inicial alternativa **depois do E6**, só para quem falhou sem chegar a S1; extremidades do linear **revisadas para N-terminal neutro (NH₂) + COO⁻**, por pKa do N-terminal 7,7 (Grimsley 2009) e modelo biológico; pedido a autorização para parar/retomar o pipeline (`scripts/run_e6_resume_nterm.sh`), 9 MDs com NH₃⁺ viram braço de comparação | **aguarda autorização** |
 | 6 | Pendências editoriais (autores, DOI do código, IA, financiamento) | autores | aberto |
 
 Recuperação: se o E6 parar, olhar `outputs/e1_fix_pipeline.log` e `outputs/md10_*/summary.json` (`status: erro`); **nunca** `pkill -f` na linha do ssh nem `screen -X quit` (ver memória `feedback_ssh_servidor_cuidados`).
