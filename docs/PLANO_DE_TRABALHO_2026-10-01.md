@@ -21,7 +21,7 @@ Consolida o que foi feito e o que falta. Fontes: `ESTADO_CONSOLIDADO_2026-09-30.
 2. **Pipeline atual permanece** (decisão do autor, 01/10); parar/relançar foi negado pelo classificador de permissões e não será tentado sem autorização explícita.
 3. **N-terminal do linear neutro em pH alto** (pKa 7,7 ± 0,5; Grimsley 2009, 10.1002/pro.19), regra pH − 7,7 ≥ 2, Pro inicial mantém PRO-NH2+ (1 de 24); implementado (commit b25bbe8). As 24 MDs lineares em curso usam NH₃⁺ e viram o braço de referência.
 4. **Duas faixas de pH** (10,0 e 8,2) comparadas depois, com análise pareada e Figura 12; 8,2 = protocolo do grupo e limite inferior da faixa alcalina adotada (variável `PH_LOW`).
-5. Réplicas com pose inicial alternativa: só depois do E6/campanha, apenas para quem falhou sem chegar a S1.
+5. **Sem réplicas** (decisão do autor, 01/10): o prazo de submissão é curto e as MDs servem para **verificar a estabilidade** da pose, não para estimar afinidade; uma réplica de 10 ns por candidato é o desenho final e as conclusões são descritivas. **Objetivo final: a lista dos melhores peptídeos com potencial inibidor, com base em dados computacionais** (ranqueamento em camadas, `scripts/rank_final_candidates.py`, Figura 13).
 
 ## 3. Cronograma e dependências
 | # | Etapa | Depende de | Duração estimada | Responsável |
@@ -33,17 +33,19 @@ Consolida o que foi feito e o que falta. Fontes: `ESTADO_CONSOLIDADO_2026-09-30.
 | 5 | **Campanha de pH** — fase 1: A. gemmatalis nas 3 condições (9 MDs) + Figura 12 parcial | 4 | ~7 h | `ph-campaign` |
 | 6 | Campanha de pH — fase 2: demais espécies (63 MDs) + Figura 12 final | 5 | ~2–3 dias | `ph-campaign` |
 | 7 | Recopiar `outputs/` → `data-e2-results/`, rodar `make_figures_e2_md.py`; figura L × M; trocar `[[INTERIM]]`; escrever 3.9, 3.10 e a seção de pH; fechar Resumo, 4.1 e 4.3 | 4 (parte), 6 (pH) | 1 dia | local |
-| 8 | Réplicas com semente/pose alternativa nos candidatos relevantes (escolha após ver 4–6) | 6 | a definir | autor decide |
+| 8 | **Ranqueamento final em camadas A/B/C/P** (`rank_final_candidates.py`, layout `server`) → `outputs/ranking_final/` (CSV, JSON, MD, Figura 13) | 4 (e 6 para a robustez ao pH) | minutos | local/servidor |
 | 9 | MD longa dos melhores (lista do E9) | 4 | — | autor |
 | 10 | Pendências editoriais: autores, afiliações, contribuições, financiamento, conflito de interesses, IA generativa, DOI do código, conferir Valaitis/Yang/Zhan/Severiche no texto completo | — | — | autores |
 
 Caminho crítico: 1 → 3 → 5 → 6 → 7 ≈ 4–5 dias de relógio com a GPU compartilhada. A Figura 12 parcial (fase 5) chega ~2 dias antes do fim.
 
+**Prazo curto — regra de corte:** o manuscrito pode ser fechado em duas versões, sem refazer cálculos. (i) Mínimo viável: depois do item 4 (E6 + E7 + E3 + E9, ~1,5 dia): lista final com as camadas e a robustez ao pH marcada como pendente. (ii) Completo: depois da fase 1 ou da fase 2 da campanha de pH, o que estiver pronto na data de submissão (a campanha roda L pH 10 neutro, depois L pH 8,2, depois M pH 8,2, de modo que as comparações lineares ficam completas primeiro). A figura e o JSON da comparação usam só os candidatos presentes nas duas condições.
+
 ## 4. Riscos e mitigação
 | Risco | Mitigação |
 |---|---|
-| Confusão entre pose inicial e capacidade de encontrar S1 (os que passam partiram a ≤ 3,5 Å) | declarado no texto; item 8 (poses alternativas); MD de 10 ns = estabilidade da pose |
-| Uma réplica por candidato | resultados descritivos; comparação de pH por tendência entre candidatos, não por candidato |
+| Confusão entre pose inicial e capacidade de encontrar S1 (os que passam partiram a ≤ 3,5 Å) | declarado no texto como limitação; MD de 10 ns = estabilidade da pose prevista |
+| Uma réplica por candidato (sem réplicas, por decisão) | resultados descritivos; comparação de pH por tendência entre candidatos, não por candidato; MDs são verificação de estabilidade |
 | GPU compartilhada com jobs do grupo (OOM com duas cargas) | uma carga por vez; campanha só depois do pipeline; sequência única |
 | E3 pode mostrar que a confiança não supera a de controles embaralhados | resultado será reportado como está; texto já cauteloso (isca de 0,944) |
 | Escopo: trabalho só computacional, revista pode pedir validação | decisão dos autores; declarado em 4.4 |
