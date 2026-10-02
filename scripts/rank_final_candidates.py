@@ -6,12 +6,15 @@ TODAS as evidencias computacionais, sem criar limiares novos (so os pre-registra
   E4  QC de pose da estrutura inicial                    E7  MD de 10 ns: ocupancia de S1 >= 70% a 5 A na 2a metade e ancora
                                                              igual nas duas metades; macrociclo: anel integro (C-N <= 1,5 A, omega >= 150 em todos os quadros)
   campanha de pH (quando existir): ocupancia de S1 nas outras condicoes (robustez ao pH)
-Camadas (declaradas em 01/10/2026, quando 12/48 MDs ja eram conhecidas; nenhum limiar novo):
-  A  cumpre todos os criterios disponiveis (S1, QC, delta > 0 e, no macrociclo, anel estrito)     -> recomendado
-  B  cumpre o criterio de S1 e falha exatamente um dos demais (anel estrito, delta <= 0 ou QC)     -> candidato com ressalva
-  C  nao cumpre o criterio de S1 (simulado)                                                         -> sem ancoragem confirmada em 10 ns
-  P  MD ainda nao disponivel                                                                        -> pendente
-Dentro da camada: ocupancia de S1 (2a metade) decrescente, depois delta (E3), depois confianca (E2). Criterio faltante (ex.: E3 ainda
+Camadas (revistas em 02/10/2026, apos analisar as 16 primeiras MDs; nenhum limiar novo):
+  A  cumpre todos os criterios disponiveis (QC, delta > 0 e, no macrociclo, anel estrito)           -> recomendado
+  B  falha exatamente um deles (anel estrito, delta <= 0 ou QC)                                        -> candidato com ressalva
+  C  falha dois ou mais                                                                                -> sem sustentacao nos criterios
+  P  MD ainda nao disponivel                                                                           -> pendente
+REBAIXAMENTO DA OCUPANCIA DE S1 (decisao do usuario, 02/10/2026): deixou de ser criterio de camada e virou descricao
+secundaria (colunas occ5_h2, anchor, anchor_same, s1_original), porque acompanha a pose inicial (>= 0,70 so nos 3 sistemas que
+partiram a <= 3,5 A de Asp189). Mudanca de procedimento apos ver dados; declarada em 2.9 do manuscrito.
+Dentro da camada: delta (E3) decrescente, depois confianca (E2), depois ocupancia de S1 (2a metade). Criterio faltante (ex.: E3 ainda
 nao rodou) deixa o candidato marcado `provisorio`. A MD de 10 ns verifica estabilidade da pose; nao e' estimativa de afinidade.
 
 LEITURA DAS CAMADAS (corrigida em 01/10/2026 pelo resultado dos controles, docs/PLANO_DE_ANALISES_2026-10-01.md):
@@ -93,9 +96,9 @@ def main():
             pending = [k for k, v in others.items() if v is None]
             if not has_md:
                 tier = "P"
-            elif s1 and n_fail == 0:
+            elif n_fail == 0:
                 tier = "A"
-            elif s1 and n_fail == 1:
+            elif n_fail == 1:
                 tier = "B"
             else:
                 tier = "C"
@@ -111,21 +114,21 @@ def main():
                 "ph_occ": phs, "ph_robust": (all(v >= 0.7 for v in have_ph) if have_ph and has_md and (m.get("occ_5A_h2", 0) >= 0.7) else None),
                 "ctrl_decoy_occ5_h2": (max(ctrl[key]) if ctrl.get(key) else None),
                 "ctrl_n": len(ctrl.get(key, [])),
-                "tier": tier, "provisional": bool(pending) or not has_md, "pending": pending, "failed": [k for k, v in others.items() if v is False] + ([] if s1 in (True, None) else ["s1_occupancy"]),
+                "tier": tier, "provisional": bool(pending) or not has_md, "pending": pending, "failed": [k for k, v in others.items() if v is False], "s1_original": s1,
             })
     order = {"A": 0, "B": 1, "C": 2, "P": 3}
-    rows.sort(key=lambda r: (r["front"], order[r["tier"]], -(r["occ5_h2"] or 0), -(r["delta_E3"] if r["delta_E3"] is not None else -9), -r["confidence_E2"]))
+    rows.sort(key=lambda r: (r["front"], order[r["tier"]], -(r["delta_E3"] if r["delta_E3"] is not None else -9), -r["confidence_E2"], -(r["occ5_h2"] or 0)))
     (out / "ranking_final.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False))
     with open(out / "ranking_final.csv", "w", newline="", encoding="utf-8") as f:
-        cols = ["front", "tier", "provisional", "species", "sequence", "confidence_E2", "delta_E3", "qc_pose", "occ5_h2", "anchor", "anchor_same",
+        cols = ["front", "tier", "provisional", "species", "sequence", "confidence_E2", "delta_E3", "qc_pose", "occ5_h2", "anchor", "anchor_same", "s1_original",
                 "ring_strict", "ring_frac_ge150", "ctrl_decoy_occ5_h2", "ph_robust", "has_KR", "start_dist_Asp189_A", "failed", "pending", "key"]
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
         for r in rows:
             w.writerow({**r, "failed": ";".join(r["failed"]), "pending": ";".join(r["pending"])})
     md = [f"# {T('Final candidate peptides', 'Peptídeos candidatos finais')} (01/10/2026)\n",
-          T("Tiers: A = meets all available criteria; B = meets the S1 criterion and fails exactly one other; C = no confirmed S1 anchoring in 10 ns; P = MD pending. `provisional` = a criterion not yet available (e.g., E3).\n",
-            "Camadas: A = cumpre todos os critérios disponíveis; B = cumpre o critério de S1 e falha exatamente um dos demais; C = sem ancoragem de S1 confirmada em 10 ns; P = MD pendente. `provisório` = falta um critério (ex.: E3).\n")]
+          T("Tiers: A = meets all available criteria (pose QC, paired delta > 0, strict ring for macrocycles); B = fails exactly one; C = fails two or more; P = MD pending. S1 occupancy is descriptive only (demoted 02/10/2026) and orders within a tier after delta and E2. `provisional` = a criterion not yet available (e.g., E3).\n",
+            "Camadas: A = cumpre todos os critérios disponíveis (QC de pose, delta pareado > 0, anel estrito no macrociclo); B = falha exatamente um; C = falha dois ou mais; P = MD pendente. A ocupância de S1 é só descritiva (rebaixada em 02/10/2026) e ordena dentro da camada depois de delta e E2. `provisório` = falta um critério (ex.: E3).\n")]
     for front, nm in (("L", T("Linear", "Linear")), ("M", T("Macrocycle", "Macrociclo"))):
         md += [f"\n## {nm}\n", "| tier | " + T("species", "espécie") + " | " + T("sequence", "sequência") + " | E2 | Δ E3 | QC | S1 occ (2nd half) | anchor | ring | pH | notes |",
                "|---|---|---|---|---|---|---|---|---|---|---|"]

@@ -544,5 +544,29 @@
   ],
   "n": 2,
   "year": 2023
+ },
+ "helland1999": {
+  "fam": [
+   "Helland",
+   "Otlewski"
+  ],
+  "n": 5,
+  "year": 1999
+ },
+ "grzesiak2000": {
+  "fam": [
+   "Grzesiak",
+   "Helland"
+  ],
+  "n": 6,
+  "year": 2000
+ },
+ "brandsdal2006": {
+  "fam": [
+   "Brandsdal",
+   "Smalås"
+  ],
+  "n": 3,
+  "year": 2006
  }
 }
