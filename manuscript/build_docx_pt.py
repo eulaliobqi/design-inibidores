@@ -206,12 +206,23 @@ full = panel + "\n" + src + "\n\n## Referências\n\n" + "\n\n".join(refs[k] for 
 
 # ---------- 5. pandoc
 out = HERE / "Manuscrito_PT_leitura.docx"
+alt = HERE / "Manuscrito_PT_leitura_novo.docx"
 try:  # se o arquivo estiver aberto no Word, grava com sufixo em vez de falhar
     with open(out, "ab"):
         pass
 except PermissionError:
-    out = HERE / "Manuscrito_PT_leitura_novo.docx"
+    out = alt
     print("AVISO: Manuscrito_PT_leitura.docx esta aberto em outro programa; gravando em", out.name)
+else:
+    # o documento de leitura e' UM so': assim que o canonico volta a ser gravavel, a copia `_novo`
+    # (e o arquivo de bloqueio que o Word deixa) sao removidos, para ninguem ler a versao errada.
+    for extra in (alt, HERE / ("~$" + alt.name[2:])):
+        if extra.exists():
+            try:
+                extra.unlink()
+                print("removido:", extra.name)
+            except OSError:
+                print(f"AVISO: {extra.name} ainda esta aberto no Word; feche-o e rode de novo para apagar")
 ref_doc = HERE / "_reference.docx"
 if not ref_doc.exists():
     subprocess.run(["pandoc", "-o", str(ref_doc), "--print-default-data-file", "reference.docx"], check=True)
