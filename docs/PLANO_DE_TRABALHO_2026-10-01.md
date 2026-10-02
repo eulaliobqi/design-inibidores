@@ -23,30 +23,38 @@ Consolida o que foi feito e o que falta. Fontes: `ESTADO_CONSOLIDADO_2026-09-30.
 4. **Duas faixas de pH** (10,0 e 8,2) comparadas depois, com análise pareada e Figura 12; 8,2 = protocolo do grupo e limite inferior da faixa alcalina adotada (variável `PH_LOW`).
 5. **Sem réplicas** (decisão do autor, 01/10): o prazo de submissão é curto e as MDs servem para **verificar a estabilidade** da pose, não para estimar afinidade; uma réplica de 10 ns por candidato é o desenho final e as conclusões são descritivas. **Objetivo final: a lista dos melhores peptídeos com potencial inibidor, com base em dados computacionais** (ranqueamento em camadas, `scripts/rank_final_candidates.py`, Figura 13).
 
-## 3. Cronograma e dependências
-| # | Etapa | Depende de | Duração estimada | Responsável |
+## 3. Cronograma e dependências (recalculado em 01/10, com tempos medidos)
+
+**Ritmo medido em 16 simulações:** 75–105 min por MD (produção de 69 min em média, 98 min nas cinco últimas; o
+resto é montagem e equilíbrio). A variação é disputa de GPU com os jobs do grupo. O E3 foi recalculado a partir do
+E2 (480 predições em 6,2 h, 46 s cada): com 1.413 predições, custa **15–20 h**, e não as ~6 h do plano v3.
+
+| # | Etapa | Depende de | Custo medido | Responsável |
 |---|---|---|---|---|
-| 1 | Terminar E6 (36 MDs) | — | ~25 h | pipeline (automático) |
-| 2 | E7 final (L e M; o braço linear com NH₃⁺ é o próprio `md10_L`) | 1 | minutos | pipeline |
-| 3 | E3 (controles embaralhados 3 sementes × 2 frentes), matriz 8 × 8 | 2 | ~6 h (GPU, Boltz) | pipeline |
-| 4 | E8 (L × M) e E9 (lista para a MD longa) | 3 | minutos | pipeline |
-| 5 | **Campanha de pH** — fase 1: A. gemmatalis nas 3 condições (9 MDs) + Figura 12 parcial | 4 | ~7 h | `ph-campaign` |
-| 6 | Campanha de pH — fase 2: demais espécies (63 MDs) + Figura 12 final | 5 | ~2–3 dias | `ph-campaign` |
-| 7 | Recopiar `outputs/` → `data-e2-results/`, rodar `make_figures_e2_md.py`; figura L × M; trocar `[[INTERIM]]`; escrever 3.9, 3.10 e a seção de pH; fechar Resumo, 4.1 e 4.3 | 4 (parte), 6 (pH) | 1 dia | local |
-| 8 | **Ranqueamento final em camadas A/B/C/P** (`rank_final_candidates.py`, layout `server`) → `outputs/ranking_final/` (CSV, JSON, MD, Figura 13) | 4 (e 6 para a robustez ao pH) | minutos | local/servidor |
-| 9 | MD longa dos melhores (lista do E9) | 4 | — | autor |
-| 10 | Pendências editoriais: autores, afiliações, contribuições, financiamento, conflito de interesses, IA generativa, DOI do código, conferir Valaitis/Yang/Zhan/Severiche no texto completo | — | — | autores |
+| 1 | Terminar o E6 (32 MDs) | — | **40–56 h** | pipeline (automático) |
+| 2 | E7 final (L e M) | 1 | minutos | pipeline |
+| 3 | E3 (1.413 predições) | 2 | **15–20 h** | pipeline |
+| 4 | Matriz 8 × 8, E8 (L × M), E9 (lista de entrega) | 3 | ~1 h | pipeline |
+| 5 | **Controles de MD** (5 MDs nas iscas dos próprios candidatos) | 3 | **6–9 h** | `screen md-controls` |
+| 6 | Refazer Figuras 9–13, trocar os `[[PROVISÓRIO]]`, escrever 3.9/3.10/3.11, Resumo, 4.1 e 4.3 | 4 e 5 | ~1 dia (sem GPU) | local |
+| 7 | Seções dos autores e submissão | — | — | autores |
 
-Caminho crítico: 1 → 3 → 5 → 6 → 7 ≈ 4–5 dias de relógio com a GPU compartilhada. A Figura 12 parcial (fase 5) chega ~2 dias antes do fim.
+**Total de processamento até poder fechar o artigo: 62–86 h, ou seja, 2,7 a 3,5 dias.** O item 6 corre em paralelo
+ao fim do processamento. Caminho crítico: 1 → 3 → 5, com o 4 em paralelo ao 5.
 
-**Prazo curto — regra de corte:** o manuscrito pode ser fechado em duas versões, sem refazer cálculos. (i) Mínimo viável: depois do item 4 (E6 + E7 + E3 + E9, ~1,5 dia): lista final com as camadas e a robustez ao pH marcada como pendente. (ii) Completo: depois da fase 1 ou da fase 2 da campanha de pH, o que estiver pronto na data de submissão (a campanha roda L pH 10 neutro, depois L pH 8,2, depois M pH 8,2, de modo que as comparações lineares ficam completas primeiro). A figura e o JSON da comparação usam só os candidatos presentes nas duas condições.
+**Fora deste artigo (decisão do autor, 01/10):** a campanha de duas faixas de pH (72 simulações, 4–5 dias, dois
+terços de todo o processamento restante) foi **cancelada** e fica para um artigo seguinte. Os scripts
+(`run_ph_campaign.sh`, `run_md_ph_campaign.py`, `compare_ph_conditions.py`) e a regra do N-terminal dependente do pH
+continuam versionados e prontos. Consequência para o texto: todas as simulações deste artigo compartilham um só
+estado de protonação, o que as mantém comparáveis entre si; a comparação de pH e de carga do N-terminal passa a ser
+trabalho futuro (Seção 4.5), e o NH₃⁺ do peptídeo linear em pH 10 continua declarado como limitação (4.4 viii).
 
 ## 4. Riscos e mitigação
 | Risco | Mitigação |
 |---|---|
 | Confusão entre pose inicial e capacidade de encontrar S1 (os que passam partiram a ≤ 3,5 Å) | declarado no texto como limitação; MD de 10 ns = estabilidade da pose prevista |
 | Uma réplica por candidato (sem réplicas, por decisão) | resultados descritivos; comparação de pH por tendência entre candidatos, não por candidato; MDs são verificação de estabilidade |
-| GPU compartilhada com jobs do grupo (OOM com duas cargas) | uma carga por vez; campanha só depois do pipeline; sequência única |
+| GPU compartilhada com jobs do grupo (OOM com duas cargas) | uma carga por vez; com a campanha de pH cancelada, só o pipeline e, depois do E3, os controles disputam a GPU |
 | E3 pode mostrar que a confiança não supera a de controles embaralhados | resultado será reportado como está; texto já cauteloso (isca de 0,944) |
 | Escopo: trabalho só computacional, revista pode pedir validação | decisão dos autores; declarado em 4.4 |
 | Falha de MD isolada | runner marca `status: erro` e continua; conferir `summary.json` |

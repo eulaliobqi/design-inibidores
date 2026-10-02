@@ -42,7 +42,7 @@ Complementa `ESTADO_CONSOLIDADO_2026-09-30.md` e `PLANO_LINEAR_2026-09-30.md`. N
 | 1 | Terminar E6 (≈ 37 MDs: restante de L, depois M) | `screen two-fronts` (automático) | **em curso**, ≈ 25 h |
 | 2 | Análise E7 incremental de cada MD ao terminar | laço `/tmp/e7_incremental.sh` (CPU, `nice`); para sozinho quando o pipeline chegar ao `[E7]` | **ligado** |
 | 3 | E7 final, E3 (controles), matriz 8 × 8, E8 (L × M), E9 (lista para a MD longa) | pipeline | após o E6 |
-| 3b | Campanha de pH: L pH 10 N-terminal neutro, L pH 8,2, M pH 8,2 (72 MDs, A. gemmatalis primeiro) + Figura 12 | `screen ph-campaign` | espera `TWO_FRONTS_ALL_DONE` |
+| 3b | ~~Campanha de pH~~ **cancelada neste artigo** (01/10): 72 simulações e 4–5 dias; scripts versionados, fica para o artigo seguinte | — | fora de escopo |
 | 4 | Reexecutar `make_figures_e2_md.py` com os dados completos (copiar `outputs/` → `data-e2-results/`); figura L × M; fechar 3.8–3.10, Resumo, 4.1/4.3 | local | após o item 3 |
 | 5 | Decisões (01/10): critério do anel **mantido** + fração de quadros com \|ω\| ≥ 150° como secundário pós-dados; **pipeline atual permanece**; depois, campanha `run_ph_campaign.sh` (N-terminal neutro do linear em pH 10, pKa 7,7, Grimsley 2009; pH 8,2 no linear e no macrociclo) com comparação pareada e Figura 12; **sem réplicas** (prazo curto; MDs verificam estabilidade); entrega final = ranqueamento em camadas A/B/C/P dos melhores peptídeos (`rank_final_candidates.py`, Figura 13) | autor | **agendado / em vigor** |
 | 6 | Pendências editoriais (autores, DOI do código, IA, financiamento) | autores | aberto |

@@ -65,15 +65,14 @@ quadros) com a fração de quadros ≥ 150° como descrição secundária; QC de
 4/10); contra-triagem de seletividade (E5 não construída) — e, portanto, nenhuma afirmação de seletividade.
 
 ## 4. Ordem de execução
-1. Pipeline termina o E6 → E7 → **E3** → matriz 8 × 8 → E8/E9. *(em curso)*
+1. Pipeline termina o E6 → E7 → **E3** → matriz 8 × 8 → E8/E9. *(em curso; 40–56 h + 15–20 h)*
 2. `screen md-controls` dispara assim que o E3 grava `delta_paired_{L,M}.json`: 5 controles de 10 ns
-   (3 na frente L, 2 na M), priorizando os candidatos que passaram. *(na fila)*
-3. `screen ph-campaign` (duas faixas de pH) começa ao fim do pipeline. *(na fila)*
-4. Ranqueamento final com a coluna de controle; figuras; texto.
+   (3 na frente L, 2 na M), priorizando os candidatos que passaram. *(na fila; 6–9 h)*
+3. Ranqueamento final com a coluna de controle; figuras; texto.
 
-**Se o prazo apertar:** o item 2 tem prioridade sobre o 3. Sem os controles pareados, a lista final não pode ser
-apresentada como "melhores peptídeos"; com eles, pode — seja para sustentar os candidatos, seja para mostrar
-honestamente que a triagem não os distingue de suas iscas.
+**Campanha de pH: cancelada neste artigo** (01/10) — 72 simulações e 4–5 dias não cabem no prazo, e ela é um
+refinamento de método, não o resultado central. Fica para o artigo seguinte, com os scripts prontos. Com isso, os
+controles pareados deixam de competir por GPU e são a única etapa além do pipeline.
 
 ## 5. Efeito sobre o que já está escrito
 - Seção 3.9: ganhou o parágrafo da escala de referência (EN e PT).

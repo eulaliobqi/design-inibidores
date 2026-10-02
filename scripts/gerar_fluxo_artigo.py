@@ -26,7 +26,7 @@ def arrow(x1, y1, x2, y2, style="-|>", color="#495057", lw=1.2, ls="-"):
                                  color=color, lw=lw, linestyle=ls, shrinkA=2, shrinkB=2))
 
 
-ax.text(0.1, 10.15, "Caminho até a submissão — estado em 01/10/2026, 21h49",
+ax.text(0.1, 10.15, "Caminho até a submissão — estado em 01/10/2026, 22h30 — sem a campanha de pH",
         fontsize=13.5, fontweight="bold", va="top")
 ax.text(0.1, 9.78, "Números conferidos nos arquivos do servidor. Caixa verde = concluído · amarela = em execução · "
                    "azul = na fila (dispara sozinha) · cinza = a fazer · laranja = decisão sua",
@@ -54,7 +54,7 @@ for x in (2.55, 5.2, 7.85, 10.5, 13.0):
 ax.text(0.1, 7.45, "EM EXECUÇÃO AGORA", fontsize=10, fontweight="bold", color=EDGE["run"], va="top")
 y2 = 5.85
 box(0.1, y2, 3.5, 1.3, "E6 · MD de triagem 10 ns  (screen two-fronts)",
-    "16 de 48 concluídas e analisadas (L 13 · M 3)\n0 erros · faltam 32 (~22 h de GPU)\ntriagem: 2 aprovados (L) · 0 (M)", "run", fs=8.2)
+    "16 de 48 concluídas e analisadas (L 13 · M 3)\nfaltam 32 → 40–56 h (medido: 75–105 min/MD)\ntriagem: 2 aprovados (L) · 0 (M)", "run", fs=8.2)
 box(3.85, y2, 3.3, 1.3, "E7 · análise de cada MD",
     "laço incremental ligado:\nanalisa cada MD ao terminar\n(para sozinho no E7 do pipeline)", "run", fs=8.2)
 arrow(3.6, y2 + 0.65, 3.85, y2 + 0.65)
@@ -70,21 +70,21 @@ ax.text(0.1, 5.42, "NA FILA — dispara sozinha, sem você precisar agir", fonts
         color=EDGE["queue"], va="top")
 y3 = 3.9
 box(0.1, y3, 3.5, 1.25, "E3 · controles embaralhados",
-    "3 sementes × 2 frentes (~6 h)\ndá o Δ pareado de cada candidato\n→ libera os controles de MD", "queue", fs=8.2)
+    "1.413 predições → 15–20 h\n(recalculado pelo E2: 46 s por predição)\ndá o Δ pareado → libera os controles", "queue", fs=8.2)
 box(3.85, y3, 3.3, 1.25, "Matriz 8×8 · E8 · E9",
-    "especificidade cruzada do top-1\ncomparação L × M\nlista de entrega", "queue", fs=8.2)
+    "especificidade cruzada do top-1\ncomparação L × M · lista de entrega\n~1 h", "queue", fs=8.2)
 box(7.45, y3, 3.6, 1.25, "Controles de MD  (screen md-controls)",
-    "5 MDs de 10 ns nas iscas DOS PRÓPRIOS\ncandidatos (reusa o E3, sem custo Boltz)\n⇒ TESTE DECISIVO da lista final", "queue", fs=8.2)
-box(11.35, y3, 4.05, 1.25, "Campanha de pH  (screen ph-campaign)",
-    "L pH 10 N-term neutro · L pH 8,2 · M pH 8,2\n72 MDs (~2–3 dias) · Figura 12\nA. gemmatalis primeiro (figura parcial antes)", "queue", fs=8.2)
+    "5 MDs de 10 ns nas iscas DOS PRÓPRIOS\ncandidatos → 6–9 h (reusa o E3)\n⇒ TESTE DECISIVO da lista final", "queue", fs=8.2)
+box(11.35, y3, 4.05, 1.25, "Campanha de pH — FORA DESTE ARTIGO",
+    "cancelada em 01/10: 72 MDs, 4–5 dias\n(2/3 de todo o processamento restante)\nscripts prontos → vai para o artigo seguinte", "todo", fs=8.2)
 arrow(3.6, y3 + 0.62, 3.85, y3 + 0.62)
 arrow(1.85, y2, 1.85, y3 + 1.25, color=EDGE["queue"])
 arrow(1.85, y3, 1.85, y3 - 0.33, color=EDGE["queue"], ls=(0, (4, 3)))
 arrow(1.85, y3 - 0.33, 9.25, y3 - 0.33, color=EDGE["queue"], ls=(0, (4, 3)), style="-")
 arrow(9.25, y3 - 0.33, 9.25, y3, color=EDGE["queue"])
 ax.text(5.5, y3 - 0.3, "o E3 pronto libera os controles de MD", fontsize=7.6, color=EDGE["queue"], ha="center", va="bottom")
-arrow(3.6, y2 + 0.18, 13.3, y3 + 1.25, color=EDGE["queue"], ls=(0, (4, 3)))
-ax.text(10.1, y3 + 1.33, "fim do E6 libera", fontsize=7.4, color=EDGE["queue"], ha="center")
+
+
 
 # ---------------- FAIXA 4: falta ----------------
 ax.text(0.1, 3.5, "FALTA FAZER", fontsize=10, fontweight="bold", color="#495057", va="top")
@@ -102,11 +102,10 @@ for x in (3.6, 7.15, 11.05):
 arrow(0.75, y3, 0.75, y4 + 1.3)
 
 # ---------------- decisões ----------------
-box(0.1, 0.12, 15.3, 1.6, "DECISÕES SUAS — travam o fecho do artigo",
-    "1. ACHADO NOVO: ocupância ≥ 0,70 ocorreu exatamente nos 3 sistemas que partiram a ≤ 3,5 Å do Asp189, e em nenhum dos 13 que partiram a ≥ 4,1 Å.\n"
-    "    A pose inicial decide, não a química da âncora (GQNDS passa sem resíduo básico): a triagem repete a pose do Boltz-2. Como tratar isso no artigo?\n"
-    "2. Se a isca também ficar em S1 (controles de MD): a entrega vira lista priorizada por não clivabilidade e escore, com ressalva explícita.\n"
-    "3. Se o prazo apertar: cortar a campanha de pH e manter os controles (recomendado)?   ·   4. Seções dos autores já podem ser escritas (não dependem de cálculo).",
+box(0.1, 0.12, 15.3, 1.6, "TEMPO ATÉ PODER FECHAR O ARTIGO:  62–86 h de processamento  =  2,7 a 3,5 dias",
+    "E6 (32 MDs, 40–56 h)  →  E3 (15–20 h)  →  controles de MD (6–9 h).  A matriz, o E8 e o E9 (~1 h) correm em paralelo aos controles; a escrita (~1 dia) corre junto.\n"
+    "Decisões suas, que não dependem de processamento:   1. como tratar no artigo o achado de que a pose inicial decide a triagem (ocupância ≥ 0,70 só nos 3 que\n"
+    "partiram a ≤ 3,5 Å do Asp189, e GQNDS passa sem resíduo básico);   2. o que fazer se a isca também ficar em S1;   3. escrever as seções dos autores.",
     "dec", fs=8.3, tfs=9.2)
 
 

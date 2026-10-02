@@ -185,10 +185,10 @@ panel = f"""
 | E4 · QC de pose e matriz cruzada 8 × 8 | QC concluído; matriz pendente | 80/80 candidatos com ao menos uma amostra aprovada em cada frente |
 | E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **em curso: 12/48 concluídas** | triagem pré-registrada: 1 de 9 lineares passa (NGGRPDAP); 0 de 3 cíclicas (GGKPGEP falha só no ω do anel: 144,5° contra 150°); resultado provisório (Seção 3.9, Figura 11) |
 | E8–E9 · comparação linear × macrociclo e lista para a MD longa | pendente | scripts prontos |
-| Campanha de pH · linear em pH 10 (N-terminal neutro), linear em pH 8,2 e macrociclo em pH 8,2 (72 simulações) | **agendada** (espera o fim do pipeline) | comparação pareada e Figura 12 (`compare_ph_conditions.py`); N-terminal neutro pela regra pH − 7,7 ≥ 2 (Grimsley 2009) |
+| Campanha de pH (duas faixas) | **fora deste artigo** (decisão de 01/10: o custo, 72 simulações e 4–5 dias, não cabe no prazo) | scripts prontos e versionados; fica para trabalho seguinte |
 | E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Estimativa:** faltam 36 simulações do E6 (40–55 min cada com a GPU compartilhada), cerca de 25 h; depois E7, E3, matriz 8 × 8, E8/E9 e, por fim, a campanha de pH (72 simulações, 2–3 dias).
+**Estimativa (medida em 16 simulações):** cada MD leva 75–105 min com a GPU compartilhada. Faltam 32 MDs do E6 (40–56 h), o E3 (~1.413 predições, 15–20 h), a matriz 8 × 8 com E8/E9 (~1 h) e 5 MDs de controle (6–9 h): **2,7 a 3,5 dias de processamento** até dar para fechar o artigo.
 
 **Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida. (iii) a análise de MD não reconhecia o resíduo GLUP do CHARMM36 (o seletor `protein` do MDAnalysis o ignora) e falhou numa simulação; corrigido e todas as simulações concluídas foram reanalisadas; (iv) o RMSD global de controle usava o `md.tpr` (receptor partido pela caixa) como referência; corrigido antes de qualquer uso nos resultados.
 
