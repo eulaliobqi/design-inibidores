@@ -29,7 +29,7 @@ nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader   # quem e
   2277887 (run_boltz.sh, chunk S/c07), 2277900 (boltz predict) e 2278129/2278130 (filhos). A GPU continua com ~9,8 GB reservados
   por ele, o que não atrapalha a MD (16 GB no total).
 - **Retomar quando o E6 e o E3 terminarem:** `ssh eulalio@200.235.143.10 'kill -CONT 2202359 2277887 2277900 2278129 2278130'`
-  (os mesmos PIDs estão em `~/gore_paused_pids.txt`, mas o arquivo só lista o script e as filhas da 1ª tentativa; use a linha acima).
+  (os mesmos 5 PIDs estão também em `~/gore_paused_pids.txt` no servidor).
   Conferir antes com `ps -o pid,stat -p 2202359,2277900` (devem estar em `T`); se algum já tiver terminado, o PID some e o `kill` avisa.
 - Esperado: a MD volta a ~100 ns/dia (~75 min por MD) e as 23 restantes fecham em ~30–40 h.
 
