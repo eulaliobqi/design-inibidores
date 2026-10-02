@@ -1,0 +1,1424 @@
+{
+  "Sfrugiperda__len5_design_9__1__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_9__1",
+    "sequence": "SSTGG",
+    "decoy": 1
+  },
+  "Sfrugiperda__len5_design_9__1__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_9__1",
+    "sequence": "GGTSS",
+    "decoy": 2
+  },
+  "Sfrugiperda__len5_design_9__1__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_9__1",
+    "sequence": "GGSTS",
+    "decoy": 3
+  },
+  "Sfrugiperda__len7_design_2__2__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__2",
+    "sequence": "GTGGGPG",
+    "decoy": 1
+  },
+  "Sfrugiperda__len7_design_2__2__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__2",
+    "sequence": "GGGGGPT",
+    "decoy": 2
+  },
+  "Sfrugiperda__len7_design_2__2__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__2",
+    "sequence": "GTPGGGG",
+    "decoy": 3
+  },
+  "Sfrugiperda__len5_design_7__3__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__3",
+    "sequence": "GGHES",
+    "decoy": 1
+  },
+  "Sfrugiperda__len5_design_7__3__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__3",
+    "sequence": "GEHGS",
+    "decoy": 2
+  },
+  "Sfrugiperda__len5_design_7__3__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__3",
+    "sequence": "HSGEG",
+    "decoy": 3
+  },
+  "Sfrugiperda__len7_design_2__4__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__4",
+    "sequence": "DGGGTGP",
+    "decoy": 1
+  },
+  "Sfrugiperda__len7_design_2__4__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__4",
+    "sequence": "DGGTGPG",
+    "decoy": 2
+  },
+  "Sfrugiperda__len7_design_2__4__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__4",
+    "sequence": "GGDTGPG",
+    "decoy": 3
+  },
+  "Sfrugiperda__len5_design_7__5__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__5",
+    "sequence": "GSTTG",
+    "decoy": 1
+  },
+  "Sfrugiperda__len5_design_7__5__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__5",
+    "sequence": "GGSTT",
+    "decoy": 2
+  },
+  "Sfrugiperda__len5_design_7__5__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__5",
+    "sequence": "GSTTG",
+    "decoy": 3
+  },
+  "Sfrugiperda__len8_design_2__6__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len8_design_2__6",
+    "sequence": "GSTSGTST",
+    "decoy": 1
+  },
+  "Sfrugiperda__len8_design_2__6__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len8_design_2__6",
+    "sequence": "GTSSTGST",
+    "decoy": 2
+  },
+  "Sfrugiperda__len8_design_2__6__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len8_design_2__6",
+    "sequence": "SSGTSTGT",
+    "decoy": 3
+  },
+  "Sfrugiperda__len7_design_2__7__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__7",
+    "sequence": "GNEGGPG",
+    "decoy": 1
+  },
+  "Sfrugiperda__len7_design_2__7__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__7",
+    "sequence": "GPGNGGE",
+    "decoy": 2
+  },
+  "Sfrugiperda__len7_design_2__7__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__7",
+    "sequence": "GNGGEGP",
+    "decoy": 3
+  },
+  "Sfrugiperda__len5_design_7__8__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__8",
+    "sequence": "GGGTS",
+    "decoy": 1
+  },
+  "Sfrugiperda__len5_design_7__8__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__8",
+    "sequence": "STGGG",
+    "decoy": 2
+  },
+  "Sfrugiperda__len5_design_7__8__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len5_design_7__8",
+    "sequence": "GGGST",
+    "decoy": 3
+  },
+  "Sfrugiperda__len7_design_9__9__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_9__9",
+    "sequence": "SIGDING",
+    "decoy": 1
+  },
+  "Sfrugiperda__len7_design_9__9__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_9__9",
+    "sequence": "GSGIDIN",
+    "decoy": 2
+  },
+  "Sfrugiperda__len7_design_9__9__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_9__9",
+    "sequence": "DGINISG",
+    "decoy": 3
+  },
+  "Sfrugiperda__len7_design_2__10__d1": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__10",
+    "sequence": "EGGGGSN",
+    "decoy": 1
+  },
+  "Sfrugiperda__len7_design_2__10__d2": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__10",
+    "sequence": "GEGGGSN",
+    "decoy": 2
+  },
+  "Sfrugiperda__len7_design_2__10__d3": {
+    "species": "Sfrugiperda",
+    "parent": "Sfrugiperda__len7_design_2__10",
+    "sequence": "GSGEGNG",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__1__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__1",
+    "sequence": "SQTPFNPDPNAG",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__1__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__1",
+    "sequence": "DPNTGSPQFPNA",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__1__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__1",
+    "sequence": "QDTPSFNGPNAP",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__2__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__2",
+    "sequence": "DAFDNNSPPPTP",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__2__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__2",
+    "sequence": "ADPNSNPPDPTF",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__2__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__2",
+    "sequence": "NADPDPPPSTFN",
+    "decoy": 3
+  },
+  "Slitura__len7_design_4__3__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__3",
+    "sequence": "TDPRPAS",
+    "decoy": 1
+  },
+  "Slitura__len7_design_4__3__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__3",
+    "sequence": "DPPTSAR",
+    "decoy": 2
+  },
+  "Slitura__len7_design_4__3__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__3",
+    "sequence": "TPRPDSA",
+    "decoy": 3
+  },
+  "Slitura__len7_design_4__4__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__4",
+    "sequence": "GATRPPT",
+    "decoy": 1
+  },
+  "Slitura__len7_design_4__4__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__4",
+    "sequence": "PRPGATT",
+    "decoy": 2
+  },
+  "Slitura__len7_design_4__4__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len7_design_4__4",
+    "sequence": "AGRPPTT",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__5__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__5",
+    "sequence": "PFPPSPDNHNQN",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__5__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__5",
+    "sequence": "PNFQPSPNDHPN",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__5__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__5",
+    "sequence": "PFSNPHNPPQND",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__7__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__7",
+    "sequence": "PSQPFRSPGPDN",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__7__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__7",
+    "sequence": "PGDQPSPRFNPS",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__7__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__7",
+    "sequence": "PGSSRPQFDPPN",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__8__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__8",
+    "sequence": "PNAQDFGTPPQS",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__8__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__8",
+    "sequence": "FQTSNPQDGAPP",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__8__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__8",
+    "sequence": "SATPPQDPQNGF",
+    "decoy": 3
+  },
+  "Slitura__len12_design_7__9__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__9",
+    "sequence": "PFQGSDSPPNGQ",
+    "decoy": 1
+  },
+  "Slitura__len12_design_7__9__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__9",
+    "sequence": "FPNPDPQQGSSG",
+    "decoy": 2
+  },
+  "Slitura__len12_design_7__9__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len12_design_7__9",
+    "sequence": "SPPNPSDFQGGQ",
+    "decoy": 3
+  },
+  "Slitura__len8_design_9__10__d1": {
+    "species": "Slitura",
+    "parent": "Slitura__len8_design_9__10",
+    "sequence": "GPSSSSGN",
+    "decoy": 1
+  },
+  "Slitura__len8_design_9__10__d2": {
+    "species": "Slitura",
+    "parent": "Slitura__len8_design_9__10",
+    "sequence": "SSGPNSGS",
+    "decoy": 2
+  },
+  "Slitura__len8_design_9__10__d3": {
+    "species": "Slitura",
+    "parent": "Slitura__len8_design_9__10",
+    "sequence": "GSSGPSSN",
+    "decoy": 3
+  },
+  "Onubilalis__len7_design_1__1__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_1__1",
+    "sequence": "GPGGGNI",
+    "decoy": 1
+  },
+  "Onubilalis__len7_design_1__1__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_1__1",
+    "sequence": "GIGPGGN",
+    "decoy": 2
+  },
+  "Onubilalis__len7_design_1__1__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_1__1",
+    "sequence": "IGGPGGN",
+    "decoy": 3
+  },
+  "Onubilalis__len10_design_5__2__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_5__2",
+    "sequence": "GSGHQPSTGP",
+    "decoy": 1
+  },
+  "Onubilalis__len10_design_5__2__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_5__2",
+    "sequence": "PGSGPGTSQH",
+    "decoy": 2
+  },
+  "Onubilalis__len10_design_5__2__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_5__2",
+    "sequence": "GSGHTQGPPS",
+    "decoy": 3
+  },
+  "Onubilalis__len5_design_9__3__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__3",
+    "sequence": "SNNGI",
+    "decoy": 1
+  },
+  "Onubilalis__len5_design_9__3__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__3",
+    "sequence": "GINSN",
+    "decoy": 2
+  },
+  "Onubilalis__len5_design_9__3__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__3",
+    "sequence": "NNIGS",
+    "decoy": 3
+  },
+  "Onubilalis__len8_design_9__4__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__4",
+    "sequence": "DPPGGGGG",
+    "decoy": 1
+  },
+  "Onubilalis__len8_design_9__4__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__4",
+    "sequence": "GGPGDGPG",
+    "decoy": 2
+  },
+  "Onubilalis__len8_design_9__4__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__4",
+    "sequence": "DGGPGGPG",
+    "decoy": 3
+  },
+  "Onubilalis__len5_design_9__5__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__5",
+    "sequence": "DQGSN",
+    "decoy": 1
+  },
+  "Onubilalis__len5_design_9__5__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__5",
+    "sequence": "DQNGS",
+    "decoy": 2
+  },
+  "Onubilalis__len5_design_9__5__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len5_design_9__5",
+    "sequence": "NGSDQ",
+    "decoy": 3
+  },
+  "Onubilalis__len6_design_7__6__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_7__6",
+    "sequence": "GISSTT",
+    "decoy": 1
+  },
+  "Onubilalis__len6_design_7__6__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_7__6",
+    "sequence": "SGSITT",
+    "decoy": 2
+  },
+  "Onubilalis__len6_design_7__6__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_7__6",
+    "sequence": "TSSIGT",
+    "decoy": 3
+  },
+  "Onubilalis__len6_design_4__7__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_4__7",
+    "sequence": "GGSSND",
+    "decoy": 1
+  },
+  "Onubilalis__len6_design_4__7__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_4__7",
+    "sequence": "SGNDGS",
+    "decoy": 2
+  },
+  "Onubilalis__len6_design_4__7__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len6_design_4__7",
+    "sequence": "NGGSSD",
+    "decoy": 3
+  },
+  "Onubilalis__len7_design_0__8__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_0__8",
+    "sequence": "EGDTHTD",
+    "decoy": 1
+  },
+  "Onubilalis__len7_design_0__8__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_0__8",
+    "sequence": "DHTGTED",
+    "decoy": 2
+  },
+  "Onubilalis__len7_design_0__8__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len7_design_0__8",
+    "sequence": "TGDETHD",
+    "decoy": 3
+  },
+  "Onubilalis__len10_design_8__9__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_8__9",
+    "sequence": "SIIGGLTSPD",
+    "decoy": 1
+  },
+  "Onubilalis__len10_design_8__9__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_8__9",
+    "sequence": "TSIDGPSILG",
+    "decoy": 2
+  },
+  "Onubilalis__len10_design_8__9__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len10_design_8__9",
+    "sequence": "GGSLIPDTSI",
+    "decoy": 3
+  },
+  "Onubilalis__len8_design_9__10__d1": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__10",
+    "sequence": "GGGGGPQP",
+    "decoy": 1
+  },
+  "Onubilalis__len8_design_9__10__d2": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__10",
+    "sequence": "GPGGGPQG",
+    "decoy": 2
+  },
+  "Onubilalis__len8_design_9__10__d3": {
+    "species": "Onubilalis",
+    "parent": "Onubilalis__len8_design_9__10",
+    "sequence": "GGGPGPGQ",
+    "decoy": 3
+  },
+  "Dsaccharalis__len6_design_1__1__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_1__1",
+    "sequence": "GTPIYE",
+    "decoy": 1
+  },
+  "Dsaccharalis__len6_design_1__1__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_1__1",
+    "sequence": "GTEPIY",
+    "decoy": 2
+  },
+  "Dsaccharalis__len6_design_1__1__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_1__1",
+    "sequence": "TYIGPE",
+    "decoy": 3
+  },
+  "Dsaccharalis__len5_design_9__2__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_9__2",
+    "sequence": "ISGGG",
+    "decoy": 1
+  },
+  "Dsaccharalis__len5_design_9__2__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_9__2",
+    "sequence": "GSIGG",
+    "decoy": 2
+  },
+  "Dsaccharalis__len5_design_9__2__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_9__2",
+    "sequence": "GSIGG",
+    "decoy": 3
+  },
+  "Dsaccharalis__len7_design_6__3__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_6__3",
+    "sequence": "GGIGTES",
+    "decoy": 1
+  },
+  "Dsaccharalis__len7_design_6__3__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_6__3",
+    "sequence": "TGGISEG",
+    "decoy": 2
+  },
+  "Dsaccharalis__len7_design_6__3__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_6__3",
+    "sequence": "SIGGETG",
+    "decoy": 3
+  },
+  "Dsaccharalis__len5_design_3__4__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__4",
+    "sequence": "NGIGS",
+    "decoy": 1
+  },
+  "Dsaccharalis__len5_design_3__4__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__4",
+    "sequence": "GGNIS",
+    "decoy": 2
+  },
+  "Dsaccharalis__len5_design_3__4__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__4",
+    "sequence": "IGNGS",
+    "decoy": 3
+  },
+  "Dsaccharalis__len5_design_3__5__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__5",
+    "sequence": "SGDGI",
+    "decoy": 1
+  },
+  "Dsaccharalis__len5_design_3__5__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__5",
+    "sequence": "IDGSG",
+    "decoy": 2
+  },
+  "Dsaccharalis__len5_design_3__5__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__5",
+    "sequence": "ISGGD",
+    "decoy": 3
+  },
+  "Dsaccharalis__len7_design_5__6__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__6",
+    "sequence": "GNGNGIG",
+    "decoy": 1
+  },
+  "Dsaccharalis__len7_design_5__6__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__6",
+    "sequence": "GIGGNGN",
+    "decoy": 2
+  },
+  "Dsaccharalis__len7_design_5__6__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__6",
+    "sequence": "NGGNGIG",
+    "decoy": 3
+  },
+  "Dsaccharalis__len7_design_5__7__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__7",
+    "sequence": "GISDGNG",
+    "decoy": 1
+  },
+  "Dsaccharalis__len7_design_5__7__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__7",
+    "sequence": "SIGDGGN",
+    "decoy": 2
+  },
+  "Dsaccharalis__len7_design_5__7__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len7_design_5__7",
+    "sequence": "GSNGGID",
+    "decoy": 3
+  },
+  "Dsaccharalis__len5_design_3__8__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__8",
+    "sequence": "IDNGG",
+    "decoy": 1
+  },
+  "Dsaccharalis__len5_design_3__8__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__8",
+    "sequence": "DGIGN",
+    "decoy": 2
+  },
+  "Dsaccharalis__len5_design_3__8__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len5_design_3__8",
+    "sequence": "GDNGI",
+    "decoy": 3
+  },
+  "Dsaccharalis__len8_design_1__9__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len8_design_1__9",
+    "sequence": "ETTGTTES",
+    "decoy": 1
+  },
+  "Dsaccharalis__len8_design_1__9__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len8_design_1__9",
+    "sequence": "SGTETTTE",
+    "decoy": 2
+  },
+  "Dsaccharalis__len8_design_1__9__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len8_design_1__9",
+    "sequence": "GTTSTTEE",
+    "decoy": 3
+  },
+  "Dsaccharalis__len6_design_9__10__d1": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_9__10",
+    "sequence": "PTTQTT",
+    "decoy": 1
+  },
+  "Dsaccharalis__len6_design_9__10__d2": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_9__10",
+    "sequence": "TQTTTP",
+    "decoy": 2
+  },
+  "Dsaccharalis__len6_design_9__10__d3": {
+    "species": "Dsaccharalis",
+    "parent": "Dsaccharalis__len6_design_9__10",
+    "sequence": "TTQTTP",
+    "decoy": 3
+  },
+  "Cincludens__len5_design_5__1__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__1",
+    "sequence": "TNTGD",
+    "decoy": 1
+  },
+  "Cincludens__len5_design_5__1__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__1",
+    "sequence": "DTGTN",
+    "decoy": 2
+  },
+  "Cincludens__len5_design_5__1__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__1",
+    "sequence": "TTNDG",
+    "decoy": 3
+  },
+  "Cincludens__len10_design_8__2__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__2",
+    "sequence": "RSQGPSIDSI",
+    "decoy": 1
+  },
+  "Cincludens__len10_design_8__2__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__2",
+    "sequence": "SPSSGQIIDR",
+    "decoy": 2
+  },
+  "Cincludens__len10_design_8__2__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__2",
+    "sequence": "RSISDQGPSI",
+    "decoy": 3
+  },
+  "Cincludens__len7_design_2__3__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__3",
+    "sequence": "TIGSSDE",
+    "decoy": 1
+  },
+  "Cincludens__len7_design_2__3__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__3",
+    "sequence": "DSGETIS",
+    "decoy": 2
+  },
+  "Cincludens__len7_design_2__3__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__3",
+    "sequence": "DGTSESI",
+    "decoy": 3
+  },
+  "Cincludens__len5_design_5__4__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__4",
+    "sequence": "NTDNG",
+    "decoy": 1
+  },
+  "Cincludens__len5_design_5__4__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__4",
+    "sequence": "TNNGD",
+    "decoy": 2
+  },
+  "Cincludens__len5_design_5__4__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_5__4",
+    "sequence": "DNGTN",
+    "decoy": 3
+  },
+  "Cincludens__len7_design_2__5__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__5",
+    "sequence": "DGDIGST",
+    "decoy": 1
+  },
+  "Cincludens__len7_design_2__5__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__5",
+    "sequence": "DITGDGS",
+    "decoy": 2
+  },
+  "Cincludens__len7_design_2__5__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_2__5",
+    "sequence": "GISTDDG",
+    "decoy": 3
+  },
+  "Cincludens__len6_design_8__6__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_8__6",
+    "sequence": "GSTTTG",
+    "decoy": 1
+  },
+  "Cincludens__len6_design_8__6__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_8__6",
+    "sequence": "GGTTST",
+    "decoy": 2
+  },
+  "Cincludens__len6_design_8__6__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_8__6",
+    "sequence": "TSGTGT",
+    "decoy": 3
+  },
+  "Cincludens__len7_design_6__7__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_6__7",
+    "sequence": "TSSGTDP",
+    "decoy": 1
+  },
+  "Cincludens__len7_design_6__7__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_6__7",
+    "sequence": "TSTPSGD",
+    "decoy": 2
+  },
+  "Cincludens__len7_design_6__7__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len7_design_6__7",
+    "sequence": "TTSSGPD",
+    "decoy": 3
+  },
+  "Cincludens__len5_design_2__8__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_2__8",
+    "sequence": "GNGNG",
+    "decoy": 1
+  },
+  "Cincludens__len5_design_2__8__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_2__8",
+    "sequence": "GGNGN",
+    "decoy": 2
+  },
+  "Cincludens__len5_design_2__8__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len5_design_2__8",
+    "sequence": "NGGGN",
+    "decoy": 3
+  },
+  "Cincludens__len10_design_8__9__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__9",
+    "sequence": "SISNSSSIGT",
+    "decoy": 1
+  },
+  "Cincludens__len10_design_8__9__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__9",
+    "sequence": "SNTSSISGIS",
+    "decoy": 2
+  },
+  "Cincludens__len10_design_8__9__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len10_design_8__9",
+    "sequence": "ISTSNSSSGI",
+    "decoy": 3
+  },
+  "Cincludens__len6_design_5__10__d1": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_5__10",
+    "sequence": "GSSDGE",
+    "decoy": 1
+  },
+  "Cincludens__len6_design_5__10__d2": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_5__10",
+    "sequence": "EGGDSS",
+    "decoy": 2
+  },
+  "Cincludens__len6_design_5__10__d3": {
+    "species": "Cincludens",
+    "parent": "Cincludens__len6_design_5__10",
+    "sequence": "GSEGSD",
+    "decoy": 3
+  },
+  "Hvirescens__len7_design_9__1__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_9__1",
+    "sequence": "GYGPPGG",
+    "decoy": 1
+  },
+  "Hvirescens__len7_design_9__1__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_9__1",
+    "sequence": "GGYGGPP",
+    "decoy": 2
+  },
+  "Hvirescens__len7_design_9__1__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_9__1",
+    "sequence": "PPGGGGY",
+    "decoy": 3
+  },
+  "Hvirescens__len8_design_2__2__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__2",
+    "sequence": "PDGGNSPD",
+    "decoy": 1
+  },
+  "Hvirescens__len8_design_2__2__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__2",
+    "sequence": "PDDGNPGS",
+    "decoy": 2
+  },
+  "Hvirescens__len8_design_2__2__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__2",
+    "sequence": "PDGSGDNP",
+    "decoy": 3
+  },
+  "Hvirescens__len7_design_2__3__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__3",
+    "sequence": "TSSHSGG",
+    "decoy": 1
+  },
+  "Hvirescens__len7_design_2__3__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__3",
+    "sequence": "SSTGSHG",
+    "decoy": 2
+  },
+  "Hvirescens__len7_design_2__3__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__3",
+    "sequence": "TSHSSGG",
+    "decoy": 3
+  },
+  "Hvirescens__len6_design_7__4__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_7__4",
+    "sequence": "SSPSEN",
+    "decoy": 1
+  },
+  "Hvirescens__len6_design_7__4__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_7__4",
+    "sequence": "SSPNES",
+    "decoy": 2
+  },
+  "Hvirescens__len6_design_7__4__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_7__4",
+    "sequence": "EPSSNS",
+    "decoy": 3
+  },
+  "Hvirescens__len5_design_6__5__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__5",
+    "sequence": "AGPHE",
+    "decoy": 1
+  },
+  "Hvirescens__len5_design_6__5__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__5",
+    "sequence": "GAHEP",
+    "decoy": 2
+  },
+  "Hvirescens__len5_design_6__5__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__5",
+    "sequence": "GPHAE",
+    "decoy": 3
+  },
+  "Hvirescens__len8_design_2__6__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__6",
+    "sequence": "PQGDGGSP",
+    "decoy": 1
+  },
+  "Hvirescens__len8_design_2__6__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__6",
+    "sequence": "DSQGGPGP",
+    "decoy": 2
+  },
+  "Hvirescens__len8_design_2__6__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len8_design_2__6",
+    "sequence": "GGSGPDQP",
+    "decoy": 3
+  },
+  "Hvirescens__len5_design_2__7__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_2__7",
+    "sequence": "GTTNG",
+    "decoy": 1
+  },
+  "Hvirescens__len5_design_2__7__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_2__7",
+    "sequence": "GNGTT",
+    "decoy": 2
+  },
+  "Hvirescens__len5_design_2__7__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_2__7",
+    "sequence": "TGTGN",
+    "decoy": 3
+  },
+  "Hvirescens__len5_design_6__8__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__8",
+    "sequence": "EGHSP",
+    "decoy": 1
+  },
+  "Hvirescens__len5_design_6__8__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__8",
+    "sequence": "EGHSP",
+    "decoy": 2
+  },
+  "Hvirescens__len5_design_6__8__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len5_design_6__8",
+    "sequence": "GSPEH",
+    "decoy": 3
+  },
+  "Hvirescens__len7_design_2__9__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__9",
+    "sequence": "SPGSGTI",
+    "decoy": 1
+  },
+  "Hvirescens__len7_design_2__9__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__9",
+    "sequence": "GIGSTPS",
+    "decoy": 2
+  },
+  "Hvirescens__len7_design_2__9__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len7_design_2__9",
+    "sequence": "GITSPGS",
+    "decoy": 3
+  },
+  "Hvirescens__len6_design_2__10__d1": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_2__10",
+    "sequence": "IPGHGG",
+    "decoy": 1
+  },
+  "Hvirescens__len6_design_2__10__d2": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_2__10",
+    "sequence": "PGGGHI",
+    "decoy": 2
+  },
+  "Hvirescens__len6_design_2__10__d3": {
+    "species": "Hvirescens",
+    "parent": "Hvirescens__len6_design_2__10",
+    "sequence": "GIGGPH",
+    "decoy": 3
+  },
+  "Pxylostella__len6_design_7__1__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__1",
+    "sequence": "GHGHGG",
+    "decoy": 1
+  },
+  "Pxylostella__len6_design_7__1__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__1",
+    "sequence": "GHGHGG",
+    "decoy": 2
+  },
+  "Pxylostella__len6_design_7__1__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__1",
+    "sequence": "HGGGHG",
+    "decoy": 3
+  },
+  "Pxylostella__len6_design_2__2__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_2__2",
+    "sequence": "GHGGGG",
+    "decoy": 1
+  },
+  "Pxylostella__len6_design_2__2__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_2__2",
+    "sequence": "GGGGGH",
+    "decoy": 2
+  },
+  "Pxylostella__len6_design_2__2__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_2__2",
+    "sequence": "GGHGGG",
+    "decoy": 3
+  },
+  "Pxylostella__len7_design_6__3__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__3",
+    "sequence": "HGGSGGN",
+    "decoy": 1
+  },
+  "Pxylostella__len7_design_6__3__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__3",
+    "sequence": "NGGGGSH",
+    "decoy": 2
+  },
+  "Pxylostella__len7_design_6__3__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__3",
+    "sequence": "GGHGSGN",
+    "decoy": 3
+  },
+  "Pxylostella__len7_design_6__4__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__4",
+    "sequence": "GHGGSGG",
+    "decoy": 1
+  },
+  "Pxylostella__len7_design_6__4__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__4",
+    "sequence": "SGGGGGH",
+    "decoy": 2
+  },
+  "Pxylostella__len7_design_6__4__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len7_design_6__4",
+    "sequence": "SGGGGHG",
+    "decoy": 3
+  },
+  "Pxylostella__len6_design_7__5__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__5",
+    "sequence": "GGGGGH",
+    "decoy": 1
+  },
+  "Pxylostella__len6_design_7__5__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__5",
+    "sequence": "GGGGGH",
+    "decoy": 2
+  },
+  "Pxylostella__len6_design_7__5__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_7__5",
+    "sequence": "GHGGGG",
+    "decoy": 3
+  },
+  "Pxylostella__len5_design_6__6__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__6",
+    "sequence": "EGGSG",
+    "decoy": 1
+  },
+  "Pxylostella__len5_design_6__6__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__6",
+    "sequence": "GGESG",
+    "decoy": 2
+  },
+  "Pxylostella__len5_design_6__6__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__6",
+    "sequence": "GGGSE",
+    "decoy": 3
+  },
+  "Pxylostella__len5_design_3__7__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_3__7",
+    "sequence": "QNGGP",
+    "decoy": 1
+  },
+  "Pxylostella__len5_design_3__7__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_3__7",
+    "sequence": "GGNQP",
+    "decoy": 2
+  },
+  "Pxylostella__len5_design_3__7__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_3__7",
+    "sequence": "QPGNG",
+    "decoy": 3
+  },
+  "Pxylostella__len5_design_6__8__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__8",
+    "sequence": "GHGGG",
+    "decoy": 1
+  },
+  "Pxylostella__len5_design_6__8__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__8",
+    "sequence": "HGGGG",
+    "decoy": 2
+  },
+  "Pxylostella__len5_design_6__8__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len5_design_6__8",
+    "sequence": "GGGHG",
+    "decoy": 3
+  },
+  "Pxylostella__len8_design_8__9__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len8_design_8__9",
+    "sequence": "SEDPSIPP",
+    "decoy": 1
+  },
+  "Pxylostella__len8_design_8__9__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len8_design_8__9",
+    "sequence": "EPDSPPSI",
+    "decoy": 2
+  },
+  "Pxylostella__len8_design_8__9__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len8_design_8__9",
+    "sequence": "SSPPEPID",
+    "decoy": 3
+  },
+  "Pxylostella__len6_design_5__10__d1": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_5__10",
+    "sequence": "GGGGSG",
+    "decoy": 1
+  },
+  "Pxylostella__len6_design_5__10__d2": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_5__10",
+    "sequence": "GGGGGS",
+    "decoy": 2
+  },
+  "Pxylostella__len6_design_5__10__d3": {
+    "species": "Pxylostella",
+    "parent": "Pxylostella__len6_design_5__10",
+    "sequence": "GGGGGS",
+    "decoy": 3
+  },
+  "Agemmatalis__len6_design_4__1__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__1",
+    "sequence": "SGGSQS",
+    "decoy": 1
+  },
+  "Agemmatalis__len6_design_4__1__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__1",
+    "sequence": "SGSGQS",
+    "decoy": 2
+  },
+  "Agemmatalis__len6_design_4__1__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__1",
+    "sequence": "GGQSSS",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_9__2__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_9__2",
+    "sequence": "GGEGKPP",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_9__2__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_9__2",
+    "sequence": "KPGGGEP",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_9__2__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_9__2",
+    "sequence": "GGEKPPG",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_0__3__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__3",
+    "sequence": "PATGGEI",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_0__3__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__3",
+    "sequence": "IETGPGA",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_0__3__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__3",
+    "sequence": "ATGIEPG",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_5__4__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_5__4",
+    "sequence": "GGHTSPG",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_5__4__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_5__4",
+    "sequence": "GTPGHSG",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_5__4__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_5__4",
+    "sequence": "TPGGGHS",
+    "decoy": 3
+  },
+  "Agemmatalis__len6_design_5__5__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_5__5",
+    "sequence": "GPITGI",
+    "decoy": 1
+  },
+  "Agemmatalis__len6_design_5__5__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_5__5",
+    "sequence": "IGTGIP",
+    "decoy": 2
+  },
+  "Agemmatalis__len6_design_5__5__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_5__5",
+    "sequence": "GIPTGI",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_6__6__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__6",
+    "sequence": "PPWDGES",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_6__6__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__6",
+    "sequence": "PGSDWPE",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_6__6__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__6",
+    "sequence": "WDPPGSE",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_0__7__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__7",
+    "sequence": "TIEGGGP",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_0__7__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__7",
+    "sequence": "GEPITGG",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_0__7__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_0__7",
+    "sequence": "PGGGIET",
+    "decoy": 3
+  },
+  "Agemmatalis__len8_design_0__8__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len8_design_0__8",
+    "sequence": "QSGDPAGP",
+    "decoy": 1
+  },
+  "Agemmatalis__len8_design_0__8__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len8_design_0__8",
+    "sequence": "QGAGPPSD",
+    "decoy": 2
+  },
+  "Agemmatalis__len8_design_0__8__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len8_design_0__8",
+    "sequence": "SDGQPPAG",
+    "decoy": 3
+  },
+  "Agemmatalis__len6_design_4__9__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__9",
+    "sequence": "TSHDGG",
+    "decoy": 1
+  },
+  "Agemmatalis__len6_design_4__9__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__9",
+    "sequence": "GTHSDG",
+    "decoy": 2
+  },
+  "Agemmatalis__len6_design_4__9__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len6_design_4__9",
+    "sequence": "STDGGH",
+    "decoy": 3
+  },
+  "Agemmatalis__len7_design_6__10__d1": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__10",
+    "sequence": "LSSSGPP",
+    "decoy": 1
+  },
+  "Agemmatalis__len7_design_6__10__d2": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__10",
+    "sequence": "SSLPSGP",
+    "decoy": 2
+  },
+  "Agemmatalis__len7_design_6__10__d3": {
+    "species": "Agemmatalis",
+    "parent": "Agemmatalis__len7_design_6__10",
+    "sequence": "SSPSLPG",
+    "decoy": 3
+  }
+}

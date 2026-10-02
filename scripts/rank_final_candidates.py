@@ -13,6 +13,12 @@ Camadas (declaradas em 01/10/2026, quando 12/48 MDs ja eram conhecidas; nenhum l
   P  MD ainda nao disponivel                                                                        -> pendente
 Dentro da camada: ocupancia de S1 (2a metade) decrescente, depois delta (E3), depois confianca (E2). Criterio faltante (ex.: E3 ainda
 nao rodou) deixa o candidato marcado `provisorio`. A MD de 10 ns verifica estabilidade da pose; nao e' estimativa de afinidade.
+
+LEITURA DAS CAMADAS (corrigida em 01/10/2026 pelo resultado dos controles, docs/PLANO_DE_ANALISES_2026-10-01.md):
+camada A/B significa "sobreviveu a todos os filtros disponiveis", NAO "deve inibir". A ocupancia de S1 e' necessaria
+e nao suficiente: nos 11 complexos da calibracao, as 5 iscas embaralhadas tambem a satisfazem. A evidencia decisiva
+por candidato e' a coluna `ctrl_decoy_occ5_h2`: a ocupancia do controle embaralhado DO PROPRIO candidato, no mesmo
+protocolo (`run_md_controls.py`). Enquanto ela nao existir, nenhum candidato passa de provisorio.
 Uso: python scripts/rank_final_candidates.py --layout server|local --data data-e2-results --out outputs/ranking_final [--lang en|pt]
 """
 import argparse
@@ -55,8 +61,19 @@ def main():
                 "L10n": O / "mdph_L_ph10/analysis_summary.json", "L82": O / "mdph_L_ph8.2/analysis_summary.json",
                 "M82": O / "mdph_M_ph8.2/analysis_summary.json"}[what]
 
+    # controle embaralhado do proprio candidato (mesmo protocolo), quando ja simulado
+    def controls(front):
+        q = (ROOT / a.data / f"md10_controls_{front}_analysis.json") if a.layout == "local" else (ROOT / f"outputs/md10_controls_{front}/analysis_summary.json")
+        d = jl(q)
+        out = {}
+        for k, v in d.items():
+            if "occ_5A_h2" in v:
+                out.setdefault(k.split("__ctrl_")[0], []).append(v["occ_5A_h2"])
+        return out
+
     rows = []
     for front in "LM":
+        ctrl = controls(front)
         top = jl(P(front, "top")).get("candidates", {})
         qc, ana = jl(P(front, "qc")), jl(P(front, "ana"))
         delta = {r["stem"]: r for v in jl(P(front, "delta")).values() for r in v}
@@ -92,6 +109,8 @@ def main():
                 "occ5_h2": m.get("occ_5A_h2"), "anchor": m.get("anchor_aa"), "anchor_same": m.get("anchor_same_in_halves"),
                 "ring_strict": ring, "ring_frac_ge150": m.get("ring_omega_frac_ge150"),
                 "ph_occ": phs, "ph_robust": (all(v >= 0.7 for v in have_ph) if have_ph and has_md and (m.get("occ_5A_h2", 0) >= 0.7) else None),
+                "ctrl_decoy_occ5_h2": (max(ctrl[key]) if ctrl.get(key) else None),
+                "ctrl_n": len(ctrl.get(key, [])),
                 "tier": tier, "provisional": bool(pending) or not has_md, "pending": pending, "failed": [k for k, v in others.items() if v is False] + ([] if s1 in (True, None) else ["s1_occupancy"]),
             })
     order = {"A": 0, "B": 1, "C": 2, "P": 3}
@@ -99,7 +118,7 @@ def main():
     (out / "ranking_final.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False))
     with open(out / "ranking_final.csv", "w", newline="", encoding="utf-8") as f:
         cols = ["front", "tier", "provisional", "species", "sequence", "confidence_E2", "delta_E3", "qc_pose", "occ5_h2", "anchor", "anchor_same",
-                "ring_strict", "ring_frac_ge150", "ph_robust", "has_KR", "start_dist_Asp189_A", "failed", "pending", "key"]
+                "ring_strict", "ring_frac_ge150", "ctrl_decoy_occ5_h2", "ph_robust", "has_KR", "start_dist_Asp189_A", "failed", "pending", "key"]
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
         for r in rows:
