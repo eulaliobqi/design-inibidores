@@ -74,10 +74,12 @@ def pbc_traj(sp_dir: Path) -> Path:
     return out
 
 
-def analyze(species: str, seq: str, cyclic: bool | None = None) -> dict:
-    """`species` pode ser a chave composta "{especie}__r{rank}" (top-k por especie)."""
+def analyze(species: str, seq: str, cyclic: bool | None = None, receptor: str | None = None) -> dict:
+    """`species` pode ser a chave composta "{especie}__r{rank}" (top-k por especie). `receptor` permite
+    analisar um sistema cuja pasta nao se chama como a especie (ex.: os controles da calibracao,
+    `sfrug__SFTI1`, que usam o receptor de S. frugiperda)."""
     sp_dir = MD_DIR / species
-    res_map = receptor_residues(species.split("__")[0])
+    res_map = receptor_residues(receptor or species.split("__")[0])
     u = mda.Universe(str(sp_dir / "md.tpr"), str(pbc_traj(sp_dir)))
     # o seletor "protein" do MDAnalysis nao reconhece alguns nomes CHARMM36 (ex.: GLUP): inclui-os explicitamente
     prot = u.select_atoms("protein or resname " + " ".join(sorted(_STD_RES)))
