@@ -140,12 +140,15 @@ def main():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    plt.rcParams.update({"font.size": 8, "savefig.dpi": 300})
-    fig, axes = plt.subplots(1, 2, figsize=(13, 9.5), gridspec_kw={"wspace": .55})
+    import sys
+    sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
+    from frontiers_style import apply_style, mm_figsize, save_journal
+    apply_style()
+    fig, axes = plt.subplots(1, 2, figsize=mm_figsize("double", 125), gridspec_kw={"wspace": .62})
     TC = {"A": "#2a9d8f", "B": "#e9c46a", "C": "#c8553d", "P": "#bdbdbd"}
     for ax, front, nm in zip(axes, "LM", (T("Linear front", "Frente linear"), T("Macrocycle front", "Frente macrocíclica"))):
         rr = [r for r in rows if r["front"] == front]
-        cols = [T("E2 conf.", "conf. E2"), T("Δ E3", "Δ E3"), "QC", T("S1 occ.", "ocup. S1"), T("anchor=", "âncora="), T("ring", "anel"), T("pH rob.", "pH rob.")]
+        cols = [T("E2 conf.", "conf. E2"), T("Δ E3", "Δ E3"), "QC", T("S1 occ.", "ocup. S1"), T("anchor=", "âncora="), T("ring", "anel")]
         M = np.full((len(rr), len(cols)), np.nan)
         txt = [[""] * len(cols) for _ in rr]
         for i, r in enumerate(rr):
@@ -159,29 +162,23 @@ def main():
                 M[i, 4] = 1 if r["anchor_same"] else 0; txt[i][4] = (r["anchor"] or "") + (" ✓" if r["anchor_same"] else " ✗")
             if r["ring_strict"] is not None:
                 M[i, 5] = 1 if r["ring_strict"] else 0.15; txt[i][5] = "✓" if r["ring_strict"] else (f"✗ {r['ring_frac_ge150']:.3f}" if r["ring_frac_ge150"] else "✗")
-            if r["ph_robust"] is not None:
-                M[i, 6] = 1 if r["ph_robust"] else 0; txt[i][6] = "✓" if r["ph_robust"] else "✗"
         ax.imshow(np.ma.masked_invalid(M), aspect="auto", cmap="YlGn", vmin=0, vmax=1)
         for i in range(len(rr)):
             for j in range(len(cols)):
                 if txt[i][j]:
                     v = M[i, j]
-                    ax.text(j, i, txt[i][j], ha="center", va="center", fontsize=6.5,
+                    ax.text(j, i, txt[i][j], ha="center", va="center", fontsize=8,
                             color="white" if (not np.isnan(v) and v > 0.55) else "black")
         ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, rotation=40, ha="right")
         ax.set_yticks(range(len(rr)))
-        ax.set_yticklabels([f"{r['tier']}  {r['species'][0]}. {r['species'][1:]}  {r['sequence']}" for r in rr], fontsize=6.5)
+        ax.set_yticklabels([f"{r['tier']} {r['species'][0]}. {r['species'][1:4]}. {r['sequence']}" for r in rr], fontsize=8)
         for lab, r in zip(ax.get_yticklabels(), rr):
             lab.set_color(TC[r["tier"]] if r["tier"] != "P" else "gray")
             lab.set_fontweight("bold" if r["tier"] in "AB" else "normal")
-        ax.set_title(nm, fontsize=10)
-    fig.suptitle(T("Evidence matrix of the 48 final candidates (blank = not yet available; A/B/C/P = tiers; provisional while E3 and the MDs run)",
-                   "Matriz de evidências dos 48 candidatos finais (vazio = ainda não disponível; A/B/C/P = camadas; provisório enquanto E3 e as MDs rodam)"), fontsize=9)
-    fig.subplots_adjust(top=.93, left=.2, right=.97, bottom=.08)
-    name = "Figure13_final_candidates" if EN else "fig13_candidatos_finais"
-    fig.savefig(out / f"{name}.png"); fig.savefig(out / f"{name}.pdf")
-    from PIL import Image
-    Image.open(out / f"{name}.png").convert("RGB").save(out / f"{name}.tif", compression="tiff_lzw", dpi=(300, 300))
+        ax.set_title(nm)
+    fig.subplots_adjust(top=.95, left=.21, right=.98, bottom=.12)
+    name = "Figure12_final_candidates" if EN else "fig12_candidatos_finais"
+    save_journal(fig, out / name)
     cnt = {f: {t: sum(1 for r in rows if r["front"] == f and r["tier"] == t) for t in "ABCP"} for f in "LM"}
     print(json.dumps(cnt))
 

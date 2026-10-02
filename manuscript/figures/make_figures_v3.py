@@ -18,7 +18,9 @@ from matplotlib.patches import FancyBboxPatch
 D, O, LG = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 O.mkdir(parents=True, exist_ok=True)
 EN = LG == "en"
-plt.rcParams.update({"font.size": 10, "savefig.dpi": 300, "axes.spines.top": False, "axes.spines.right": False, "figure.dpi": 150})
+from frontiers_style import apply_style, mm_figsize, save_journal
+
+apply_style()   # 8 pt e 180 mm: exigencias da revista, ver frontiers_style.py
 
 
 def T(en, pt):
@@ -62,55 +64,66 @@ def comp(rs):
 
 # ---- Figura 1: esquema do pipeline -----------------------------------------------------------
 def fig_pipeline(status_e1="run"):
-    fig, ax = plt.subplots(figsize=(11, 5.2))
-    ax.set_xlim(0, 11); ax.set_ylim(0, 5.6); ax.axis("off")
+    """Esquema do pipeline em 180 mm. Reescrito em 01/10/2026: o leiaute antigo era de uma tela larga
+    (330 mm) e, ao ser trazido para a largura da revista com o texto no piso de 8 pt, as caixas se
+    sobrepunham. Agora sao duas faixas, com texto curto; os numeros detalhados vivem na legenda."""
+    fig, ax = plt.subplots(figsize=mm_figsize("double", 92))
+    ax.set_xlim(0, 100); ax.set_ylim(0, 56); ax.axis("off")
     col = {"done": "#b7e4c7", "run": "#ffe066", "todo": "#e9ecef"}
 
-    def box(x, y, w, h, t, st, fs=7.3):
-        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.03", fc=col[st], ec="#495057", lw=.8))
-        ax.text(x + w / 2, y + h / 2, t, ha="center", va="center", fontsize=fs)
+    def box(x, y, w, h, t, st):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.6", fc=col[st], ec="#495057", lw=.8))
+        ax.text(x + w / 2, y + h / 2, t, ha="center", va="center", linespacing=1.35)
 
     def arr(x1, y1, x2, y2):
-        ax.annotate("", (x2, y2), (x1, y1), arrowprops=dict(arrowstyle="->", color="#495057", lw=.9))
+        ax.annotate("", (x2, y2), (x1, y1), arrowprops=dict(arrowstyle="->", color="#495057", lw=1.0))
 
-    box(.05, 2.25, 1.55, 1.1, T("8 receptors\n+ S1–S3' subsites\n(TM 0.946–0.957)", "8 receptores\n+ sub-sítios S1–S3'\n(TM 0,946–0,957)"), "done")
-    box(1.8, 2.25, 1.55, 1.1, T("Calibration:\n6 inhibitors + decoys\n(Boltz-2 10/10 pairs)", "Calibração:\n6 inibidores + decoys\n(Boltz-2 10/10 pares)"), "done")
-    box(3.55, 2.25, 1.55, 1.1, T("RFdiffusion + MPNN\n880 backbones\n22,066 sequences", "RFdiffusion + MPNN\n880 backbones\n22.066 sequências"), "done")
-    box(5.3, 2.25, 1.6, 1.1, T("E0  hard criterion\n(no K/R/F/Y/W/L/M/A/V\nat P1; Fig. 2)", "E0  critério duro\n(sem K/R/F/Y/W/L/M/A/V\nem P1; Fig. 2)"), "done")
-    for a, b in ((1.6, 1.8), (3.35, 3.55), (5.1, 5.3)):
-        arr(a, 2.8, b, 2.8)
-    box(7.1, 3.85, 2.0, 1.25, T(f"FRONT L (linear)\n{len(AL)} candidates\nE1 Boltz-2 cyclic:false", f"FRENTE L (linear)\n{len(AL)} candidatos\nE1 Boltz-2 cyclic:false"), status_e1)
-    box(7.1, .6, 2.0, 1.25, T(f"FRONT M (macrocycle)\n{len(AM)} candidates\nE1 Boltz-2 cyclic:true", f"FRENTE M (macrociclo)\n{len(AM)} candidatos\nE1 Boltz-2 cyclic:true"), status_e1)
-    arr(6.9, 3.1, 7.1, 4.4); arr(6.9, 2.5, 7.1, 1.4)
-    steps = [T("E2  top-10/species\n5 samples × 3 seeds", "E2  top-10/espécie\n5 amostras × 3 sementes"),
-             T("E3  shuffled controls\n(paired Δ)", "E3  controles embaralhados\n(Δ pareado)"),
-             T("E4  pose QC\n+ 8×8 cross matrix", "E4  QC de pose\n+ matriz 8×8"),
-             T("E6–E7  10-ns MD, top-3/species\n(pH 10.0)", "E6–E7  MD 10 ns, top-3/espécie\n(pH 10,0)"),
-             T("E8–E9  L vs M comparison\n+ list for long MD", "E8–E9  comparação L×M\n+ lista p/ MD longa")]
-    ax.text(9.3, 5.35, T("E2 → E9", "E2 → E9"), fontsize=8, weight="bold")
-    for i, t in enumerate(steps):
-        y = 4.6 - i * 0.98
-        box(9.3, y - .3, 1.65, .75, t, "todo", fs=6.4)
-        if i:
-            arr(10.12, y + .75 - .02 + 0.25, 10.12, y + .45)
-    arr(9.1, 4.47, 9.3, 4.6)
-    ax.plot([9.1, 9.2, 9.2], [1.2, 1.2, 4.6], color="#495057", lw=.9); arr(9.2, 4.6, 9.3, 4.6)
-    ax.text(.05, .12, T("green = done · yellow = running · grey = pending.  E5 (non-target counter-screen) was not built; no selectivity is claimed.",
-                        "verde = concluído · amarelo = em execução · cinza = pendente.  E5 (contra-triagem com não-alvos) não construída; nenhuma seletividade é afirmada."),
-            fontsize=7, color="#495057")
-    ax.text(.05, 1.2, T("Validated: cyclic topology (tleap;\nC–N 1.34 Å, ω −179°); pH 10.0\n(Lepidoptera midgut)", "Validado: topologia cíclica (tleap;\nC–N 1,34 Å, ω −179°); pH 10,0\n(intestino de Lepidoptera)"), fontsize=7, color="#1b4332")
-    fig.savefig(O / T("Figure1_pipeline_v3.png", "fig1_pipeline_v3.png"), bbox_inches="tight", dpi=300)
-    fig.savefig(O / T("Figure1_pipeline_v3.pdf", "fig1_pipeline_v3.pdf"), bbox_inches="tight")
+    # faixa 1: do painel de receptores ao criterio duro
+    y = 38
+    for k, (x, t) in enumerate([
+            (1, T("8 receptors\nS1–S3' subsites", "8 receptores\nsub-sítios S1–S3'")),
+            (25, T("Calibration\n6 inhibitors + decoys", "Calibração\n6 inibidores + iscas")),
+            (49, T("RFdiffusion + MPNN\n22,066 sequences", "RFdiffusion + MPNN\n22.066 sequências")),
+            (73, T("E0  hard criterion\n(Fig. 2)", "E0  critério duro\n(Fig. 2)"))]):
+        box(x, y, 21, 11, t, "done")
+        if k:
+            arr(x - 3, y + 5.5, x - 0.5, y + 5.5)
+
+    # as duas frentes
+    box(14, 20, 28, 11, T("FRONT L  linear\n527 candidates", "FRENTE L  linear\n527 candidatos"), "done")
+    box(56, 20, 28, 11, T("FRONT M  macrocycle\n543 candidates", "FRENTE M  macrociclo\n543 candidatos"), "done")
+    arr(83, 38, 40, 32)
+    arr(83, 38, 68, 32)
+
+    # faixa 2: etapas comuns as duas frentes
+    y2 = 4
+    for k, (x, t, st) in enumerate([
+            (1, T("E1–E2\nBoltz-2 + re-scoring", "E1–E2\nBoltz-2 + reescore"), "done"),
+            (25, T("E4  pose QC\n48/48", "E4  QC de pose\n48/48"), "done"),
+            (49, T("E6–E7  MD 10 ns\nCHARMM36, pH 10", "E6–E7  MD 10 ns\nCHARMM36, pH 10"), "run"),
+            (73, T("E3 · 8×8 · E8–E9\ncontrols, L vs M", "E3 · 8×8 · E8–E9\ncontroles, L × M"), "todo")]):
+        box(x, y2, 21, 11, t, st)
+        if k:
+            arr(x - 3, y2 + 5.5, x - 0.5, y2 + 5.5)
+    arr(28, 20, 11.5, 15.5)
+    arr(70, 20, 11.5, 15.5)
+
+    ax.text(50, 53.5, T("green: done · yellow: running · grey: pending",
+                        "verde: concluído · amarelo: em curso · cinza: pendente"),
+            ha="center", color="#495057")
+    # sem bbox_inches="tight": ele muda a largura fisica pedida (o texto em PT, maior, gerava 222 mm
+    # em vez dos 180 mm exigidos)
+    fig.savefig(O / T("Figure1_pipeline_v3.png", "fig1_pipeline_v3.png"), dpi=300)
+    fig.savefig(O / T("Figure1_pipeline_v3.pdf", "fig1_pipeline_v3.pdf"))
     plt.close()
 
 
-# ---- Figura 4: matriz P1 proibido -----------------------------------------------------------
 def fig_rule():
     cls = [T("Trypsin-like", "Tripsina-like"), T("Chymotrypsin-like", "Quimotripsina-like"), T("Elastase-like", "Elastase-like"),
            T("Carboxypeptidase\n(free C-terminus)", "Carboxipeptidase\n(C-term. livre)")]
     forb = ["KR", "FYWLM", "AVLM", "KRFYWLMAVI"]
     mat = np.array([[1 if a in f else 0 for a in AA] for f in forb])
-    fig, ax = plt.subplots(figsize=(8.5, 2.7))
+    fig, ax = plt.subplots(figsize=mm_figsize("double", 57.2))
     ax.imshow(mat, cmap="Reds", aspect="auto", vmin=0, vmax=1.3)
     ax.set_xticks(range(20)); ax.set_xticklabels(list(AA)); ax.set_yticks(range(4)); ax.set_yticklabels(cls, fontsize=8)
     for i in range(4):
@@ -127,7 +140,7 @@ def fig_rule():
 
 # ---- Figura 5: funil -----------------------------------------------------------------------------
 def fig_funnel():
-    fig, ax = plt.subplots(1, 2, figsize=(10.5, 3.9), gridspec_kw={"width_ratios": [3, 1.4]})
+    fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 66.9), gridspec_kw={"width_ratios": [3, 1.4]})
     x = np.arange(len(SP)); w = .27
     soft = [cir_s["by_species"][s]["summary"]["RESISTENTE"] for s in SP]
     ax[0].bar(x - w, soft, w, color="#e9c46a", label=T("motif score, circular (first round)", "escore por motivo, circular (1ª rodada)"))
@@ -152,7 +165,7 @@ def fig_funnel():
 # ---- Figura 6: composicao + comprimento --------------------------------------------------------
 def fig_comp():
     cA, nA = comp(ALL); cL, nL = comp(AL)
-    fig, ax = plt.subplots(1, 2, figsize=(10.5, 3.7), gridspec_kw={"width_ratios": [2.4, 1]})
+    fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 63.4), gridspec_kw={"width_ratios": [2.4, 1]})
     aa = sorted(cA, key=lambda a: -cL[a]); xx = np.arange(20); w = .4
     ax[0].bar(xx - w / 2, [cA[a] for a in aa], w, color="#b0b0b0", label=T(f"all sequences ({num(nA)} residues)", f"todas as sequências ({num(nA)} res.)"))
     ax[0].bar(xx + w / 2, [cL[a] for a in aa], w, color="#457b9d", label=T(f"hard criterion, front L ({num(nL)} residues)", f"critério duro, frente L ({num(nL)} res.)"))
@@ -162,7 +175,7 @@ def fig_comp():
     for off, rs, c, l in ((-.2, ALL, "#b0b0b0", T("all", "todas")), (.2, AL, "#457b9d", T("hard L", "duro L"))):
         cnt = collections.Counter(r["length"] for r in rs); tt = sum(cnt.values())
         ax[1].bar(xs + off, [cnt[k] / tt * 100 for k in lens], .4, color=c, label=l)
-    ax[1].set_xticks(xs); ax[1].set_xticklabels(lens, fontsize=7); ax[1].set_xlabel(T("length (residues)", "comprimento (aa)"))
+    ax[1].set_xticks(xs); ax[1].set_xticklabels(lens, fontsize=8); ax[1].set_xlabel(T("length (residues)", "comprimento (aa)"))
     ax[1].set_ylabel(T("% of sequences", "% das sequências")); ax[1].legend(frameon=False, fontsize=8.5); ax[1].set_title(T("Length", "Comprimento"))
     fig.tight_layout()
     fig.savefig(O / T("Figure6_hard_composition.png", "fig6_composicao.png")); fig.savefig(O / T("Figure6_hard_composition.pdf", "fig6_composicao.pdf")); plt.close()
@@ -173,7 +186,7 @@ def fig_boltz():
     res = {sp: {(r["backbone"], r["sequence"]) for r in e["results"] if r["verdict"] == "RESISTENTE"} for sp, e in cir_s["by_species"].items()}
     sub = {sp: [r for r in scores[sp] if (r["backbone"], r["sequence"]) in res[sp]] for sp in SP}
     n = sum(len(v) for v in sub.values())
-    fig, ax = plt.subplots(1, 3, figsize=(11.5, 3.8))
+    fig, ax = plt.subplots(1, 3, figsize=mm_figsize("double", 59.5))
     for a, key, t in zip(ax[:2], ("iptm", "complex_plddt"), ("ipTM", T("complex pLDDT", "pLDDT do complexo"))):
         a.boxplot([[r[key] for r in sub[s]] for s in SP], tick_labels=SHORT, showfliers=False, patch_artist=True,
                   boxprops=dict(facecolor="#9bc4e2"), medianprops=dict(color="k"))
@@ -186,8 +199,8 @@ def fig_boltz():
     c = [sum(1 for r in allr if r["length"] == l) for l in Ls]
     ax[2].bar(range(len(Ls)), m, color="#9bc4e2")
     for i, (mm, cc) in enumerate(zip(m, c)):
-        ax[2].text(i, mm + .01, f"n={cc}", ha="center", fontsize=6, rotation=90)
-    ax[2].set_xticks(range(len(Ls))); ax[2].set_xticklabels(Ls, fontsize=7)
+        ax[2].text(i, mm + .01, f"n={cc}", ha="center", fontsize=8, rotation=90)
+    ax[2].set_xticks(range(len(Ls))); ax[2].set_xticklabels(Ls, fontsize=8)
     ax[2].set_xlabel(T("length (residues)", "comprimento (aa)")); ax[2].set_ylabel(T("mean ipTM", "ipTM médio")); ax[2].set_ylim(0, 1.15)
     ax[2].set_title(T("ipTM by length", "ipTM por comprimento"))
     fig.suptitle(T(f"Boltz-2 co-folding of the {num(n)} resistant-like macrocycles of the first round (1 sample each)",
@@ -213,7 +226,7 @@ def fig_e1():
     for sp in SP:
         rep += [(Ok[sp][k], Mk[sp][k]) for k in rm[sp] if k in Ok.get(sp, {}) and k in Mk.get(sp, {})]
         lm += [(Mk[sp][k], Lk[sp][k]) for k in rl[sp] & rm[sp] if k in Mk.get(sp, {}) and k in Lk.get(sp, {})]
-    fig, ax = plt.subplots(1, 2, figsize=(9.5, 4.3))
+    fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 81.5))
     for a, pairs, xl, yl, ttl, c in (
             (ax[0], rep, T("cyclic, first round", "cíclico, 1ª rodada"), T("cyclic, repeated", "cíclico, repetido"), T("Same input, two runs", "Mesma entrada, duas rodadas"), "#2a9d8f"),
             (ax[1], lm, T("cyclic", "cíclico"), T("linear", "linear"), T("Same sequence, two modalities", "Mesma sequência, duas modalidades"), "#457b9d")):
@@ -229,7 +242,7 @@ def fig_e1():
 
 # ---- Suplementares -------------------------------------------------------------------------------
 def fig_s1():
-    fig, ax = plt.subplots(figsize=(8.5, 3.8))
+    fig, ax = plt.subplots(figsize=mm_figsize("double", 80.5))
     x = np.arange(len(SP)); w = .38
     for off, d, lab in ((-w / 2, lin_s, T("linear", "linear")), (w / 2, cir_s, T("circular", "circular"))):
         bot = np.zeros(len(SP))
@@ -238,7 +251,7 @@ def fig_s1():
             ax.bar(x + off, v, w * .95, bottom=bot, color=CL[k], label=LAB[k] if lab == T("linear", "linear") else None, edgecolor="white", lw=.4)
             bot += v
         for i in x:
-            ax.text(i + off, 101, lab[:3], ha="center", fontsize=6)
+            ax.text(i + off, 101, lab[:3], ha="center", fontsize=8)
     ax.set_xticks(x); ax.set_xticklabels(SHORT, rotation=35, ha="right", style="italic"); ax.set_ylabel(T("% of sequences", "% das sequências")); ax.set_ylim(0, 108)
     ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=3)
     ax.set_title(T("Motif-score screen, linear-strict vs circular rule", "Filtro por escore de motivo, regra linear-estrita vs circular"))
@@ -251,7 +264,7 @@ def fig_s2():
     def xvg(f):
         return np.array([[float(v) for v in l.split()] for l in open(D / f) if l[0] not in "#@"])
     r, h = xvg("rmsd.xvg"), xvg("hbond_num.xvg")
-    fig, ax = plt.subplots(1, 2, figsize=(7.5, 3))
+    fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 72.0))
     ax[0].plot(r[:, 0] * 1000, r[:, 1] * 10, "o-", c="#2a9d8f"); ax[0].set_xlabel(T("time (ps)", "tempo (ps)")); ax[0].set_ylabel(T("backbone RMSD (Å)", "RMSD backbone (Å)"))
     ax[1].plot(h[:, 0], h[:, 1], "o-", c="#c8553d"); ax[1].set_xlabel(T("time (ps)", "tempo (ps)")); ax[1].set_ylabel(T("hydrogen bonds (system)", "ligações H (sistema)"))
     fig.suptitle(T("Smoke test of the cyclic topology (GRPGIQAAPI, 50 ps): checks the set-up, not stability", "Teste de fumaça da topologia cíclica (GRPGIQAAPI, 50 ps): valida a montagem, não a estabilidade"), fontsize=8)
