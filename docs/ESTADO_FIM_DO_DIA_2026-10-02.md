@@ -25,7 +25,13 @@ nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader   # quem e
 - Desde ~09h30 roda `screen gore-ph10` (`bin/03_ph10_e_s102.sh`, em `~/GOREs-boltz`), um job Boltz-2 de **outro trabalho seu**, na mesma GPU.
 - Efeito medido: a MD caiu de ~101 para ~61 ns/dia (de ~75 min para ~2h40 por MD). Entre 09h37 e 13h30 fechou só 1 MD.
 - **Previsão com o ritmo atual:** 23 MDs restantes ≈ 60 h, e não 30–40 h. Sem o job concorrente volta ao ritmo de ~75 min.
-- Nada foi pausado nem encerrado. Decidir amanhã se o `gore-ph10` já terminou ou se vale pausá-lo até o E6 acabar.
+- **Pausado por pedido do usuário às ~14h** (`SIGSTOP`, reversível; nada foi encerrado nem perdeu progresso). PIDs: 2202359 (script),
+  2277887 (run_boltz.sh, chunk S/c07), 2277900 (boltz predict) e 2278129/2278130 (filhos). A GPU continua com ~9,8 GB reservados
+  por ele, o que não atrapalha a MD (16 GB no total).
+- **Retomar quando o E6 e o E3 terminarem:** `ssh eulalio@200.235.143.10 'kill -CONT 2202359 2277887 2277900 2278129 2278130'`
+  (os mesmos PIDs estão em `~/gore_paused_pids.txt`, mas o arquivo só lista o script e as filhas da 1ª tentativa; use a linha acima).
+  Conferir antes com `ps -o pid,stat -p 2202359,2277900` (devem estar em `T`); se algum já tiver terminado, o PID some e o `kill` avisa.
+- Esperado: a MD volta a ~100 ns/dia (~75 min por MD) e as 23 restantes fecham em ~30–40 h.
 
 ## 3. Decisões tomadas hoje (todas no manuscrito EN e PT, commitadas)
 
