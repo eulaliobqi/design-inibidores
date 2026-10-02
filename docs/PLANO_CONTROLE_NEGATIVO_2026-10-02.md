@@ -34,8 +34,9 @@
 - **O quê:** manter a pose inicial; substituir a âncora por **Asp** (ionizado em pH 10, repelido por Asp189) e por **Leu**.
   Mesmo protocolo de 10 ns (CHARMM36, pH 10).
 - **Leitura:** distância âncora–Asp189 e perda da ponte salina; **não** MM-GBSA (não separou inibidor de isca na calibração, 3.3).
-- **Risco declarado:** a pose inicial pode sustentar o contato por 10 ns mesmo com Asp. Se nenhuma variante sair de S1, o
-  controle é **não informativo** e será relatado assim, não como confirmação.
+- **Risco declarado:** a pose inicial pode sustentar o contato por 10 ns mesmo com Asp. Se nenhuma variante sair de S1 (ou se as iscas
+  embaralhadas não se separarem do candidato), o controle não informa nada e é **retirado por completo** das análises, camadas e
+  figuras (decisão do usuário, 02/10). O resultado da calibração (iscas 5/5 = 1,00) é dado já obtido e permanece.
 - **Custo:** ~75–105 min por MD; 2 variantes × N candidatos. Definir N depois do E3 (≈ 2,5–3,5 h por candidato).
 
 ## Pendências abertas
