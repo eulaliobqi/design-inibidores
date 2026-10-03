@@ -47,6 +47,6 @@ print('M', sum(v.get('status')=='done' for v in d.values()), '/24', [k for k,v i
 screen -ls | grep -E 'two-fronts|md-controls'
 ls data-b23-scoring/results/delta_paired_*.json     # E3 comeca quando M fechar
 ```
-- Se M fechou (24/24): rodar `rank_final_candidates.py` de novo (4 MDs de macrociclo saem de P) e atualizar a seção 3 deste documento.
+- Se M fechou (24/24): rodar `rank_final_candidates.py` de novo (as MDs de macrociclo restantes saem de P) e atualizar a seção 3 deste documento.
 - Duas decisões do usuário ainda abertas: (1) lançar `md-controls` sem esperar o E3; (2) recalcular RMSD local com PBC nos 40+ sistemas (coluna `peptide_rmsd_local_nm_last10ns` está `None` na maioria).
 - Nada foi alterado no servidor nesta sessão além de `outputs/ranking_parcial_0310/` (saída nova, sem sobrescrever nada).
