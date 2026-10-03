@@ -18,7 +18,11 @@ ls data-b23-scoring/results/delta_paired_*.json     # E3: existe quando ele term
 nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader   # quem está na GPU
 ```
 
-**Ao sair (13h50):** 25 de 48 MDs (L 22/24, M 3/24), **zero erros**; `two-fronts` e `md-controls` vivos; E3 ainda não existe.
+**Atualização final (02/10, 20h54):** **33 de 48 MDs** (L 24/24 completa; M 9/24), **zero erros**; `two-fronts` e `md-controls` vivos; `gore-ph10` pausado (`T`); E3 ainda não existe; disco 832 GB livres. Ritmo da frente M: ~55 min por MD (33–57 min); faltam 15 MDs ≈ 14 h, previsão **manhã de 03/10**; depois o E3 (15–20 h) e as iscas (6–9 h).
+
+*Histórico:* às 13h50 eram 25/48, com a GPU dividida com o `gore-ph10` (ver §2).
+
+**VPN:** caiu por volta das 15h30 (SSH deu timeout); reconectei com `openvpn-gui.exe --connect vpn-UFV-config.ovpn` e o usuário confirmou "vpn ativo". Se o SSH não responder amanhã, é quase certo a VPN, não o servidor.
 
 ## 2. Ponto de atenção: a GPU está compartilhada
 
