@@ -1,9 +1,10 @@
-# Consolidação parcial — 03/10/2026, ~09h30
+# Consolidação parcial — 03/10/2026 (atualizada 12h57)
 
 Base: `outputs/md10_L` (24/24), `outputs/md10_M` (16/24), `outputs/ranking_parcial_0310` (gerado hoje no servidor, `--lang pt`).
 Todos os números abaixo vêm de `analysis_summary.json` dessas pastas; nada foi estimado.
 
 ## 1. Andamento
+- **Atualização 12h57:** **43/48** (L 24/24, M 19/24), zero erros, GPU só com a MD (58%). Ritmo da manhã: 3 MDs em ~3,5 h (~1h10 cada). M fecha por volta das 18h; E3 ainda inexistente, `md-controls` ainda aguardando.
 - MDs de 10 ns: **40/48**, zero erros. L completa; M faltam 8 (~8 h). A GPU ficou livre: o `gore-ph10` terminou às 04:25 (`logs/05.all.done`).
 - `two-fronts` e `md-controls` vivos. **E3 (`delta_paired_*.json`) ainda não existe**; `md-controls` está parado esperando-o (log: "aguardando o E3"), portanto as iscas por candidato só começam depois.
 
@@ -35,3 +36,17 @@ Todos os números abaixo vêm de `analysis_summary.json` dessas pastas; nada foi
 ## 5. Pontos abertos para decisão
 - Lançar `md-controls` das iscas **sem esperar o E3**? Hoje o script bloqueia nele; a GPU fica só com a MD enquanto isso.
 - Retomar o `gore-ph10` não é mais necessário (terminou).
+
+## 6. Retomada à noite (conferir nesta ordem)
+```bash
+ssh eulalio@200.235.143.10      # se der timeout: VPN -> openvpn-gui.exe --connect vpn-UFV-config.ovpn
+cd ~/design-inibidores && python3 -c "
+import json
+d=json.load(open('outputs/md10_M/summary.json'))
+print('M', sum(v.get('status')=='done' for v in d.values()), '/24', [k for k,v in d.items() if v.get('status')=='erro'])"
+screen -ls | grep -E 'two-fronts|md-controls'
+ls data-b23-scoring/results/delta_paired_*.json     # E3 comeca quando M fechar
+```
+- Se M fechou (24/24): rodar `rank_final_candidates.py` de novo (4 MDs de macrociclo saem de P) e atualizar a seção 3 deste documento.
+- Duas decisões do usuário ainda abertas: (1) lançar `md-controls` sem esperar o E3; (2) recalcular RMSD local com PBC nos 40+ sistemas (coluna `peptide_rmsd_local_nm_last10ns` está `None` na maioria).
+- Nada foi alterado no servidor nesta sessão além de `outputs/ranking_parcial_0310/` (saída nova, sem sobrescrever nada).
