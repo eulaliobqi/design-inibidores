@@ -131,8 +131,8 @@ def fig_md():
     ok = {F: {k: v for k, v in AN[F].items() if "error" not in v and "occ_5A_h2" in v} for F in "LM"}
     if not any(ok.values()):
         return None
-    fig = plt.figure(figsize=mm_figsize("double", 170), layout="constrained")
-    gs = fig.add_gridspec(2, 3, height_ratios=[1, 1.05])
+    fig = plt.figure(figsize=mm_figsize("double", 185), layout="constrained")
+    gs = fig.add_gridspec(3, 3, height_ratios=[1, .75, .75])
     a1, a2, a3 = (fig.add_subplot(gs[0, i]) for i in range(3))
     # (a,b) A. gemmatalis: distancia ancora-Asp189 e RMSD local, por tempo
     ls = {"r1": "-", "r2": "--", "r3": ":"}
@@ -166,21 +166,25 @@ def fig_md():
     for F in "LM":
         a3.scatter([], [], color=CF[F], label=FNAME[F])
     a3.legend(frameon=False, loc="lower right")
-    # (d) painel inferior: tabela-grafico por simulacao (ocupancia 5 A 2a metade + Ser195/His57 + RMSD local)
-    b = fig.add_subplot(gs[1, :])
-    items = [(F, k, v) for F in "LM" for k, v in sorted(ok[F].items())]
-    x = np.arange(len(items)); w = .27
-    b.bar(x - w, [v["occ_5A_h2"] for _, _, v in items], w, color=[CF[F] for F, _, _ in items], label=T("S1 occupancy ≤5 Å, 2nd half", "ocupância do S1 ≤5 Å, 2ª metade"))
-    b.bar(x, [v["ser195_contact_frac_4.5A"] for _, _, v in items], w, color=[CF[F] for F, _, _ in items], alpha=.55, hatch="//", label=T("Ser195 contact ≤4.5 Å", "contato com Ser195 ≤4,5 Å"))
-    b.bar(x + w, [v["contact_any_frac_4.5A"] for _, _, v in items], w, color=[CF[F] for F, _, _ in items], alpha=.3, hatch="..", label=T("any receptor contact ≤4.5 Å", "qualquer contato com o receptor ≤4,5 Å"))
-    b.axhline(.7, ls="--", c="gray", lw=.8)
-    b.set_xticks(x); b.set_xticklabels([f"{F} {k.replace('__', ' ')}\n{v['sequence']}" + ("" if F == "L" or "ring_intact" not in v else ("\nring ✓" if v["ring_intact"] else "\nring ✗")) for F, k, v in items], rotation=60, ha="right", fontsize=8)
-    b.set_ylim(0, 1.25); b.set_ylabel(T("fraction of frames", "fração dos quadros"))
+    # (d) painel inferior: uma linha por frente (ocupancia 5 A 2a metade + Ser195 + qualquer contato)
     from matplotlib.patches import Patch
-    b.legend(handles=[Patch(fc="gray", label=T("S1 occupancy ≤5 Å, 2nd half", "ocupância do S1 ≤5 Å, 2ª metade")),
+    bs = [fig.add_subplot(gs[1 + i, :]) for i in range(2)]
+    for b, F in zip(bs, "LM"):
+        items = [(F, k, v) for k, v in sorted(ok[F].items())]
+        x = np.arange(len(items)); w = .27
+        b.bar(x - w, [v["occ_5A_h2"] for _, _, v in items], w, color=CF[F])
+        b.bar(x, [v["ser195_contact_frac_4.5A"] for _, _, v in items], w, color=CF[F], alpha=.55, hatch="//")
+        b.bar(x + w, [v["contact_any_frac_4.5A"] for _, _, v in items], w, color=CF[F], alpha=.3, hatch="..")
+        b.axhline(.7, ls="--", c="gray", lw=.8)
+        b.set_xticks(x)
+        b.set_xticklabels([SHORT[k.split("__")[0]].replace(". ", ".") + " " + v["sequence"] + ("" if F == "L" or "ring_intact" not in v else (" ✓" if v["ring_intact"] else " ✗")) for _, k, v in items], rotation=90, ha="center", fontsize=6)
+        b.set_ylim(0, 1.05); b.set_xlim(-.7, len(items) - .3)
+        b.set_ylabel(FNAME[F] + "\n" + T("fraction of frames", "fração dos quadros"))
+    bs[0].legend(handles=[Patch(fc="gray", label=T("S1 occupancy ≤5 Å, 2nd half", "ocupância do S1 ≤5 Å, 2ª metade")),
                       Patch(fc="gray", alpha=.55, hatch="//", label=T("Ser195 contact ≤4.5 Å", "contato com Ser195 ≤4,5 Å")),
                       Patch(fc="gray", alpha=.3, hatch="..", label=T("any receptor contact ≤4.5 Å", "qualquer contato ≤4,5 Å"))],
-             frameon=False, ncol=3, loc="upper center", bbox_to_anchor=(.5, 1.02))
+             frameon=False, ncol=3, loc="lower center", bbox_to_anchor=(.5, 1.0), fontsize=7)
+    b = bs[0]
 
     letters([a1, a2, a3, b])
     save(fig, "Figure11_MD_screen_10ns", "fig11_md_triagem_10ns")
