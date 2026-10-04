@@ -93,3 +93,10 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 2. Decidir se as frases de literatura (4.2, 4.4, Introdução) entram, e inserir as 8 referências em `refs_meta.json` e `refs_resolved.json`.
 3. Após o E3: revisar a lista do `run_md_controls.sh` (inclui NGGRPDAP e GGKPGEP, não GQNDS), recalcular camadas, fechar 3.8–3.11 e 4.1.
 4. Decisão aberta do usuário: lançar `md-controls` sem esperar o E3.
+
+### 9.1 Contagem do E3 (03/10, ~22h45)
+- **243 de 1.413 predições prontas (17%)**, contadas pelos `confidence_*_model_0.json` em `outputs/b23_boltz2_E3_*`. Total esperado = 471 YAMLs (234 L + 237 M) × 3 sementes.
+- Linear, semente 1: 234/234 (completo). Linear, semente 2, *S. frugiperda*: 9/30 em andamento. Resto da linear (sementes 2 e 3) e toda a frente M: 0.
+- Ritmo ~120 predições/h desde ~20h45 → faltam ~1.170, estimativa grosseira de 8–12 h (fim provável na manhã de 04/10; cíclicos e a GPU dividida com os jobs `gore` podem alongar).
+- Após as predições o pipeline calcula `delta_paired`, matriz 8×8, E8 e E9; só então o `md-controls` dispara.
+- Comando de contagem: `find outputs/b23_boltz2_E3_* -path "*predictions*" -name "confidence_*_model_0.json" | wc -l`.
