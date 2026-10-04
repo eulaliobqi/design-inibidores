@@ -1,0 +1,658 @@
+{
+  "Sfrugiperda": [
+    {
+      "stem": "Sfrugiperda__len7_design_2__7",
+      "sequence": "GPGGGTG",
+      "E2_mean": 0.9234249949455261,
+      "decoy_mean": 0.8922660297817654,
+      "n_decoys": 3,
+      "delta": 0.03115896516376071
+    },
+    {
+      "stem": "Sfrugiperda__len5_design_9__8",
+      "sequence": "GTDTG",
+      "E2_mean": 0.9178672234217325,
+      "decoy_mean": 0.8629252089394464,
+      "n_decoys": 3,
+      "delta": 0.054942014482286194
+    },
+    {
+      "stem": "Sfrugiperda__len5_design_7__1",
+      "sequence": "GGTSE",
+      "E2_mean": 0.9145316878954569,
+      "decoy_mean": 0.8941572176085578,
+      "n_decoys": 3,
+      "delta": 0.020374470286899093
+    },
+    {
+      "stem": "Sfrugiperda__len7_design_2__3",
+      "sequence": "GENGGPG",
+      "E2_mean": 0.9143233458201091,
+      "decoy_mean": 0.8918277833196853,
+      "n_decoys": 3,
+      "delta": 0.022495562500423838
+    },
+    {
+      "stem": "Sfrugiperda__len7_design_2__5",
+      "sequence": "GPDGGTG",
+      "E2_mean": 0.9123615662256876,
+      "decoy_mean": 0.9056902832455105,
+      "n_decoys": 3,
+      "delta": 0.006671282980177162
+    },
+    {
+      "stem": "Sfrugiperda__len7_design_2__4",
+      "sequence": "GEDGSDG",
+      "E2_mean": 0.9120707035064697,
+      "decoy_mean": 0.879355435901218,
+      "n_decoys": 3,
+      "delta": 0.032715267605251674
+    },
+    {
+      "stem": "Sfrugiperda__len6_design_4__2",
+      "sequence": "PHIGPG",
+      "E2_mean": 0.9104877233505249,
+      "decoy_mean": 0.8975415176815457,
+      "n_decoys": 3,
+      "delta": 0.012946205668979194
+    },
+    {
+      "stem": "Sfrugiperda__len7_design_2__6",
+      "sequence": "GPDGGPG",
+      "E2_mean": 0.9000214695930481,
+      "decoy_mean": 0.8842320746845669,
+      "n_decoys": 3,
+      "delta": 0.01578939490848119
+    },
+    {
+      "stem": "Sfrugiperda__len8_design_8__9",
+      "sequence": "TSGGPGGG",
+      "E2_mean": 0.8913027207056682,
+      "decoy_mean": 0.9010410070419311,
+      "n_decoys": 3,
+      "delta": -0.009738286336262947
+    },
+    {
+      "stem": "Sfrugiperda__len5_design_9__10",
+      "sequence": "GTSTG",
+      "E2_mean": 0.8884922941525777,
+      "decoy_mean": 0.874782395362854,
+      "n_decoys": 3,
+      "delta": 0.013709898789723729
+    }
+  ],
+  "Slitura": [
+    {
+      "stem": "Slitura__len5_design_0__7",
+      "sequence": "GISGS",
+      "E2_mean": 0.8656783938407898,
+      "decoy_mean": 0.8460103962156508,
+      "n_decoys": 3,
+      "delta": 0.019667997625139044
+    },
+    {
+      "stem": "Slitura__len12_design_7__5",
+      "sequence": "QAPDFPTGPNNS",
+      "E2_mean": 0.8648983836174011,
+      "decoy_mean": 0.8536491195360819,
+      "n_decoys": 3,
+      "delta": 0.01124926408131921
+    },
+    {
+      "stem": "Slitura__len8_design_0__1",
+      "sequence": "GTPESNES",
+      "E2_mean": 0.8643351991971334,
+      "decoy_mean": 0.8253606226709154,
+      "n_decoys": 3,
+      "delta": 0.03897457652621805
+    },
+    {
+      "stem": "Slitura__len12_design_7__2",
+      "sequence": "QSPDFPRPPGNS",
+      "E2_mean": 0.8616644541422526,
+      "decoy_mean": 0.8875211596488952,
+      "n_decoys": 3,
+      "delta": -0.025856705506642652
+    },
+    {
+      "stem": "Slitura__len7_design_4__4",
+      "sequence": "DRPTSAP",
+      "E2_mean": 0.8555164575576782,
+      "decoy_mean": 0.8678808278507656,
+      "n_decoys": 3,
+      "delta": -0.012364370293087346
+    },
+    {
+      "stem": "Slitura__len12_design_7__10",
+      "sequence": "QAPDFPTGPNQS",
+      "E2_mean": 0.8511502822240193,
+      "decoy_mean": 0.8625562111536662,
+      "n_decoys": 3,
+      "delta": -0.011405928929646869
+    },
+    {
+      "stem": "Slitura__len6_design_4__8",
+      "sequence": "NSTETG",
+      "E2_mean": 0.8497012893358866,
+      "decoy_mean": 0.816335842344496,
+      "n_decoys": 3,
+      "delta": 0.03336544699139066
+    },
+    {
+      "stem": "Slitura__len7_design_3__6",
+      "sequence": "GGGGGGG",
+      "E2_mean": 0.8452084024747213,
+      "decoy_mean": null,
+      "n_decoys": 0,
+      "delta": null
+    },
+    {
+      "stem": "Slitura__len5_design_0__3",
+      "sequence": "GITGG",
+      "E2_mean": 0.8424568931261699,
+      "decoy_mean": 0.835047373506758,
+      "n_decoys": 3,
+      "delta": 0.007409519619411942
+    },
+    {
+      "stem": "Slitura__len7_design_4__9",
+      "sequence": "DRPDSSP",
+      "E2_mean": 0.8339310646057129,
+      "decoy_mean": 0.8574426968892416,
+      "n_decoys": 3,
+      "delta": -0.023511632283528705
+    }
+  ],
+  "Onubilalis": [
+    {
+      "stem": "Onubilalis__len5_design_9__2",
+      "sequence": "GSNIN",
+      "E2_mean": 0.9264683127403259,
+      "decoy_mean": 0.8958195315466987,
+      "n_decoys": 3,
+      "delta": 0.03064878119362724
+    },
+    {
+      "stem": "Onubilalis__len5_design_9__1",
+      "sequence": "GQNDS",
+      "E2_mean": 0.9085963169733683,
+      "decoy_mean": 0.8954262932141622,
+      "n_decoys": 3,
+      "delta": 0.013170023759206062
+    },
+    {
+      "stem": "Onubilalis__len5_design_9__5",
+      "sequence": "GDNSD",
+      "E2_mean": 0.8907459696133931,
+      "decoy_mean": 0.882989247639974,
+      "n_decoys": 3,
+      "delta": 0.007756721973419145
+    },
+    {
+      "stem": "Onubilalis__len8_design_9__3",
+      "sequence": "GGGDSGGP",
+      "E2_mean": 0.8905577898025513,
+      "decoy_mean": 0.8717293580373128,
+      "n_decoys": 3,
+      "delta": 0.018828431765238518
+    },
+    {
+      "stem": "Onubilalis__len7_design_1__4",
+      "sequence": "GGINPGG",
+      "E2_mean": 0.8862568378448487,
+      "decoy_mean": 0.8661689930491977,
+      "n_decoys": 3,
+      "delta": 0.020087844795650955
+    },
+    {
+      "stem": "Onubilalis__len6_design_3__9",
+      "sequence": "GGGGGG",
+      "E2_mean": 0.8815836628278096,
+      "decoy_mean": null,
+      "n_decoys": 0,
+      "delta": null
+    },
+    {
+      "stem": "Onubilalis__len7_design_1__6",
+      "sequence": "GGINPGP",
+      "E2_mean": 0.8812980492909749,
+      "decoy_mean": 0.8651851786507501,
+      "n_decoys": 3,
+      "delta": 0.01611287064022482
+    },
+    {
+      "stem": "Onubilalis__len7_design_1__8",
+      "sequence": "GGINGGS",
+      "E2_mean": 0.8769798914591471,
+      "decoy_mean": 0.8577189167340596,
+      "n_decoys": 3,
+      "delta": 0.019260974725087476
+    },
+    {
+      "stem": "Onubilalis__len10_design_8__7",
+      "sequence": "DITNPISTGG",
+      "E2_mean": 0.8627549846967061,
+      "decoy_mean": 0.8729943421151903,
+      "n_decoys": 3,
+      "delta": -0.010239357418484252
+    },
+    {
+      "stem": "Onubilalis__len5_design_6__10",
+      "sequence": "GGGGS",
+      "E2_mean": 0.8570996363957722,
+      "decoy_mean": 0.8754311892721388,
+      "n_decoys": 3,
+      "delta": -0.018331552876366564
+    }
+  ],
+  "Dsaccharalis": [
+    {
+      "stem": "Dsaccharalis__len6_design_9__1",
+      "sequence": "PTTTQT",
+      "E2_mean": 0.943760347366333,
+      "decoy_mean": 0.9012442919943068,
+      "n_decoys": 3,
+      "delta": 0.042516055372026185
+    },
+    {
+      "stem": "Dsaccharalis__len7_design_5__2",
+      "sequence": "GGDINPG",
+      "E2_mean": 0.932581114768982,
+      "decoy_mean": 0.8995895557933383,
+      "n_decoys": 3,
+      "delta": 0.03299155897564365
+    },
+    {
+      "stem": "Dsaccharalis__len5_design_3__8",
+      "sequence": "SGIDG",
+      "E2_mean": 0.9287514170010884,
+      "decoy_mean": 0.8926278167300754,
+      "n_decoys": 3,
+      "delta": 0.03612360027101302
+    },
+    {
+      "stem": "Dsaccharalis__len7_design_5__3",
+      "sequence": "DGNINGG",
+      "E2_mean": 0.9285260558128356,
+      "decoy_mean": 0.8948449876573351,
+      "n_decoys": 3,
+      "delta": 0.03368106815550054
+    },
+    {
+      "stem": "Dsaccharalis__len6_design_0__4",
+      "sequence": "NPDGSG",
+      "E2_mean": 0.9246468226114909,
+      "decoy_mean": 0.9219065401289198,
+      "n_decoys": 3,
+      "delta": 0.002740282482571077
+    },
+    {
+      "stem": "Dsaccharalis__len6_design_9__6",
+      "sequence": "PTTTTT",
+      "E2_mean": 0.924272108078003,
+      "decoy_mean": 0.9138795057932536,
+      "n_decoys": 3,
+      "delta": 0.010392602284749364
+    },
+    {
+      "stem": "Dsaccharalis__len6_design_1__7",
+      "sequence": "ISEETG",
+      "E2_mean": 0.9213116685549418,
+      "decoy_mean": 0.9105480379528469,
+      "n_decoys": 3,
+      "delta": 0.010763630602094953
+    },
+    {
+      "stem": "Dsaccharalis__len5_design_3__5",
+      "sequence": "DGIGS",
+      "E2_mean": 0.9041732668876648,
+      "decoy_mean": 0.903915101952023,
+      "n_decoys": 3,
+      "delta": 0.00025816493564179144
+    },
+    {
+      "stem": "Dsaccharalis__len8_design_3__9",
+      "sequence": "SSGNTIDG",
+      "E2_mean": 0.90100572903951,
+      "decoy_mean": 0.888069400522444,
+      "n_decoys": 3,
+      "delta": 0.012936328517066054
+    },
+    {
+      "stem": "Dsaccharalis__len6_design_7__10",
+      "sequence": "PTTDST",
+      "E2_mean": 0.8902879158655802,
+      "decoy_mean": 0.9083477033509149,
+      "n_decoys": 3,
+      "delta": -0.018059787485334655
+    }
+  ],
+  "Cincludens": [
+    {
+      "stem": "Cincludens__len5_design_5__5",
+      "sequence": "TDETG",
+      "E2_mean": 0.9171869079271953,
+      "decoy_mean": 0.8965028762817383,
+      "n_decoys": 3,
+      "delta": 0.020684031645456957
+    },
+    {
+      "stem": "Cincludens__len6_design_8__1",
+      "sequence": "STTDGG",
+      "E2_mean": 0.9115340550740559,
+      "decoy_mean": 0.8715612649917602,
+      "n_decoys": 3,
+      "delta": 0.039972790082295706
+    },
+    {
+      "stem": "Cincludens__len6_design_4__9",
+      "sequence": "GGPSTG",
+      "E2_mean": 0.9092857559521993,
+      "decoy_mean": 0.8827771584192912,
+      "n_decoys": 3,
+      "delta": 0.02650859753290813
+    },
+    {
+      "stem": "Cincludens__len5_design_5__3",
+      "sequence": "TDNTG",
+      "E2_mean": 0.9092002431551616,
+      "decoy_mean": 0.9067415383127001,
+      "n_decoys": 3,
+      "delta": 0.0024587048424614677
+    },
+    {
+      "stem": "Cincludens__len5_design_2__2",
+      "sequence": "NNGGG",
+      "E2_mean": 0.9016404787699381,
+      "decoy_mean": 0.8770036723878649,
+      "n_decoys": 3,
+      "delta": 0.024636806382073217
+    },
+    {
+      "stem": "Cincludens__len8_design_4__4",
+      "sequence": "STGLPTNP",
+      "E2_mean": 0.8902935345967611,
+      "decoy_mean": 0.8783081399069892,
+      "n_decoys": 3,
+      "delta": 0.011985394689771889
+    },
+    {
+      "stem": "Cincludens__len5_design_2__8",
+      "sequence": "GEGGG",
+      "E2_mean": 0.8870829304059347,
+      "decoy_mean": 0.8746003323131137,
+      "n_decoys": 3,
+      "delta": 0.012482598092820929
+    },
+    {
+      "stem": "Cincludens__len8_design_4__6",
+      "sequence": "HGPLPTNP",
+      "E2_mean": 0.8803813735644023,
+      "decoy_mean": 0.9137921969095866,
+      "n_decoys": 3,
+      "delta": -0.033410823345184304
+    },
+    {
+      "stem": "Cincludens__len5_design_0__7",
+      "sequence": "LPGGG",
+      "E2_mean": 0.869974943002065,
+      "decoy_mean": 0.8743620461887783,
+      "n_decoys": 3,
+      "delta": -0.004387103186713315
+    },
+    {
+      "stem": "Cincludens__len6_design_4__10",
+      "sequence": "GGPGTP",
+      "E2_mean": 0.8646606127421061,
+      "decoy_mean": 0.8617368433210585,
+      "n_decoys": 3,
+      "delta": 0.0029237694210476617
+    }
+  ],
+  "Hvirescens": [
+    {
+      "stem": "Hvirescens__len7_design_5__4",
+      "sequence": "GGPSPES",
+      "E2_mean": 0.9264661073684692,
+      "decoy_mean": 0.8569960898823209,
+      "n_decoys": 3,
+      "delta": 0.06947001748614834
+    },
+    {
+      "stem": "Hvirescens__len5_design_1__7",
+      "sequence": "SGPIG",
+      "E2_mean": 0.9113090872764588,
+      "decoy_mean": 0.8555056346787346,
+      "n_decoys": 3,
+      "delta": 0.055803452597724124
+    },
+    {
+      "stem": "Hvirescens__len5_design_2__2",
+      "sequence": "NGGTT",
+      "E2_mean": 0.9069839914639791,
+      "decoy_mean": 0.884729528427124,
+      "n_decoys": 3,
+      "delta": 0.022254463036855077
+    },
+    {
+      "stem": "Hvirescens__len7_design_5__1",
+      "sequence": "GGPNPSS",
+      "E2_mean": 0.9035194794336955,
+      "decoy_mean": 0.86889232661989,
+      "n_decoys": 3,
+      "delta": 0.03462715281380546
+    },
+    {
+      "stem": "Hvirescens__len5_design_2__10",
+      "sequence": "GGSTS",
+      "E2_mean": 0.902950382232666,
+      "decoy_mean": 0.8702175829145643,
+      "n_decoys": 3,
+      "delta": 0.03273279931810169
+    },
+    {
+      "stem": "Hvirescens__len5_design_2__6",
+      "sequence": "NGSTT",
+      "E2_mean": 0.900196901957194,
+      "decoy_mean": 0.8883859422471788,
+      "n_decoys": 3,
+      "delta": 0.011810959710015223
+    },
+    {
+      "stem": "Hvirescens__len5_design_6__8",
+      "sequence": "PHGEG",
+      "E2_mean": 0.8991585572560629,
+      "decoy_mean": 0.9043202850553724,
+      "n_decoys": 3,
+      "delta": -0.005161727799309568
+    },
+    {
+      "stem": "Hvirescens__len5_design_6__9",
+      "sequence": "PHGES",
+      "E2_mean": 0.8928043921788533,
+      "decoy_mean": 0.8974274184968737,
+      "n_decoys": 3,
+      "delta": -0.004623026318020362
+    },
+    {
+      "stem": "Hvirescens__len6_design_2__3",
+      "sequence": "GPHGIG",
+      "E2_mean": 0.8926910797754923,
+      "decoy_mean": 0.8799972613652547,
+      "n_decoys": 3,
+      "delta": 0.012693818410237645
+    },
+    {
+      "stem": "Hvirescens__len6_design_2__5",
+      "sequence": "GPHGPG",
+      "E2_mean": 0.8911407748858134,
+      "decoy_mean": 0.8878130157788595,
+      "n_decoys": 3,
+      "delta": 0.0033277591069539314
+    }
+  ],
+  "Pxylostella": [
+    {
+      "stem": "Pxylostella__len6_design_7__2",
+      "sequence": "GHHGGG",
+      "E2_mean": 0.9335197687149048,
+      "decoy_mean": 0.920333460966746,
+      "n_decoys": 3,
+      "delta": 0.013186307748158876
+    },
+    {
+      "stem": "Pxylostella__len6_design_1__1",
+      "sequence": "GSGGPS",
+      "E2_mean": 0.9315814177195231,
+      "decoy_mean": 0.8953056308958266,
+      "n_decoys": 3,
+      "delta": 0.036275786823696476
+    },
+    {
+      "stem": "Pxylostella__len7_design_6__4",
+      "sequence": "HGGGGSG",
+      "E2_mean": 0.9234226465225219,
+      "decoy_mean": 0.9235626419385274,
+      "n_decoys": 3,
+      "delta": -0.00013999541600551169
+    },
+    {
+      "stem": "Pxylostella__len6_design_1__6",
+      "sequence": "GPGGPS",
+      "E2_mean": 0.9223205924034119,
+      "decoy_mean": 0.8765529288185967,
+      "n_decoys": 3,
+      "delta": 0.04576766358481521
+    },
+    {
+      "stem": "Pxylostella__len6_design_1__9",
+      "sequence": "GPGGPG",
+      "E2_mean": 0.9197794198989868,
+      "decoy_mean": 0.8848506940735711,
+      "n_decoys": 3,
+      "delta": 0.03492872582541573
+    },
+    {
+      "stem": "Pxylostella__len7_design_3__8",
+      "sequence": "PTDSHSS",
+      "E2_mean": 0.9150654077529907,
+      "decoy_mean": 0.8985882030593024,
+      "n_decoys": 3,
+      "delta": 0.016477204693688297
+    },
+    {
+      "stem": "Pxylostella__len5_design_9__5",
+      "sequence": "ESING",
+      "E2_mean": 0.9100692272186279,
+      "decoy_mean": 0.9069766110844083,
+      "n_decoys": 3,
+      "delta": 0.003092616134219628
+    },
+    {
+      "stem": "Pxylostella__len8_design_8__7",
+      "sequence": "GGPDISPE",
+      "E2_mean": 0.9098933657010396,
+      "decoy_mean": 0.8949127554893493,
+      "n_decoys": 3,
+      "delta": 0.014980610211690282
+    },
+    {
+      "stem": "Pxylostella__len6_design_2__10",
+      "sequence": "GGGHGG",
+      "E2_mean": 0.906324831644694,
+      "decoy_mean": 0.9221449441379971,
+      "n_decoys": 3,
+      "delta": -0.015820112493303062
+    },
+    {
+      "stem": "Pxylostella__len7_design_6__3",
+      "sequence": "HGGGSGG",
+      "E2_mean": 0.9049951752026876,
+      "decoy_mean": 0.905024434460534,
+      "n_decoys": 3,
+      "delta": -2.92592578464701e-05
+    }
+  ],
+  "Agemmatalis": [
+    {
+      "stem": "Agemmatalis__len6_design_4__2",
+      "sequence": "GGSQSS",
+      "E2_mean": 0.9369060317675273,
+      "decoy_mean": 0.9099586963653564,
+      "n_decoys": 3,
+      "delta": 0.02694733540217087
+    },
+    {
+      "stem": "Agemmatalis__len8_design_0__6",
+      "sequence": "NGGRPDAP",
+      "E2_mean": 0.9366043289502461,
+      "decoy_mean": 0.9065556168556214,
+      "n_decoys": 3,
+      "delta": 0.030048712094624785
+    },
+    {
+      "stem": "Agemmatalis__len5_design_8__4",
+      "sequence": "GTDEN",
+      "E2_mean": 0.9297599196434021,
+      "decoy_mean": 0.8844203472137452,
+      "n_decoys": 3,
+      "delta": 0.045339572429656916
+    },
+    {
+      "stem": "Agemmatalis__len5_design_8__7",
+      "sequence": "GTSDG",
+      "E2_mean": 0.9271240750948588,
+      "decoy_mean": 0.9074308448367648,
+      "n_decoys": 3,
+      "delta": 0.019693230258093997
+    },
+    {
+      "stem": "Agemmatalis__len5_design_8__1",
+      "sequence": "GTDES",
+      "E2_mean": 0.9211288054784139,
+      "decoy_mean": 0.9143390072716607,
+      "n_decoys": 3,
+      "delta": 0.006789798206753184
+    },
+    {
+      "stem": "Agemmatalis__len6_design_4__9",
+      "sequence": "GGTDHT",
+      "E2_mean": 0.9208413362503052,
+      "decoy_mean": 0.9087722818056743,
+      "n_decoys": 3,
+      "delta": 0.012069054444630911
+    },
+    {
+      "stem": "Agemmatalis__len7_design_9__5",
+      "sequence": "GGKPGEP",
+      "E2_mean": 0.9198202172915141,
+      "decoy_mean": 0.9004415843221877,
+      "n_decoys": 3,
+      "delta": 0.019378632969326404
+    },
+    {
+      "stem": "Agemmatalis__len6_design_8__10",
+      "sequence": "GTSTTG",
+      "E2_mean": 0.9080053607622782,
+      "decoy_mean": 0.8983386768235101,
+      "n_decoys": 3,
+      "delta": 0.009666683938768128
+    },
+    {
+      "stem": "Agemmatalis__len7_design_6__8",
+      "sequence": "PGSDPDT",
+      "E2_mean": 0.9069407184918722,
+      "decoy_mean": 0.8901733040809632,
+      "n_decoys": 3,
+      "delta": 0.01676741441090901
+    },
+    {
+      "stem": "Agemmatalis__len8_design_2__3",
+      "sequence": "GSGDPDIP",
+      "E2_mean": 0.9053738633791606,
+      "decoy_mean": 0.8979407403204176,
+      "n_decoys": 3,
+      "delta": 0.007433123058742996
+    }
+  ]
+}

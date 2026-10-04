@@ -100,3 +100,19 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 - Ritmo ~120 predições/h desde ~20h45 → faltam ~1.170, estimativa grosseira de 8–12 h (fim provável na manhã de 04/10; cíclicos e a GPU dividida com os jobs `gore` podem alongar).
 - Após as predições o pipeline calcula `delta_paired`, matriz 8×8, E8 e E9; só então o `md-controls` dispara.
 - Comando de contagem: `find outputs/b23_boltz2_E3_* -path "*predictions*" -name "confidence_*_model_0.json" | wc -l`.
+
+## 10. Retomada de 04/10 (manhã)
+**Diagnóstico.** O pipeline `two-fronts`/`e1-fix` morreu às 04:09 de 04/10 no E4m da frente L: `pose_qc.py matrix-prepare` rodou sob `boltz2-env`, que não tem MDAnalysis (`ModuleNotFoundError`). Antes disso o E3 da L havia terminado (702 predições, `delta_paired_L.json`); a frente M nem começou (`set -e` abortou o script). GPU ociosa de ~04:10 a 08:47.
+
+**Ação.** `scripts/run_resume_e3m_e4m.sh` (novo, resume-safe) em `screen resume-e3m`, log `outputs/resume_e3m.log`: E3 da M (3 sementes × 8 espécies, ~711 predições) → `collect` + `delta` → E4m de L e M com `pose_qc` em `protein_design_env` (MDAnalysis 2.9.0) e `boltz predict` em `boltz2-env` → E8/E9. Iniciado 08:47; às 09:01 o lote 1 da M estava em 18/30, GPU a 100% (11,7/16,3 GiB, só o nosso processo). Estimativa de fim do E3 da M: 6–8 h. `md-controls` espera `delta_paired_L` **e** `delta_paired_M` e dispara sozinho depois; a decisão aberta de ontem fica resolvida como "esperar o E3".
+- Não rodar `git pull` no servidor com o job vivo: o `run_resume_e3m_e4m.sh` existe lá como arquivo não rastreado e o pull o sobrescreveria (o bash lê o script de forma incremental).
+
+**Resultado do E3, frente L** (`data-e2-results/delta_paired_L.json`, 80 candidatos do E2):
+- 78 com controles (S. litura e O. nubilalis perderam os 3 controles de um candidato cada, 27/30); Δ>0 em 63/78 (81%), mediana 0,013, IQR 0,003–0,030, faixa −0,033 a 0,069; por espécie de 5/10 (S. litura) a 10/10 (A. gemmatalis).
+- 24 finais L: Δ>0 em 23/24, mediana 0,030 (faixa −0,0001 a 0,069); única exceção HGGGGSG (P. xylostella, Δ = −0,0001).
+- Camadas recalculadas (`rank_final_candidates.py`): **L = 23 A + 1 B**, M = 11 A + 13 B (M ainda provisória). `docs/dados/ranking_final.*` e Figura 12 regeneradas.
+- Leitura: Δ é da ordem do desvio entre as 15 predições de um candidato (0,019); os finais foram escolhidos por E2 alto, o que infla Δ (0,030 contra 0,013 no conjunto de 80); cada Δ usa 3 controles. Camada A da L exclui só 1 de 24 e não discrimina.
+
+**Manuscrito (EN + PT, re-renderizado).** Seção 3.8: parágrafo novo "Paired controls, linear front (E3)"; 3.11: 23 A + 1 B; Resumo e 4.1 atualizados; `[[PENDING]]` mantidos só para a frente M, a matriz 8×8 (E4), o controle negativo, as camadas finais e as seções administrativas. Resumo EN agora com 482 palavras (era 455): **conferir o limite da revista e cortar**.
+
+**Para quando o job acabar:** (1) `delta_paired_M.json` → rodar `rank_final_candidates.py` e fechar 3.8/3.11/4.1/Resumo; (2) matriz 8×8 → 3.8; (3) `md-controls` dispara: revisar a lista antes (NGGRPDAP, GGKPGEP, não GQNDS); (4) inserir as 8 referências verificadas em 03/10 se as frases entrarem.

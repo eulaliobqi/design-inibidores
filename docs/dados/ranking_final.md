@@ -1,40 +1,40 @@
-# Peptídeos candidatos finais (01/10/2026)
+# Final candidate peptides (01/10/2026)
 
-Camadas: A = cumpre todos os critérios disponíveis (QC de pose, delta pareado > 0, anel estrito no macrociclo); B = falha exatamente um; C = falha dois ou mais; P = MD pendente. A ocupância de S1 é só descritiva (rebaixada em 02/10/2026) e ordena dentro da camada depois de delta e E2. `provisório` = falta um critério (ex.: E3).
+Tiers: A = meets all available criteria (pose QC, paired delta > 0, strict ring for macrocycles); B = fails exactly one; C = fails two or more; P = MD pending. S1 occupancy is descriptive only (demoted 02/10/2026) and orders within a tier after delta and E2. `provisional` = a criterion not yet available (e.g., E3).
 
 
 ## Linear
 
-| tier | espécie | sequência | E2 | Δ E3 | QC | S1 occ (2nd half) | anchor | ring | pH | notes |
+| tier | species | sequence | E2 | Δ E3 | QC | S1 occ (2nd half) | anchor | ring | pH | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| A | Dsaccharalis | `PTTTQT` | 0.944 | – | ✓ | 0.351 | Q | – | – | provisional;  |
-| A | Agemmatalis | `NGGRPDAP` | 0.937 | – | ✓ | 1.0 | R | – | – | provisional; K/R at P1 protected by Pro;  |
-| A | Agemmatalis | `GGSQSS` | 0.937 | – | ✓ | 0.068 | Q | – | – | provisional;  |
-| A | Pxylostella | `GHHGGG` | 0.934 | – | ✓ | 0.673 | H | – | – | provisional;  |
-| A | Dsaccharalis | `GGDINPG` | 0.933 | – | ✓ | 0.024 | I | – | – | provisional;  |
-| A | Pxylostella | `GSGGPS` | 0.932 | – | ✓ | 0.0 | S | – | – | provisional;  |
-| A | Agemmatalis | `GTDEN` | 0.93 | – | ✓ | 0.629 | E | – | – | provisional;  |
-| A | Dsaccharalis | `SGIDG` | 0.929 | – | ✓ | 0.028 | I | – | – | provisional;  |
-| A | Onubilalis | `GSNIN` | 0.926 | – | ✓ | 0.371 | N | – | – | provisional;  |
-| A | Hvirescens | `GGPSPES` | 0.926 | – | ✓ | 0.068 | E | – | – | provisional;  |
-| A | Sfrugiperda | `GPGGGTG` | 0.923 | – | ✓ | 0.0 | T | – | – | provisional;  |
-| A | Pxylostella | `HGGGGSG` | 0.923 | – | ✓ | 0.0 | S | – | – | provisional;  |
-| A | Sfrugiperda | `GTDTG` | 0.918 | – | ✓ | 0.0 | T | – | – | provisional;  |
-| A | Cincludens | `TDETG` | 0.917 | – | ✓ | 0.0 | T | – | – | provisional;  |
-| A | Sfrugiperda | `GGTSE` | 0.915 | – | ✓ | 0.0 | S | – | – | provisional;  |
-| A | Cincludens | `STTDGG` | 0.912 | – | ✓ | 0.0 | T | – | – | provisional;  |
-| A | Hvirescens | `SGPIG` | 0.911 | – | ✓ | 0.0 | I | – | – | provisional;  |
-| A | Onubilalis | `GQNDS` | 0.909 | – | ✓ | 1.0 | Q | – | – | provisional;  |
-| A | Cincludens | `GGPSTG` | 0.909 | – | ✓ | 0.0 | S | – | – | provisional;  |
-| A | Hvirescens | `NGGTT` | 0.907 | – | ✓ | 0.0 | T | – | – | provisional;  |
-| A | Onubilalis | `GDNSD` | 0.891 | – | ✓ | 0.542 | N | – | – | provisional;  |
-| A | Slitura | `GISGS` | 0.866 | – | ✓ | 0.0 | S | – | – | provisional;  |
-| A | Slitura | `QAPDFPTGPNNS` | 0.865 | – | ✓ | 0.0 | F | – | – | provisional;  |
-| A | Slitura | `GTPESNES` | 0.864 | – | ✓ | 0.0 | N | – | – | provisional;  |
+| A | Hvirescens | `GGPSPES` | 0.926 | 0.069 | ✓ | 0.068 | E | – | – |  |
+| A | Hvirescens | `SGPIG` | 0.911 | 0.056 | ✓ | 0.0 | I | – | – |  |
+| A | Sfrugiperda | `GTDTG` | 0.918 | 0.055 | ✓ | 0.0 | T | – | – |  |
+| A | Agemmatalis | `GTDEN` | 0.93 | 0.045 | ✓ | 0.629 | E | – | – |  |
+| A | Dsaccharalis | `PTTTQT` | 0.944 | 0.043 | ✓ | 0.351 | Q | – | – |  |
+| A | Cincludens | `STTDGG` | 0.912 | 0.04 | ✓ | 0.0 | T | – | – |  |
+| A | Slitura | `GTPESNES` | 0.864 | 0.039 | ✓ | 0.0 | N | – | – |  |
+| A | Pxylostella | `GSGGPS` | 0.932 | 0.036 | ✓ | 0.0 | S | – | – |  |
+| A | Dsaccharalis | `SGIDG` | 0.929 | 0.036 | ✓ | 0.028 | I | – | – |  |
+| A | Dsaccharalis | `GGDINPG` | 0.933 | 0.033 | ✓ | 0.024 | I | – | – |  |
+| A | Onubilalis | `GSNIN` | 0.926 | 0.031 | ✓ | 0.371 | N | – | – |  |
+| A | Sfrugiperda | `GPGGGTG` | 0.923 | 0.031 | ✓ | 0.0 | T | – | – |  |
+| A | Agemmatalis | `NGGRPDAP` | 0.937 | 0.03 | ✓ | 1.0 | R | – | – | K/R at P1 protected by Pro;  |
+| A | Agemmatalis | `GGSQSS` | 0.937 | 0.027 | ✓ | 0.068 | Q | – | – |  |
+| A | Cincludens | `GGPSTG` | 0.909 | 0.027 | ✓ | 0.0 | S | – | – |  |
+| A | Hvirescens | `NGGTT` | 0.907 | 0.022 | ✓ | 0.0 | T | – | – |  |
+| A | Cincludens | `TDETG` | 0.917 | 0.021 | ✓ | 0.0 | T | – | – |  |
+| A | Sfrugiperda | `GGTSE` | 0.915 | 0.02 | ✓ | 0.0 | S | – | – |  |
+| A | Slitura | `GISGS` | 0.866 | 0.02 | ✓ | 0.0 | S | – | – |  |
+| A | Pxylostella | `GHHGGG` | 0.934 | 0.013 | ✓ | 0.673 | H | – | – |  |
+| A | Onubilalis | `GQNDS` | 0.909 | 0.013 | ✓ | 1.0 | Q | – | – |  |
+| A | Slitura | `QAPDFPTGPNNS` | 0.865 | 0.011 | ✓ | 0.0 | F | – | – |  |
+| A | Onubilalis | `GDNSD` | 0.891 | 0.008 | ✓ | 0.542 | N | – | – |  |
+| B | Pxylostella | `HGGGGSG` | 0.923 | -0.0 | ✓ | 0.0 | S | – | – | fails: delta_gt0 |
 
-## Macrociclo
+## Macrocycle
 
-| tier | espécie | sequência | E2 | Δ E3 | QC | S1 occ (2nd half) | anchor | ring | pH | notes |
+| tier | species | sequence | E2 | Δ E3 | QC | S1 occ (2nd half) | anchor | ring | pH | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | A | Dsaccharalis | `IYPETG` | 0.921 | – | ✓ | 0.008 | Y | ✓ | – | provisional;  |
 | A | Pxylostella | `HGGNGSG` | 0.913 | – | ✓ | 0.088 | N | ✓ | – | provisional;  |
