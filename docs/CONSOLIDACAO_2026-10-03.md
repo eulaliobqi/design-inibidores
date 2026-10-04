@@ -122,3 +122,24 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 - **Números conferidos contra os dados/aritmética:** soma das Tabelas 3 e 4 (22.066; 1.829; 4.987; 15.250), percentuais das Seções 3.5–3.7, contagens da Tabela 3, "63/78" e "23/24" do E3 linear, identidade candidato × controle (0,35 L / 0,29 M; 5 com ≥60%; 6 com 2 controles distintos, **só nos 48 finais** — texto corrigido).
 - **Correções:** (a) os dois candidatos sem controle são poliglicina (GGGGGGG, GGGGGG): todo embaralhamento reproduz a sequência (antes o texto dizia "predições não obtidas"); na M falta o GGGGGGGGGGGGGG pelo mesmo motivo — mencionar ao fechar a 3.8; (b) numeração das limitações em 4.4 estava duplicada ((ix)–(x) repetidos), agora (i)–(xvi); (c) nota de rascunho 1 atualizada.
 - **Escrita mais objetiva:** Resumo reescrito (EN e PT); Seção 4.1 e 4.3 reescritas com cortes (~15%). Seções 2 e 3 não foram reescritas; a 3.9 (a mais longa) é candidata a corte numa próxima passada.
+
+## 11. Fechamento do E3-M e entrega (04/10, noite)
+**Pipeline `two-fronts` concluído** (`screen resume-e3m`, log `outputs/resume_e3m.log`, terminou com `TWO_FRONTS_ALL_DONE` às 17:47:48):
+- E3 da M concluído às 17:22 (`delta_paired_M.json`; 3 sementes × 8 espécies; *S. litura* ficou em 27/30 por semente, como na L). O E3 acabou antes da estimativa de 6–8 h.
+- E4m (matriz cruzada 8×8, top-1): L às 17:22, M às 17:34. E8/E9 (comparação e lista de entrega) às 17:47.
+- Lista de entrega para MD longa: `outputs/delivery_md_long/` no servidor; cópia em `docs/dados/delivery_md_long_report_2026-10-04.md`. **3 entregues, de 48:**
+  - L: `Onubilalis__r2` GQNDS (conf 0,909; Δ 0,013; ocup. 1,0) e `Agemmatalis__r2` NGGRPDAP (0,937; Δ 0,030; ocup. 1,0).
+  - M: `Sfrugiperda__r1` GGHSE (0,908; Δ 0,015; ocup. 0,988; anel estrito).
+- Critério de entrega (colunas do relatório): QC, MD 10 ns passando, ocupância 5 Å na 2ª metade, âncora igual, Δ>0 (e anel, na M). Os 3 entregues têm ocupância ≥0,988; os Δ são pequenos (0,013–0,030, mesma ordem do desvio entre predições, ver §10).
+- Δ ≤ 0 em 3 casos: HGGGGSG (L, *P. xylostella*, −0,0001), GPDGGTG (M, *S. frugiperda*, −0,002), GGHGGG (M, *P. xylostella*, −0,009).
+- **Atenção, GGKPGEP (M, *A. gemmatalis*):** ocupância 1,0 e Δ 0,020, mas anel=False, logo **não** entregue. Era um dos nomes da lista prevista em §10 (NGGRPDAP, GGKPGEP, não GQNDS); a lista real difere (entrou GQNDS, saiu GGKPGEP, entrou GGHSE).
+
+**`md-controls`** (`screen md-controls`, log `outputs/md_controls.log`) disparou às 17:25 ao existirem os dois deltas. Primeiro controle: `Agemmatalis__r2__ctrl_d1` (NGGRPDAP embaralhado → PGRGDANP, linear, 1 × 10 ns, CHARMM36 `charmm36-feb2026_cgenff-5.0`); em MD de produção desde 17:41 (gmx_mpi, GPU, 16 threads). **Sem resultado de controle ainda** às 19:01; não sei quantos controles o script roda no total.
+
+**Pendências:**
+1. Rodar `rank_final_candidates.py` com `delta_paired_M.json` e fechar 3.8/3.11/4.1/Resumo (camadas M finais; hoje 11 A / 13 B provisório); `[[PENDING]]` da M e da matriz 8×8 (E4).
+2. Ler a matriz 8×8 (E4m L/M) e escrever na 3.8.
+3. Quando os controles `md-controls` terminarem: comparar com o candidato; regra do projeto, controle sem diferença é retirado por completo.
+4. Decidir se GGKPGEP (anel=False) entra por outra via; mencionar poliglicina sem controle (GGGGGGG, GGGGGG, GGGGGGGGGGGGGG) ao fechar a 3.8.
+5. Inserir as 8 referências verificadas em 03/10 se as frases entrarem; conferir limite de palavras do Resumo EN (382 contra 350).
+6. **Não** rodar `git pull` no servidor com `md-controls` vivo (ver §10).
