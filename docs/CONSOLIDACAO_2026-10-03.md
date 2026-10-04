@@ -75,3 +75,21 @@ ls data-b23-scoring/results/delta_paired_*.json
 tail -3 outputs/md_controls.log; screen -ls | grep -E 'two-fronts|md-controls'
 ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 ```
+
+## 9. Fechamento do dia (03/10, ~22h30)
+**Feito hoje**
+- Manuscrito EN e PT atualizados com as 48 MDs (Resumo, 2.8, 3.8, 3.9, 3.10, 3.11, 4.1, 4.4 xi, legendas das Figs 11, 12 e S2); commit `fbc014e`. Números conferidos contra `docs/dados/md10_resumo_48.csv`; janelas inicial (4%) e final (20%) como na Seção 2.9; correlação reportada como Spearman (ρ = 0,63) com Pearson (0,77) ao lado; sem valores de P.
+- Figuras 11 (painel D dividido em linhas L e M), 12 e S2 regeneradas a partir de `data-e2-results/` (sincronizado do servidor) e `scripts/rank_final_candidates.py` (reproduz 24 A | 11 A + 13 B do servidor).
+- Correção do §2: "âncora ≤ 4 Å no último quadro" é, no analisador, a média da janela final (últimos 20%); o texto usa "janela final".
+- Revisão de literatura 2025–2026 (OpenAlex, Crossref, PubMed, Europe PMC). Verificados no Crossref, **ainda não inseridos** no manuscrito: Junker e Schoeder 2026 (10.1371/journal.pone.0355549), Fonteyne 2026 (10.1039/d6dd00242k), Masters 2025 (10.1038/s41467-025-63947-5), Wan 2026 (10.1021/acs.jctc.6c01334), Rettie 2025 AfCycDesign (10.1038/s41467-025-59940-7), HighFold4 (10.1093/bib/bbag505), Schultz 2026 (10.1002/arch.70145), Dunbrack 2025 ipSAE (10.1101/2025.02.10.637595, preprint).
+
+**Estado ao fechar**
+- E3 em curso (4 `boltz predict` ativos, `delta_paired_{L,M}.json` ainda não existe); GPU a 100%, dividida com jobs `gore`. `two-fronts` e `md-controls` vivos.
+- Resumo EN com 455 palavras: conferir o limite da revista.
+- `[[PENDING]]` que restam: 3.8 (E3 e matriz 8×8), 3.9 (controle negativo), 3.11 (camadas finais), 4.1 (E3), seções administrativas.
+
+**Para amanhã (ordem)**
+1. Conferir E3: `ls data-b23-scoring/results/delta_paired_*.json`; `screen -ls`.
+2. Decidir se as frases de literatura (4.2, 4.4, Introdução) entram, e inserir as 8 referências em `refs_meta.json` e `refs_resolved.json`.
+3. Após o E3: revisar a lista do `run_md_controls.sh` (inclui NGGRPDAP e GGKPGEP, não GQNDS), recalcular camadas, fechar 3.8–3.11 e 4.1.
+4. Decisão aberta do usuário: lançar `md-controls` sem esperar o E3.
