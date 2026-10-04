@@ -699,133 +699,13 @@
   },
   {
     "front": "M",
-    "key": "Dsaccharalis__r3",
-    "species": "Dsaccharalis",
-    "sequence": "IYPETG",
-    "length": 6,
-    "has_KR": false,
-    "confidence_E2": 0.921,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.95,
-    "occ5_h2": 0.008,
-    "anchor": "Y",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Pxylostella__r3",
-    "species": "Pxylostella",
-    "sequence": "HGGNGSG",
-    "length": 7,
-    "has_KR": false,
-    "confidence_E2": 0.913,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 5.97,
-    "occ5_h2": 0.088,
-    "anchor": "N",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Pxylostella__r2",
-    "species": "Pxylostella",
-    "sequence": "GGHGGG",
-    "length": 6,
-    "has_KR": false,
-    "confidence_E2": 0.913,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.21,
-    "occ5_h2": 0.0,
-    "anchor": "H",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Sfrugiperda__r1",
-    "species": "Sfrugiperda",
-    "sequence": "GGHSE",
-    "length": 5,
-    "has_KR": false,
-    "confidence_E2": 0.908,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 2.85,
-    "occ5_h2": 0.988,
-    "anchor": "H",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": true
-  },
-  {
-    "front": "M",
     "key": "Cincludens__r2",
     "species": "Cincludens",
     "sequence": "SGSTDIE",
     "length": 7,
     "has_KR": false,
     "confidence_E2": 0.908,
-    "delta_E3": null,
+    "delta_E3": 0.042,
     "qc_pose": true,
     "start_dist_Asp189_A": 4.4,
     "occ5_h2": 0.064,
@@ -840,10 +720,8 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [],
     "s1_original": false
   },
@@ -855,7 +733,7 @@
     "length": 7,
     "has_KR": false,
     "confidence_E2": 0.904,
-    "delta_E3": null,
+    "delta_E3": 0.039,
     "qc_pose": true,
     "start_dist_Asp189_A": 5.19,
     "occ5_h2": 0.012,
@@ -870,70 +748,8 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Onubilalis__r2",
-    "species": "Onubilalis",
-    "sequence": "GSDSNG",
-    "length": 6,
-    "has_KR": false,
-    "confidence_E2": 0.895,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 4.97,
-    "occ5_h2": 0.016,
-    "anchor": "S",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Hvirescens__r2",
-    "species": "Hvirescens",
-    "sequence": "NGGTT",
-    "length": 5,
-    "has_KR": false,
-    "confidence_E2": 0.894,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 4.8,
-    "occ5_h2": 0.0,
-    "anchor": "N",
-    "anchor_same": true,
-    "ring_strict": true,
-    "ring_frac_ge150": 1.0,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [],
     "s1_original": false
   },
@@ -945,7 +761,7 @@
     "length": 5,
     "has_KR": false,
     "confidence_E2": 0.874,
-    "delta_E3": null,
+    "delta_E3": 0.031,
     "qc_pose": true,
     "start_dist_Asp189_A": 3.94,
     "occ5_h2": 0.0,
@@ -960,10 +776,64 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
+    "failed": [],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Dsaccharalis__r3",
+    "species": "Dsaccharalis",
+    "sequence": "IYPETG",
+    "length": 6,
+    "has_KR": false,
+    "confidence_E2": 0.921,
+    "delta_E3": 0.025,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.95,
+    "occ5_h2": 0.008,
+    "anchor": "Y",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "A",
+    "provisional": false,
+    "pending": [],
+    "failed": [],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Hvirescens__r2",
+    "species": "Hvirescens",
+    "sequence": "NGGTT",
+    "length": 5,
+    "has_KR": false,
+    "confidence_E2": 0.894,
+    "delta_E3": 0.025,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 4.8,
+    "occ5_h2": 0.0,
+    "anchor": "N",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "A",
+    "provisional": false,
+    "pending": [],
     "failed": [],
     "s1_original": false
   },
@@ -975,7 +845,7 @@
     "length": 12,
     "has_KR": false,
     "confidence_E2": 0.871,
-    "delta_E3": null,
+    "delta_E3": 0.024,
     "qc_pose": true,
     "start_dist_Asp189_A": 4.19,
     "occ5_h2": 0.0,
@@ -990,10 +860,92 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
+    "failed": [],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Sfrugiperda__r1",
+    "species": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "length": 5,
+    "has_KR": false,
+    "confidence_E2": 0.908,
+    "delta_E3": 0.015,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 2.85,
+    "occ5_h2": 0.988,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "A",
+    "provisional": false,
+    "pending": [],
+    "failed": [],
+    "s1_original": true
+  },
+  {
+    "front": "M",
+    "key": "Onubilalis__r2",
+    "species": "Onubilalis",
+    "sequence": "GSDSNG",
+    "length": 6,
+    "has_KR": false,
+    "confidence_E2": 0.895,
+    "delta_E3": 0.014,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 4.97,
+    "occ5_h2": 0.016,
+    "anchor": "S",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "A",
+    "provisional": false,
+    "pending": [],
+    "failed": [],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Pxylostella__r3",
+    "species": "Pxylostella",
+    "sequence": "HGGNGSG",
+    "length": 7,
+    "has_KR": false,
+    "confidence_E2": 0.913,
+    "delta_E3": 0.012,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 5.97,
+    "occ5_h2": 0.088,
+    "anchor": "N",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "A",
+    "provisional": false,
+    "pending": [],
     "failed": [],
     "s1_original": false
   },
@@ -1005,7 +957,7 @@
     "length": 12,
     "has_KR": false,
     "confidence_E2": 0.864,
-    "delta_E3": null,
+    "delta_E3": 0.008,
     "qc_pose": true,
     "start_dist_Asp189_A": 3.26,
     "occ5_h2": 0.351,
@@ -1020,43 +972,9 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "A",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Agemmatalis__r1",
-    "species": "Agemmatalis",
-    "sequence": "GGSQSS",
-    "length": 6,
-    "has_KR": false,
-    "confidence_E2": 0.932,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 5.01,
-    "occ5_h2": 0.0,
-    "anchor": "Q",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.998,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
     "s1_original": false
   },
   {
@@ -1067,7 +985,7 @@
     "length": 5,
     "has_KR": false,
     "confidence_E2": 0.93,
-    "delta_E3": null,
+    "delta_E3": 0.061,
     "qc_pose": true,
     "start_dist_Asp189_A": 4.9,
     "occ5_h2": 0.0,
@@ -1082,234 +1000,8 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Pxylostella__r1",
-    "species": "Pxylostella",
-    "sequence": "GGGGH",
-    "length": 5,
-    "has_KR": false,
-    "confidence_E2": 0.924,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.37,
-    "occ5_h2": 0.817,
-    "anchor": "H",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.982,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": true
-  },
-  {
-    "front": "M",
-    "key": "Agemmatalis__r2",
-    "species": "Agemmatalis",
-    "sequence": "GGKPGEP",
-    "length": 7,
-    "has_KR": true,
-    "confidence_E2": 0.923,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.17,
-    "occ5_h2": 1.0,
-    "anchor": "K",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.996,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": true
-  },
-  {
-    "front": "M",
-    "key": "Dsaccharalis__r2",
-    "species": "Dsaccharalis",
-    "sequence": "DGING",
-    "length": 5,
-    "has_KR": false,
-    "confidence_E2": 0.923,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 5.18,
-    "occ5_h2": 0.0,
-    "anchor": "I",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.998,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Cincludens__r1",
-    "species": "Cincludens",
-    "sequence": "PISQIDSGSR",
-    "length": 10,
-    "has_KR": true,
-    "confidence_E2": 0.919,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 2.95,
-    "occ5_h2": 0.331,
-    "anchor": "R",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.978,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Agemmatalis__r3",
-    "species": "Agemmatalis",
-    "sequence": "GGSDHT",
-    "length": 6,
-    "has_KR": false,
-    "confidence_E2": 0.908,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 4.08,
-    "occ5_h2": 0.0,
-    "anchor": "H",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.998,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Sfrugiperda__r2",
-    "species": "Sfrugiperda",
-    "sequence": "GENGGPG",
-    "length": 7,
-    "has_KR": false,
-    "confidence_E2": 0.902,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.47,
-    "occ5_h2": 0.406,
-    "anchor": "N",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.998,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Sfrugiperda__r3",
-    "species": "Sfrugiperda",
-    "sequence": "GPDGGTG",
-    "length": 7,
-    "has_KR": false,
-    "confidence_E2": 0.9,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 5.55,
-    "occ5_h2": 0.008,
-    "anchor": "G",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.986,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [
       "ring_strict"
     ],
@@ -1323,7 +1015,7 @@
     "length": 10,
     "has_KR": false,
     "confidence_E2": 0.898,
-    "delta_E3": null,
+    "delta_E3": 0.04,
     "qc_pose": true,
     "start_dist_Asp189_A": 11.56,
     "occ5_h2": 0.0,
@@ -1338,10 +1030,8 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [
       "ring_strict"
     ],
@@ -1349,20 +1039,20 @@
   },
   {
     "front": "M",
-    "key": "Hvirescens__r1",
-    "species": "Hvirescens",
-    "sequence": "THSGSGS",
-    "length": 7,
-    "has_KR": false,
-    "confidence_E2": 0.897,
-    "delta_E3": null,
+    "key": "Cincludens__r1",
+    "species": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "length": 10,
+    "has_KR": true,
+    "confidence_E2": 0.919,
+    "delta_E3": 0.03,
     "qc_pose": true,
-    "start_dist_Asp189_A": 4.73,
-    "occ5_h2": 0.0,
-    "anchor": "H",
+    "start_dist_Asp189_A": 2.95,
+    "occ5_h2": 0.331,
+    "anchor": "R",
     "anchor_same": true,
     "ring_strict": false,
-    "ring_frac_ge150": 0.996,
+    "ring_frac_ge150": 0.978,
     "ph_occ": {
       "pH 8.2": null
     },
@@ -1370,42 +1060,8 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
-    "failed": [
-      "ring_strict"
-    ],
-    "s1_original": false
-  },
-  {
-    "front": "M",
-    "key": "Hvirescens__r3",
-    "species": "Hvirescens",
-    "sequence": "PHGEA",
-    "length": 5,
-    "has_KR": false,
-    "confidence_E2": 0.891,
-    "delta_E3": null,
-    "qc_pose": true,
-    "start_dist_Asp189_A": 3.81,
-    "occ5_h2": 0.024,
-    "anchor": "H",
-    "anchor_same": true,
-    "ring_strict": false,
-    "ring_frac_ge150": 0.9182,
-    "ph_occ": {
-      "pH 8.2": null
-    },
-    "ph_robust": null,
-    "ctrl_decoy_occ5_h2": null,
-    "ctrl_n": 0,
-    "tier": "B",
-    "provisional": true,
-    "pending": [
-      "delta_gt0"
-    ],
+    "provisional": false,
+    "pending": [],
     "failed": [
       "ring_strict"
     ],
@@ -1419,7 +1075,7 @@
     "length": 12,
     "has_KR": false,
     "confidence_E2": 0.868,
-    "delta_E3": null,
+    "delta_E3": 0.029,
     "qc_pose": true,
     "start_dist_Asp189_A": 4.35,
     "occ5_h2": 0.0,
@@ -1434,11 +1090,310 @@
     "ctrl_decoy_occ5_h2": null,
     "ctrl_n": 0,
     "tier": "B",
-    "provisional": true,
-    "pending": [
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Hvirescens__r3",
+    "species": "Hvirescens",
+    "sequence": "PHGEA",
+    "length": 5,
+    "has_KR": false,
+    "confidence_E2": 0.891,
+    "delta_E3": 0.025,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.81,
+    "occ5_h2": 0.024,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.9182,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Agemmatalis__r1",
+    "species": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "length": 6,
+    "has_KR": false,
+    "confidence_E2": 0.932,
+    "delta_E3": 0.024,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 5.01,
+    "occ5_h2": 0.0,
+    "anchor": "Q",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.998,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Dsaccharalis__r2",
+    "species": "Dsaccharalis",
+    "sequence": "DGING",
+    "length": 5,
+    "has_KR": false,
+    "confidence_E2": 0.923,
+    "delta_E3": 0.022,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 5.18,
+    "occ5_h2": 0.0,
+    "anchor": "I",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.998,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Sfrugiperda__r2",
+    "species": "Sfrugiperda",
+    "sequence": "GENGGPG",
+    "length": 7,
+    "has_KR": false,
+    "confidence_E2": 0.902,
+    "delta_E3": 0.021,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.47,
+    "occ5_h2": 0.406,
+    "anchor": "N",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.998,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Agemmatalis__r2",
+    "species": "Agemmatalis",
+    "sequence": "GGKPGEP",
+    "length": 7,
+    "has_KR": true,
+    "confidence_E2": 0.923,
+    "delta_E3": 0.02,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.17,
+    "occ5_h2": 1.0,
+    "anchor": "K",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.996,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": true
+  },
+  {
+    "front": "M",
+    "key": "Hvirescens__r1",
+    "species": "Hvirescens",
+    "sequence": "THSGSGS",
+    "length": 7,
+    "has_KR": false,
+    "confidence_E2": 0.897,
+    "delta_E3": 0.02,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 4.73,
+    "occ5_h2": 0.0,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.996,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Agemmatalis__r3",
+    "species": "Agemmatalis",
+    "sequence": "GGSDHT",
+    "length": 6,
+    "has_KR": false,
+    "confidence_E2": 0.908,
+    "delta_E3": 0.019,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 4.08,
+    "occ5_h2": 0.0,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.998,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Pxylostella__r1",
+    "species": "Pxylostella",
+    "sequence": "GGGGH",
+    "length": 5,
+    "has_KR": false,
+    "confidence_E2": 0.924,
+    "delta_E3": 0.003,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.37,
+    "occ5_h2": 0.817,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.982,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
+      "ring_strict"
+    ],
+    "s1_original": true
+  },
+  {
+    "front": "M",
+    "key": "Pxylostella__r2",
+    "species": "Pxylostella",
+    "sequence": "GGHGGG",
+    "length": 6,
+    "has_KR": false,
+    "confidence_E2": 0.913,
+    "delta_E3": -0.009,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 3.21,
+    "occ5_h2": 0.0,
+    "anchor": "H",
+    "anchor_same": true,
+    "ring_strict": true,
+    "ring_frac_ge150": 1.0,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "B",
+    "provisional": false,
+    "pending": [],
+    "failed": [
       "delta_gt0"
     ],
+    "s1_original": false
+  },
+  {
+    "front": "M",
+    "key": "Sfrugiperda__r3",
+    "species": "Sfrugiperda",
+    "sequence": "GPDGGTG",
+    "length": 7,
+    "has_KR": false,
+    "confidence_E2": 0.9,
+    "delta_E3": -0.002,
+    "qc_pose": true,
+    "start_dist_Asp189_A": 5.55,
+    "occ5_h2": 0.008,
+    "anchor": "G",
+    "anchor_same": true,
+    "ring_strict": false,
+    "ring_frac_ge150": 0.986,
+    "ph_occ": {
+      "pH 8.2": null
+    },
+    "ph_robust": null,
+    "ctrl_decoy_occ5_h2": null,
+    "ctrl_n": 0,
+    "tier": "C",
+    "provisional": false,
+    "pending": [],
     "failed": [
+      "delta_gt0",
       "ring_strict"
     ],
     "s1_original": false

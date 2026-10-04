@@ -1,0 +1,374 @@
+{
+  "Sfrugiperda__from_Sfrugiperda": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.9121428728103638
+  },
+  "Slitura__from_Sfrugiperda": {
+    "receptor": "Slitura",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.8377701044082642
+  },
+  "Onubilalis__from_Sfrugiperda": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.8620471358299255
+  },
+  "Dsaccharalis__from_Sfrugiperda": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.880865216255188
+  },
+  "Cincludens__from_Sfrugiperda": {
+    "receptor": "Cincludens",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.9184488654136658
+  },
+  "Hvirescens__from_Sfrugiperda": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.9018851518630981
+  },
+  "Pxylostella__from_Sfrugiperda": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.9026778340339661
+  },
+  "Agemmatalis__from_Sfrugiperda": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Sfrugiperda",
+    "sequence": "GGHSE",
+    "confidence_score": 0.8912607431411743
+  },
+  "Sfrugiperda__from_Slitura": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.8800051808357239
+  },
+  "Slitura__from_Slitura": {
+    "receptor": "Slitura",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.9041623473167419
+  },
+  "Onubilalis__from_Slitura": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.9221663475036621
+  },
+  "Dsaccharalis__from_Slitura": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.9026758074760437
+  },
+  "Cincludens__from_Slitura": {
+    "receptor": "Cincludens",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.8881909251213074
+  },
+  "Hvirescens__from_Slitura": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.8397538065910339
+  },
+  "Pxylostella__from_Slitura": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.8446084260940552
+  },
+  "Agemmatalis__from_Slitura": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Slitura",
+    "sequence": "QSPDFPNPPNNH",
+    "confidence_score": 0.8959250450134277
+  },
+  "Sfrugiperda__from_Onubilalis": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.909113347530365
+  },
+  "Slitura__from_Onubilalis": {
+    "receptor": "Slitura",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.8661579489707947
+  },
+  "Onubilalis__from_Onubilalis": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.8657192587852478
+  },
+  "Dsaccharalis__from_Onubilalis": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.9454606175422668
+  },
+  "Cincludens__from_Onubilalis": {
+    "receptor": "Cincludens",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.8455023765563965
+  },
+  "Hvirescens__from_Onubilalis": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.8592533469200134
+  },
+  "Pxylostella__from_Onubilalis": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.8170010447502136
+  },
+  "Agemmatalis__from_Onubilalis": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Onubilalis",
+    "sequence": "HSQPGSPTGG",
+    "confidence_score": 0.9189956784248352
+  },
+  "Sfrugiperda__from_Dsaccharalis": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.9147487878799438
+  },
+  "Slitura__from_Dsaccharalis": {
+    "receptor": "Slitura",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.7951090931892395
+  },
+  "Onubilalis__from_Dsaccharalis": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.8544873595237732
+  },
+  "Dsaccharalis__from_Dsaccharalis": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.9323108792304993
+  },
+  "Cincludens__from_Dsaccharalis": {
+    "receptor": "Cincludens",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.8995580673217773
+  },
+  "Hvirescens__from_Dsaccharalis": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.8699802756309509
+  },
+  "Pxylostella__from_Dsaccharalis": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.9240273833274841
+  },
+  "Agemmatalis__from_Dsaccharalis": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Dsaccharalis",
+    "sequence": "GIGSG",
+    "confidence_score": 0.9269594550132751
+  },
+  "Sfrugiperda__from_Cincludens": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.8828625679016113
+  },
+  "Slitura__from_Cincludens": {
+    "receptor": "Slitura",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.8714205026626587
+  },
+  "Onubilalis__from_Cincludens": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.8620829582214355
+  },
+  "Dsaccharalis__from_Cincludens": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.9206304550170898
+  },
+  "Cincludens__from_Cincludens": {
+    "receptor": "Cincludens",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.915181577205658
+  },
+  "Hvirescens__from_Cincludens": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.9001869559288025
+  },
+  "Pxylostella__from_Cincludens": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.9092386364936829
+  },
+  "Agemmatalis__from_Cincludens": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Cincludens",
+    "sequence": "PISQIDSGSR",
+    "confidence_score": 0.9344744086265564
+  },
+  "Sfrugiperda__from_Hvirescens": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.9239028096199036
+  },
+  "Slitura__from_Hvirescens": {
+    "receptor": "Slitura",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.8375088572502136
+  },
+  "Onubilalis__from_Hvirescens": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.846961498260498
+  },
+  "Dsaccharalis__from_Hvirescens": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.9128769040107727
+  },
+  "Cincludens__from_Hvirescens": {
+    "receptor": "Cincludens",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.8414270281791687
+  },
+  "Hvirescens__from_Hvirescens": {
+    "receptor": "Hvirescens",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.8950567245483398
+  },
+  "Pxylostella__from_Hvirescens": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.8498247265815735
+  },
+  "Agemmatalis__from_Hvirescens": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Hvirescens",
+    "sequence": "THSGSGS",
+    "confidence_score": 0.9024039506912231
+  },
+  "Sfrugiperda__from_Pxylostella": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8886449933052063
+  },
+  "Slitura__from_Pxylostella": {
+    "receptor": "Slitura",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8291786313056946
+  },
+  "Onubilalis__from_Pxylostella": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8650416731834412
+  },
+  "Dsaccharalis__from_Pxylostella": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8795682191848755
+  },
+  "Cincludens__from_Pxylostella": {
+    "receptor": "Cincludens",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8185703158378601
+  },
+  "Pxylostella__from_Pxylostella": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.9259166717529297
+  },
+  "Agemmatalis__from_Pxylostella": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Pxylostella",
+    "sequence": "GGGGH",
+    "confidence_score": 0.8917867541313171
+  },
+  "Sfrugiperda__from_Agemmatalis": {
+    "receptor": "Sfrugiperda",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.9158698916435242
+  },
+  "Slitura__from_Agemmatalis": {
+    "receptor": "Slitura",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.8280302286148071
+  },
+  "Onubilalis__from_Agemmatalis": {
+    "receptor": "Onubilalis",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.8578168749809265
+  },
+  "Dsaccharalis__from_Agemmatalis": {
+    "receptor": "Dsaccharalis",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.9236276745796204
+  },
+  "Cincludens__from_Agemmatalis": {
+    "receptor": "Cincludens",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.9100261926651001
+  },
+  "Pxylostella__from_Agemmatalis": {
+    "receptor": "Pxylostella",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.9040333032608032
+  },
+  "Agemmatalis__from_Agemmatalis": {
+    "receptor": "Agemmatalis",
+    "peptide_of": "Agemmatalis",
+    "sequence": "GGSQSS",
+    "confidence_score": 0.9297747015953064
+  }
+}

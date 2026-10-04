@@ -143,3 +143,12 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 4. Decidir se GGKPGEP (anel=False) entra por outra via; mencionar poliglicina sem controle (GGGGGGG, GGGGGG, GGGGGGGGGGGGGG) ao fechar a 3.8.
 5. Inserir as 8 referências verificadas em 03/10 se as frases entrarem; conferir limite de palavras do Resumo EN (382 contra 350).
 6. **Não** rodar `git pull` no servidor com `md-controls` vivo (ver §10).
+
+### 11.1 Manuscrito atualizado com E3-M, camadas M e matriz 8×8 (04/10, noite)
+- **Dados trazidos do servidor** para `data-e2-results/`: `delta_paired_M.json`, `matrix_L.json`, `matrix_M.json`, `b23_boltz2_E3_M_scores.json`. Ranking recalculado: `outputs/ranking_final_0410/` (cópia em `docs/dados/ranking_final.*`; Fig. 12 regenerada em `manuscript/figures/`).
+- **E3 macrocíclico:** 79/80 com controles (falta GGGGGGGGGGGGGG, *S. litura*); Δ>0 em 60/79 (76%), mediana 0,014, IQR 0,001–0,024, faixa −0,027 a 0,061; finais 22/24 (mediana 0,023); exceções GGHGGG (−0,009) e GPDGGTG (−0,002). Duas frentes juntas: 123/157 (78%).
+- **Camadas finais:** L 23 A + 1 B + 0 C; M **10 A + 13 B + 1 C** (antes 11/13/0): GGHGGG foi de A para B (só Δ) e GPDGGTG de B para C (Δ e anel).
+- **Matriz 8×8 (1 amostra, parâmetros padrão):** 63/64 (L) e 62/64 (M) predições; 3 falharam no pré-processamento (Slitura×Pxylostella na L; Hvirescens×Pxylostella e Hvirescens×Agemmatalis na M, erro `'tuple' object has no attribute 'islower'`) e não foram repetidas. Diagonal 0,928 (L) e 0,910 (M) contra 0,903 e 0,882 fora da diagonal (~0,025, ruído); receptor próprio é o melhor em 4/8 (L) e 3/8 (M); receptor de *S. litura* tem a menor confiança nas duas frentes. Conclusão escrita: sem preferência espécie-específica, e sem ser teste de seletividade.
+- **Correção de erro anterior:** a frente linear tem 5/9 (e não 5/10) em *S. litura* (9 candidatos com controle).
+- **Manuscrito:** `manuscript_src.md` (EN) e `pt_parts/p*.md` (PT; `manuscript_pt_src.md` é gerado por `build_docx_pt.py` e sobrescrito) editados em Resumo, 3.8, 3.11, 4.1, legenda da Fig. 12 e nota 1; `render.py` e `build_docx_pt.py` rodados. `[[PENDING]]` restantes: controle negativo (3.9), controles embaralhados em MD e pH (3.11), seções administrativas. **Resumo EN: 390 palavras (limite Frontiers 350).**
+- **`md-controls` às 20:53:** 2 controles concluídos (Agemmatalis__r2__ctrl_d1 RMSD 0,45 nm; Agemmatalis__r3__ctrl_d1 0,71 nm; ocupância ainda não analisada), o 3º (Sfrugiperda__r1__ctrl_d2) em MD de produção desde 20:39.
