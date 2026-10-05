@@ -177,3 +177,7 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 - **README** atualizado com o estado do projeto.
 
 **Estado do servidor no encerramento (21:53):** `md-controls` (lote 1) com o 4º controle (frente M, GGKPGEP) em MD desde 21:34; `md-final-queue` aguardando `MD_CONTROLS_DONE`. Ao retomar: `ssh` → `tail outputs/md_controls.log outputs/queue_final_md.log`; quando aparecer `QUEUE_FINAL_MD_DONE`, copiar `outputs/md10_controls_{L,M}/analysis_summary.json` para `data-e2-results/md10_controls_{L,M}_analysis.json` e `outputs/md10_negctrl_{L,M}/analysis_summary.json`, rodar `python scripts/rank_final_candidates.py --layout local ...`, refazer a Fig. 13 e aplicar a regra de retirada.
+
+
+## 12. Continuação de 05/10/2026
+Ver `docs/ESTADO_2026-10-05.md`: fila `md-final-queue` morta por `set -u` e relançada (5e03837), lote 2 de controles concluído (7 controles), controle negativo parcial (NGGRPDAP, GGKPGEP), Figura 14, manuscrito EN/PT atualizado e comparação de formato com 3 artigos da Frontiers in Natural Products.

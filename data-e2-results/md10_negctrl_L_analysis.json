@@ -1,0 +1,82 @@
+{
+  "Agemmatalis__r2__neg_ASP": {
+    "sequence": "NGGDPDAP",
+    "cyclic": false,
+    "n_frames": 501,
+    "receptor_residues": 260,
+    "s1_asp": "ASP211",
+    "anchor_idx": 3,
+    "anchor_aa": "D",
+    "d_anchor_asp_mean_A": 13.29,
+    "d_anchor_asp_ini_A": 7.61,
+    "d_anchor_asp_fim_A": 16.29,
+    "com_dist_pep_rec_A_median": 16.5,
+    "n_frames_image_jump_gt30A": 0,
+    "peptide_rmsd_local_nm_mean": 0.919,
+    "peptide_rmsd_local_nm_final20pct": 1.36,
+    "window_early_ns": [
+      0.0,
+      0.4
+    ],
+    "window_late_ns": [
+      8.0,
+      10.0
+    ],
+    "contact_any_frac_4.5A": 1.0,
+    "ser195_contact_frac_4.5A": 0.146,
+    "his57_contact_frac_4.5A": 0.285,
+    "anchor_idx_h1": 3,
+    "anchor_idx_h2": 3,
+    "anchor_same_in_halves": true,
+    "occ_4A": 0.0,
+    "occ_4A_h1": 0.0,
+    "occ_4A_h2": 0.0,
+    "occ_5A": 0.0,
+    "occ_5A_h1": 0.0,
+    "occ_5A_h2": 0.0,
+    "occ_6A": 0.0,
+    "occ_6A_h1": 0.0,
+    "occ_6A_h2": 0.0,
+    "passes_screen": false
+  },
+  "Agemmatalis__r2__neg_LEU": {
+    "sequence": "NGGLPDAP",
+    "cyclic": false,
+    "n_frames": 501,
+    "receptor_residues": 260,
+    "s1_asp": "ASP211",
+    "anchor_idx": 3,
+    "anchor_aa": "L",
+    "d_anchor_asp_mean_A": 8.9,
+    "d_anchor_asp_ini_A": 6.47,
+    "d_anchor_asp_fim_A": 9.22,
+    "com_dist_pep_rec_A_median": 15.0,
+    "n_frames_image_jump_gt30A": 0,
+    "peptide_rmsd_local_nm_mean": 0.376,
+    "peptide_rmsd_local_nm_final20pct": 0.433,
+    "window_early_ns": [
+      0.0,
+      0.4
+    ],
+    "window_late_ns": [
+      8.0,
+      10.0
+    ],
+    "contact_any_frac_4.5A": 1.0,
+    "ser195_contact_frac_4.5A": 1.0,
+    "his57_contact_frac_4.5A": 0.998,
+    "anchor_idx_h1": 3,
+    "anchor_idx_h2": 3,
+    "anchor_same_in_halves": true,
+    "occ_4A": 0.0,
+    "occ_4A_h1": 0.0,
+    "occ_4A_h2": 0.0,
+    "occ_5A": 0.0,
+    "occ_5A_h1": 0.0,
+    "occ_5A_h2": 0.0,
+    "occ_6A": 0.006,
+    "occ_6A_h1": 0.012,
+    "occ_6A_h2": 0.0,
+    "passes_screen": false
+  }
+}

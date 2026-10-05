@@ -244,11 +244,11 @@ def fig_controls():
         a.text(1.05, ypos[j], f'{c["sequence"]} → {cv["sequence"]}', va="center", fontsize=6.5)
     a.axhline(.7, ls="--", c="gray", lw=.8)
     a.set_xticks([0, 1]); a.set_xticklabels([T("candidate", "candidato"), T("shuffled control", "controle embaralhado")])
-    a.set_xlim(-.15, 2.0); a.set_ylim(-.05, 1.12)
+    a.set_xlim(-.15, 2.0); a.set_ylim(-.05, 1.3)
     a.set_ylabel(T("S1 occupancy at 5 Å, second half", "ocupância de S1 a 5 Å, 2ª metade"))
     for F in "LM":
         a.plot([], [], "-o", c=CF[F], ms=4, label=FNAME[F])
-    a.legend(frameon=False, loc="center right")
+    a.legend(frameon=False, loc="upper left", ncol=2)
     for F in "LM":
         for k, v in AN[F].items():
             if "occ_5A_h2" in v:
@@ -269,13 +269,55 @@ def fig_controls():
     return {"n_pairs": len(pairs)}
 
 
+def fig_negctrl():
+    """Figura 14: controle negativo por troca da ancora (Asp, Leu) frente ao candidato e ao controle embaralhado.
+    Funciona com dados parciais: so desenha os candidatos cujas duas variantes terminaram."""
+    AN = {F: load(f"md10_{F}_analysis.json") or {} for F in "LM"}
+    CT = {F: load(f"md10_controls_{F}_analysis.json") or {} for F in "LM"}
+    NG = {F: load(f"md10_negctrl_{F}_analysis.json") or {} for F in "LM"}
+    rows = []
+    for F in "LM":
+        for k, c in AN[F].items():
+            neg = {v: NG[F].get(f"{k}__neg_{v}") for v in ("ASP", "LEU")}
+            ctl = next((cv for ck, cv in CT[F].items() if ck.startswith(k + "__ctrl_")), None)
+            if all(neg.values()) and ctl and "occ_5A_h2" in c:
+                rows.append((F, k, c, ctl, neg))
+    if not rows:
+        return None
+    cats = [T("candidate", "candidato"), T("shuffled", "embaralhado"), "Asp", "Leu"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=mm_figsize("double", 80), layout="constrained")
+    for j, (F, k, c, ctl, neg) in enumerate(rows):
+        recs = [c, ctl, neg["ASP"], neg["LEU"]]
+        off = (j - (len(rows) - 1) / 2) * .12
+        xs = np.arange(4) + off
+        a.plot(xs, [r["occ_5A_h2"] for r in recs], "-o", c=CF[F], lw=1.3, ms=4)
+        b.plot(xs, [r["d_anchor_asp_fim_A"] for r in recs], "-o", c=CF[F], lw=1.3, ms=4,
+               label=f'{c["sequence"]} ({FNAME[F]})')
+        b.plot(xs, [r["d_anchor_asp_ini_A"] for r in recs], "o", mfc="w", c=CF[F], ms=4, lw=0)
+    a.axhline(.7, ls="--", c="gray", lw=.8)
+    b.axhline(5, ls="--", c="gray", lw=.8)
+    for ax_ in (a, b):
+        ax_.set_xticks(range(4)); ax_.set_xticklabels(cats)
+        ax_.set_xlim(-.4, 3.4)
+    a.set_ylim(-.05, 1.1)
+    a.set_ylabel(T("S1 occupancy at 5 Å, second half", "ocupância de S1 a 5 Å, 2ª metade"))
+    b.set_ylabel(T("anchor–Asp189 distance (Å)", "distância âncora–Asp189 (Å)"))
+    b.plot([], [], "o", mfc="w", c="k", ms=4, lw=0, label=T("initial window (open)", "janela inicial (vazado)"))
+    b.plot([], [], "o", c="k", ms=4, lw=0, label=T("final window (filled)", "janela final (cheio)"))
+    b.legend(frameon=False, loc="upper left", fontsize=7)
+    letters([a, b], dx=-0.16)
+    save(fig, "Figure14_negative_control", "fig14_controle_negativo")
+    return {"n_candidates": len(rows), "seqs": [r[2]["sequence"] for r in rows]}
+
+
 if __name__ == "__main__":
     print("fig9 ", fig_e2())
     print("fig10", fig_top3())
     print("fig11", fig_md())
     print("figS2", fig_s2_ring())
     print("fig13", fig_controls())
+    print("fig14", fig_negctrl())
     from PIL import Image
     for f in O.glob("*.png"):
-        if f.name.startswith(("fig9", "fig10", "fig11", "figS2_anel", "fig13", "Figure9", "Figure10", "Figure11", "Figure13", "FigureS2_cyclic_ring")):
+        if f.name.startswith(("fig9", "fig10", "fig11", "figS2_anel", "fig13", "Figure9", "Figure10", "Figure11", "Figure13", "Figure14", "fig14", "FigureS2_cyclic_ring")):
             Image.open(f).convert("RGB").save(f.with_suffix(".tif"), compression="tiff_lzw", dpi=(300, 300))

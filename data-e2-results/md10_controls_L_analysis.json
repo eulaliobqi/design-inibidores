@@ -118,5 +118,45 @@
     "occ_6A_h1": 1.0,
     "occ_6A_h2": 1.0,
     "passes_screen": true
+  },
+  "Onubilalis__r2__ctrl_d1": {
+    "sequence": "DQGSN",
+    "cyclic": false,
+    "n_frames": 501,
+    "receptor_residues": 256,
+    "s1_asp": "ASP207",
+    "anchor_idx": 1,
+    "anchor_aa": "Q",
+    "d_anchor_asp_mean_A": 5.08,
+    "d_anchor_asp_ini_A": 5.38,
+    "d_anchor_asp_fim_A": 5.26,
+    "com_dist_pep_rec_A_median": 11.0,
+    "n_frames_image_jump_gt30A": 0,
+    "peptide_rmsd_local_nm_mean": 0.32,
+    "peptide_rmsd_local_nm_final20pct": 0.356,
+    "window_early_ns": [
+      0.0,
+      0.4
+    ],
+    "window_late_ns": [
+      8.0,
+      10.0
+    ],
+    "contact_any_frac_4.5A": 1.0,
+    "ser195_contact_frac_4.5A": 1.0,
+    "his57_contact_frac_4.5A": 0.962,
+    "anchor_idx_h1": 1,
+    "anchor_idx_h2": 1,
+    "anchor_same_in_halves": true,
+    "occ_4A": 0.012,
+    "occ_4A_h1": 0.02,
+    "occ_4A_h2": 0.004,
+    "occ_5A": 0.377,
+    "occ_5A_h1": 0.46,
+    "occ_5A_h2": 0.295,
+    "occ_6A": 0.992,
+    "occ_6A_h1": 0.988,
+    "occ_6A_h2": 0.996,
+    "passes_screen": false
   }
 }

@@ -6,7 +6,7 @@ Dado um conjunto de estruturas 3D da enzima-alvo, o pipeline mapeia automaticame
 
 ---
 
-## Estado atual do projeto (04/10/2026)
+## Estado atual do projeto (05/10/2026)
 
 O pipeline evoluiu do desenho inicial descrito abaixo para uma **triagem em duas frentes** (peptídeos lineares, L, e macrociclos cabeça-cauda, M) contra tripsinas digestivas de oito lepidópteros-praga da soja, com **critério duro de não clivagem** pelas proteases do intestino médio. Todo o resultado é computacional: **não há ensaio de inibição nem contrasseleção contra proteases não alvo**.
 
@@ -18,12 +18,12 @@ O pipeline evoluiu do desenho inicial descrito abaixo para uma **triagem em duas
 | Matriz cruzada 8×8 (melhor candidato por espécie × 8 receptores) | concluída; sem preferência espécie-específica |
 | MD de 10 ns dos 48 finais (CHARMM36, pH 10) | concluída; a ocupância de S1 acompanha a pose inicial |
 | Camadas finais | L 23 A + 1 B; M 10 A + 13 B + 1 C ("sobreviveu aos filtros", não "deve inibir") |
-| Controles embaralhados em MD (10 ns) | **em andamento**: nos 3 já analisados, 2 controles chegaram a ocupância 1,00 e 1 candidato ficou abaixo do controle |
-| Controle negativo (âncora → Asp/Leu) | **na fila** (`scripts/queue_final_md.sh`) |
+| Controles embaralhados em MD (10 ns) | **concluídos (7)**: 3 candidatos superam o controle; os 3 controles que partiram a ≤ 2,74 Å chegaram a 1,00 (confundido com a distância inicial) |
+| Controle negativo (âncora → Asp/Leu) | **em curso** (`screen md-final-queue`): NGGRPDAP e GGKPGEP, as 4 variantes perderam a ocupância (variantes partem mais longe); GQNDS e GGHSE pendentes |
 
 **Onde está cada coisa**
 - `manuscript/` — manuscrito (EN em `manuscript_src.md` + `render.py`; PT em `pt_parts/` + `build_docx_pt.py`); figuras em `manuscript/figures/` (gerador: `figures/make_figures_e2_md.py`).
-- `docs/CONSOLIDACAO_2026-10-03.md` — diário técnico e retomada (§11: fechamento de 04/10).
+- `docs/ESTADO_2026-10-05.md` — estado e retomada atuais; `docs/CONSOLIDACAO_2026-10-03.md` — diário técnico (§11: fechamento de 04/10).
 - `docs/dados/` — tabelas finais (`ranking_final.*`, lista de entrega para MD longa).
 - `data-e2-results/` — cópias dos resultados do servidor usados nas figuras e tabelas.
 - Scripts principais: `scripts/rescore_boltz2_topk.py` (E2/E3), `scripts/pose_qc.py` (E4), `scripts/analyze_md_top_candidates.py`, `scripts/rank_final_candidates.py`, `scripts/run_md_controls.py`, `scripts/run_md_negctrl.py`, `scripts/compare_controls.py`, `scripts/deliver_md_long.py`.

@@ -1,0 +1,332 @@
+{
+  "L": {
+    "Agemmatalis__r2": {
+      "sequence": "NGGRPDAP",
+      "cand": {
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "R",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 2.74,
+        "peptide_rmsd_local_nm_final20pct": 0.209
+      },
+      "ctrl": {
+        "key": "Agemmatalis__r2__ctrl_d1",
+        "sequence": "PGRGDANP",
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "R",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 2.73,
+        "peptide_rmsd_local_nm_final20pct": 0.417
+      },
+      "delta_occ": 0.0,
+      "separates": false,
+      "eligible_negctrl": true
+    },
+    "Agemmatalis__r3": {
+      "sequence": "GTDEN",
+      "cand": {
+        "occ_5A_h2": 0.629,
+        "anchor_aa": "E",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 5.0,
+        "peptide_rmsd_local_nm_final20pct": 0.341
+      },
+      "ctrl": {
+        "key": "Agemmatalis__r3__ctrl_d1",
+        "sequence": "GTNED",
+        "occ_5A_h2": 0.195,
+        "anchor_aa": "G",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 5.2,
+        "peptide_rmsd_local_nm_final20pct": 0.684
+      },
+      "delta_occ": 0.434,
+      "separates": true,
+      "eligible_negctrl": false
+    },
+    "Onubilalis__r2": {
+      "sequence": "GQNDS",
+      "cand": {
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "Q",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 3.77,
+        "peptide_rmsd_local_nm_final20pct": 0.515
+      },
+      "ctrl": {
+        "key": "Onubilalis__r2__ctrl_d1",
+        "sequence": "DQGSN",
+        "occ_5A_h2": 0.295,
+        "anchor_aa": "Q",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 5.26,
+        "peptide_rmsd_local_nm_final20pct": 0.356
+      },
+      "delta_occ": 0.705,
+      "separates": true,
+      "eligible_negctrl": true
+    },
+    "Sfrugiperda__r1": {
+      "sequence": "GPGGGTG",
+      "cand": {
+        "occ_5A_h2": 0.0,
+        "anchor_aa": "T",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 6.33,
+        "peptide_rmsd_local_nm_final20pct": 0.851
+      },
+      "ctrl": {
+        "key": "Sfrugiperda__r1__ctrl_d2",
+        "sequence": "GGGGGPT",
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "G",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 3.04,
+        "peptide_rmsd_local_nm_final20pct": 0.339
+      },
+      "delta_occ": -1.0,
+      "separates": false,
+      "eligible_negctrl": false
+    }
+  },
+  "L_neg": {
+    "Agemmatalis__r2__neg_ASP": {
+      "sequence": "NGGDPDAP",
+      "cyclic": false,
+      "n_frames": 501,
+      "receptor_residues": 260,
+      "s1_asp": "ASP211",
+      "anchor_idx": 3,
+      "anchor_aa": "D",
+      "d_anchor_asp_mean_A": 13.29,
+      "d_anchor_asp_ini_A": 7.61,
+      "d_anchor_asp_fim_A": 16.29,
+      "com_dist_pep_rec_A_median": 16.5,
+      "n_frames_image_jump_gt30A": 0,
+      "peptide_rmsd_local_nm_mean": 0.919,
+      "peptide_rmsd_local_nm_final20pct": 1.36,
+      "window_early_ns": [
+        0.0,
+        0.4
+      ],
+      "window_late_ns": [
+        8.0,
+        10.0
+      ],
+      "contact_any_frac_4.5A": 1.0,
+      "ser195_contact_frac_4.5A": 0.146,
+      "his57_contact_frac_4.5A": 0.285,
+      "anchor_idx_h1": 3,
+      "anchor_idx_h2": 3,
+      "anchor_same_in_halves": true,
+      "occ_4A": 0.0,
+      "occ_4A_h1": 0.0,
+      "occ_4A_h2": 0.0,
+      "occ_5A": 0.0,
+      "occ_5A_h1": 0.0,
+      "occ_5A_h2": 0.0,
+      "occ_6A": 0.0,
+      "occ_6A_h1": 0.0,
+      "occ_6A_h2": 0.0,
+      "passes_screen": false
+    },
+    "Agemmatalis__r2__neg_LEU": {
+      "sequence": "NGGLPDAP",
+      "cyclic": false,
+      "n_frames": 501,
+      "receptor_residues": 260,
+      "s1_asp": "ASP211",
+      "anchor_idx": 3,
+      "anchor_aa": "L",
+      "d_anchor_asp_mean_A": 8.9,
+      "d_anchor_asp_ini_A": 6.47,
+      "d_anchor_asp_fim_A": 9.22,
+      "com_dist_pep_rec_A_median": 15.0,
+      "n_frames_image_jump_gt30A": 0,
+      "peptide_rmsd_local_nm_mean": 0.376,
+      "peptide_rmsd_local_nm_final20pct": 0.433,
+      "window_early_ns": [
+        0.0,
+        0.4
+      ],
+      "window_late_ns": [
+        8.0,
+        10.0
+      ],
+      "contact_any_frac_4.5A": 1.0,
+      "ser195_contact_frac_4.5A": 1.0,
+      "his57_contact_frac_4.5A": 0.998,
+      "anchor_idx_h1": 3,
+      "anchor_idx_h2": 3,
+      "anchor_same_in_halves": true,
+      "occ_4A": 0.0,
+      "occ_4A_h1": 0.0,
+      "occ_4A_h2": 0.0,
+      "occ_5A": 0.0,
+      "occ_5A_h1": 0.0,
+      "occ_5A_h2": 0.0,
+      "occ_6A": 0.006,
+      "occ_6A_h1": 0.012,
+      "occ_6A_h2": 0.0,
+      "passes_screen": false
+    }
+  },
+  "M": {
+    "Agemmatalis__r1": {
+      "sequence": "GGSQSS",
+      "cand": {
+        "occ_5A_h2": 0.0,
+        "anchor_aa": "Q",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 8.02,
+        "peptide_rmsd_local_nm_final20pct": 0.503
+      },
+      "ctrl": {
+        "key": "Agemmatalis__r1__ctrl_d1",
+        "sequence": "SGGSQS",
+        "occ_5A_h2": 0.622,
+        "anchor_aa": "S",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 4.61,
+        "peptide_rmsd_local_nm_final20pct": 0.282
+      },
+      "delta_occ": -0.622,
+      "separates": false,
+      "eligible_negctrl": false
+    },
+    "Agemmatalis__r2": {
+      "sequence": "GGKPGEP",
+      "cand": {
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "K",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 2.71,
+        "peptide_rmsd_local_nm_final20pct": 0.294
+      },
+      "ctrl": {
+        "key": "Agemmatalis__r2__ctrl_d3",
+        "sequence": "GGEKPPG",
+        "occ_5A_h2": 1.0,
+        "anchor_aa": "K",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 2.82,
+        "peptide_rmsd_local_nm_final20pct": 0.381
+      },
+      "delta_occ": 0.0,
+      "separates": false,
+      "eligible_negctrl": true
+    },
+    "Sfrugiperda__r1": {
+      "sequence": "GGHSE",
+      "cand": {
+        "occ_5A_h2": 0.988,
+        "anchor_aa": "H",
+        "anchor_same_in_halves": true,
+        "d_anchor_asp_fim_A": 3.07,
+        "peptide_rmsd_local_nm_final20pct": 0.238
+      },
+      "ctrl": {
+        "key": "Sfrugiperda__r1__ctrl_d2",
+        "sequence": "GEHGS",
+        "occ_5A_h2": 0.0,
+        "anchor_aa": "H",
+        "anchor_same_in_halves": false,
+        "d_anchor_asp_fim_A": 16.71,
+        "peptide_rmsd_local_nm_final20pct": 0.897
+      },
+      "delta_occ": 0.988,
+      "separates": true,
+      "eligible_negctrl": true
+    }
+  },
+  "M_neg": {
+    "Agemmatalis__r2__neg_ASP": {
+      "sequence": "GGDPGEP",
+      "cyclic": true,
+      "n_frames": 501,
+      "receptor_residues": 260,
+      "s1_asp": "ASP211",
+      "anchor_idx": 3,
+      "anchor_aa": "P",
+      "d_anchor_asp_mean_A": 5.4,
+      "d_anchor_asp_ini_A": 6.33,
+      "d_anchor_asp_fim_A": 5.16,
+      "com_dist_pep_rec_A_median": 14.6,
+      "n_frames_image_jump_gt30A": 0,
+      "peptide_rmsd_local_nm_mean": 0.677,
+      "peptide_rmsd_local_nm_final20pct": 0.619,
+      "window_early_ns": [
+        0.0,
+        0.4
+      ],
+      "window_late_ns": [
+        8.0,
+        10.0
+      ],
+      "contact_any_frac_4.5A": 1.0,
+      "ser195_contact_frac_4.5A": 0.992,
+      "his57_contact_frac_4.5A": 0.814,
+      "anchor_idx_h1": 3,
+      "anchor_idx_h2": 3,
+      "anchor_same_in_halves": true,
+      "ring_omega_frac_ge150": 1.0,
+      "ring_CN_max_A": 1.441,
+      "ring_omega_abs_min_deg": 151.9,
+      "ring_intact": true,
+      "occ_4A": 0.0,
+      "occ_4A_h1": 0.0,
+      "occ_4A_h2": 0.0,
+      "occ_5A": 0.192,
+      "occ_5A_h1": 0.064,
+      "occ_5A_h2": 0.319,
+      "occ_6A": 0.9,
+      "occ_6A_h1": 0.812,
+      "occ_6A_h2": 0.988,
+      "passes_screen": false
+    },
+    "Agemmatalis__r2__neg_LEU": {
+      "sequence": "GGLPGEP",
+      "cyclic": true,
+      "n_frames": 501,
+      "receptor_residues": 260,
+      "s1_asp": "ASP211",
+      "anchor_idx": 2,
+      "anchor_aa": "L",
+      "d_anchor_asp_mean_A": 7.71,
+      "d_anchor_asp_ini_A": 6.36,
+      "d_anchor_asp_fim_A": 8.71,
+      "com_dist_pep_rec_A_median": 14.4,
+      "n_frames_image_jump_gt30A": 0,
+      "peptide_rmsd_local_nm_mean": 0.417,
+      "peptide_rmsd_local_nm_final20pct": 0.384,
+      "window_early_ns": [
+        0.0,
+        0.4
+      ],
+      "window_late_ns": [
+        8.0,
+        10.0
+      ],
+      "contact_any_frac_4.5A": 1.0,
+      "ser195_contact_frac_4.5A": 0.523,
+      "his57_contact_frac_4.5A": 0.497,
+      "anchor_idx_h1": 2,
+      "anchor_idx_h2": 3,
+      "anchor_same_in_halves": false,
+      "ring_omega_frac_ge150": 0.998,
+      "ring_CN_max_A": 1.442,
+      "ring_omega_abs_min_deg": 144.9,
+      "ring_intact": false,
+      "occ_4A": 0.0,
+      "occ_4A_h1": 0.0,
+      "occ_4A_h2": 0.0,
+      "occ_5A": 0.0,
+      "occ_5A_h1": 0.0,
+      "occ_5A_h2": 0.0,
+      "occ_6A": 0.09,
+      "occ_6A_h1": 0.176,
+      "occ_6A_h2": 0.004,
+      "passes_screen": false
+    }
+  }
+}

@@ -86,7 +86,7 @@ legends = dict(re.findall(r"\*\*Figura (S?\d+)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)"
 src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
        "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "13": "figures/pt/fig13_controles_embaralhados.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "13": "figures/pt/fig13_controles_embaralhados.png", "14": "figures/pt/fig14_controle_negativo.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
 
 
 def img(n, w="16.5cm"):
@@ -101,8 +101,8 @@ src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n##
 src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
 src = src.replace("\n### 3.9 Simulações", img("8") + img("9") + img("10") + "\n### 3.9 Simulações")
 src = src.replace("\n### 3.10 Frente linear", img("11") + "\n### 3.10 Frente linear")
-src = src.replace("\n---\n\n## 4 Discussão", img("12") + img("13") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + img("13") + "\n## 4 Discussão")
-for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"):
+src = src.replace("\n---\n\n## 4 Discussão", img("12") + img("13") + img("14") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + img("13") + img("14") + "\n## 4 Discussão")
+for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
 
@@ -145,31 +145,32 @@ panel = f"""
 ## Como ler as marcações
 
 - Trechos em **amarelo** marcam o que ainda depende de simulações em andamento ou de informação dos autores.
-- Nada nesta versão foi inventado para preencher lacunas: os resultados do co-dobramento nas duas frentes e das simulações de 10 ns (Seções 3.8–3.10) e as frases que deles dependem estão pendentes.
+- Nada nesta versão foi inventado para preencher lacunas: o que ainda depende de simulações em andamento (controle negativo de GQNDS e GGHSE, robustez ao pH, lista de peptídeos recomendados) ou de informação dos autores está marcado.
 
 ## Painel de conformidade com as métricas da revista
 
 | Requisito | Limite / padrão | Situação atual | Estado |
 |---|---|---|---|
 | Tipo de artigo | Original Research (IMRaD: Resumo, Introdução, Material e métodos, Resultados, Discussão) | Estrutura cumprida | OK |
-| Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | {n_body_en:,} palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: {n_body_pt:,} | OK (há margem para as Seções 3.8–3.10) |
-| Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | {n_abs_en} palavras no original em inglês sem o trecho pendente (≈ {n_abs_en + 9} com ele preenchido); tradução: {n_abs_pt} | OK |
+| Extensão do texto principal | ≤ 12.000 palavras (Original Research; página oficial de tipos de artigo da revista, conferida em 30/09/2026) | {n_body_en:,} palavras no original em inglês (corpo sem tabelas, títulos e legendas; cada citação contada como uma palavra); tradução: {n_body_pt:,} | OK (margem de {12000 - n_body_en:,} palavras) |
+| Resumo | ≤ 350 palavras (convenção da Frontiers; a página da revista não especifica o número) | {n_abs_en} palavras no original em inglês (reescrito em 05/10/2026 para caber no limite); tradução: {n_abs_pt} | OK |
 | Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | {n_kw} | OK |
 | Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, {len(title_en)} caracteres | OK |
 | Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | {len(short_en)} caracteres | OK |
-| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as figuras dos resultados pendentes (Seções 3.8–3.10) ainda serão geradas | pendente |
+| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as Figuras 13 e 14 (controles) são provisórias e serão regeneradas com `make_figures_e2_md.py` quando a fila de MD terminar | provisório |
 | Tabelas | editáveis, com legenda | {n_tab} tabelas | OK |
 | Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | {len(cited)} referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
 | Declaração de disponibilidade de dados | obrigatória | seção criada; falta confirmar visibilidade do repositório e DOI de arquivamento | pendente |
 | Contribuições dos autores, financiamento, conflito de interesses, agradecimentos | obrigatórios | seções criadas, conteúdo a completar pelos autores | pendente |
-| Declaração de uso de IA generativa | deve ser reconhecida nos agradecimentos (diretrizes da Frontiers) | rascunho factual na seção Agradecimentos, a ser confirmado pelos autores | pendente |
+| Declaração de uso de IA generativa | seção própria ("Generative AI statement") nos artigos de exemplo da revista | seção criada com rascunho no formato da revista, a confirmar pelos autores | pendente |
 | Declaração de ética | exigida para estudos com animais ou humanos | seção criada: não se aplica | OK |
 | Lista de autores e afiliações | obrigatória | não preenchida | pendente |
+| Formato frente aos três artigos de exemplo da *Frontiers in Natural Products* (pasta `exemplos-papers`, 05/10/2026) | seções Conclusion, Generative AI statement e Supplementary material; resumo ≤ 350 palavras | seções criadas e resumo reescrito; Resultados e Discussão mantidos separados (os exemplos os fundem); lista de referências não reformatada (a produção da revista a reestiliza) | OK |
 | Adequação ao escopo | seção *Informatics and Computational Methods* existe na revista | o título destaca inibidores naturais como moldes e padrões de calibração, mas o trabalho projeta peptídeos *de novo* e é só computacional; a revista pode exigir validação experimental | risco a verificar com o editor |
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
-## Estado dos cálculos (01/10/2026, fim da tarde)
+## Estado dos cálculos (05/10/2026, tarde)
 
 | Etapa | Estado | Resultado até aqui |
 |---|---|---|
@@ -181,21 +182,23 @@ panel = f"""
 | E1 · Boltz-2 nas duas frentes | concluído (1.070/1.070) | reprodutibilidade entre rodadas ρ = 0,57; linear × cíclico ρ = 0,50 (Seção 3.8, Figura 8) |
 | E2 · reescore dos 10 melhores por espécie (5 amostras × 3 sementes) | concluído (L e M) | confiança média 0,900 (L) e 0,888 (M); ρ com o E1 de 0,80 e 0,74; ordem dentro do top 10 não resolvida (Seção 3.8, Figura 9) |
 | Escolha da estrutura inicial (melhor amostra que passa no QC de pose) | concluída | 48 de 48 passam; tríade íntegra em todas (Figura 10) |
-| E3 · controles embaralhados pareados | pendente (roda depois das MDs) | 234 controles por frente preparados |
-| E4 · QC de pose e matriz cruzada 8 × 8 | QC concluído; matriz pendente | 80/80 candidatos com ao menos uma amostra aprovada em cada frente |
-| E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **em curso: 12/48 concluídas** | triagem pré-registrada: 1 de 9 lineares passa (NGGRPDAP); 0 de 3 cíclicas (GGKPGEP falha só no ω do anel: 144,5° contra 150°); resultado provisório (Seção 3.9, Figura 11) |
-| E8–E9 · comparação linear × macrociclo e lista para a MD longa | pendente | scripts prontos |
+| E3 · controles embaralhados pareados | concluído (L e M) | Δ positivo em 63 de 78 lineares e 60 de 79 macrocíclicos, da ordem do ruído (Seção 3.8) |
+| E4 · QC de pose e matriz cruzada 8 × 8 | concluído | 80/80 candidatos com ao menos uma amostra aprovada em cada frente; matriz sem preferência espécie-específica (Seção 3.8) |
+| E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **concluído (48/48)** | 5 de 48 com ocupância ≥ 0,70; 3 passam na triagem como foi declarada (NGGRPDAP, GQNDS, GGHSE) (Seção 3.9, Figura 11) |
+| E8–E9 · comparação linear × macrociclo e camadas | concluído | 23 A, 1 B, 0 C (linear); 10 A, 13 B, 1 C (macrocíclica) (Seção 3.11, Figura 12) |
+| MD de 10 ns dos controles embaralhados | concluído (7 controles) | 3 de 7 candidatos superam o controle; os 3 controles que partiram a até 2,74 Å chegaram a 1,00 (Seção 3.11, Figura 13) |
+| Controle negativo (âncora → Asp ou Leu) | **em curso** (`md-final-queue`, servidor) | NGGRPDAP e GGKPGEP: as 4 variantes perderam a ocupância, com a distância inicial confundida (Seção 3.9, Figura 14); GQNDS e GGHSE pendentes |
 | Campanha de pH (duas faixas) | **fora deste artigo** (decisão de 01/10: o custo, 72 simulações e 4–5 dias, não cabe no prazo) | scripts prontos e versionados; fica para trabalho seguinte |
 | E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Estimativa (medida em 16 simulações):** cada MD leva 75–105 min com a GPU compartilhada. Faltam 32 MDs do E6 (40–56 h), o E3 (~1.413 predições, 15–20 h), a matriz 8 × 8 com E8/E9 (~1 h) e 5 MDs de controle (6–9 h): **2,7 a 3,5 dias de processamento** até dar para fechar o artigo.
+**Estimativa (05/10/2026):** a fila final de MD (`md-final-queue`) roda o controle negativo de GQNDS e GGHSE (2 variantes por candidato, cerca de 2 h cada); fechamento previsto para a noite de 05/10, por analogia com as MDs anteriores.
 
 **Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida. (iii) a análise de MD não reconhecia o resíduo GLUP do CHARMM36 (o seletor `protein` do MDAnalysis o ignora) e falhou numa simulação; corrigido e todas as simulações concluídas foram reanalisadas; (iv) o RMSD global de controle usava o `md.tpr` (receptor partido pela caixa) como referência; corrigido antes de qualquer uso nos resultados.
 
 ## Pendências antes da submissão
 
-1. Seções 3.8–3.10 (E1–E4 e dinâmica molecular de 10 ns nas duas frentes), frase correspondente no Resumo e na Seção 4.1: dependem de cálculos em andamento ou ainda não disparados no servidor.
-2. Figuras 9–11 geradas com dados provisórios (11 de 48 MDs); reexecutar `make_figures_e2_md.py` quando as 48 terminarem e acrescentar a figura da comparação linear × macrociclo e a Figura S2 com CHARMM36.
+1. Controle negativo de GQNDS e GGHSE, decisão (sobre o conjunto) de manter ou retirar o controle, robustez ao pH e lista de peptídeos recomendados (Seções 3.9 e 3.11).
+2. Figuras 13 e 14 provisórias: regenerar quando a fila terminar; conferir a Figura S2.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).
 
