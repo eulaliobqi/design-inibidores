@@ -152,3 +152,13 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 - **Correção de erro anterior:** a frente linear tem 5/9 (e não 5/10) em *S. litura* (9 candidatos com controle).
 - **Manuscrito:** `manuscript_src.md` (EN) e `pt_parts/p*.md` (PT; `manuscript_pt_src.md` é gerado por `build_docx_pt.py` e sobrescrito) editados em Resumo, 3.8, 3.11, 4.1, legenda da Fig. 12 e nota 1; `render.py` e `build_docx_pt.py` rodados. `[[PENDING]]` restantes: controle negativo (3.9), controles embaralhados em MD e pH (3.11), seções administrativas. **Resumo EN: 390 palavras (limite Frontiers 350).**
 - **`md-controls` às 20:53:** 2 controles concluídos (Agemmatalis__r2__ctrl_d1 RMSD 0,45 nm; Agemmatalis__r3__ctrl_d1 0,71 nm; ocupância ainda não analisada), o 3º (Sfrugiperda__r1__ctrl_d2) em MD de produção desde 20:39.
+
+### 11.2 Fila das etapas finais de MD (04/10, 21:42)
+`screen md-final-queue` (log `outputs/queue_final_md.log`, script `scripts/queue_final_md.sh`) espera `MD_CONTROLS_DONE` do `md-controls` e então roda, sem intervenção:
+1. **Lote 2 de controles embaralhados** (10 ns, mesmo protocolo): GQNDS (L, `Onubilalis__r2`) e GGHSE (M, `Sfrugiperda__r1`), L e M em paralelo. Motivo: o lote 1 (NGGRPDAP, GTDEN, GPGGGTG; GGKPGEP, GGSQSS) não cobria dois dos três candidatos entregues.
+2. **`scripts/compare_controls.py`**: candidato × controle (`occ_5A_h2`) → `outputs/controls_decision.{json,md}`. Elegível ao controle negativo = ocupância do candidato ≥ 0,70 **e** ≥ a do próprio controle (critério fixado antes de ver os resultados dos controles).
+3. **`scripts/run_md_negctrl.py`**: troca da âncora por Asp e por Leu, mantendo a pose inicial (PDBFixer; esqueleto idêntico e receptor intacto, OXT removido; verificado em dry-run para GQNDS, NGGRPDAP e o macrociclo GGHSE), MD de 10 ns, L e M em paralelo → `outputs/md10_negctrl_{L,M}`; leitura pelos mesmos critérios do `analyze_md_top_candidates` (ancora global, não o resíduo trocado). Sem MM-GBSA.
+4. Tabela final com o controle negativo (`compare_controls --negctrl`); marcador `QUEUE_FINAL_MD_DONE`.
+- **Não faz** a decisão de retirar o controle (regra de 3.9: se não separam, é retirado por completo): é lida sobre a tabela, depois.
+- **Depois da fila:** copiar `md10_controls_*`/`md10_negctrl_*` `analysis_summary.json` para `data-e2-results/` como `md10_controls_{L,M}_analysis.json` (é onde o `rank_final_candidates.py --layout local` os procura), rerodar o ranking, escrever 3.9/3.11, regenerar a Fig. 12, EN e PT.
+- Estimativa (não medida): ~3 h para o lote 1 terminar + ~1,5 h para o lote 2 + 1 h por variante do controle negativo (até ~8 variantes por frente em paralelo, dependendo da elegibilidade).
