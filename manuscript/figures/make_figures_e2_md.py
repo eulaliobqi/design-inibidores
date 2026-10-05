@@ -221,12 +221,61 @@ def fig_s2_ring():
     return stats
 
 
+def fig_controls():
+    """Figura 13: candidatos x controles embaralhados (10 ns, mesmo protocolo). Funciona com dados parciais."""
+    AN = {F: load(f"md10_{F}_analysis.json") or {} for F in "LM"}
+    CT = {F: load(f"md10_controls_{F}_analysis.json") or {} for F in "LM"}
+    pairs = []
+    for F in "LM":
+        for ck, cv in CT[F].items():
+            c = AN[F].get(ck.split("__ctrl_")[0])
+            if c and "occ_5A_h2" in c and "occ_5A_h2" in cv:
+                pairs.append((F, ck.split("__ctrl_")[0], c, cv))
+    if not pairs:
+        return None
+    fig, (a, b) = plt.subplots(1, 2, figsize=mm_figsize("double", 80), layout="constrained")
+    ys = sorted(((cv["occ_5A_h2"], j) for j, (_, _, _, cv) in enumerate(pairs)))
+    ypos, last = {}, -9
+    for y, j in ys:  # rotulos a direita com espacamento minimo, para nao se sobreporem
+        last = max(y, last + .075)
+        ypos[j] = last
+    for j, (F, key, c, cv) in enumerate(pairs):
+        a.plot([0, 1], [c["occ_5A_h2"], cv["occ_5A_h2"]], "-o", c=CF[F], lw=1.3, ms=4)
+        a.text(1.05, ypos[j], f'{c["sequence"]} → {cv["sequence"]}', va="center", fontsize=6.5)
+    a.axhline(.7, ls="--", c="gray", lw=.8)
+    a.set_xticks([0, 1]); a.set_xticklabels([T("candidate", "candidato"), T("shuffled control", "controle embaralhado")])
+    a.set_xlim(-.15, 2.0); a.set_ylim(-.05, 1.12)
+    a.set_ylabel(T("S1 occupancy at 5 Å, second half", "ocupância de S1 a 5 Å, 2ª metade"))
+    for F in "LM":
+        a.plot([], [], "-o", c=CF[F], ms=4, label=FNAME[F])
+    a.legend(frameon=False, loc="center right")
+    for F in "LM":
+        for k, v in AN[F].items():
+            if "occ_5A_h2" in v:
+                b.scatter(v["d_anchor_asp_ini_A"], v["occ_5A_h2"], s=16, color="#bbbbbb", edgecolor="none", zorder=1)
+    b.scatter([], [], s=16, color="#bbbbbb", label=T("candidates (48)", "candidatos (48)"))
+    seen = {}
+    for F, key, c, cv in pairs:
+        pt = (round(cv["d_anchor_asp_ini_A"], 1), round(cv["occ_5A_h2"], 1))
+        dx = .18 * seen.get(pt, 0); seen[pt] = seen.get(pt, 0) + 1  # pontos coincidentes: leve deslocamento horizontal
+        b.scatter(cv["d_anchor_asp_ini_A"] + dx, cv["occ_5A_h2"], s=46, marker="D", color=CF[F], edgecolor="k", lw=.6, zorder=3)
+    b.scatter([], [], s=46, marker="D", color="w", edgecolor="k", lw=.6, label=T("shuffled controls", "controles embaralhados"))
+    b.axhline(.7, ls="--", c="gray", lw=.8)
+    b.set_xlabel(T("initial anchor–Asp189 distance (Å)", "distância inicial âncora–Asp189 (Å)"))
+    b.set_ylabel(T("S1 occupancy at 5 Å, second half", "ocupância de S1 a 5 Å, 2ª metade"))
+    b.legend(frameon=False, loc="upper right")
+    letters([a, b], dx=-0.16)
+    save(fig, "Figure13_shuffled_controls", "fig13_controles_embaralhados")
+    return {"n_pairs": len(pairs)}
+
+
 if __name__ == "__main__":
     print("fig9 ", fig_e2())
     print("fig10", fig_top3())
     print("fig11", fig_md())
     print("figS2", fig_s2_ring())
+    print("fig13", fig_controls())
     from PIL import Image
     for f in O.glob("*.png"):
-        if f.name.startswith(("fig9", "fig10", "fig11", "figS2_anel", "Figure9", "Figure10", "Figure11", "FigureS2_cyclic_ring")):
+        if f.name.startswith(("fig9", "fig10", "fig11", "figS2_anel", "fig13", "Figure9", "Figure10", "Figure11", "Figure13", "FigureS2_cyclic_ring")):
             Image.open(f).convert("RGB").save(f.with_suffix(".tif"), compression="tiff_lzw", dpi=(300, 300))

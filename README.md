@@ -6,6 +6,34 @@ Dado um conjunto de estruturas 3D da enzima-alvo, o pipeline mapeia automaticame
 
 ---
 
+## Estado atual do projeto (04/10/2026)
+
+O pipeline evoluiu do desenho inicial descrito abaixo para uma **triagem em duas frentes** (peptídeos lineares, L, e macrociclos cabeça-cauda, M) contra tripsinas digestivas de oito lepidópteros-praga da soja, com **critério duro de não clivagem** pelas proteases do intestino médio. Todo o resultado é computacional: **não há ensaio de inibição nem contrasseleção contra proteases não alvo**.
+
+| Etapa | Estado |
+|---|---|
+| Calibração (Boltz-2, MD, MM-GBSA com 6 inibidores naturais e iscas) | concluída; MM-GBSA não separou inibidores de iscas |
+| Geração (22.066 sequências) e critério duro | 527 lineares e 543 cíclicas resistentes |
+| Co-dobramento Boltz-2 (E1), re-escore 5×3 (E2), controles pareados (E3), QC de pose (E4) | concluídos nas duas frentes; Δ pareado positivo em 63/78 (L) e 60/79 (M), da ordem do ruído |
+| Matriz cruzada 8×8 (melhor candidato por espécie × 8 receptores) | concluída; sem preferência espécie-específica |
+| MD de 10 ns dos 48 finais (CHARMM36, pH 10) | concluída; a ocupância de S1 acompanha a pose inicial |
+| Camadas finais | L 23 A + 1 B; M 10 A + 13 B + 1 C ("sobreviveu aos filtros", não "deve inibir") |
+| Controles embaralhados em MD (10 ns) | **em andamento**: nos 3 já analisados, 2 controles chegaram a ocupância 1,00 e 1 candidato ficou abaixo do controle |
+| Controle negativo (âncora → Asp/Leu) | **na fila** (`scripts/queue_final_md.sh`) |
+
+**Onde está cada coisa**
+- `manuscript/` — manuscrito (EN em `manuscript_src.md` + `render.py`; PT em `pt_parts/` + `build_docx_pt.py`); figuras em `manuscript/figures/` (gerador: `figures/make_figures_e2_md.py`).
+- `docs/CONSOLIDACAO_2026-10-03.md` — diário técnico e retomada (§11: fechamento de 04/10).
+- `docs/dados/` — tabelas finais (`ranking_final.*`, lista de entrega para MD longa).
+- `data-e2-results/` — cópias dos resultados do servidor usados nas figuras e tabelas.
+- Scripts principais: `scripts/rescore_boltz2_topk.py` (E2/E3), `scripts/pose_qc.py` (E4), `scripts/analyze_md_top_candidates.py`, `scripts/rank_final_candidates.py`, `scripts/run_md_controls.py`, `scripts/run_md_negctrl.py`, `scripts/compare_controls.py`, `scripts/deliver_md_long.py`.
+
+**Regras de método** (decisões do projeto): corrigir PBC antes de calcular RMSD; nenhuma referência sem verificação no Crossref/PubMed; a ocupância de S1 é descrição, não critério de camada; controle sem diferença em relação ao candidato é retirado por completo.
+
+> As seções abaixo descrevem a versão inicial do pipeline multiagente e são mantidas como documentação de instalação e execução.
+
+---
+
 ## Contexto biológico
 
 As tripsinas digestivas são serina-proteases essenciais para lagartas-praga. Inibidores do tipo Kunitz e BPTI bloqueam o sítio S1 da enzima competindo com o substrato. Este pipeline projeta novos inibidores peptídicos curtos com:

@@ -86,7 +86,7 @@ legends = dict(re.findall(r"\*\*Figura (S?\d+)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)"
 src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
        "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "13": "figures/pt/fig13_controles_embaralhados.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
 
 
 def img(n, w="16.5cm"):
@@ -101,7 +101,7 @@ src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n##
 src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
 src = src.replace("\n### 3.9 Simulações", img("8") + img("9") + img("10") + "\n### 3.9 Simulações")
 src = src.replace("\n### 3.10 Frente linear", img("11") + "\n### 3.10 Frente linear")
-src = src.replace("\n---\n\n## 4 Discussão", img("12") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + "\n## 4 Discussão")
+src = src.replace("\n---\n\n## 4 Discussão", img("12") + img("13") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + img("13") + "\n## 4 Discussão")
 for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")

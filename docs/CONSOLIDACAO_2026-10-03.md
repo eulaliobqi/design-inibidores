@@ -162,3 +162,18 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 - **Não faz** a decisão de retirar o controle (regra de 3.9: se não separam, é retirado por completo): é lida sobre a tabela, depois.
 - **Depois da fila:** copiar `md10_controls_*`/`md10_negctrl_*` `analysis_summary.json` para `data-e2-results/` como `md10_controls_{L,M}_analysis.json` (é onde o `rank_final_candidates.py --layout local` os procura), rerodar o ranking, escrever 3.9/3.11, regenerar a Fig. 12, EN e PT.
 - Estimativa (não medida): ~3 h para o lote 1 terminar + ~1,5 h para o lote 2 + 1 h por variante do controle negativo (até ~8 variantes por frente em paralelo, dependendo da elegibilidade).
+
+### 11.3 Primeiros resultados dos controles embaralhados e encerramento de 04/10 (21:55)
+**Controles da frente L concluídos e analisados** (`data-e2-results/md10_controls_L_analysis.json`; 10 ns, CHARMM36, pH 10; 1 controle por candidato, o de maior confiança do E3):
+| candidato (occ 2ª metade, âncora) | controle (occ, âncora) | início ancora–Asp189 do controle | leitura |
+|---|---|---|---|
+| NGGRPDAP (1,00, Arg) | PGRGDANP (1,00, Arg) | 2,73 Å | indistinguível |
+| GPGGGTG (0,00, Thr) | GGGGGPT (1,00, Gly) | 2,73 Å | controle acima do candidato |
+| GTDEN (0,63, Glu) | GTNED (0,20, Gly) | 6,3 Å | candidato acima do controle (mas <0,70) |
+- Os dois controles que partiram a 2,73 Å ficaram em S1; o que partiu a 6,3 Å terminou em 0,20: **mesma dependência da pose inicial vista nos candidatos**. Com n=3 e 1 réplica, é descritivo. Pela regra de 3.9, nesse subconjunto a ocupância não separa candidato de sequência embaralhada; **a conclusão definitiva espera os controles da M e de GQNDS/GGHSE** (no servidor).
+- `compare_controls.py` marca só NGGRPDAP como elegível ao controle negativo (ocup ≥0,70 e ≥ controle).
+- **Nova Figura 13** (`manuscript/figures/Figure13_shuffled_controls.*`, PT em `figures/pt/fig13_controles_embaralhados.*`): A, pares candidato→controle; B, distância inicial × ocupância (48 candidatos + controles). Gerador: `make_figures_e2_md.py` (`fig_controls`), refazer quando os controles da M chegarem. Fig. 12 PT também regenerada com as camadas novas.
+- **Manuscrito:** parágrafo "Shuffled-control simulations (partial)" em 3.11; frase em 3.9 e 4.1; legenda da Fig. 13; EN e PT reconstruídos. `[[PENDING]]` restantes: controles restantes, controle negativo, pH, administrativas. Resumo EN ainda em 390 palavras (limite 350).
+- **README** atualizado com o estado do projeto.
+
+**Estado do servidor no encerramento (21:53):** `md-controls` (lote 1) com o 4º controle (frente M, GGKPGEP) em MD desde 21:34; `md-final-queue` aguardando `MD_CONTROLS_DONE`. Ao retomar: `ssh` → `tail outputs/md_controls.log outputs/queue_final_md.log`; quando aparecer `QUEUE_FINAL_MD_DONE`, copiar `outputs/md10_controls_{L,M}/analysis_summary.json` para `data-e2-results/md10_controls_{L,M}_analysis.json` e `outputs/md10_negctrl_{L,M}/analysis_summary.json`, rodar `python scripts/rank_final_candidates.py --layout local ...`, refazer a Fig. 13 e aplicar a regra de retirada.
