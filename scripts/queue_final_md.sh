@@ -12,7 +12,9 @@ cd "$(dirname "$0")/.."
 source ~/miniforge3/etc/profile.d/conda.sh
 echo "[queue] $(date) aguardando MD_CONTROLS_DONE..."
 until grep -q "MD_CONTROLS_DONE" outputs/md_controls.log 2>/dev/null; do sleep 300; done
+set +u  # gromacs_deactivate.sh do env referencia OLD_GMX* nao definidas: com set -u o script morria no activate
 conda activate protein_design_env
+set -u
 echo "[queue] $(date) lote 2 de controles embaralhados (GQNDS, GGHSE)"
 python -m scripts.run_md_controls --front L --ns 10 --candidates Onubilalis__r2 > outputs/queue_ctrl2_L.log 2>&1 &
 python -m scripts.run_md_controls --front M --ns 10 --candidates Sfrugiperda__r1 > outputs/queue_ctrl2_M.log 2>&1 &
