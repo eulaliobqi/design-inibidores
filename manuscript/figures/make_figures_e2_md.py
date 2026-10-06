@@ -285,15 +285,20 @@ def fig_negctrl():
     if not rows:
         return None
     cats = [T("candidate", "candidato"), T("shuffled", "embaralhado"), "Asp", "Leu"]
-    fig, (a, b) = plt.subplots(1, 2, figsize=mm_figsize("double", 80), layout="constrained")
+    fig, (a, b) = plt.subplots(1, 2, figsize=mm_figsize("double", 95), layout="constrained")
+    seen_f = {}
+    handles = []
     for j, (F, k, c, ctl, neg) in enumerate(rows):
+        n = seen_f.get(F, 0); seen_f[F] = n + 1
+        mk, ls = (("o", "-"), ("s", "--"))[n % 2]
         recs = [c, ctl, neg["ASP"], neg["LEU"]]
-        off = (j - (len(rows) - 1) / 2) * .12
+        off = (j - (len(rows) - 1) / 2) * .1
         xs = np.arange(4) + off
-        a.plot(xs, [r["occ_5A_h2"] for r in recs], "-o", c=CF[F], lw=1.3, ms=4)
-        b.plot(xs, [r["d_anchor_asp_fim_A"] for r in recs], "-o", c=CF[F], lw=1.3, ms=4,
-               label=f'{c["sequence"]} ({FNAME[F]})')
-        b.plot(xs, [r["d_anchor_asp_ini_A"] for r in recs], "o", mfc="w", c=CF[F], ms=4, lw=0)
+        a.plot(xs, [r["occ_5A_h2"] for r in recs], ls, marker=mk, c=CF[F], lw=1.3, ms=4)
+        h, = b.plot(xs, [r["d_anchor_asp_fim_A"] for r in recs], ls, marker=mk, c=CF[F], lw=1.3, ms=4,
+                    label=f'{c["sequence"]} ({FNAME[F]})')
+        handles.append(h)
+        b.plot(xs, [r["d_anchor_asp_ini_A"] for r in recs], mk, mfc="w", c=CF[F], ms=4, lw=0)
     a.axhline(.7, ls="--", c="gray", lw=.8)
     b.axhline(5, ls="--", c="gray", lw=.8)
     for ax_ in (a, b):
@@ -302,9 +307,9 @@ def fig_negctrl():
     a.set_ylim(-.05, 1.1)
     a.set_ylabel(T("S1 occupancy at 5 Å, second half", "ocupância de S1 a 5 Å, 2ª metade"))
     b.set_ylabel(T("anchor–Asp189 distance (Å)", "distância âncora–Asp189 (Å)"))
-    b.plot([], [], "o", mfc="w", c="k", ms=4, lw=0, label=T("initial window (open)", "janela inicial (vazado)"))
-    b.plot([], [], "o", c="k", ms=4, lw=0, label=T("final window (filled)", "janela final (cheio)"))
-    b.legend(frameon=False, loc="upper left", fontsize=7)
+    h1, = b.plot([], [], "o", mfc="w", c="k", ms=4, lw=0, label=T("initial window (open)", "janela inicial (vazado)"))
+    h2, = b.plot([], [], "o", c="k", ms=4, lw=0, label=T("final window (filled)", "janela final (cheio)"))
+    fig.legend(handles=handles + [h1, h2], loc="outside lower center", ncol=3, frameon=False, fontsize=7.5)
     letters([a, b], dx=-0.16)
     save(fig, "Figure14_negative_control", "fig14_controle_negativo")
     return {"n_candidates": len(rows), "seqs": [r[2]["sequence"] for r in rows]}

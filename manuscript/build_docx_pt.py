@@ -145,7 +145,7 @@ panel = f"""
 ## Como ler as marcações
 
 - Trechos em **amarelo** marcam o que ainda depende de simulações em andamento ou de informação dos autores.
-- Nada nesta versão foi inventado para preencher lacunas: o que ainda depende de simulações em andamento (controle negativo de GQNDS e GGHSE, robustez ao pH, lista de peptídeos recomendados) ou de informação dos autores está marcado.
+- Nada nesta versão foi inventado para preencher lacunas: o que ainda depende de decisão ou de informação dos autores (manter ou retirar o controle, robustez ao pH, lista de peptídeos recomendados) está marcado.
 
 ## Painel de conformidade com as métricas da revista
 
@@ -157,7 +157,7 @@ panel = f"""
 | Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | {n_kw} | OK |
 | Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, {len(title_en)} caracteres | OK |
 | Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | {len(short_en)} caracteres | OK |
-| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as Figuras 13 e 14 (controles) são provisórias e serão regeneradas com `make_figures_e2_md.py` quando a fila de MD terminar | provisório |
+| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as Figuras 13 e 14 (controles) foram geradas com todos os dados da fila final | OK |
 | Tabelas | editáveis, com legenda | {n_tab} tabelas | OK |
 | Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | {len(cited)} referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
 | Declaração de disponibilidade de dados | obrigatória | seção criada; falta confirmar visibilidade do repositório e DOI de arquivamento | pendente |
@@ -187,18 +187,18 @@ panel = f"""
 | E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **concluído (48/48)** | 5 de 48 com ocupância ≥ 0,70; 3 passam na triagem como foi declarada (NGGRPDAP, GQNDS, GGHSE) (Seção 3.9, Figura 11) |
 | E8–E9 · comparação linear × macrociclo e camadas | concluído | 23 A, 1 B, 0 C (linear); 10 A, 13 B, 1 C (macrocíclica) (Seção 3.11, Figura 12) |
 | MD de 10 ns dos controles embaralhados | concluído (7 controles) | 3 de 7 candidatos superam o controle; os 3 controles que partiram a até 2,74 Å chegaram a 1,00 (Seção 3.11, Figura 13) |
-| Controle negativo (âncora → Asp ou Leu) | **em curso** (`md-final-queue`, servidor) | NGGRPDAP e GGKPGEP: as 4 variantes perderam a ocupância, com a distância inicial confundida (Seção 3.9, Figura 14); GQNDS e GGHSE pendentes |
+| Controle negativo (âncora → Asp ou Leu) | concluído (4 candidatos × 2 variantes) | 7 de 8 variantes perderam a ocupância, mas partiram mais longe do Asp189; a variante Asp de GGHSE manteve 0,86 (Seção 3.9, Figura 14) |
 | Campanha de pH (duas faixas) | **fora deste artigo** (decisão de 01/10: o custo, 72 simulações e 4–5 dias, não cabe no prazo) | scripts prontos e versionados; fica para trabalho seguinte |
 | E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Estimativa (05/10/2026):** a fila final de MD (`md-final-queue`) roda o controle negativo de GQNDS e GGHSE (2 variantes por candidato, cerca de 2 h cada); fechamento previsto para a noite de 05/10, por analogia com as MDs anteriores.
+**Fila final de MD (05/10/2026):** concluída às 19:21 (`QUEUE_FINAL_MD_DONE`); não há cálculo em andamento.
 
 **Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida. (iii) a análise de MD não reconhecia o resíduo GLUP do CHARMM36 (o seletor `protein` do MDAnalysis o ignora) e falhou numa simulação; corrigido e todas as simulações concluídas foram reanalisadas; (iv) o RMSD global de controle usava o `md.tpr` (receptor partido pela caixa) como referência; corrigido antes de qualquer uso nos resultados.
 
 ## Pendências antes da submissão
 
-1. Controle negativo de GQNDS e GGHSE, decisão (sobre o conjunto) de manter ou retirar o controle, robustez ao pH e lista de peptídeos recomendados (Seções 3.9 e 3.11).
-2. Figuras 13 e 14 provisórias: regenerar quando a fila terminar; conferir a Figura S2.
+1. Decisão dos autores sobre manter ou retirar o controle, robustez ao pH e lista de peptídeos recomendados (Seções 3.9 e 3.11).
+2. Conferir a Figura S2.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).
 
