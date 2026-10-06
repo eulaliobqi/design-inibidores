@@ -568,5 +568,29 @@
   ],
   "n": 3,
   "year": 2006
+ },
+ "vangone2015": {
+  "fam": [
+   "Vangone",
+   "Bonvin"
+  ],
+  "n": 2,
+  "year": 2015
+ },
+ "onufriev2004": {
+  "fam": [
+   "Onufriev",
+   "Bashford"
+  ],
+  "n": 3,
+  "year": 2004
+ },
+ "miller2012": {
+  "fam": [
+   "Miller",
+   "McGee"
+  ],
+  "n": 6,
+  "year": 2012
  }
 }

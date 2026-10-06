@@ -70,5 +70,8 @@
  "wacha2023": "Wacha AF, Lemkul JA (2023). charmm2gmx: An Automated Method to Port the CHARMM Additive Force Field to GROMACS. Journal of Chemical Information and Modeling 63, 4246-4252. doi: 10.1021/acs.jcim.3c00860",
  "helland1999": "Helland R, Otlewski J, Sundheim O, Dadlez M, Smalås AO (1999). The crystal structures of the complexes between bovine β-trypsin and ten P1 variants of BPTI. Journal of Molecular Biology 287, 923-942. doi: 10.1006/jmbi.1999.2654",
  "grzesiak2000": "Grzesiak A, Helland R, Smalås AO, Krowarsch D, Dadlez M, Otlewski J (2000). Substitutions at the P 1 ′ position in BPTI strongly affect the association energy with serine proteinases 1 1Edited by R. Huber. Journal of Molecular Biology 301, 205-217. doi: 10.1006/jmbi.2000.3935",
- "brandsdal2006": "Brandsdal BO, Smalås AO, Åqvist J (2006). Free energy calculations show that acidic P1 variants undergo large pKa shifts upon binding to trypsin. Proteins: Structure, Function, and Bioinformatics 64, 740-748. doi: 10.1002/prot.20940"
+ "brandsdal2006": "Brandsdal BO, Smalås AO, Åqvist J (2006). Free energy calculations show that acidic P1 variants undergo large pKa shifts upon binding to trypsin. Proteins: Structure, Function, and Bioinformatics 64, 740-748. doi: 10.1002/prot.20940",
+ "vangone2015": "Vangone A, Bonvin AMJJ (2015). Contacts-based prediction of binding affinity in protein–protein complexes. eLife 4, e07454. doi: 10.7554/eLife.07454",
+ "onufriev2004": "Onufriev A, Bashford D, Case DA (2004). Exploring protein native states and large‐scale conformational changes with a modified generalized born model. Proteins: Structure, Function, and Bioinformatics 55, 383-394. doi: 10.1002/prot.20033",
+ "miller2012": "Miller BR, McGee TD, Swails JM, Homeyer N, Gohlke H, Roitberg AE (2012). MMPBSA.py: An Efficient Program for End-State Free Energy Calculations. Journal of Chemical Theory and Computation 8, 3314-3321. doi: 10.1021/ct300418h"
 }
