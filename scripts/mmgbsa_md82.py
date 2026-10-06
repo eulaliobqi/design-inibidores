@@ -63,6 +63,25 @@ def parse_dat(p: Path) -> dict:
     return out
 
 
+def prodigy_frames(run_dir: Path, nframes: int = 30):
+    """PRODIGY em `nframes` quadros igualmente espacados da 2a metade (5-10 ns) de md_pbc_sub.xtc."""
+    vals = []
+    for i in range(nframes):
+        t = 5000 + i * (5000 / max(1, nframes - 1))
+        with tempfile.TemporaryDirectory() as td:
+            fr = Path(td) / "f.pdb"
+            run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc_sub.xtc", "-dump", str(t), "-o", str(fr)], run_dir, 120, input_text="1\n")
+            if not fr.exists():
+                continue
+            sp = Path(td) / "s.pdb"
+            sp.write_text(_frame_to_complex(fr.read_text()))
+            vals.append(prodigy(sp)["dG_kcal"])
+    vals = [v for v in vals if v is not None]
+    if not vals:
+        return None
+    return {"dG_kcal_mean": sum(vals) / len(vals), "sd": st.pstdev(vals), "n_frames": len(vals)}
+
+
 def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     src = ROOT / f"outputs/{tag}_{front}" / key
     run_dir = ROOT / f"outputs/mmgbsa_{tag}" / f"{front}__{key}"
@@ -133,20 +152,9 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     out = {"status": "real", "front": front, "key": key, "n_frames": len(frames) or None,
            "dG_gb_kcal": d.get("total"), "components": d, "sem_blocks": block_sem(frames) if frames else None}
     # PRODIGY nos quadros da mesma metade
-    vals = []
-    for i in range(nframes_prodigy):
-        t = 5000 + i * (5000 / max(1, nframes_prodigy - 1))
-        with tempfile.TemporaryDirectory() as td:
-            fr = Path(td) / "f.pdb"
-            run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc_sub.xtc", "-dump", str(t), "-o", str(fr)], run_dir, 120, input_text="1\n")
-            if not fr.exists():
-                continue
-            sp = Path(td) / "s.pdb"
-            sp.write_text(_frame_to_complex(fr.read_text()))
-            vals.append(prodigy(sp)["dG_kcal"])
-    vals = [v for v in vals if v is not None]
-    if vals:
-        out["PRODIGY_md"] = {"dG_kcal_mean": sum(vals) / len(vals), "sd": st.pstdev(vals), "n_frames": len(vals)}
+    pr = prodigy_frames(run_dir, nframes_prodigy)
+    if pr:
+        out["PRODIGY_md"] = pr
     res_file.write_text(json.dumps(out, indent=1))
     return out
 
@@ -156,12 +164,27 @@ def main():
     ap.add_argument("--front", choices=["L", "M"], required=True)
     ap.add_argument("--tag", default="md82", help="prefixo do diretorio de MD: outputs/<tag>_<front>")
     ap.add_argument("--keys", nargs="+")
+    ap.add_argument("--backfill-prodigy", action="store_true",
+                    help="so completa PRODIGY_md das entradas ja calculadas que o nao tem (nao refaz o MM-GBSA)")
     a = ap.parse_args()
     base = ROOT / f"outputs/{a.tag}_{a.front}"
     summ = json.loads((base / "summary.json").read_text()) if (base / "summary.json").exists() else {}
     keys = a.keys or [k for k, v in summ.items() if v.get("status") == "done"]
     outp = ROOT / f"outputs/mmgbsa_{a.tag}_{a.front}.json"
     allr = json.loads(outp.read_text()) if outp.exists() else {}
+    if a.backfill_prodigy:
+        for k, v in allr.items():
+            rd = ROOT / f"outputs/mmgbsa_{a.tag}" / f"{a.front}__{k}"
+            if v.get("status") != "real" or "PRODIGY_md" in v or not (rd / "md_pbc_sub.xtc").exists():
+                continue
+            pr = prodigy_frames(rd)
+            print("==", k, "PRODIGY", pr and round(pr["dG_kcal_mean"], 2), flush=True)
+            if pr:
+                v["PRODIGY_md"] = pr
+                (rd / "result.json").write_text(json.dumps(v, indent=1))
+                outp.write_text(json.dumps(allr, indent=1))
+        print("PRODIGY_BACKFILL_DONE")
+        return
     for k in keys:
         if allr.get(k, {}).get("status") == "real" and allr[k].get("dG_gb_kcal") is not None:
             continue
