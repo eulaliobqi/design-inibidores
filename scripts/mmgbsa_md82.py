@@ -26,7 +26,7 @@ from scripts.mmpbsa_calib import GMX, last_atom_number, run
 from scripts.prodigy_scores import _frame_to_complex, prodigy
 
 ROOT = Path(__file__).parent.parent
-FILES = ["md.tpr", "topol.top", "md_pbc_sub.xtc", "topol_Protein_chain_A.itp", "topol_Protein_chain_B.itp"]
+FILES = ["md.tpr", "md_pbc_sub.xtc", "topol_Protein_chain_A.itp", "topol_Protein_chain_B.itp"]
 
 
 def stage(src: Path, dst: Path):
@@ -69,6 +69,12 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     if not (src / "md_pbc_sub.xtc").exists():
         return {"status": "sem_trajetoria"}
     stage(src, run_dir)
+    # gmx_MMPBSA tira so a agua da topologia; os ions ficariam nela e o indice (so proteina) teria menos atomos que a
+    # topologia. Topologia so com as duas cadeias de proteina (as cargas dos ions nao entram no GB implicito).
+    top = (src / "topol.top").read_text()
+    head, _, tail = top.partition("[ molecules ]")
+    keep = [l for l in tail.splitlines() if l.strip().startswith("Protein_chain_") or l.strip().startswith(";")]
+    (run_dir / "topol_mmpbsa.top").write_text(head + "[ molecules ]\n" + "\n".join(keep) + "\n")
     res_file = run_dir / "result.json"
     if res_file.exists():
         return json.loads(res_file.read_text())
@@ -87,7 +93,7 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
         for f in run_dir.glob("_GMXMMPBSA_*"):
             f.unlink()
         cmd = (f"gmx_MMPBSA -O -i mmpbsa.in -cs md.tpr -ci index_mmpbsa.ndx -cg {ia} {ib} -ct md_pbc_sub.xtc "
-               f"-cp topol.top -nogui -o FINAL_RESULTS_MMPBSA.dat -eo FRAME_ENERGIES.csv")
+               f"-cp topol_mmpbsa.top -nogui -o FINAL_RESULTS_MMPBSA.dat -eo FRAME_ENERGIES.csv")
         env_cmd = ("source ~/miniforge3/etc/profile.d/conda.sh && conda activate mmgbsa-env && "
                    "export PATH=$PATH:/home/eulalio/miniforge3/envs/md-gromacs/bin && "
                    f"cd {run_dir} && mpirun -np 4 {cmd} || {cmd}")
