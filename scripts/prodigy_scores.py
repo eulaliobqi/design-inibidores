@@ -118,10 +118,7 @@ def _frame_to_complex(pdb_text: str) -> str:
             continue
         ch = "A" if l[21] == "A" else "B"
         out.append(l[:17] + f"{STD.get(rn, rn):>3} " + ch + l[22:])
-    return "
-".join(out) + "
-END
-"
+    return "\n".join(out) + "\nEND\n"
 
 
 def cmd_calib(a):
@@ -134,8 +131,7 @@ def cmd_calib(a):
         for t in a.times:
             with tempfile.TemporaryDirectory() as td:
                 fr = Path(td) / "f.pdb"
-                run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc.xtc", "-dump", str(t), "-o", str(fr)], d, 120, input_text="1
-")
+                run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc.xtc", "-dump", str(t), "-o", str(fr)], d, 120, input_text="1\n")
                 if not fr.exists():
                     continue
                 sp = Path(td) / "s.pdb"
