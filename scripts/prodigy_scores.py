@@ -117,7 +117,12 @@ def _frame_to_complex(pdb_text: str) -> str:
         if rn in ("SOL", "WAT", "HOH", "K", "CL", "NA"):
             continue
         ch = "A" if l[21] == "A" else "B"
-        out.append(l[:17] + f"{STD.get(rn, rn):>3} " + ch + l[22:])
+        rn = STD.get(rn, rn)
+        nm = l[12:16].strip()
+        nm = {"OC1": "O", "OC2": "OXT", "O1": "O", "O2": "OXT"}.get(nm, nm)
+        if rn == "ILE" and nm == "CD":      # AMBER do GROMACS chama o CD1 da Ile de CD; o freesasa exige CD1
+            nm = "CD1"
+        out.append(l[:12] + (" " + nm).ljust(4)[:4] + " " + f"{rn:>3} " + ch + l[22:])
     return "\n".join(out) + "\nEND\n"
 
 
