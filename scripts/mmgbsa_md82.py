@@ -22,6 +22,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from scripts.analyze_md_top_candidates import pbc_traj
 from scripts.mmpbsa_calib import GMX, last_atom_number, run
 from scripts.prodigy_scores import _frame_to_complex, prodigy
 
@@ -66,7 +67,14 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     src = ROOT / f"outputs/{tag}_{front}" / key
     run_dir = ROOT / f"outputs/mmgbsa_{tag}" / f"{front}__{key}"
     if not (src / "md_pbc_sub.xtc").exists():
-        return {"status": "sem_trajetoria"}
+        # o arquivo e' criado na analise (analyze_md_top_candidates), que a fila de energia roda no fim; aqui ele e'
+        # gerado sob demanda para que o MM-GBSA nao dependa da ordem das etapas
+        if not (src / "md.xtc").exists():
+            return {"status": "sem_trajetoria"}
+        try:
+            pbc_traj(src)
+        except RuntimeError:
+            return {"status": "sem_trajetoria"}
     stage(src, run_dir)
     # gmx_MMPBSA tira so a agua da topologia; os ions ficariam nela e o indice (so proteina) teria menos atomos que a
     # topologia. Topologia so com as duas cadeias de proteina (as cargas dos ions nao entram no GB implicito).
@@ -76,7 +84,9 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     (run_dir / "topol_mmpbsa.top").write_text(head + "[ molecules ]\n" + "\n".join(keep) + "\n")
     res_file = run_dir / "result.json"
     if res_file.exists():
-        return json.loads(res_file.read_text())
+        cached = json.loads(res_file.read_text())
+        if cached.get("dG_gb_kcal") is not None:
+            return cached
     n_a = last_atom_number(run_dir / "topol_Protein_chain_A.itp")
     n_b = last_atom_number(run_dir / "topol_Protein_chain_B.itp")
     ndx = run_dir / "index_mmpbsa.ndx"
@@ -89,6 +99,8 @@ def process(front: str, key: str, tag: str, nframes_prodigy: int = 30) -> dict:
     final = run_dir / "FINAL_RESULTS_MMPBSA.dat"
     log = ""
     for attempt in range(1, 4):
+        if final.exists():
+            break
         for f in run_dir.glob("_GMXMMPBSA_*"):
             f.unlink()
         cmd = (f"gmx_MMPBSA -O -i mmpbsa.in -cs md.tpr -ci index_mmpbsa.ndx -cg {ia} {ib} -ct md_pbc_sub.xtc "
@@ -151,7 +163,7 @@ def main():
     outp = ROOT / f"outputs/mmgbsa_{a.tag}_{a.front}.json"
     allr = json.loads(outp.read_text()) if outp.exists() else {}
     for k in keys:
-        if allr.get(k, {}).get("status") == "real":
+        if allr.get(k, {}).get("status") == "real" and allr[k].get("dG_gb_kcal") is not None:
             continue
         print("==", k, flush=True)
         allr[k] = process(a.front, k, a.tag)
