@@ -98,44 +98,48 @@ def cmd_poses(a):
     Path(a.out).write_text(json.dumps(res, indent=1))
 
 
-def _chain_split(pdb_text: str, n_a: int) -> str:
-    """O PDB dos quadros nao traz cadeias: receptor = primeiros n_a atomos, peptideo/ligante = o resto."""
-    out, k = [], 0
+def _is_h(l: str) -> bool:
+    el = l[76:78].strip()
+    if el:
+        return el.upper() == "H"
+    n = l[12:16].strip()
+    return n[:1] == "H" or (n[:1].isdigit() and n[1:2] == "H")
+
+
+def _frame_to_complex(pdb_text: str) -> str:
+    """Quadro da trajetoria -> complexo de atomos pesados: receptor = cadeia A; todas as outras cadeias da proteina
+    (ligante; a ApTI tem 3) viram a cadeia B; agua e ions saem; nomes de residuo padronizados."""
+    out = []
     for l in pdb_text.splitlines():
-        if l.startswith(("ATOM", "HETATM")):
-            k += 1
-            if l[17:20].strip() in ("SOL", "WAT", "HOH", "K", "CL", "NA"):
-                continue
-            ch = "A" if k <= n_a else "B"
-            out.append(l[:21] + ch + l[22:])
-    return "\n".join(out) + "\nEND\n"
+        if not l.startswith("ATOM") or _is_h(l):
+            continue
+        rn = l[17:21].strip()
+        if rn in ("SOL", "WAT", "HOH", "K", "CL", "NA"):
+            continue
+        ch = "A" if l[21] == "A" else "B"
+        out.append(l[:17] + f"{STD.get(rn, rn):>3} " + ch + l[22:])
+    return "
+".join(out) + "
+END
+"
 
 
 def cmd_calib(a):
-    from scripts.mmpbsa_calib import BASE, GMX, chain_letters, last_atom_number, run
+    from scripts.mmpbsa_calib import BASE, GMX, run
     res = {}
     for d in sorted(p for p in BASE.iterdir() if p.is_dir()):
-        tpr, xtc = d / "md.tpr", d / "md_pbc.xtc"
-        if not (tpr.exists() and xtc.exists()):
+        if not ((d / "md.tpr").exists() and (d / "md_pbc.xtc").exists()):
             continue
-        letters = chain_letters(d / "topol.top")
-        n_a = last_atom_number(d / f"topol_Protein_chain_{letters[0]}.itp")
         vals = []
         for t in a.times:
             with tempfile.TemporaryDirectory() as td:
                 fr = Path(td) / "f.pdb"
-                run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc.xtc", "-dump", str(t), "-o", str(fr)], d, 120, input_text="1\n")
+                run([GMX, "trjconv", "-s", "md.tpr", "-f", "md_pbc.xtc", "-dump", str(t), "-o", str(fr)], d, 120, input_text="1
+")
                 if not fr.exists():
                     continue
                 sp = Path(td) / "s.pdb"
-                sp.write_text(_chain_split(fr.read_text(), n_a))
-                txt = [STD.get(l[17:21].strip(), l[17:21].strip()) for l in sp.read_text().splitlines() if l.startswith("ATOM")]
-                rewritten = []
-                for l in sp.read_text().splitlines():
-                    if l.startswith("ATOM"):
-                        rn = l[17:21].strip()
-                        rewritten.append(l[:17] + f"{STD.get(rn, rn):>3} " + l[21:])
-                sp.write_text("\n".join(rewritten) + "\nEND\n")
+                sp.write_text(_frame_to_complex(fr.read_text()))
                 vals.append(prodigy(sp))
         if vals:
             dg = [v["dG_kcal"] for v in vals if v["dG_kcal"] is not None]
