@@ -158,24 +158,26 @@ O PRODIGY nas poses iniciais dos 48 candidatos (protonadas em pH 8,2) deu ΔG en
 
 A classificação por etapa entre os 33 candidatos que passaram nos portões (23 lineares, 10 cíclicos) com as etapas disponíveis (confiança do Boltz-2 no E2, Δ, RMSD final da simulação de pH 10,0, PRODIGY na pose) colocou PTTTQT (posto médio 4,6), NGGRPDAP (6,5), SGPIG (7,6), GSNIN (8,5) e GTDEN (9,1) à frente na frente linear, e IYPETG (3,2), SGSTDIE (3,5), NGGTT (4,3), GGSTDID (4,6) e GGHSE (5,0) à frente na cíclica (Figura 6B). Os postos de um mesmo candidato variam muito entre as etapas (por exemplo, o NGGRPDAP é o 2º pelo E2 e o 13º pelo Δ), de modo que a classificação agregada é uma triagem grosseira e não uma medida.
 
-[[PENDENTE: MM-GBSA e PRODIGY nas trajetórias de pH 8,2 e a classificação com todas as etapas (arquivos `outputs/ranking_energy_final_all.*`; fila `energy-queue`).]]
+O MM-GBSA e o PRODIGY também foram calculados na segunda metade das 48 simulações de pH 10,0 (Figura S10). O ΔG do MM-GBSA teve mediana de −24,8 kcal mol^−1^ (−65,0 a −4,1; erro padrão entre blocos de quadros, mediana 0,9), correlacionou-se fracamente com o comprimento do peptídeo (ρ = −0,29, *P* = 0,05) e com a distância final âncora–Asp189 (ρ = 0,37, *P* = 0,01), e foi mais favorável para os três peptídeos com lisina ou arginina (mediana −45,3 contra −23,2 dos outros 45; Mann–Whitney *P* = 0,014), como esperado de um escore que inclui a atração eletrostática pelo carboxilato do Asp189. Os valores mais favoráveis foram os do PISQIDSGSR (−65,0), QAPDFPTGPNNS (−56,5), QSPDFPNGPGQS (−54,5), GENGGPG (−47,3) e NGGRPDAP (−45,3). O PRODIGY em 30 quadros da mesma metade deu mediana de −8,2 kcal mol^−1^ (−11,4 a −6,5; ρ com o comprimento −0,37, com o MM-GBSA 0,61). Dada a calibração (Seção 3.2), esses valores ordenam candidatos e não são afinidades.
+
+[[PENDENTE: MM-GBSA e PRODIGY nas trajetórias de pH 8,2 dos 48 candidatos e a classificação com todas as etapas (arquivos `outputs/ranking_energy_final_all.*`; fila `energy-queue`).]]
 
 ### 3.7 pH 8,2 versus pH 10,0
 
-[[PENDENTE: comparação pareada das 48 simulações de pH 8,2 e pH 10,0 (distância âncora–Asp189, ocupância, RMSD, contatos, anel, MM-GBSA, PRODIGY), os estados de protonação que diferem, a variação entre execuções dos candidatos repetidos e a concordância das classificações (`scripts/compare_ph.py`; Figura 8).]]
+[[PROVISÓRIO, escrito em 6 de outubro de 2026 com as 17 das 48 simulações de pH 8,2 que haviam terminado; são os finalistas e não uma amostra aleatória. Reescrever com as 48, as execuções repetidas e `scripts/compare_ph.py`.]] Dezessete simulações de pH 8,2 (oito lineares e nove macrocíclicas) haviam terminado e estão pareadas na Figura 7 com os mesmos candidatos em pH 10,0. A distância final âncora–Asp189 teve mediana de 6,47 Å em pH 8,2 contra 5,72 Å em pH 10,0 (Wilcoxon *P* = 0,57), a ocupância da segunda metade 0,02 contra 0,06 (*P* = 0,53) e o RMSD final do peptídeo 0,32 contra 0,29 nm (*P* = 0,31). Ocupância de pelo menos 0,70 ocorreu em duas simulações de pH 8,2 (NGGRPDAP e GGKPGEP) e em quatro de pH 10,0 (essas duas, GQNDS linear e GGHSE). O desfecho em um pH previu o do outro só fracamente para a distância final (ρ = 0,48, *P* = 0,054) e para a ocupância (ρ = 0,42, *P* = 0,095). O GQNDS linear ocupou S1 só na primeira metade em pH 8,2 (0,97 e depois 0,04) e o GGHSE saiu (distância final 8,61 Å, ocupância 0,00; |ω| mínimo 149,5° contra 153,7° em pH 10,0), enquanto GTDTG (0,68) e IYPETG (0,57) ocuparam S1 em pH 8,2 e não em pH 10,0. O NGGRPDAP e o GGKPGEP, os dois peptídeos cuja âncora é um resíduo básico seguido de prolina (Arg e Lys), a mantiveram em S1 nos dois pH: ocupância 0,98 e 1,00 e distância final 2,84 e 2,74 Å no NGGRPDAP; ocupância 1,00 nos dois pH e 2,71 Å no GGKPGEP, cujo anel atendeu ao critério estrito em pH 8,2 (|ω| mínimo 156,7° contra 144,5° em pH 10,0). Os escores de energia, ao contrário, concordaram entre os pH: MM-GBSA ρ = 0,73 (*P* = 0,001; mediana −25,9 contra −26,5 kcal mol^−1^, *P* = 0,43) e PRODIGY nos quadros ρ = 0,67 (*P* = 0,003; −8,52 contra −8,75 kcal mol^−1^, *P* = 0,38). Cada candidato foi simulado uma vez por pH, com semente diferente; assim, uma diferença entre pH não se separa da variação entre execuções até que as execuções repetidas sejam analisadas; e, como quatro candidatos entraram nos finalistas pela ocupância em pH 10,0 (NGGRPDAP, GQNDS, GGHSE e GGKPGEP), a perda de ocupância em pH 8,2 é esperada por regressão à média, como ocorreu com GQNDS e GGHSE, mas não com NGGRPDAP e GGKPGEP.
 
 ### 3.8 Peptídeos candidatos
 
-Quatro peptídeos se destacam pelos critérios declarados de antemão e pelas etapas acima (Tabela 4, Figura 7). O GGHSE (*S. frugiperda*, cíclico) é a única simulação que combinou ocupância de pelo menos 0,70 com o critério estrito do anel. O GQNDS (*O. nubilalis*, linear) chegou a ocupância de 1,00 com âncora Gln. O NGGRPDAP (*A. gemmatalis*, linear) tem uma Arg em S1 seguida de prolina, o mecanismo canônico, e o menor ΔG do PRODIGY da frente linear. O GGKPGEP (*A. gemmatalis*, cíclico) tem a menor distância final âncora–Asp189 (2,71 Å) e uma Lys seguida de prolina, mas fica abaixo do limite de ω do critério estrito do anel (mínimo de 144,5° contra 150°). Os quatro partiram com a âncora a até 4,0 Å do Asp189 (Seção 3.5), e nem a pose inicial do Boltz-2 nem a simulação de 10 ns os separa de uma sequência embaralhada; são candidatos que sobreviveram aos filtros disponíveis, e nenhum carrega alegação de seletividade ou atividade. Os 48 candidatos também foram classificados em camadas A–C pelos critérios declarados antes das simulações (23 A e 1 B lineares; 10 A, 13 B e 1 C cíclicos; Figura S7); a camada A exclui poucos candidatos e não discrimina entre os demais.
+Quatro peptídeos se destacam pelos critérios declarados de antemão e pelas etapas acima (Tabela 4, Figura 8). O GGHSE (*S. frugiperda*, cíclico) é a única simulação de pH 10,0 que combinou ocupância de pelo menos 0,70 com o critério estrito do anel; em pH 8,2 ele saiu de S1 (Seção 3.7). O GQNDS (*O. nubilalis*, linear) chegou a ocupância de 1,00 com âncora Gln em pH 10,0, mas ocupou S1 só na primeira metade em pH 8,2. O NGGRPDAP (*A. gemmatalis*, linear) tem uma Arg em S1 seguida de prolina, o mecanismo canônico, e o menor ΔG do PRODIGY da frente linear; com o GGKPGEP, é um dos dois dos quatro cuja ocupância de S1 apareceu nos dois pH (uma execução cada), e teve o MM-GBSA mais favorável das 17 simulações pareadas nos dois pH. O GGKPGEP (*A. gemmatalis*, cíclico) tem a menor distância final âncora–Asp189 (2,71 Å) e uma Lys seguida de prolina, mas em pH 10,0 fica abaixo do limite de ω do critério estrito do anel (mínimo de 144,5° contra 150°; 156,7° em pH 8,2, onde também manteve S1). Os quatro partiram com a âncora a até 4,0 Å do Asp189 (Seção 3.5), e nem a pose inicial do Boltz-2 nem a simulação de 10 ns os separa de uma sequência embaralhada; são candidatos que sobreviveram aos filtros disponíveis, e nenhum carrega alegação de seletividade ou atividade. Os 48 candidatos também foram classificados em camadas A–C pelos critérios declarados antes das simulações (23 A e 1 B lineares; 10 A, 13 B e 1 C cíclicos; Figura S7); a camada A exclui poucos candidatos e não discrimina entre os demais.
 
-**Tabela 4.** Candidatos da lista curta. Inicial e final: distância âncora–Asp189 nas janelas inicial e final da simulação de 10 ns em pH 10,0. Ocup.: ocupância a 5 Å na segunda metade (descritiva). ΔG PRODIGY: pose inicial; entre parênteses, por resíduo. MM-GBSA em pH 8,2 pendente.
+**Tabela 4.** Candidatos da lista curta. Inicial e final: distância âncora–Asp189 nas janelas inicial e final da simulação de 10 ns em pH 10,0. Ocup.: ocupância a 5 Å na segunda metade (descritiva). ΔG PRODIGY: pose inicial; entre parênteses, por resíduo. MM-GBSA: segunda metade da simulação de 10 ns em pH 10,0 e em pH 8,2 (provisório; uma execução cada). As colunas de ocupância e anel referem-se a pH 10,0.
 
-| Peptídeo | Frente | Espécie | Comprimento | Conf. E2 | Δ (E3) | Âncora | Inicial (Å) | Final (Å) | Ocup. | Anel | ΔG PRODIGY (kcal mol^−1^) |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| NGGRPDAP | linear | *A. gemmatalis* | 8 | 0,937 | 0,030 | Arg | 2,78 | 2,74 | 1,00 | – | −11,1 (−1,39) |
-| GQNDS | linear | *O. nubilalis* | 5 | 0,909 | 0,013 | Gln | 4,00 | 3,77 | 1,00 | – | −9,0 (−1,80) |
-| GGHSE | cíclico | *S. frugiperda* | 5 | 0,908 | 0,015 | His | 2,86 | 3,07 | 0,99 | estrito | −8,8 (−1,76) |
-| GGKPGEP | cíclico | *A. gemmatalis* | 7 | 0,923 | 0,020 | Lys | 2,71 | 2,71 | 1,00 | não estrito | −9,7 (−1,39) |
+| Peptídeo | Frente | Espécie | Comprimento | Conf. E2 | Δ (E3) | Âncora | Inicial (Å) | Final (Å) | Ocup. | Anel | ΔG PRODIGY (kcal mol^−1^) | MM-GBSA pH 10,0 / 8,2 (kcal mol^−1^) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| NGGRPDAP | linear | *A. gemmatalis* | 8 | 0,937 | 0,030 | Arg | 2,78 | 2,74 | 1,00 | – | −11,1 (−1,39) | −45,3 / −53,3 |
+| GQNDS | linear | *O. nubilalis* | 5 | 0,909 | 0,013 | Gln | 4,00 | 3,77 | 1,00 | – | −9,0 (−1,80) | −18,2 / −2,0 |
+| GGHSE | cíclico | *S. frugiperda* | 5 | 0,908 | 0,015 | His | 2,86 | 3,07 | 0,99 | estrito | −8,8 (−1,76) | −26,5 / −23,9 |
+| GGKPGEP | cíclico | *A. gemmatalis* | 7 | 0,923 | 0,020 | Lys | 2,71 | 2,71 | 1,00 | não estrito | −9,7 (−1,39) | −35,4 / −27,7 |
 
 
 ---
@@ -245,7 +247,7 @@ Não se aplica. É um estudo computacional; não envolveu animais, participantes
 
 ## Material suplementar
 
-As Figuras S1–S9 e a Tabela S1 (legendas e tabela abaixo) são fornecidas como material suplementar.
+As Figuras S1–S10 e a Tabela S1 (legendas e tabela abaixo) são fornecidas como material suplementar.
 
 ---
 
@@ -263,7 +265,9 @@ As Figuras S1–S9 e a Tabela S1 (legendas e tabela abaixo) são fornecidas como
 
 **Figura 6.** Filtro de energia e classificação por etapa. (A) ΔG do PRODIGY da pose inicial dos 48 candidatos contra o comprimento do peptídeo (ρ: Spearman). (B) Posto de cada candidato dentro de sua frente em cada etapa (1 = melhor) e o agregado (posto médio) para os dez melhores candidatos de cada frente entre os que passaram nos portões; etapas mostradas: confiança do Boltz-2 no E2, Δ pareado (E3), RMSD final da simulação de pH 10,0 e PRODIGY na pose. O MM-GBSA e as etapas de pH 8,2 estão pendentes.
 
-**Figura 7.** Poses iniciais (Boltz-2) dos quatro peptídeos da lista curta no sítio ativo. Peptídeo em ciano com o resíduo âncora (o mais próximo do carboxilato do Asp189) em magenta; Asp189 em laranja; His57 e Ser195 em verde; a linha pontilhada é a distância âncora–Asp189; receptor em *cartoon* até 12 Å do peptídeo. (A) NGGRPDAP (linear, *A. gemmatalis*). (B) GQNDS (linear, *O. nubilalis*). (C) GGHSE (cíclico, *S. frugiperda*). (D) GGKPGEP (cíclico, *A. gemmatalis*).
+**Figura 7.** Comparação provisória das simulações de pH 8,2 e pH 10,0 (as 17 das 48 execuções de pH 8,2 que haviam terminado em 6 de outubro de 2026; os finalistas, não uma amostra aleatória; uma execução por pH, com sementes diferentes). (A, B) Distância final âncora–Asp189 e ocupância de S1 a 5 Å na segunda metade, pareadas (linhas pontilhadas: 4 Å e 0,70; teste de Wilcoxon de postos sinalizados). (C–E) pH 8,2 contra pH 10,0 para a distância final, o ΔG do MM-GBSA e o ΔG do PRODIGY nos quadros da trajetória (linha pontilhada: identidade; ρ: correlação de Spearman). Azul: linear; verde-azulado: macrociclo; em destaque: NGGRPDAP, GGKPGEP, GQNDS e GGHSE.
+
+**Figura 8.** Poses iniciais (Boltz-2) dos quatro peptídeos da lista curta no sítio ativo. Peptídeo em ciano com o resíduo âncora (o mais próximo do carboxilato do Asp189) em magenta; Asp189 em laranja; His57 e Ser195 em verde; a linha pontilhada é a distância âncora–Asp189; receptor em *cartoon* até 12 Å do peptídeo. (A) NGGRPDAP (linear, *A. gemmatalis*). (B) GQNDS (linear, *O. nubilalis*). (C) GGHSE (cíclico, *S. frugiperda*). (D) GGKPGEP (cíclico, *A. gemmatalis*).
 
 **Figura S1.** Resíduos proibidos em P1 por classe de protease do intestino médio no critério duro. Um resíduo é tolerado quando o seguinte é prolina; a isoleucina é proibida só no C-terminal livre do peptídeo linear.
 
@@ -282,6 +286,8 @@ As Figuras S1–S9 e a Tabela S1 (legendas e tabela abaixo) são fornecidas como
 **Figura S8.** Co-dobramento com o Boltz-2 dos 1.829 macrociclos da primeira rodada: ipTM e pLDDT do complexo por espécie e ipTM médio por comprimento.
 
 **Figura S9.** Triagem por escore de motivos por espécie sob a regra linear-estrita e a circular.
+
+**Figura S10.** MM-GBSA e PRODIGY nas trajetórias das 48 simulações de pH 10,0 (segunda metade; ΔG sem entropia). (A) ΔG do MM-GBSA contra o comprimento do peptídeo. (B) ΔG do MM-GBSA contra a distância final âncora–Asp189. (C) ΔG do PRODIGY em 30 quadros contra o ΔG do MM-GBSA. ρ: correlação de Spearman.
 
 **Tabela S1.** Subsítios de referência (resíduos da tripsina bovina a até 4,5 Å do resíduo do inibidor em cada posição).
 

@@ -350,5 +350,49 @@
     "occ_6A_h1": 0.992,
     "occ_6A_h2": 0.948,
     "passes_screen": false
+  },
+  "Agemmatalis__r2": {
+    "sequence": "GGKPGEP",
+    "cyclic": true,
+    "n_frames": 501,
+    "receptor_residues": 260,
+    "s1_asp": "ASP211",
+    "anchor_idx": 2,
+    "anchor_aa": "K",
+    "d_anchor_asp_mean_A": 2.71,
+    "d_anchor_asp_ini_A": 2.71,
+    "d_anchor_asp_fim_A": 2.71,
+    "com_dist_pep_rec_A_median": 12.8,
+    "n_frames_image_jump_gt30A": 0,
+    "peptide_rmsd_local_nm_mean": 0.345,
+    "peptide_rmsd_local_nm_final20pct": 0.46,
+    "window_early_ns": [
+      0.0,
+      0.4
+    ],
+    "window_late_ns": [
+      8.0,
+      10.0
+    ],
+    "contact_any_frac_4.5A": 1.0,
+    "ser195_contact_frac_4.5A": 0.94,
+    "his57_contact_frac_4.5A": 1.0,
+    "anchor_idx_h1": 2,
+    "anchor_idx_h2": 2,
+    "anchor_same_in_halves": true,
+    "ring_omega_frac_ge150": 1.0,
+    "ring_CN_max_A": 1.431,
+    "ring_omega_abs_min_deg": 156.7,
+    "ring_intact": true,
+    "occ_4A": 1.0,
+    "occ_4A_h1": 1.0,
+    "occ_4A_h2": 1.0,
+    "occ_5A": 1.0,
+    "occ_5A_h1": 1.0,
+    "occ_5A_h2": 1.0,
+    "occ_6A": 1.0,
+    "occ_6A_h1": 1.0,
+    "occ_6A_h2": 1.0,
+    "passes_screen": true
   }
 }

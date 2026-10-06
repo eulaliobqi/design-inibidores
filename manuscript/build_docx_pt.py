@@ -87,7 +87,8 @@ src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/final/Figure1_pipeline.png", "2": "figures/final/Figure2_calibration.png",
        "3": "figures/pt/fig5_funil.png", "4": "figures/pt/fig8_reprodutibilidade.png",
        "5": "figures/pt/fig11_md_triagem_10ns.png", "6": "figures/final/Figure6_energy_ranking.png",
-       "7": "figures/final/Figure7_candidate_poses.png",
+       "7": "figures/final/Figure7_pH_comparison.png", "8": "figures/final/Figure8_candidate_poses.png",
+       "S10": "figures/final/FigureS10_energy_trajectories.png",
        "S1": "figures/pt/fig2_regra_dura.png", "S2": "figures/final/FigureS2_motif_screen.png",
        "S3": "figures/pt/fig6_composicao.png", "S4": "figures/pt/fig9_reescore_e2.png",
        "S5": "figures/pt/fig10_top3_pose.png", "S6": "figures/pt/figS2_anel_ciclico_charmm36.png",
@@ -105,10 +106,11 @@ src = src.replace("\n### 3.4 Co-dobramento", img("3") + "\n### 3.4 Co-dobramento
 src = src.replace("\n### 3.5 Simulações", img("4") + "\n### 3.5 Simulações")
 src = src.replace("\n### 3.6 Filtro de energia", img("5") + "\n### 3.6 Filtro de energia")
 src = src.replace("\n### 3.7 pH 8,2", img("6") + "\n### 3.7 pH 8,2")
-src = src.replace("\n---\n\n## 4 Discussão", img("7") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("7") + "\n## 4 Discussão")
-for fid in ("1", "2", "3", "4", "5", "6", "7"):
+src = src.replace("\n### 3.8 Peptídeos", img("7") + "\n### 3.8 Peptídeos")
+src = src.replace("\n---\n\n## 4 Discussão", img("8") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("8") + "\n## 4 Discussão")
+for fid in ("1", "2", "3", "4", "5", "6", "7", "8"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
-src = src.rstrip() + "\n\n## Figuras suplementares\n" + "".join(img(k, "13cm") for k in ("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9"))
+src = src.rstrip() + "\n\n## Figuras suplementares\n" + "".join(img(k, "13cm") for k in ("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10"))
 
 # marcadores pendentes -> span com estilo
 src = re.sub(r"\[\[(.*?)\]\]", lambda m: '[' + m.group(1).replace("[", "(").replace("]", ")") + ']{custom-style="Pendente"}', src, flags=re.S)
@@ -185,7 +187,7 @@ panel = f"""
 | MD de 10 ns em pH 10,0 | concluída (48/48) | a ocupância de S1 acompanha a pose inicial (Seção 3.5, Figura 5) |
 | Controles em MD (7 embaralhados; 8 de troca de âncora) | simulados e retirados do artigo (05/10) | a distância inicial explica o resultado; uma frase de divulgação em 3.5 |
 | PRODIGY nas 48 poses | concluído | ΔG −12,2 a −7,1 kcal/mol; acompanha o comprimento (Seção 3.6, Figura 6) |
-| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`); 12/48 iniciadas e 10 concluídas em 06/10, 09:47 | 48 MDs: fim previsto entre a noite de 07/10 e a manhã de 08/10; repetidas: ≈ 09/10 (extrapolação do ritmo medido) |
+| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`); 17 das 48 concluídas em 06/10, 17:15 (8 L e 9 M; as frentes terminam o 1º lote em horários diferentes) | 48 MDs: fim previsto entre a noite de 07/10 e a manhã de 08/10; repetidas: ≈ 09/10 (extrapolação do ritmo medido) |
 | MM-GBSA e PRODIGY nas trajetórias (pH 8,2 e pH 10,0) e classificação final | **em curso** (`energy-queue`, `mmgbsa-md10`) | pendente (Seções 3.6 e 3.7) |
 | Contrasseleção frente a proteases não alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
@@ -193,7 +195,7 @@ panel = f"""
 
 ## Pendências antes da submissão
 
-1. Resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 8); depois ajustar resumo, 4.1, 4.4 e 5.
+1. Resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 7); depois ajustar resumo, 4.1, 4.4 e 5.
 2. Motivo do pH 8,2 (Seção 2.6) e lista de peptídeos recomendados.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Revisar a auditoria metodológica e de código (`docs/AUDITORIA_2026-10-05.md`).

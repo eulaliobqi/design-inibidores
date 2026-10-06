@@ -1,7 +1,7 @@
 """Figuras novas do manuscrito (numeracao final), no padrao da revista (180 mm, 300 dpi, texto >= 8 pt; frontiers_style.py):
   Figure2_calibration     calibracao da escada de escores, agora com o PRODIGY
   Figure6_energy_ranking  PRODIGY nas 48 poses e classificacao por etapa
-  Figure7_candidate_poses paineis estruturais (PyMOL) dos quatro candidatos da lista curta
+  Figure8_candidate_poses paineis estruturais (PyMOL) dos quatro candidatos da lista curta
 Uso (de manuscript/): python figures/make_figures_final.py figures
 Le: data-calibration-b05/*, data-e2-results/prodigy_*.json, figures/_src/*.png, outputs/ranking_energy_pre.json (gerado por
 scripts/rank_energy_stages.py) ou, quando existir, outputs/ranking_energy_final_all.json (todas as etapas)."""
@@ -152,7 +152,7 @@ def fig5():
            Line2D([0], [0], color="#7a9a5a", lw=4, label="His57, Ser195"),
            Line2D([0], [0], color="#e6e600", lw=2, ls=":", label="anchor–Asp189 distance")]
     fig.legend(handles=key, loc="outside lower center", ncol=3, frameon=False)
-    return save_journal(fig, OUT / "Figure7_candidate_poses")
+    return save_journal(fig, OUT / "Figure8_candidate_poses")
 
 
 def fig7():

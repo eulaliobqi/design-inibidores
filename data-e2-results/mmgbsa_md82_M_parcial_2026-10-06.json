@@ -230,5 +230,34 @@
    "sd": 0.32504700514780255,
    "n_frames": 30
   }
+ },
+ "Agemmatalis__r2": {
+  "status": "real",
+  "front": "M",
+  "key": "Agemmatalis__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -27.68,
+  "components": {
+   "vdw": -40.7,
+   "vdw_sd": 1.07,
+   "eel": -178.26,
+   "eel_sd": 4.85,
+   "egb": 197.24,
+   "egb_sd": 3.31,
+   "esurf": -5.96,
+   "esurf_sd": 0.05,
+   "ggas": -218.96,
+   "ggas_sd": 5.5,
+   "gsolv": 191.28,
+   "gsolv_sd": 3.31,
+   "total": -27.68,
+   "total_sd": 6.42
+  },
+  "sem_blocks": 0.8485524766330013,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -9.123333333333335,
+   "sd": 0.272865453210104,
+   "n_frames": 30
+  }
  }
 }
