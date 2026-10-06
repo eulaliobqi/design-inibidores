@@ -182,7 +182,10 @@ def main():
             if pr:
                 v["PRODIGY_md"] = pr
                 (rd / "result.json").write_text(json.dumps(v, indent=1))
-                outp.write_text(json.dumps(allr, indent=1))
+                # a fila de energia grava o mesmo JSON: reler antes de gravar para nao perder entradas novas
+                cur = json.loads(outp.read_text())
+                cur.setdefault(k, v)["PRODIGY_md"] = pr
+                outp.write_text(json.dumps(cur, indent=1))
         print("PRODIGY_BACKFILL_DONE")
         return
     for k in keys:
