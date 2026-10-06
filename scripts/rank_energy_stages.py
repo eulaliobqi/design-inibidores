@@ -90,15 +90,35 @@ def attach(rows, path, field, prefix):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--stages", choices=["pre", "all"], default="pre")
-    ap.add_argument("--pool", choices=["all", "gated"], default="gated",
-                    help="gated: so quem passa o QC de pose, tem delta>0 (ou sem dado) e, nos macrociclos, anel estrito")
+    ap.add_argument("--pool", choices=["all", "gated", "finalists"], default="gated",
+                    help="gated: so quem passa o QC de pose, tem delta>0 (ou sem dado) e, nos macrociclos, anel estrito; "
+                         "finalists: os candidatos da MD de pH 8,2 (data-e2-results/finalists_ph82.json)")
     ap.add_argument("--out", default="outputs/ranking_energy")
     a = ap.parse_args()
     rows = load_rows()
     if a.stages == "all":
-        attach(rows, ROOT / "outputs/prodigy_md82.json", "dG_kcal_mean", "PRODIGY_md")
-        attach(rows, ROOT / "outputs/mmgbsa_md82.json", "dG_gb_kcal", "MMGBSA")
+        mm = {}
+        for F in "LM":
+            pth = ROOT / f"outputs/mmgbsa_md82_{F}.json"
+            if pth.exists():
+                for k, v in json.loads(pth.read_text()).items():
+                    if v.get("status") == "real":
+                        mm[f"{F}:{k}"] = {"dG_gb_kcal": v.get("dG_gb_kcal"), "sem": v.get("sem_blocks"),
+                                          "dG_kcal_mean": (v.get("PRODIGY_md") or {}).get("dG_kcal_mean")}
+        for r in rows:
+            m = mm.get(f'{r["front"]}:{r["key"]}', {})
+            for src, dst in (("dG_gb_kcal", "MMGBSA"), ("dG_kcal_mean", "PRODIGY_md")):
+                v = m.get(src)
+                r[dst] = v
+                r[dst + "_res"] = (v / r["n_res"]) if v is not None else None
+            r["MMGBSA_sem"] = m.get("sem")
     pool = rows
+    if a.pool == "finalists":
+        fin = json.loads((DATA / "finalists_ph82.json").read_text())
+        keep = {(F, x["key"]) for F in fin for x in fin[F]}
+        pool = [r for r in rows if (r["front"], r["key"]) in keep]
+        if a.stages == "all":
+            pool = [r for r in pool if r.get("MMGBSA") is not None]
     if a.pool == "gated":
         pool = [r for r in rows if r["qc_pose"] and (r["E3"] is None or r["E3"] > 0)
                 and (r["front"] == "L" or r["ring_strict"])]
