@@ -4,7 +4,7 @@ rank_energy_stages.py -- classificacao dos peptideos finais pela pontuacao em ca
 Etapas (cada uma da a cada candidato um posto, 1 = melhor, dentro do conjunto avaliado; empates recebem o posto medio):
   E2   confianca media do Boltz-2 (5 amostras x 3 sementes)                     maior e' melhor
   E3   diferenca pareada frente aos controles embaralhados (Boltz-2)           maior e' melhor   (sem dado: etapa omitida)
-  MD10 RMSD local do peptideo na janela final da MD de 10 ns (pH 10)           menor e' melhor
+  MD   RMSD local do peptideo na janela final da MD de 10 ns (--md-source md10: pH 10; md82: pH 8,2)  menor e' melhor
   PRODIGY-pose   dG do PRODIGY na pose inicial (pH 8,2) e dG por residuo         menor e' melhor (media dos dois postos)
   PRODIGY-MD     dG do PRODIGY no conjunto de quadros da MD de pH 8,2           menor e' melhor (media dos dois postos)
   MMGBSA         dG de MM-GBSA (GB, igb=5, 0,15 M) da MD de pH 8,2; e por residuo menor e' melhor (media dos dois)
@@ -50,9 +50,13 @@ def fnum(x):
         return None
 
 
-def load_rows():
+def load_rows(md_source="md10"):
     rows = list(csv.DictReader(open(ROOT / "manuscript/figures/ranking_final.csv", encoding="utf-8")))
-    md = {F: json.loads((DATA / f"md10_{F}_analysis.json").read_text()) for F in "LM"}
+    md = {}
+    for F in "LM":
+        srv = ROOT / f"outputs/{md_source}_{F}/analysis_summary.json"   # no servidor (pH 8,2: outputs/md82_<F>)
+        loc = DATA / f"{md_source}_{F}_analysis.json"
+        md[F] = json.loads((srv if srv.exists() else loc).read_text())
     pp = json.loads((DATA / "prodigy_poses.json").read_text())
     dl = {}
     for F in "LM":
@@ -69,7 +73,7 @@ def load_rows():
             "front": F, "key": k, "sequence": r["sequence"], "species": r["species"], "tier": r["tier"], "n_res": n,
             "qc_pose": r["qc_pose"] == "True", "ring_strict": {"True": True, "False": False}.get(r["ring_strict"]),
             "E2": fnum(r["confidence_E2"]), "E3": dl.get((F, r["species"], r["sequence"]), fnum(r["delta_E3"])),
-            "MD10_rmsd": m.get("peptide_rmsd_local_nm_final20pct"),
+            "MD_rmsd": m.get("peptide_rmsd_local_nm_final20pct"),
             "PRODIGY_pose": p.get("dG_kcal"),
             "PRODIGY_pose_res": (p["dG_kcal"] / n) if p.get("dG_kcal") is not None else None,
         })
@@ -94,8 +98,9 @@ def main():
                     help="gated: so quem passa o QC de pose, tem delta>0 (ou sem dado) e, nos macrociclos, anel estrito; "
                          "finalists: os candidatos da MD de pH 8,2 (data-e2-results/finalists_ph82.json)")
     ap.add_argument("--out", default="outputs/ranking_energy")
+    ap.add_argument("--md-source", choices=["md10", "md82"], default="md10")
     a = ap.parse_args()
-    rows = load_rows()
+    rows = load_rows(a.md_source)
     if a.stages == "all":
         mm = {}
         for F in "LM":
@@ -122,7 +127,7 @@ def main():
     if a.pool == "gated":
         pool = [r for r in rows if r["qc_pose"] and (r["E3"] is None or r["E3"] > 0)
                 and (r["front"] == "L" or r["ring_strict"])]
-    stage_defs = [("E2", ["E2"], True), ("E3", ["E3"], True), ("MD10", ["MD10_rmsd"], False),
+    stage_defs = [("E2", ["E2"], True), ("E3", ["E3"], True), ("MD", ["MD_rmsd"], False),
                   ("PRODIGY_pose", ["PRODIGY_pose", "PRODIGY_pose_res"], False)]
     if a.stages == "all":
         stage_defs += [("PRODIGY_md", ["PRODIGY_md", "PRODIGY_md_res"], False), ("MMGBSA", ["MMGBSA", "MMGBSA_res"], False)]
@@ -154,7 +159,7 @@ def main():
         print("== frente", F)
         for r in sorted([r for r in pool if r["front"] == F], key=lambda r: r[f"pos_{F}"])[:12]:
             print(f'{r[f"pos_{F}"]:2d} {r["sequence"]:14s} {r["species"]:13s} agg={r[f"agg_{F}"]:.1f} E2={r["E2"]} d3={r["E3"]} '
-                  f'rmsd={r["MD10_rmsd"]} prodigy={r["PRODIGY_pose"]}')
+                  f'rmsd={r["MD_rmsd"]} prodigy={r["PRODIGY_pose"]}')
 
 
 if __name__ == "__main__":
