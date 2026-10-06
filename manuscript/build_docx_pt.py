@@ -86,7 +86,7 @@ legends = dict(re.findall(r"\*\*Figura (S?\d+)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)"
 src = src.split("\n---\n\n## Legendas das figuras")[0]
 FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
        "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "13": "figures/pt/fig13_controles_embaralhados.png", "14": "figures/pt/fig14_controle_negativo.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
+       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
 
 
 def img(n, w="16.5cm"):
@@ -101,8 +101,8 @@ src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n##
 src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
 src = src.replace("\n### 3.9 Simulações", img("8") + img("9") + img("10") + "\n### 3.9 Simulações")
 src = src.replace("\n### 3.10 Frente linear", img("11") + "\n### 3.10 Frente linear")
-src = src.replace("\n---\n\n## 4 Discussão", img("12") + img("13") + img("14") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + img("13") + img("14") + "\n## 4 Discussão")
-for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"):
+src = src.replace("\n---\n\n## 4 Discussão", img("12") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + "\n## 4 Discussão")
+for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
 
@@ -145,7 +145,7 @@ panel = f"""
 ## Como ler as marcações
 
 - Trechos em **amarelo** marcam o que ainda depende de simulações em andamento ou de informação dos autores.
-- Nada nesta versão foi inventado para preencher lacunas: o que ainda depende de decisão ou de informação dos autores (manter ou retirar o controle, robustez ao pH, lista de peptídeos recomendados) está marcado.
+- Nada nesta versão foi inventado para preencher lacunas: o que ainda depende de decisão ou de informação dos autores (lista de peptídeos recomendados, robustez ao pH) está marcado.
 
 ## Painel de conformidade com as métricas da revista
 
@@ -157,7 +157,7 @@ panel = f"""
 | Palavras-chave | 5–8 (diretrizes gerais da Frontiers) | {n_kw} | OK |
 | Título | informativo e conciso; sem limite de caracteres na página da Frontiers | título oficial definido pelos autores, {len(title_en)} caracteres | OK |
 | Título curto | ≤ cerca de 50 caracteres (prática da Frontiers; não especificado na página) | {len(short_en)} caracteres | OK |
-| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as Figuras 13 e 14 (controles) foram geradas com todos os dados da fila final | OK |
+| Figuras | 300 dpi no tamanho final; TIFF, JPEG ou EPS; RGB | {n_fig} figuras + {n_figs} suplementares em PNG, TIFF (LZW) e PDF vetorial a 300 dpi, largura 180 mm, RGB; as Figuras 13 e 14 (controles) foram retiradas | OK |
 | Tabelas | editáveis, com legenda | {n_tab} tabelas | OK |
 | Referências | autor-ano (Harvard), seis primeiros autores e "et al.", com DOI | {len(cited)} referências, todas com metadados conferidos no Crossref/PubMed; nenhuma citada sem estar na lista, nenhuma na lista sem ser citada | OK |
 | Declaração de disponibilidade de dados | obrigatória | seção criada; falta confirmar visibilidade do repositório e DOI de arquivamento | pendente |
@@ -186,9 +186,8 @@ panel = f"""
 | E4 · QC de pose e matriz cruzada 8 × 8 | concluído | 80/80 candidatos com ao menos uma amostra aprovada em cada frente; matriz sem preferência espécie-específica (Seção 3.8) |
 | E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **concluído (48/48)** | 5 de 48 com ocupância ≥ 0,70; 3 passam na triagem como foi declarada (NGGRPDAP, GQNDS, GGHSE) (Seção 3.9, Figura 11) |
 | E8–E9 · comparação linear × macrociclo e camadas | concluído | 23 A, 1 B, 0 C (linear); 10 A, 13 B, 1 C (macrocíclica) (Seção 3.11, Figura 12) |
-| MD de 10 ns dos controles embaralhados | concluído (7 controles) | 3 de 7 candidatos superam o controle; os 3 controles que partiram a até 2,74 Å chegaram a 1,00 (Seção 3.11, Figura 13) |
-| Controle negativo (âncora → Asp ou Leu) | concluído (4 candidatos × 2 variantes) | 7 de 8 variantes perderam a ocupância, mas partiram mais longe do Asp189; a variante Asp de GGHSE manteve 0,86 (Seção 3.9, Figura 14) |
 | Campanha de pH (duas faixas) | **fora deste artigo** (decisão de 01/10: o custo, 72 simulações e 4–5 dias, não cabe no prazo) | scripts prontos e versionados; fica para trabalho seguinte |
+| Controles em MD (7 embaralhados e 8 de troca de âncora) | simulados e **retirados do artigo** (05/10) | a distância inicial explica o resultado; não separam sequência de pose (Seção 3.9); análises em `data-e2-results/` |
 | E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
 **Fila final de MD (05/10/2026):** concluída às 19:21 (`QUEUE_FINAL_MD_DONE`); não há cálculo em andamento.
@@ -197,7 +196,7 @@ panel = f"""
 
 ## Pendências antes da submissão
 
-1. Decisão dos autores sobre manter ou retirar o controle, robustez ao pH e lista de peptídeos recomendados (Seções 3.9 e 3.11).
+1. Lista de peptídeos recomendados (Seção 3.11); MD longa e contra-triagem dos selecionados, se forem feitas; robustez ao pH está fora do artigo.
 2. Conferir a Figura S2.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).

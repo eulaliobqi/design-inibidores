@@ -18,8 +18,7 @@ O pipeline evoluiu do desenho inicial descrito abaixo para uma **triagem em duas
 | Matriz cruzada 8×8 (melhor candidato por espécie × 8 receptores) | concluída; sem preferência espécie-específica |
 | MD de 10 ns dos 48 finais (CHARMM36, pH 10) | concluída; a ocupância de S1 acompanha a pose inicial |
 | Camadas finais | L 23 A + 1 B; M 10 A + 13 B + 1 C ("sobreviveu aos filtros", não "deve inibir") |
-| Controles embaralhados em MD (10 ns) | **concluídos (7)**: 3 candidatos superam o controle; os 3 controles que partiram a ≤ 2,74 Å chegaram a 1,00 (confundido com a distância inicial) |
-| Controle negativo (âncora → Asp/Leu) | **concluído** (4 candidatos × 2 variantes): 7 de 8 perdem a ocupância, mas partem mais longe do Asp189; GGDSE (Asp de GGHSE) manteve 0,86; decisão de manter/retirar o controle é do usuário |
+| Controles em MD (7 embaralhados; 8 de troca de âncora Asp/Leu) | **concluídos e retirados do artigo (05/10)**: a distância inicial explica o resultado; ficam em `data-e2-results/` e `manuscript/figures/_retiradas/` |
 
 **Onde está cada coisa**
 - `manuscript/` — manuscrito (EN em `manuscript_src.md` + `render.py`; PT em `pt_parts/` + `build_docx_pt.py`); figuras em `manuscript/figures/` (gerador: `figures/make_figures_e2_md.py`).

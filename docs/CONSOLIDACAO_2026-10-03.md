@@ -181,3 +181,4 @@ ps -eo pid,etime,cmd | grep "boltz predict" | grep -v grep | cut -c1-140
 
 ## 12. Continuação de 05/10/2026
 Ver `docs/ESTADO_2026-10-05.md`: fila `md-final-queue` morta por `set -u` e relançada (5e03837), lote 2 de controles concluído (7 controles), controle negativo completo (4 candidatos × 2 variantes, fila concluída às 19:21), Figura 14, manuscrito EN/PT atualizado e comparação de formato com 3 artigos da Frontiers in Natural Products.
+**Decisão final de 05/10 (noite):** controles em MD retirados do artigo; ver `docs/ESTADO_2026-10-05.md`.

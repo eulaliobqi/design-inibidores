@@ -320,8 +320,8 @@ if __name__ == "__main__":
     print("fig10", fig_top3())
     print("fig11", fig_md())
     print("figS2", fig_s2_ring())
-    print("fig13", fig_controls())
-    print("fig14", fig_negctrl())
+    # Figs 13 e 14 (controles em MD) retiradas do artigo em 05/10/2026 (ver docs/ESTADO_2026-10-05.md);
+    # as funcoes fig_controls() e fig_negctrl() ficam para consulta, as saidas estao em figures/_retiradas/.
     from PIL import Image
     for f in O.glob("*.png"):
         if f.name.startswith(("fig9", "fig10", "fig11", "figS2_anel", "fig13", "Figure9", "Figure10", "Figure11", "Figure13", "Figure14", "fig14", "FigureS2_cyclic_ring")):
