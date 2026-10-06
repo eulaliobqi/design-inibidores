@@ -1,0 +1,54 @@
+{
+ "total": 22066,
+ "linear_total": 527,
+ "cyclic_total": 543,
+ "linear_por_especie": {
+  "Sfrugiperda": 41,
+  "Slitura": 58,
+  "Onubilalis": 65,
+  "Dsaccharalis": 70,
+  "Cincludens": 77,
+  "Hvirescens": 57,
+  "Pxylostella": 86,
+  "Agemmatalis": 73
+ },
+ "ciclico_por_especie": {
+  "Sfrugiperda": 41,
+  "Slitura": 58,
+  "Onubilalis": 65,
+  "Dsaccharalis": 70,
+  "Cincludens": 79,
+  "Hvirescens": 62,
+  "Pxylostella": 87,
+  "Agemmatalis": 81
+ },
+ "divergencias_entre_implementacoes": 0,
+ "linear_dentro_do_ciclico": true,
+ "so_ciclicas": 16,
+ "so_ciclicas_terminam_em_I": 2,
+ "so_ciclicas_terminam_em_proibido_seguido_de_P_inicial": 14,
+ "linear_comprimento_medio": 7.7,
+ "linear_<=8": 430,
+ "linear_faixa": [
+  5,
+  20
+ ],
+ "linear_residuos": 4060,
+ "linear_composicao_%": {
+  "G": 49.4,
+  "S": 11.7,
+  "P": 9.8,
+  "T": 9.0,
+  "D": 5.8,
+  "I": 3.9,
+  "N": 3.8,
+  "E": 2.4
+ },
+ "linear_KR_total": 9,
+ "linear_KR_seguidos_de_P": 9,
+ "linear_Arg_Pro_Lys_Pro": [
+  6,
+  3
+ ],
+ "linear_sem_Ile_no_interior": 393
+}

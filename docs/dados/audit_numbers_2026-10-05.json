@@ -1,673 +1,673 @@
 [
  {
   "secao": "3.2 Boltz-2 confianca real>isca (pares)",
-  "afirmado": 10,
-  "recalculado": 10,
+  "afirmado": "10",
+  "recalculado": "10",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 Boltz-2 diferenca minima",
-  "afirmado": 0.042,
-  "recalculado": 0.042,
+  "afirmado": "0.042",
+  "recalculado": "0.042",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 Boltz-2 diferenca maxima",
-  "afirmado": 0.274,
-  "recalculado": 0.274,
+  "afirmado": "0.274",
+  "recalculado": "0.274",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 Boltz-2 diferenca mediana",
-  "afirmado": 0.19,
-  "recalculado": 0.19,
+  "afirmado": "0.19",
+  "recalculado": "0.19",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 conf inibidores min",
-  "afirmado": 0.853,
-  "recalculado": 0.853,
+  "afirmado": "0.853",
+  "recalculado": "0.853",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 conf inibidores max",
-  "afirmado": 0.986,
-  "recalculado": 0.986,
+  "afirmado": "0.986",
+  "recalculado": "0.986",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 conf iscas min",
-  "afirmado": 0.628,
-  "recalculado": 0.628,
+  "afirmado": "0.628",
+  "recalculado": "0.628",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 conf iscas max",
-  "afirmado": 0.944,
-  "recalculado": 0.944,
+  "afirmado": "0.944",
+  "recalculado": "0.944",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 ipTM real>isca",
-  "afirmado": 10,
-  "recalculado": 10,
+  "afirmado": "10",
+  "recalculado": "10",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 ipTM menor margem",
-  "afirmado": 0.005,
-  "recalculado": 0.005,
+  "afirmado": "0.005",
+  "recalculado": "0.005",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 pLDDT real>isca",
-  "afirmado": 10,
-  "recalculado": 10,
+  "afirmado": "10",
+  "recalculado": "10",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 RMSD do ligante real<isca",
-  "afirmado": 9,
-  "recalculado": 9,
+  "afirmado": "9",
+  "recalculado": "9",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 MM-GBSA real melhor",
-  "afirmado": 4,
-  "recalculado": 4,
+  "afirmado": "4",
+  "recalculado": "4",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 PRODIGY real melhor",
-  "afirmado": 2,
-  "recalculado": 2,
+  "afirmado": "2",
+  "recalculado": "2",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 rho MM-GBSA x contatos",
-  "afirmado": -0.93,
-  "recalculado": -0.93,
+  "afirmado": "-0.93",
+  "recalculado": "-0.93",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 n sistemas MM-GBSA",
-  "afirmado": 22,
-  "recalculado": 22,
+  "afirmado": "22",
+  "recalculado": "22",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.2 rho MM-GBSA x comprimento do ligante",
-  "afirmado": -0.27,
-  "recalculado": -0.27,
+  "afirmado": "-0.27",
+  "recalculado": "-0.27",
   "ok": true,
   "nota": "P=0.23"
  },
  {
   "secao": "3.2 rho PRODIGY x contatos",
-  "afirmado": -0.79,
-  "recalculado": -0.79,
+  "afirmado": "-0.79",
+  "recalculado": "-0.79",
   "ok": true,
   "nota": "n=22"
  },
  {
   "secao": "3.2 isca com mais contatos (PRODIGY)",
-  "afirmado": 7,
-  "recalculado": 7,
+  "afirmado": "7",
+  "recalculado": "7",
   "ok": true,
   "nota": "o par SKTI-Sf difere por 0,25 contato"
  },
  {
   "secao": "3.3 RESISTENTE",
-  "afirmado": 1829,
-  "recalculado": 1829,
+  "afirmado": "1829",
+  "recalculado": "1829",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 MARGINAL",
-  "afirmado": 4987,
-  "recalculado": 4987,
+  "afirmado": "4987",
+  "recalculado": "4987",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 SUSCEPTIVEL",
-  "afirmado": 15250,
-  "recalculado": 15250,
+  "afirmado": "15250",
+  "recalculado": "15250",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 total de sequencias",
-  "afirmado": 22066,
-  "recalculado": 22066,
+  "afirmado": "22066",
+  "recalculado": "22066",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 comprimento medio RESISTENTE",
-  "afirmado": 7.05,
-  "recalculado": 7.05,
+  "afirmado": "7.05",
+  "recalculado": "7.05",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 RESISTENTE <=10 res (%)",
-  "afirmado": 95.6,
-  "recalculado": 95.6,
+  "afirmado": "95.6",
+  "recalculado": "95.6",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 SUSCEPTIVEL comprimento medio",
-  "afirmado": 15.74,
-  "recalculado": 15.74,
+  "afirmado": "15.74",
+  "recalculado": "15.74",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.3 SUSCEPTIVEL <=10 res (%)",
-  "afirmado": 12.7,
-  "recalculado": 12.7,
+  "afirmado": "12.7",
+  "recalculado": "12.7",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E2 n candidatos L",
-  "afirmado": 80,
-  "recalculado": 80,
+  "afirmado": "80",
+  "recalculado": "80",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E1 media (top 10/esp) L",
-  "afirmado": 0.922,
-  "recalculado": 0.922,
+  "afirmado": "0.922",
+  "recalculado": "0.922",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E2 media L",
-  "afirmado": 0.9,
-  "recalculado": 0.9,
+  "afirmado": "0.9",
+  "recalculado": "0.9",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 rho E1 x E2 L",
-  "afirmado": 0.8,
-  "recalculado": 0.8,
+  "afirmado": "0.8",
+  "recalculado": "0.8",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 DP medio entre as 15 predicoes L",
-  "afirmado": 0.019,
-  "recalculado": 0.019,
+  "afirmado": "0.019",
+  "recalculado": "0.019",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 todo candidato com >=1 amostra aprovada no QC L",
-  "afirmado": 80,
-  "recalculado": 80,
+  "afirmado": "80",
+  "recalculado": "80",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E2 n candidatos M",
-  "afirmado": 80,
-  "recalculado": 80,
+  "afirmado": "80",
+  "recalculado": "80",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E1 media (top 10/esp) M",
-  "afirmado": 0.911,
-  "recalculado": 0.911,
+  "afirmado": "0.911",
+  "recalculado": "0.911",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 E2 media M",
-  "afirmado": 0.888,
-  "recalculado": 0.888,
+  "afirmado": "0.888",
+  "recalculado": "0.888",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 rho E1 x E2 M",
-  "afirmado": 0.74,
-  "recalculado": 0.74,
+  "afirmado": "0.74",
+  "recalculado": "0.74",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 DP medio entre as 15 predicoes M",
-  "afirmado": 0.022,
-  "recalculado": 0.022,
+  "afirmado": "0.022",
+  "recalculado": "0.022",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 todo candidato com >=1 amostra aprovada no QC M",
-  "afirmado": 80,
-  "recalculado": 80,
+  "afirmado": "80",
+  "recalculado": "80",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 delta positivo L",
-  "afirmado": 63,
-  "recalculado": 63,
+  "afirmado": "63",
+  "recalculado": "63",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 candidatos com controle L",
-  "afirmado": 78,
-  "recalculado": 78,
+  "afirmado": "78",
+  "recalculado": "78",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 delta mediano L",
-  "afirmado": 0.013,
-  "recalculado": 0.013,
+  "afirmado": "0.013",
+  "recalculado": "0.013",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais com delta L",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais com delta>0 L",
-  "afirmado": 23,
-  "recalculado": 23,
+  "afirmado": "23",
+  "recalculado": "23",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 delta positivo M",
-  "afirmado": 60,
-  "recalculado": 60,
+  "afirmado": "60",
+  "recalculado": "60",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 candidatos com controle M",
-  "afirmado": 79,
-  "recalculado": 79,
+  "afirmado": "79",
+  "recalculado": "79",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 delta mediano M",
-  "afirmado": 0.014,
-  "recalculado": 0.014,
+  "afirmado": "0.014",
+  "recalculado": "0.014",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais com delta M",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais com delta>0 M",
-  "afirmado": 22,
-  "recalculado": 22,
+  "afirmado": "22",
+  "recalculado": "22",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais L: menor distancia peptideo-receptor >= 2,4 A",
-  "afirmado": true,
-  "recalculado": true,
+  "afirmado": "True",
+  "recalculado": "True",
   "ok": true,
   "nota": "min=2.4"
  },
  {
   "secao": "3.4 finais L: n",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais L: omega nao-trans (sem Pro)",
-  "afirmado": 0,
-  "recalculado": 0,
+  "afirmado": "0",
+  "recalculado": "0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais M: menor distancia peptideo-receptor >= 2,4 A",
-  "afirmado": true,
-  "recalculado": true,
+  "afirmado": "True",
+  "recalculado": "True",
   "ok": true,
   "nota": "min=2.4"
  },
  {
   "secao": "3.4 finais M: n",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 finais M: omega nao-trans (sem Pro)",
-  "afirmado": 0,
-  "recalculado": 0,
+  "afirmado": "0",
+  "recalculado": "0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.4 matriz L: receptor proprio da a maior confianca (de 8)",
-  "afirmado": 4,
-  "recalculado": 4,
+  "afirmado": "4",
+  "recalculado": "4",
   "ok": true,
   "nota": "n pept=8, n predicoes=63"
  },
  {
   "secao": "3.4 matriz M: receptor proprio da a maior confianca (de 8)",
-  "afirmado": 3,
-  "recalculado": 3,
+  "afirmado": "3",
+  "recalculado": "3",
   "ok": true,
   "nota": "n pept=8, n predicoes=62"
  },
  {
   "secao": "3.5 L n simulacoes analisadas",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L d inicial mediana",
-  "afirmado": 5.72,
-  "recalculado": 5.72,
+  "afirmado": "5.72",
+  "recalculado": "5.72",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L d final mediana",
-  "afirmado": 6.77,
-  "recalculado": 6.77,
+  "afirmado": "6.77",
+  "recalculado": "6.77",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L ancora <=4 A na janela final",
-  "afirmado": 2,
-  "recalculado": 2,
+  "afirmado": "2",
+  "recalculado": "2",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L ancora >10 A na janela final",
-  "afirmado": 6,
-  "recalculado": 6,
+  "afirmado": "6",
+  "recalculado": "6",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L ancora igual nas metades",
-  "afirmado": 21,
-  "recalculado": 21,
+  "afirmado": "21",
+  "recalculado": "21",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L contato minimo com o receptor",
-  "afirmado": 0.82,
-  "recalculado": 0.82,
+  "afirmado": "0.82",
+  "recalculado": "0.82",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L RMSD final mediano",
-  "afirmado": 0.56,
-  "recalculado": 0.56,
+  "afirmado": "0.56",
+  "recalculado": "0.56",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L RMSD minimo",
-  "afirmado": 0.21,
-  "recalculado": 0.21,
+  "afirmado": "0.21",
+  "recalculado": "0.21",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 L RMSD maximo",
-  "afirmado": 2.64,
-  "recalculado": 2.64,
+  "afirmado": "2.64",
+  "recalculado": "2.64",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M n simulacoes analisadas",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M d inicial mediana",
-  "afirmado": 5.07,
-  "recalculado": 5.07,
+  "afirmado": "5.07",
+  "recalculado": "5.07",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M d final mediana",
-  "afirmado": 6.11,
-  "recalculado": 6.11,
+  "afirmado": "6.11",
+  "recalculado": "6.11",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M ancora <=4 A na janela final",
-  "afirmado": 2,
-  "recalculado": 2,
+  "afirmado": "2",
+  "recalculado": "2",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M ancora >10 A na janela final",
-  "afirmado": 4,
-  "recalculado": 4,
+  "afirmado": "4",
+  "recalculado": "4",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M ancora igual nas metades",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M contato minimo com o receptor",
-  "afirmado": 0.97,
-  "recalculado": 0.97,
+  "afirmado": "0.97",
+  "recalculado": "0.97",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M RMSD final mediano",
-  "afirmado": 0.3,
-  "recalculado": 0.3,
+  "afirmado": "0.3",
+  "recalculado": "0.3",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M RMSD minimo",
-  "afirmado": 0.16,
-  "recalculado": 0.16,
+  "afirmado": "0.16",
+  "recalculado": "0.16",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 M RMSD maximo",
-  "afirmado": 1.69,
-  "recalculado": 1.69,
+  "afirmado": "1.69",
+  "recalculado": "1.69",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 ocupancia >=0,70 (de 48)",
-  "afirmado": 5,
-  "recalculado": 5,
+  "afirmado": "5",
+  "recalculado": "5",
   "ok": true,
   "nota": "['GGGGH', 'GGHSE', 'GGKPGEP', 'GQNDS', 'NGGRPDAP']"
  },
  {
   "secao": "3.5 simulacoes que partiram a <=4,0 A",
-  "afirmado": 9,
-  "recalculado": 9,
+  "afirmado": "9",
+  "recalculado": "9",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 dessas, com ocupancia >=0,70",
-  "afirmado": 5,
-  "recalculado": 5,
+  "afirmado": "5",
+  "recalculado": "5",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 que partiram >4,0 A (n)",
-  "afirmado": 39,
-  "recalculado": 39,
+  "afirmado": "39",
+  "recalculado": "39",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 dessas, com ocupancia >=0,70",
-  "afirmado": 0,
-  "recalculado": 0,
+  "afirmado": "0",
+  "recalculado": "0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 rho distancia inicial x final",
-  "afirmado": 0.63,
-  "recalculado": 0.63,
+  "afirmado": "0.63",
+  "recalculado": "0.63",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 rho distancia inicial x ocupancia",
-  "afirmado": -0.63,
-  "recalculado": -0.63,
+  "afirmado": "-0.63",
+  "recalculado": "-0.63",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 aneis com C-N <= 1,462 A",
-  "afirmado": 24,
-  "recalculado": 24,
+  "afirmado": "24",
+  "recalculado": "24",
   "ok": true,
   "nota": "max=1.462"
  },
  {
   "secao": "3.5 aneis que cumprem o criterio estrito",
-  "afirmado": 11,
-  "recalculado": 11,
+  "afirmado": "11",
+  "recalculado": "11",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 aneis que falham",
-  "afirmado": 13,
-  "recalculado": 13,
+  "afirmado": "13",
+  "recalculado": "13",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 omega minimo (falhas) min",
-  "afirmado": 137.2,
-  "recalculado": 137.2,
+  "afirmado": "137.2",
+  "recalculado": "137.2",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 omega minimo (falhas) max",
-  "afirmado": 149.9,
-  "recalculado": 149.9,
+  "afirmado": "149.9",
+  "recalculado": "149.9",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.5 das 13, quantas com >=97,8% dos quadros acima de 150",
-  "afirmado": 12,
-  "recalculado": 12,
+  "afirmado": "12",
+  "recalculado": "12",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 PRODIGY pose: n",
-  "afirmado": 48,
-  "recalculado": 48,
+  "afirmado": "48",
+  "recalculado": "48",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 PRODIGY pose: minimo",
-  "afirmado": -12.2,
-  "recalculado": -12.2,
+  "afirmado": "-12.2",
+  "recalculado": "-12.2",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 PRODIGY pose: maximo",
-  "afirmado": -7.1,
-  "recalculado": -7.1,
+  "afirmado": "-7.1",
+  "recalculado": "-7.1",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 PRODIGY pose: mediana (a mediana verdadeira de 48 valores)",
-  "afirmado": -9.6,
-  "recalculado": -9.65,
+  "afirmado": "-9.6",
+  "recalculado": "-9.65",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 rho dG x comprimento",
-  "afirmado": -0.6,
-  "recalculado": -0.6,
+  "afirmado": "-0.6",
+  "recalculado": "-0.6",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "3.6 rho dG x contatos",
-  "afirmado": -0.62,
-  "recalculado": -0.62,
+  "afirmado": "-0.62",
+  "recalculado": "-0.62",
   "ok": true,
   "nota": ""
  },
@@ -680,50 +680,50 @@
  },
  {
   "secao": "T4 NGGRPDAP E2",
-  "afirmado": 0.937,
-  "recalculado": 0.937,
+  "afirmado": "0.937",
+  "recalculado": "0.937",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP delta",
-  "afirmado": 0.03,
-  "recalculado": 0.03,
+  "afirmado": "0.03",
+  "recalculado": "0.03",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP d inicial",
-  "afirmado": 2.78,
-  "recalculado": 2.78,
+  "afirmado": "2.78",
+  "recalculado": "2.78",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP d final",
-  "afirmado": 2.74,
-  "recalculado": 2.74,
+  "afirmado": "2.74",
+  "recalculado": "2.74",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP ocupancia",
-  "afirmado": 1.0,
-  "recalculado": 1.0,
+  "afirmado": "1.0",
+  "recalculado": "1.0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP PRODIGY",
-  "afirmado": -11.1,
-  "recalculado": -11.1,
+  "afirmado": "-11.1",
+  "recalculado": "-11.1",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 NGGRPDAP PRODIGY por residuo",
-  "afirmado": -1.39,
-  "recalculado": -1.39,
+  "afirmado": "-1.39",
+  "recalculado": "-1.39",
   "ok": true,
   "nota": ""
  },
@@ -736,50 +736,50 @@
  },
  {
   "secao": "T4 GQNDS E2",
-  "afirmado": 0.909,
-  "recalculado": 0.909,
+  "afirmado": "0.909",
+  "recalculado": "0.909",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS delta",
-  "afirmado": 0.013,
-  "recalculado": 0.013,
+  "afirmado": "0.013",
+  "recalculado": "0.013",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS d inicial",
-  "afirmado": 4.0,
-  "recalculado": 4.0,
+  "afirmado": "4.0",
+  "recalculado": "4.0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS d final",
-  "afirmado": 3.77,
-  "recalculado": 3.77,
+  "afirmado": "3.77",
+  "recalculado": "3.77",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS ocupancia",
-  "afirmado": 1.0,
-  "recalculado": 1.0,
+  "afirmado": "1.0",
+  "recalculado": "1.0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS PRODIGY",
-  "afirmado": -9.0,
-  "recalculado": -9.0,
+  "afirmado": "-9.0",
+  "recalculado": "-9.0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GQNDS PRODIGY por residuo",
-  "afirmado": -1.8,
-  "recalculado": -1.8,
+  "afirmado": "-1.8",
+  "recalculado": "-1.8",
   "ok": true,
   "nota": ""
  },
@@ -792,50 +792,50 @@
  },
  {
   "secao": "T4 GGHSE E2",
-  "afirmado": 0.908,
-  "recalculado": 0.908,
+  "afirmado": "0.908",
+  "recalculado": "0.908",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE delta",
-  "afirmado": 0.015,
-  "recalculado": 0.015,
+  "afirmado": "0.015",
+  "recalculado": "0.015",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE d inicial",
-  "afirmado": 2.86,
-  "recalculado": 2.86,
+  "afirmado": "2.86",
+  "recalculado": "2.86",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE d final",
-  "afirmado": 3.07,
-  "recalculado": 3.07,
+  "afirmado": "3.07",
+  "recalculado": "3.07",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE ocupancia",
-  "afirmado": 0.99,
-  "recalculado": 0.99,
+  "afirmado": "0.99",
+  "recalculado": "0.99",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE PRODIGY",
-  "afirmado": -8.8,
-  "recalculado": -8.8,
+  "afirmado": "-8.8",
+  "recalculado": "-8.8",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGHSE PRODIGY por residuo",
-  "afirmado": -1.76,
-  "recalculado": -1.76,
+  "afirmado": "-1.76",
+  "recalculado": "-1.76",
   "ok": true,
   "nota": ""
  },
@@ -848,50 +848,463 @@
  },
  {
   "secao": "T4 GGKPGEP E2",
-  "afirmado": 0.923,
-  "recalculado": 0.923,
+  "afirmado": "0.923",
+  "recalculado": "0.923",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP delta",
-  "afirmado": 0.02,
-  "recalculado": 0.02,
+  "afirmado": "0.02",
+  "recalculado": "0.02",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP d inicial",
-  "afirmado": 2.71,
-  "recalculado": 2.71,
+  "afirmado": "2.71",
+  "recalculado": "2.71",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP d final",
-  "afirmado": 2.71,
-  "recalculado": 2.71,
+  "afirmado": "2.71",
+  "recalculado": "2.71",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP ocupancia",
-  "afirmado": 1.0,
-  "recalculado": 1.0,
+  "afirmado": "1.0",
+  "recalculado": "1.0",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP PRODIGY",
-  "afirmado": -9.7,
-  "recalculado": -9.7,
+  "afirmado": "-9.7",
+  "recalculado": "-9.7",
   "ok": true,
   "nota": ""
  },
  {
   "secao": "T4 GGKPGEP PRODIGY por residuo",
-  "afirmado": -1.39,
-  "recalculado": -1.39,
+  "afirmado": "-1.39",
+  "recalculado": "-1.39",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 pares receptor-molde",
+  "afirmado": "20",
+  "recalculado": "20",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 TM-score minimo",
+  "afirmado": "0.946",
+  "recalculado": "0.946",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 TM-score maximo",
+  "afirmado": "0.957",
+  "recalculado": "0.957",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 RMSD minimo",
+  "afirmado": "1.18",
+  "recalculado": "1.18",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 RMSD maximo",
+  "afirmado": "1.41",
+  "recalculado": "1.41",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 transferidos 2PTC",
+  "afirmado": "{'48/48'}",
+  "recalculado": "{'48/48'}",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.1 transferidos 1SFI",
+  "afirmado": "{'49/49'}",
+  "recalculado": "{'49/49'}",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Agemmatalis comprimento",
+  "afirmado": "260",
+  "recalculado": "260",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Agemmatalis pLDDT medio",
+  "afirmado": "90.9",
+  "recalculado": "90.9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Agemmatalis Ser catalitica",
+  "afirmado": "217",
+  "recalculado": "217",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Agemmatalis equivalente do Asp189",
+  "afirmado": "211",
+  "recalculado": "211",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Bmori comprimento",
+  "afirmado": "255",
+  "recalculado": "255",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Bmori pLDDT medio",
+  "afirmado": "88.9",
+  "recalculado": "88.9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Bmori Ser catalitica",
+  "afirmado": "212",
+  "recalculado": "212",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Bmori equivalente do Asp189",
+  "afirmado": "206",
+  "recalculado": "206",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Cincludens comprimento",
+  "afirmado": "255",
+  "recalculado": "255",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Cincludens pLDDT medio",
+  "afirmado": "90.4",
+  "recalculado": "90.4",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Cincludens Ser catalitica",
+  "afirmado": "212",
+  "recalculado": "212",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Cincludens equivalente do Asp189",
+  "afirmado": "206",
+  "recalculado": "206",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Dsaccharalis comprimento",
+  "afirmado": "257",
+  "recalculado": "257",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Dsaccharalis pLDDT medio",
+  "afirmado": "91.0",
+  "recalculado": "91.0",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Dsaccharalis Ser catalitica",
+  "afirmado": "213",
+  "recalculado": "213",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Dsaccharalis equivalente do Asp189",
+  "afirmado": "207",
+  "recalculado": "207",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Hvirescens comprimento",
+  "afirmado": "263",
+  "recalculado": "263",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Hvirescens pLDDT medio",
+  "afirmado": "89.9",
+  "recalculado": "89.9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Hvirescens Ser catalitica",
+  "afirmado": "219",
+  "recalculado": "219",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Hvirescens equivalente do Asp189",
+  "afirmado": "213",
+  "recalculado": "213",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Msexta comprimento",
+  "afirmado": "256",
+  "recalculado": "256",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Msexta pLDDT medio",
+  "afirmado": "92.2",
+  "recalculado": "92.2",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Msexta Ser catalitica",
+  "afirmado": "213",
+  "recalculado": "213",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Msexta equivalente do Asp189",
+  "afirmado": "207",
+  "recalculado": "207",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Onubilalis comprimento",
+  "afirmado": "256",
+  "recalculado": "256",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Onubilalis pLDDT medio",
+  "afirmado": "89.7",
+  "recalculado": "89.7",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Onubilalis Ser catalitica",
+  "afirmado": "213",
+  "recalculado": "213",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Onubilalis equivalente do Asp189",
+  "afirmado": "207",
+  "recalculado": "207",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Pxylostella comprimento",
+  "afirmado": "255",
+  "recalculado": "255",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Pxylostella pLDDT medio",
+  "afirmado": "90.6",
+  "recalculado": "90.6",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Pxylostella Ser catalitica",
+  "afirmado": "211",
+  "recalculado": "211",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Pxylostella equivalente do Asp189",
+  "afirmado": "205",
+  "recalculado": "205",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Sfrugiperda comprimento",
+  "afirmado": "266",
+  "recalculado": "266",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Sfrugiperda pLDDT medio",
+  "afirmado": "89.8",
+  "recalculado": "89.8",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Sfrugiperda Ser catalitica",
+  "afirmado": "220",
+  "recalculado": "220",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Sfrugiperda equivalente do Asp189",
+  "afirmado": "214",
+  "recalculado": "214",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Slitura comprimento",
+  "afirmado": "254",
+  "recalculado": "254",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Slitura pLDDT medio",
+  "afirmado": "90.1",
+  "recalculado": "90.1",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Slitura Ser catalitica",
+  "afirmado": "211",
+  "recalculado": "211",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "T1 Slitura equivalente do Asp189",
+  "afirmado": "205",
+  "recalculado": "205",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.4 finais L com distancia inicial <=5 A (de 24)",
+  "afirmado": "9",
+  "recalculado": "9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.4 finais M com distancia inicial <=5 A (de 24)",
+  "afirmado": "18",
+  "recalculado": "18",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.4 finais com K ou R",
+  "afirmado": "3",
+  "recalculado": "3",
+  "ok": true,
+  "nota": "['NGGRPDAP', 'PISQIDSGSR', 'GGKPGEP']"
+ },
+ {
+  "secao": "3.8 camadas L (A,B,C)",
+  "afirmado": "(23, 1, 0)",
+  "recalculado": "(23, 1, 0)",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.8 camadas M (A,B,C)",
+  "afirmado": "(10, 13, 1)",
+  "recalculado": "(10, 13, 1)",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "2.6 C-N maximo por trajetoria, minimo",
+  "afirmado": "1.415",
+  "recalculado": "1.415",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "2.6 C-N maximo por trajetoria, maximo",
+  "afirmado": "1.462",
+  "recalculado": "1.462",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.8 unica simulacao com ocupancia>=0,70 E anel estrito",
+  "afirmado": "['GGHSE']",
+  "recalculado": "['GGHSE']",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.8 menor distancia final ancora-Asp189 (GGKPGEP)",
+  "afirmado": "2.71",
+  "recalculado": "2.71",
+  "ok": true,
+  "nota": "GGKPGEP"
+ },
+ {
+  "secao": "3.8 GGKPGEP omega minimo",
+  "afirmado": "144.5",
+  "recalculado": "144.5",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.6 menor dG PRODIGY da frente linear",
+  "afirmado": "NGGRPDAP",
+  "recalculado": "NGGRPDAP",
+  "ok": true,
+  "nota": "(-11.1, 'NGGRPDAP')"
+ },
+ {
+  "secao": "3.6 dois menores dG PRODIGY (12 residuos)",
+  "afirmado": "[('QSPDFPNPPNNH', 12), ('QAPDFPTGPNQS', 12)]",
+  "recalculado": "[('QSPDFPNPPNNH', 12), ('QAPDFPTGPNQS', 12)]",
   "ok": true,
   "nota": ""
  }

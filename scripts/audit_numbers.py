@@ -20,7 +20,7 @@ rows = []
 
 def chk(secao, afirmado, recalculado, tol=0.0, nota=""):
     ok = (afirmado == recalculado) if tol == 0 else (abs(afirmado - recalculado) <= tol)
-    rows.append({"secao": secao, "afirmado": afirmado, "recalculado": recalculado, "ok": bool(ok), "nota": nota})
+    rows.append({"secao": secao, "afirmado": str(afirmado), "recalculado": str(recalculado), "ok": bool(ok), "nota": nota})
     print(("OK   " if ok else "FALHA"), secao, "| afirmado:", afirmado, "| recalculado:", recalculado, nota)
 
 
@@ -192,6 +192,67 @@ for F, k, seq, e2, d3, ini, fin, occ, pg_, per in (("L", "Agemmatalis__r2", "NGG
     p = pp[f"{F}:{k}"]
     chk(f"T4 {seq} PRODIGY", pg_, p["dG_kcal"], 0.01)
     chk(f"T4 {seq} PRODIGY por residuo", per, round(p["dG_kcal"] / len(seq), 2), 0.006)
+
+
+# ---------------------------------------------------------------- 3.1 painel (Tabela 1) e transferencia
+PAN = json.load(open(ROOT / "data-lepidoptera-panel/subsites_by_receptor.json", encoding="utf-8"))["receptors"]
+T1 = {"Sfrugiperda": (266, 89.8, 220, 214), "Slitura": (254, 90.1, 211, 205), "Onubilalis": (256, 89.7, 213, 207),
+      "Dsaccharalis": (257, 91.0, 213, 207), "Cincludens": (255, 90.4, 212, 206), "Hvirescens": (263, 89.9, 219, 213),
+      "Pxylostella": (255, 90.6, 211, 205), "Agemmatalis": (260, 90.9, 217, 211), "Msexta": (256, 92.2, 213, 207),
+      "Bmori": (255, 88.9, 212, 206)}
+tms, rms, tr = [], [], {"2PTC_BPTI": [], "1SFI_SFTI1": []}
+for sp, v in PAN.items():
+    for tname, t in v["templates"].items():
+        tms.append(t["tmscore"]); rms.append(t["rmsd_A"])
+        tr[tname].append(t["residuos_transferidos"])
+        if t.get("status") != "go":
+            print("   (aviso) par nao aceito:", sp, tname, t.get("status"))
+chk("3.1 pares receptor-molde", 20, len(tms))
+chk("3.1 TM-score minimo", 0.946, round(min(tms), 3), 0.001)
+chk("3.1 TM-score maximo", 0.957, round(max(tms), 3), 0.001)
+chk("3.1 RMSD minimo", 1.18, round(min(rms), 2), 0.01)
+chk("3.1 RMSD maximo", 1.41, round(max(rms), 2), 0.01)
+chk("3.1 transferidos 2PTC", {"48/48"}, set(tr["2PTC_BPTI"]))
+chk("3.1 transferidos 1SFI", {"49/49"}, set(tr["1SFI_SFTI1"]))
+for pdbf in (ROOT / "data-lepidoptera-panel").glob("*-AlphaFold.pdb"):
+    sp = pdbf.name.split("-")[0]
+    if sp not in T1:
+        continue
+    ca = [(int(l[22:26]), float(l[60:66])) for l in pdbf.read_text().splitlines() if l.startswith("ATOM") and l[12:16].strip() == "CA"]
+    L, plddt, ser, asp = T1[sp]
+    chk(f"T1 {sp} comprimento", L, len(ca))
+    chk(f"T1 {sp} pLDDT medio", plddt, round(st.mean(b for _, b in ca), 1), 0.06)
+    t = PAN[sp]["templates"]["2PTC_BPTI"]
+    chk(f"T1 {sp} Ser catalitica", ser, int("".join(c for c in t["catalytic_ser_receptor"]["receptor"] if c.isdigit())))
+    asp_ref = [x["receptor"] for grp in t["subsites"].values() for x in grp if x["ref"] == "ASP189"][0]
+    chk(f"T1 {sp} equivalente do Asp189", asp, int("".join(c for c in asp_ref if c.isdigit())))
+
+# ---------------------------------------------------------------- 3.4/3.5/3.8 estrutura inicial, K/R, camadas
+chk("3.4 finais L com distancia inicial <=5 A (de 24)", 9, sum(float(r["start_dist_Asp189_A"]) <= 5 for (F, k), r in R.items() if F == "L"))
+chk("3.4 finais M com distancia inicial <=5 A (de 24)", 18, sum(float(r["start_dist_Asp189_A"]) <= 5 for (F, k), r in R.items() if F == "M"))
+chk("3.4 finais com K ou R", 3, sum(r["has_KR"] == "True" for r in R.values()), 0, str([r["sequence"] for r in R.values() if r["has_KR"] == "True"]))
+from collections import Counter
+tl = Counter(r["tier"] for (F, k), r in R.items() if F == "L")
+tm = Counter(r["tier"] for (F, k), r in R.items() if F == "M")
+chk("3.8 camadas L (A,B,C)", (23, 1, 0), (tl["A"], tl["B"], tl["C"]))
+chk("3.8 camadas M (A,B,C)", (10, 13, 1), (tm["A"], tm["B"], tm["C"]))
+cn = [x["ring_CN_max_A"] for x in A["M"].values() if "ring_CN_max_A" in x]
+chk("2.6 C-N maximo por trajetoria, minimo", 1.415, round(min(cn), 3), 0.001)
+chk("2.6 C-N maximo por trajetoria, maximo", 1.462, round(max(cn), 3), 0.001)
+
+
+# ---------------------------------------------------------------- 3.8 afirmacoes sobre a lista curta
+cycs = {k: v for k, v in A["M"].items() if "occ_5A_h2" in v}
+both = [v["sequence"] for v in cycs.values() if v["occ_5A_h2"] >= 0.70 and v.get("ring_intact")]
+chk("3.8 unica simulacao com ocupancia>=0,70 E anel estrito", ["GGHSE"], both)
+dmin = min(x["d_anchor_asp_fim_A"] for x in allv)
+chk("3.8 menor distancia final ancora-Asp189 (GGKPGEP)", 2.71, round(dmin, 2), 0.005, [x["sequence"] for x in allv if x["d_anchor_asp_fim_A"] == dmin][0])
+gk = A["M"]["Agemmatalis__r2"]
+chk("3.8 GGKPGEP omega minimo", 144.5, gk["ring_omega_abs_min_deg"], 0.05)
+lmin = min((v["dG_kcal"], R[(v["front"], v["key"])]["sequence"]) for v in pp.values() if v["front"] == "L")
+chk("3.6 menor dG PRODIGY da frente linear", "NGGRPDAP", lmin[1], 0, str(lmin))
+two = sorted((v["dG_kcal"], R[(v["front"], v["key"])]["sequence"], len(R[(v["front"], v["key"])]["sequence"])) for v in pp.values())[:2]
+chk("3.6 dois menores dG PRODIGY (12 residuos)", [("QSPDFPNPPNNH", 12), ("QAPDFPTGPNQS", 12)], [(x[1], x[2]) for x in two])
 
 nf = sum(not r["ok"] for r in rows)
 print(f"\n{len(rows)} verificacoes; {nf} falhas")

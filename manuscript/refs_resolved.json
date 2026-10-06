@@ -74,5 +74,6 @@
  "onufriev2004": "Onufriev A, Bashford D, Case DA (2004). Exploring protein native states and large‐scale conformational changes with a modified generalized born model. Proteins: Structure, Function, and Bioinformatics 55, 383-394. doi: 10.1002/prot.20033",
  "miller2012": "Miller BR, McGee TD, Swails JM, Homeyer N, Gohlke H, Roitberg AE (2012). MMPBSA.py: An Efficient Program for End-State Free Energy Calculations. Journal of Chemical Theory and Computation 8, 3314-3321. doi: 10.1021/ct300418h",
  "wan2026": "Wan S, Zhang X, Xue X, Coveney PV (2026). Reliability of AI methods in drug discovery: evaluation of Boltz-2 for structure and binding affinity prediction. Journal of Chemical Theory and Computation 22, 7811-7824. doi: 10.1021/acs.jctc.6c01334",
- "li2026": "Li Z, Yuan Y, Hu K, Pan P, He F (2026). Benchmarking confidence estimation and rescoring for cyclic peptide–protein complex predictions. bioRxiv. doi: 10.64898/2026.08.20.746104"
+ "li2026": "Li Z, Yuan Y, Hu K, Pan P, He F (2026). Benchmarking confidence estimation and rescoring for cyclic peptide–protein complex predictions. bioRxiv. doi: 10.64898/2026.08.20.746104",
+ "knapp2018": "Knapp B, Ospina L, Deane CM (2018). Avoiding false positive conclusions in molecular simulation: the importance of replicas. Journal of Chemical Theory and Computation 14, 6127-6138. doi: 10.1021/acs.jctc.8b00391"
 }
