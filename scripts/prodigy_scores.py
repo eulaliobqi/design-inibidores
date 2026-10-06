@@ -25,7 +25,8 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 PRODIGY = Path.home() / ".local/share/mamba/envs/prodigy/bin/prodigy"
 STD = {"HID": "HIS", "HIE": "HIS", "HIP": "HIS", "HSD": "HIS", "HSE": "HIS", "HSP": "HIS", "ASH": "ASP", "GLH": "GLU",
-       "LYN": "LYS", "LSN": "LYS", "CYX": "CYS", "CYM": "CYS", "GLUP": "GLU", "ASPP": "ASP"}
+       "LYN": "LYS", "LSN": "LYS", "CYX": "CYS", "CYM": "CYS", "GLUP": "GLU", "ASPP": "ASP",
+       "CYS2": "CYS", "CYS1": "CYS", "CYSH": "CYS"}   # CHARMM36: nomes de 4 letras desalinham as colunas do PDB
 NONSTD = ("HID", "HIE", "HIP", "ASH", "GLH", "LYN", "CYM")
 
 
@@ -119,7 +120,7 @@ def _frame_to_complex(pdb_text: str) -> str:
         ch = "A" if l[21] == "A" else "B"
         rn = STD.get(rn, rn)
         nm = l[12:16].strip()
-        nm = {"OC1": "O", "OC2": "OXT", "O1": "O", "O2": "OXT"}.get(nm, nm)
+        nm = {"OC1": "O", "OC2": "OXT", "O1": "O", "O2": "OXT", "OT1": "O", "OT2": "OXT"}.get(nm, nm)
         if rn == "ILE" and nm == "CD":      # AMBER do GROMACS chama o CD1 da Ile de CD; o freesasa exige CD1
             nm = "CD1"
         out.append(l[:12] + (" " + nm).ljust(4)[:4] + " " + f"{rn:>3} " + ch + l[22:])
