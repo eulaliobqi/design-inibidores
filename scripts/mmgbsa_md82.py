@@ -52,8 +52,7 @@ def block_sem(vals, nblocks=5):
 def parse_dat(p: Path) -> dict:
     t = p.read_text(errors="ignore")
     out = {}
-    m = re.search(r"Delta \(Complex - Receptor - Ligand\):(.*?)(?:\n-{5,}|\Z)", t, re.S)
-    body = m.group(1) if m else t
+    body = t.split("Delta (Complex - Receptor - Ligand):")[-1]
     for lab, key in (("VDWAALS", "vdw"), ("EEL", "eel"), ("EGB", "egb"), ("ESURF", "esurf"), ("GGAS", "ggas"),
                      ("GSOLV", "gsolv"), ("TOTAL", "total")):
         mm = re.search(rf"Δ?{lab}\s+(-?[\d.]+)\s+([\d.]+)\s+([\d.]+)", body)
