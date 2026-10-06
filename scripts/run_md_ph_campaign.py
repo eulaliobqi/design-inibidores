@@ -31,6 +31,7 @@ def main():
     ap.add_argument("--front", choices=["L", "M"], required=True)
     ap.add_argument("--ph", type=float, required=True)
     ap.add_argument("--species", nargs="+")
+    ap.add_argument("--keys", nargs="+", help="chaves exatas dos candidatos (ex.: Agemmatalis__r2); sobrepoe --species")
     ap.add_argument("--ns", type=int, default=10)
     ap.add_argument("--nterm", choices=["auto", "charged", "neutral"], default="auto")
     args = ap.parse_args()
@@ -39,6 +40,8 @@ def main():
     candidates = json.loads((ROOT / args.candidates).read_text())["candidates"]
     if args.species:
         candidates = {k: v for k, v in candidates.items() if k in args.species or v.get("species") in args.species}
+    if args.keys:
+        candidates = {k: v for k, v in candidates.items() if k in args.keys}
 
     config = yaml.safe_load(open(ROOT / "config.yaml"))
     config.setdefault("md", {})["gut_ph"] = args.ph

@@ -1,0 +1,78 @@
+{
+ "L": [
+  {
+   "key": "Dsaccharalis__r1",
+   "sequence": "PTTTQT"
+  },
+  {
+   "key": "Agemmatalis__r2",
+   "sequence": "NGGRPDAP"
+  },
+  {
+   "key": "Hvirescens__r2",
+   "sequence": "SGPIG"
+  },
+  {
+   "key": "Onubilalis__r1",
+   "sequence": "GSNIN"
+  },
+  {
+   "key": "Agemmatalis__r3",
+   "sequence": "GTDEN"
+  },
+  {
+   "key": "Hvirescens__r1",
+   "sequence": "GGPSPES"
+  },
+  {
+   "key": "Sfrugiperda__r2",
+   "sequence": "GTDTG"
+  },
+  {
+   "key": "Pxylostella__r2",
+   "sequence": "GSGGPS"
+  },
+  {
+   "key": "Onubilalis__r2",
+   "sequence": "GQNDS"
+  }
+ ],
+ "M": [
+  {
+   "key": "Dsaccharalis__r3",
+   "sequence": "IYPETG"
+  },
+  {
+   "key": "Cincludens__r2",
+   "sequence": "SGSTDIE"
+  },
+  {
+   "key": "Hvirescens__r2",
+   "sequence": "NGGTT"
+  },
+  {
+   "key": "Cincludens__r3",
+   "sequence": "GGSTDID"
+  },
+  {
+   "key": "Sfrugiperda__r1",
+   "sequence": "GGHSE"
+  },
+  {
+   "key": "Onubilalis__r3",
+   "sequence": "GQNDS"
+  },
+  {
+   "key": "Pxylostella__r3",
+   "sequence": "HGGNGSG"
+  },
+  {
+   "key": "Onubilalis__r2",
+   "sequence": "GSDSNG"
+  },
+  {
+   "key": "Agemmatalis__r2",
+   "sequence": "GGKPGEP"
+  }
+ ]
+}
