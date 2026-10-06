@@ -33,7 +33,7 @@
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
-## Estado dos cálculos (05/10/2026, noite)
+## Estado dos cálculos (06/10/2026, manhã)
 
 | Etapa | Estado | Resultado até aqui |
 |---|---|---|
@@ -44,11 +44,11 @@
 | MD de 10 ns em pH 10,0 | concluída (48/48) | a ocupância de S1 acompanha a pose inicial (Seção 3.5, Figura 5) |
 | Controles em MD (7 embaralhados; 8 de troca de âncora) | simulados e retirados do artigo (05/10) | a distância inicial explica o resultado; uma frase de divulgação em 3.5 |
 | PRODIGY nas 48 poses | concluído | ΔG −12,2 a −7,1 kcal/mol; acompanha o comprimento (Seção 3.6, Figura 6) |
-| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`) | fim previsto entre 06 e 07/10 (estimativa) |
+| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`); 12/48 iniciadas e 10 concluídas em 06/10, 09:47 | 48 MDs: fim previsto entre a noite de 07/10 e a manhã de 08/10; repetidas: ≈ 09/10 (extrapolação do ritmo medido) |
 | MM-GBSA e PRODIGY nas trajetórias (pH 8,2 e pH 10,0) e classificação final | **em curso** (`energy-queue`, `mmgbsa-md10`) | pendente (Seções 3.6 e 3.7) |
 | Contrasseleção frente a proteases não alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Fila de cálculo:** cada MD leva cerca de 75 min com as duas frentes juntas (medido); estimativa por analogia, não medida, para o conjunto.
+**Fila de cálculo:** o ritmo medido em 06/10 é de 1,3 a 2,7 h por MD (média ≈ 2,1 h) com as duas frentes juntas e a GPU compartilhada; a previsão do conjunto é extrapolação, não medida (a estimativa anterior, de 75 min por MD, vinha dos primeiros 14 min e estava otimista).
 
 ## Pendências antes da submissão
 
@@ -423,9 +423,9 @@ Lomate PR, Dewangan V, Mahajan NS, Kumar Y, Kulkarni A, Wang L, et al. (2018). I
 
 Luckett S, Garcia R, Barker J, Konarev A, Shewry P, Clarke A, et al. (1999). High-resolution structure of a potent, cyclic proteinase inhibitor from sunflower seeds. Journal of Molecular Biology 290, 525-533. doi: 10.1006/jmbi.1999.2891
 
-Meriño-Cabrera Y, Severiche Castro JG, Rios Diez JD, Rodrigues Macedo ML, de Oliveira Mendes TA, Goreti de Almeida Oliveira M (2020). Rational design of mimetic peptides based on the interaction between Inga laurina inhibitor and trypsins for Spodoptera cosmioides pest control. Insect Biochemistry and Molecular Biology 122, 103390. doi: 10.1016/j.ibmb.2020.103390
-
 Meriño-Cabrera Y, de Oliveira Mendes TA, Castro JGS, Barbosa SL, Macedo MLR, de Almeida Oliveira MG (2020). Noncompetitive tight-binding inhibition of Anticarsia gemmatalis trypsins by Adenanthera pavonina protease inhibitor affects larvae survival. Archives of Insect Biochemistry and Physiology 104, e21687. doi: 10.1002/arch.21687
+
+Meriño-Cabrera Y, Severiche Castro JG, Rios Diez JD, Rodrigues Macedo ML, de Oliveira Mendes TA, Goreti de Almeida Oliveira M (2020). Rational design of mimetic peptides based on the interaction between Inga laurina inhibitor and trypsins for Spodoptera cosmioides pest control. Insect Biochemistry and Molecular Biology 122, 103390. doi: 10.1016/j.ibmb.2020.103390
 
 Meriño-Cabrera Y, Castro JS, de Almeida Barros R, da Silva Junior NR, de Oliveira Ramos H, de Almeida Oliveira MG (2022). Arginine-containing dipeptides decrease affinity of gut trypsins and compromise soybean pest development. Pesticide Biochemistry and Physiology 184, 105107. doi: 10.1016/j.pestbp.2022.105107
 
