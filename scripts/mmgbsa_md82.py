@@ -177,7 +177,8 @@ def main():
             rd = ROOT / f"outputs/mmgbsa_{a.tag}" / f"{a.front}__{k}"
             if v.get("status") != "real" or "PRODIGY_md" in v or not (rd / "md_pbc_sub.xtc").exists():
                 continue
-            pr = prodigy_frames(rd)
+            rj = rd / "result.json"
+            pr = (json.loads(rj.read_text()).get("PRODIGY_md") if rj.exists() else None) or prodigy_frames(rd)
             print("==", k, "PRODIGY", pr and round(pr["dG_kcal_mean"], 2), flush=True)
             if pr:
                 v["PRODIGY_md"] = pr
