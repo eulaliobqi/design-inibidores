@@ -84,9 +84,15 @@ if unused:
 leg_block = src.split("## Legendas das figuras")[1]
 legends = dict(re.findall(r"\*\*Figura (S?\d+)\.\*\* (.*?)(?=\n\n\*\*Figura|\Z)", leg_block, flags=re.S))
 src = src.split("\n---\n\n## Legendas das figuras")[0]
-FIG = {"1": "figures/pt/fig1_pipeline_v3.png", "3": "figures/Figure3_calibration.png", "4": "figures/Figure4_motif_screen.png",
-       "2": "figures/pt/fig2_regra_dura.png", "5": "figures/pt/fig5_funil.png", "6": "figures/pt/fig6_composicao.png",
-       "7": "figures/pt/fig7_boltz2_1a_rodada.png", "8": "figures/pt/fig8_reprodutibilidade.png", "9": "figures/pt/fig9_reescore_e2.png", "10": "figures/pt/fig10_top3_pose.png", "11": "figures/pt/fig11_md_triagem_10ns.png", "12": "figures/pt/fig12_candidatos_finais.png", "S1": "figures/pt/figS1_regras_motivo.png", "S2": "figures/pt/figS2_anel_ciclico_charmm36.png"}
+FIG = {"1": "figures/final/Figure1_pipeline.png", "2": "figures/final/Figure2_calibration.png",
+       "3": "figures/pt/fig5_funil.png", "4": "figures/pt/fig8_reprodutibilidade.png",
+       "5": "figures/pt/fig11_md_triagem_10ns.png", "6": "figures/final/Figure6_energy_ranking.png",
+       "7": "figures/final/Figure7_candidate_poses.png",
+       "S1": "figures/pt/fig2_regra_dura.png", "S2": "figures/final/FigureS2_motif_screen.png",
+       "S3": "figures/pt/fig6_composicao.png", "S4": "figures/pt/fig9_reescore_e2.png",
+       "S5": "figures/pt/fig10_top3_pose.png", "S6": "figures/pt/figS2_anel_ciclico_charmm36.png",
+       "S7": "figures/pt/fig12_candidatos_finais.png", "S8": "figures/pt/fig7_boltz2_1a_rodada.png",
+       "S9": "figures/pt/figS1_regras_motivo.png"}
 
 
 def img(n, w="16.5cm"):
@@ -94,17 +100,15 @@ def img(n, w="16.5cm"):
 
 
 src = src.replace("\n---\n\n## 2 Material e métodos", img("1") + "\n---\n\n## 2 Material e métodos")
-src = src.replace("\n### 2.7 Co-dobramento", img("2") + "\n### 2.7 Co-dobramento")
-src = src.replace("\n### 3.4 A campanha de geração", img("3") + "\n### 3.4 A campanha de geração")
-src = src.replace("\n### 3.6 Um critério duro", img("4") + "\n### 3.6 Um critério duro")
-src = src.replace("\n### 3.7 Confiança do Boltz-2", img("5") + img("6") + "\n### 3.7 Confiança do Boltz-2")
-src = src.replace("\n### 3.8 Co-dobramento nas duas frentes", img("7") + "\n### 3.8 Co-dobramento nas duas frentes")
-src = src.replace("\n### 3.9 Simulações", img("8") + img("9") + img("10") + "\n### 3.9 Simulações")
-src = src.replace("\n### 3.10 Frente linear", img("11") + "\n### 3.10 Frente linear")
-src = src.replace("\n---\n\n## 4 Discussão", img("12") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("12") + "\n## 4 Discussão")
-for fid in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"):
+src = src.replace("\n### 3.3 Geração", img("2") + "\n### 3.3 Geração")
+src = src.replace("\n### 3.4 Co-dobramento", img("3") + "\n### 3.4 Co-dobramento")
+src = src.replace("\n### 3.5 Simulações", img("4") + "\n### 3.5 Simulações")
+src = src.replace("\n### 3.6 Filtro de energia", img("5") + "\n### 3.6 Filtro de energia")
+src = src.replace("\n### 3.7 pH 8,2", img("6") + "\n### 3.7 pH 8,2")
+src = src.replace("\n---\n\n## 4 Discussão", img("7") + "\n---\n\n## 4 Discussão") if "\n---\n\n## 4 Discussão" in src else src.replace("\n## 4 Discussão", img("7") + "\n## 4 Discussão")
+for fid in ("1", "2", "3", "4", "5", "6", "7"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
-src = src.rstrip() + "\n\n## Figuras suplementares\n" + img("S1", "13cm") + img("S2", "11cm")
+src = src.rstrip() + "\n\n## Figuras suplementares\n" + "".join(img(k, "13cm") for k in ("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9"))
 
 # marcadores pendentes -> span com estilo
 src = re.sub(r"\[\[(.*?)\]\]", lambda m: '[' + m.group(1).replace("[", "(").replace("]", ")") + ']{custom-style="Pendente"}', src, flags=re.S)
@@ -170,37 +174,29 @@ panel = f"""
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
-## Estado dos cálculos (05/10/2026, tarde)
+## Estado dos cálculos (05/10/2026, noite)
 
 | Etapa | Estado | Resultado até aqui |
 |---|---|---|
-| Painel de 8 espécies e subsítios S1–S3' | concluído | TM-score 0,946–0,957 nos 20 pares |
-| Calibração da escada de escores | concluída | Boltz-2 10/10 pares; RMSD do ligante 9/10; MM-GBSA 4/10 (ρ = −0,93 com o tamanho da interface) |
-| Geração (RFdiffusion + ProteinMPNN) | concluída | 880 esqueletos, 22.066 sequências únicas |
-| Triagem por escore de motivos | concluída | 1.829 semelhantes a resistentes |
-| E0 · critério duro de não clivabilidade | concluído | 527 lineares (frente L) e 543 cíclicas (frente M) |
-| E1 · Boltz-2 nas duas frentes | concluído (1.070/1.070) | reprodutibilidade entre rodadas ρ = 0,57; linear × cíclico ρ = 0,50 (Seção 3.8, Figura 8) |
-| E2 · reescore dos 10 melhores por espécie (5 amostras × 3 sementes) | concluído (L e M) | confiança média 0,900 (L) e 0,888 (M); ρ com o E1 de 0,80 e 0,74; ordem dentro do top 10 não resolvida (Seção 3.8, Figura 9) |
-| Escolha da estrutura inicial (melhor amostra que passa no QC de pose) | concluída | 48 de 48 passam; tríade íntegra em todas (Figura 10) |
-| E3 · controles embaralhados pareados | concluído (L e M) | Δ positivo em 63 de 78 lineares e 60 de 79 macrocíclicos, da ordem do ruído (Seção 3.8) |
-| E4 · QC de pose e matriz cruzada 8 × 8 | concluído | 80/80 candidatos com ao menos uma amostra aprovada em cada frente; matriz sem preferência espécie-específica (Seção 3.8) |
-| E6–E7 · MD de 10 ns, CHARMM36 (3 melhores por espécie e frente, 48 simulações) | **concluído (48/48)** | 5 de 48 com ocupância ≥ 0,70; 3 passam na triagem como foi declarada (NGGRPDAP, GQNDS, GGHSE) (Seção 3.9, Figura 11) |
-| E8–E9 · comparação linear × macrociclo e camadas | concluído | 23 A, 1 B, 0 C (linear); 10 A, 13 B, 1 C (macrocíclica) (Seção 3.11, Figura 12) |
-| Campanha de pH (duas faixas) | **fora deste artigo** (decisão de 01/10: o custo, 72 simulações e 4–5 dias, não cabe no prazo) | scripts prontos e versionados; fica para trabalho seguinte |
-| Controles em MD (7 embaralhados e 8 de troca de âncora) | simulados e **retirados do artigo** (05/10) | a distância inicial explica o resultado; não separam sequência de pose (Seção 3.9); análises em `data-e2-results/` |
-| E5 · contratriagem frente a proteases não-alvo | não construída | sem ela, nenhuma seletividade é afirmada |
+| Painel de 8 espécies e subsítios | concluído | TM-score 0,946–0,957 nos 20 pares (Seção 3.1) |
+| Calibração da escada de escores | concluída | Boltz-2 10/10; RMSD do ligante 9/10; MM-GBSA 4/10; PRODIGY 2/10; os dois últimos acompanham o tamanho da interface (Seção 3.2, Figura 2) |
+| Geração e critério duro | concluídos | 22.066 sequências; 527 lineares e 543 cíclicas (Seção 3.3) |
+| E1–E4 · Boltz-2, reescore, controles pareados, QC de pose, matriz 8 × 8 | concluídos | 48 candidatos finais; Δ positivo em 63/78 (L) e 60/79 (M), da ordem do ruído (Seção 3.4) |
+| MD de 10 ns em pH 10,0 | concluída (48/48) | a ocupância de S1 acompanha a pose inicial (Seção 3.5, Figura 5) |
+| Controles em MD (7 embaralhados; 8 de troca de âncora) | simulados e retirados do artigo (05/10) | a distância inicial explica o resultado; uma frase de divulgação em 3.5 |
+| PRODIGY nas 48 poses | concluído | ΔG −12,2 a −7,1 kcal/mol; acompanha o comprimento (Seção 3.6, Figura 6) |
+| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`) | fim previsto entre 06 e 07/10 (estimativa) |
+| MM-GBSA e PRODIGY nas trajetórias (pH 8,2 e pH 10,0) e classificação final | **em curso** (`energy-queue`, `mmgbsa-md10`) | pendente (Seções 3.6 e 3.7) |
+| Contrasseleção frente a proteases não alvo | não construída | sem ela, nenhuma seletividade é afirmada |
 
-**Fila final de MD (05/10/2026):** concluída às 19:21 (`QUEUE_FINAL_MD_DONE`); não há cálculo em andamento.
-
-**Incidentes de execução já corrigidos (para transparência):** (i) o pré-processamento do Boltz travou duas vezes sem erro (no E1 e no E2) e uma predição foi pulada por um erro intermitente; o pipeline agora usa 1 thread de pré-processamento, limite de 50 min por lote e repetição automática das predições faltantes; (ii) o teste de quiralidade do controle de pose estava invertido; foi corrigido antes de qualquer uso nos resultados, e a taxa de 18% citada acima já é a corrigida. (iii) a análise de MD não reconhecia o resíduo GLUP do CHARMM36 (o seletor `protein` do MDAnalysis o ignora) e falhou numa simulação; corrigido e todas as simulações concluídas foram reanalisadas; (iv) o RMSD global de controle usava o `md.tpr` (receptor partido pela caixa) como referência; corrigido antes de qualquer uso nos resultados.
+**Fila de cálculo:** cada MD leva cerca de 75 min com as duas frentes juntas (medido); estimativa por analogia, não medida, para o conjunto.
 
 ## Pendências antes da submissão
 
-1. Lista de peptídeos recomendados (Seção 3.11); MD longa e contra-triagem dos selecionados, se forem feitas; robustez ao pH está fora do artigo.
-2. Conferir a Figura S2.
+1. Resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 8); depois ajustar resumo, 4.1, 4.4 e 5.
+2. Motivo do pH 8,2 (Seção 2.6) e lista de peptídeos recomendados.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
-4. Decisão dos autores: refazer o desenho de sequências com o receptor fixo e permitindo um P1 básico (Seção 4.4 iv e 4.5).
-
+4. Revisar a auditoria metodológica e de código (`docs/AUDITORIA_2026-10-05.md`).
 """
 
 full = panel + "\n" + src + "\n\n## Referências\n\n" + "\n\n".join(refs[k] for k in cited) + "\n"

@@ -553,14 +553,6 @@
   "n": 5,
   "year": 1999
  },
- "grzesiak2000": {
-  "fam": [
-   "Grzesiak",
-   "Helland"
-  ],
-  "n": 6,
-  "year": 2000
- },
  "brandsdal2006": {
   "fam": [
    "Brandsdal",
@@ -592,5 +584,21 @@
   ],
   "n": 6,
   "year": 2012
+ },
+ "wan2026": {
+  "fam": [
+   "Wan",
+   "Zhang"
+  ],
+  "n": 4,
+  "year": 2026
+ },
+ "li2026": {
+  "fam": [
+   "Li",
+   "Yuan"
+  ],
+  "n": 5,
+  "year": 2026
  }
 }
