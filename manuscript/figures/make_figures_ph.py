@@ -3,7 +3,7 @@
   FigureS10_energy_trajectories MM-GBSA e PRODIGY nas trajetorias de pH 10 (48) contra tamanho, posicao e entre si
 Uso (de manuscript/): python figures/make_figures_ph.py figures/final
 Le data-e2-results/{mmgbsa_md10_{L,M}.json, md10_{L,M}_analysis.json} e, para pH 8,2,
-data-e2-results/{mmgbsa_md82_{L,M}, md82_{L,M}_analysis}_parcial_2026-10-06.json (ou os arquivos finais sem o sufixo, se existirem).
+data-e2-results/{mmgbsa_md82_{L,M}, md82_{L,M}_analysis}_parcial_2026-10-07.json (ou os arquivos finais sem o sufixo, se existirem).
 Quando as 48 MDs de pH 8,2 terminarem, apontar --final para os arquivos completos e retirar a legenda 'partial'."""
 import json
 import sys
@@ -27,6 +27,10 @@ BLUE, TEAL, ORANGE, RED, GREY = "#0072B2", "#2a9d8f", "#E69F00", "#D55E00", "#7f
 FOCUS = {"NGGRPDAP": RED, "GQNDS": ORANGE, "GGHSE": "#CC79A7", "GGKPGEP": "#009E73"}
 
 
+def _p(v):
+    return "P < 0.001" if v < 0.001 else f"P = {v:.3f}"
+
+
 def load(prefix, suffix=""):
     out = {}
     for F in "LM":
@@ -42,7 +46,7 @@ def pick82(final_name, partial_name):
     """Arquivos finais de pH 8,2 se ja existirem em data-e2-results; senao os parciais de 06/10."""
     if (DATA / f"{final_name}_L.json").exists():
         return {F: json.load(open(DATA / f"{final_name}_{F}.json")) for F in "LM"}
-    return {F: json.load(open(DATA / f"{partial_name}_{F}_parcial_2026-10-06.json")) for F in "LM"}
+    return {F: json.load(open(DATA / f"{partial_name}_{F}_parcial_2026-10-07.json")) for F in "LM"}
 
 
 def rows():
@@ -50,7 +54,7 @@ def rows():
     m10, an10 = load("mmgbsa_md10"), load("md10", "_analysis")
     m82 = pick82("mmgbsa_md82", "mmgbsa_md82")
     an82 = pick82("md82_analysis", "md82_analysis") if (DATA / "md82_analysis_L.json").exists() else         ({F: json.load(open(DATA / f"md82_{F}_analysis.json")) for F in "LM"} if (DATA / "md82_L_analysis.json").exists() else
-         {F: json.load(open(DATA / f"md82_{F}_analysis_parcial_2026-10-06.json")) for F in "LM"})
+         {F: json.load(open(DATA / f"md82_{F}_analysis_parcial_2026-10-07.json")) for F in "LM"})
     R = []
     for F in "LM":
         for k, v in an82[F].items():
@@ -100,7 +104,7 @@ def agree(ax, R, key, xlabel, ylabel):
     lo, hi = min(a.min(), b.min()), max(a.max(), b.max())
     ax.plot([lo, hi], [lo, hi], color=GREY, lw=1, ls=":")
     rho = spearmanr(a, b)
-    ax.set_title(f"ρ = {rho.statistic:.2f} (P = {rho.pvalue:.3f})", fontsize=8, fontweight="bold")
+    ax.set_title(f"ρ = {rho.statistic:.2f} ({_p(rho.pvalue)})", fontsize=8, fontweight="bold")
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
 
@@ -146,7 +150,7 @@ def figS10():
                                  (ax[2], dg, pr, "MM-GBSA ΔG (kcal/mol)", "PRODIGY ΔG, frames (kcal/mol)", "C")):
         a_.scatter(x, y, s=24, c=col, alpha=.85)
         r = spearmanr(x, y)
-        a_.set_title(f"ρ = {r.statistic:.2f} (P = {r.pvalue:.3f})", fontsize=8, fontweight="bold")
+        a_.set_title(f"ρ = {r.statistic:.2f} ({_p(r.pvalue)})", fontsize=8, fontweight="bold")
         a_.set_xlabel(xl)
         a_.set_ylabel(yl)
         letter(a_, L_)

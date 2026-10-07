@@ -1,0 +1,495 @@
+{
+ "Sfrugiperda__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Sfrugiperda__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -5.36,
+  "components": {
+   "vdw": -33.97,
+   "vdw_sd": 1.48,
+   "eel": -152.08,
+   "eel_sd": 21.38,
+   "egb": 186.65,
+   "egb_sd": 17.09,
+   "esurf": -5.96,
+   "esurf_sd": 0.0,
+   "ggas": -186.05,
+   "ggas_sd": 21.49,
+   "gsolv": 180.69,
+   "gsolv_sd": 17.09,
+   "total": -5.36,
+   "total_sd": 27.46
+  },
+  "sem_blocks": 1.501518248174161,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -7.526666666666667,
+   "sd": 0.2515728301881761,
+   "n_frames": 30
+  }
+ },
+ "Onubilalis__r1": {
+  "status": "real",
+  "front": "L",
+  "key": "Onubilalis__r1",
+  "n_frames": 126,
+  "dG_gb_kcal": -48.18,
+  "components": {
+   "vdw": -33.53,
+   "vdw_sd": 1.6,
+   "eel": -223.13,
+   "eel_sd": 6.88,
+   "egb": 214.77,
+   "egb_sd": 3.24,
+   "esurf": -6.29,
+   "esurf_sd": 0.03,
+   "ggas": -256.66,
+   "ggas_sd": 7.32,
+   "gsolv": 208.48,
+   "gsolv_sd": 3.24,
+   "total": -48.18,
+   "total_sd": 8.01
+  },
+  "sem_blocks": 0.14781715191411238,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -9.039999999999997,
+   "sd": 0.34794635601866364,
+   "n_frames": 30
+  }
+ },
+ "Onubilalis__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Onubilalis__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -1.98,
+  "components": {
+   "vdw": -19.39,
+   "vdw_sd": 0.19,
+   "eel": -148.46,
+   "eel_sd": 9.14,
+   "egb": 168.57,
+   "egb_sd": 0.37,
+   "esurf": -2.7,
+   "esurf_sd": 0.36,
+   "ggas": -167.85,
+   "ggas_sd": 9.37,
+   "gsolv": 165.87,
+   "gsolv_sd": 0.52,
+   "total": -1.98,
+   "total_sd": 9.38
+  },
+  "sem_blocks": 0.7708063352100837,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -6.665517241379311,
+   "sd": 0.36697821232795896,
+   "n_frames": 29
+  }
+ },
+ "Dsaccharalis__r1": {
+  "status": "real",
+  "front": "L",
+  "key": "Dsaccharalis__r1",
+  "n_frames": 126,
+  "dG_gb_kcal": -41.57,
+  "components": {
+   "vdw": -52.12,
+   "vdw_sd": 1.21,
+   "eel": -88.17,
+   "eel_sd": 8.68,
+   "egb": 105.71,
+   "egb_sd": 1.62,
+   "esurf": -6.99,
+   "esurf_sd": 0.07,
+   "ggas": -140.29,
+   "ggas_sd": 8.96,
+   "gsolv": 98.72,
+   "gsolv_sd": 1.62,
+   "total": -41.57,
+   "total_sd": 9.1
+  },
+  "sem_blocks": 0.4420373812247085,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.87,
+   "sd": 0.4001249804748513,
+   "n_frames": 30
+  }
+ },
+ "Hvirescens__r1": {
+  "status": "real",
+  "front": "L",
+  "key": "Hvirescens__r1",
+  "n_frames": 126,
+  "dG_gb_kcal": -18.59,
+  "components": {
+   "vdw": -41.41,
+   "vdw_sd": 1.47,
+   "eel": -39.96,
+   "eel_sd": 6.39,
+   "egb": 68.73,
+   "egb_sd": 4.26,
+   "esurf": -5.95,
+   "esurf_sd": 0.02,
+   "ggas": -81.37,
+   "ggas_sd": 7.16,
+   "gsolv": 62.78,
+   "gsolv_sd": 4.26,
+   "total": -18.59,
+   "total_sd": 8.33
+  },
+  "sem_blocks": 0.526352292670983,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.433333333333332,
+   "sd": 0.39440531887330776,
+   "n_frames": 30
+  }
+ },
+ "Hvirescens__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Hvirescens__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -26.77,
+  "components": {
+   "vdw": -39.05,
+   "vdw_sd": 1.1,
+   "eel": -44.92,
+   "eel_sd": 1.61,
+   "egb": 62.29,
+   "egb_sd": 4.6,
+   "esurf": -5.09,
+   "esurf_sd": 0.04,
+   "ggas": -83.97,
+   "ggas_sd": 2.96,
+   "gsolv": 57.21,
+   "gsolv_sd": 4.6,
+   "total": -26.77,
+   "total_sd": 5.47
+  },
+  "sem_blocks": 0.9063580802309855,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.909999999999998,
+   "sd": 0.24946609656090202,
+   "n_frames": 30
+  }
+ },
+ "Pxylostella__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Pxylostella__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -24.16,
+  "components": {
+   "vdw": -29.87,
+   "vdw_sd": 0.53,
+   "eel": -78.64,
+   "eel_sd": 9.34,
+   "egb": 89.68,
+   "egb_sd": 3.84,
+   "esurf": -5.34,
+   "esurf_sd": 0.02,
+   "ggas": -108.51,
+   "ggas_sd": 9.63,
+   "gsolv": 84.34,
+   "gsolv_sd": 3.84,
+   "total": -24.16,
+   "total_sd": 10.37
+  },
+  "sem_blocks": 1.4206773404260373,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.376666666666667,
+   "sd": 0.3630273941300973,
+   "n_frames": 30
+  }
+ },
+ "Agemmatalis__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Agemmatalis__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -53.25,
+  "components": {
+   "vdw": -60.38,
+   "vdw_sd": 1.4,
+   "eel": -217.24,
+   "eel_sd": 10.49,
+   "egb": 233.51,
+   "egb_sd": 11.49,
+   "esurf": -9.15,
+   "esurf_sd": 0.0,
+   "ggas": -277.61,
+   "ggas_sd": 10.96,
+   "gsolv": 224.36,
+   "gsolv_sd": 11.49,
+   "total": -53.25,
+   "total_sd": 15.88
+  },
+  "sem_blocks": 1.4384597317964785,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -10.053333333333336,
+   "sd": 0.3211783858785574,
+   "n_frames": 30
+  }
+ },
+ "Agemmatalis__r3": {
+  "status": "real",
+  "front": "L",
+  "key": "Agemmatalis__r3",
+  "n_frames": 126,
+  "dG_gb_kcal": -30.16,
+  "components": {
+   "vdw": -38.34,
+   "vdw_sd": 1.82,
+   "eel": -160.55,
+   "eel_sd": 3.2,
+   "egb": 175.12,
+   "egb_sd": 5.21,
+   "esurf": -6.4,
+   "esurf_sd": 0.02,
+   "ggas": -198.89,
+   "ggas_sd": 4.11,
+   "gsolv": 168.72,
+   "gsolv_sd": 5.21,
+   "total": -30.16,
+   "total_sd": 6.63
+  },
+  "sem_blocks": 0.4110311209628797,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.246666666666668,
+   "sd": 0.44626847923145496,
+   "n_frames": 30
+  }
+ },
+ "Sfrugiperda__r1": {
+  "status": "real",
+  "front": "L",
+  "key": "Sfrugiperda__r1",
+  "n_frames": 126,
+  "dG_gb_kcal": -15.27,
+  "components": {
+   "vdw": -34.19,
+   "vdw_sd": 2.15,
+   "eel": -40.97,
+   "eel_sd": 23.02,
+   "egb": 64.41,
+   "egb_sd": 23.7,
+   "esurf": -4.53,
+   "esurf_sd": 0.25,
+   "ggas": -75.16,
+   "ggas_sd": 23.17,
+   "gsolv": 59.89,
+   "gsolv_sd": 23.71,
+   "total": -15.27,
+   "total_sd": 33.15
+  },
+  "sem_blocks": 1.6217642117151305,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -7.2666666666666675,
+   "sd": 0.2649947588580238,
+   "n_frames": 30
+  }
+ },
+ "Sfrugiperda__r3": {
+  "status": "real",
+  "front": "L",
+  "key": "Sfrugiperda__r3",
+  "n_frames": 126,
+  "dG_gb_kcal": -26.55,
+  "components": {
+   "vdw": -33.72,
+   "vdw_sd": 1.15,
+   "eel": -69.37,
+   "eel_sd": 15.29,
+   "egb": 82.06,
+   "egb_sd": 7.88,
+   "esurf": -5.52,
+   "esurf_sd": 0.06,
+   "ggas": -103.09,
+   "ggas_sd": 15.46,
+   "gsolv": 76.54,
+   "gsolv_sd": 7.88,
+   "total": -26.55,
+   "total_sd": 17.35
+  },
+  "sem_blocks": 0.24941890866572256,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -7.3800000000000034,
+   "sd": 0.20558858593479037,
+   "n_frames": 30
+  }
+ },
+ "Slitura__r1": {
+  "status": "real",
+  "front": "L",
+  "key": "Slitura__r1",
+  "n_frames": 126,
+  "dG_gb_kcal": -33.81,
+  "components": {
+   "vdw": -30.32,
+   "vdw_sd": 1.46,
+   "eel": -90.24,
+   "eel_sd": 7.64,
+   "egb": 91.55,
+   "egb_sd": 3.97,
+   "esurf": -4.8,
+   "esurf_sd": 0.01,
+   "ggas": -120.56,
+   "ggas_sd": 7.99,
+   "gsolv": 86.74,
+   "gsolv_sd": 3.97,
+   "total": -33.81,
+   "total_sd": 8.92
+  },
+  "sem_blocks": 0.2522299078222092,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.659999999999998,
+   "sd": 0.4144072071445347,
+   "n_frames": 30
+  }
+ },
+ "Slitura__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Slitura__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -51.43,
+  "components": {
+   "vdw": -67.65,
+   "vdw_sd": 2.76,
+   "eel": -181.77,
+   "eel_sd": 8.9,
+   "egb": 207.05,
+   "egb_sd": 7.1,
+   "esurf": -9.07,
+   "esurf_sd": 0.07,
+   "ggas": -249.42,
+   "ggas_sd": 10.11,
+   "gsolv": 197.99,
+   "gsolv_sd": 7.1,
+   "total": -51.43,
+   "total_sd": 12.36
+  },
+  "sem_blocks": 0.5501727205160194,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -11.91666666666666,
+   "sd": 0.47404875511092975,
+   "n_frames": 30
+  }
+ },
+ "Slitura__r3": {
+  "status": "real",
+  "front": "L",
+  "key": "Slitura__r3",
+  "n_frames": 126,
+  "dG_gb_kcal": -42.2,
+  "components": {
+   "vdw": -43.88,
+   "vdw_sd": 2.54,
+   "eel": -285.99,
+   "eel_sd": 16.74,
+   "egb": 293.93,
+   "egb_sd": 9.75,
+   "esurf": -6.26,
+   "esurf_sd": 0.12,
+   "ggas": -329.87,
+   "ggas_sd": 17.16,
+   "gsolv": 287.67,
+   "gsolv_sd": 9.75,
+   "total": -42.2,
+   "total_sd": 19.74
+  },
+  "sem_blocks": 0.726396570476486,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.73333333333333,
+   "sd": 0.42373996218855203,
+   "n_frames": 30
+  }
+ },
+ "Onubilalis__r3": {
+  "status": "real",
+  "front": "L",
+  "key": "Onubilalis__r3",
+  "n_frames": 126,
+  "dG_gb_kcal": -8.25,
+  "components": {
+   "vdw": -31.49,
+   "vdw_sd": 2.32,
+   "eel": -183.95,
+   "eel_sd": 12.46,
+   "egb": 211.38,
+   "egb_sd": 8.1,
+   "esurf": -4.19,
+   "esurf_sd": 0.0,
+   "ggas": -215.44,
+   "ggas_sd": 12.86,
+   "gsolv": 207.19,
+   "gsolv_sd": 8.1,
+   "total": -8.25,
+   "total_sd": 15.2
+  },
+  "sem_blocks": 0.31315768296498786,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -8.166666666666666,
+   "sd": 0.3197221015541813,
+   "n_frames": 30
+  }
+ },
+ "Dsaccharalis__r2": {
+  "status": "real",
+  "front": "L",
+  "key": "Dsaccharalis__r2",
+  "n_frames": 126,
+  "dG_gb_kcal": -34.82,
+  "components": {
+   "vdw": -40.99,
+   "vdw_sd": 1.46,
+   "eel": -166.5,
+   "eel_sd": 11.7,
+   "egb": 178.67,
+   "egb_sd": 7.3,
+   "esurf": -6.0,
+   "esurf_sd": 0.03,
+   "ggas": -207.49,
+   "ggas_sd": 12.08,
+   "gsolv": 172.67,
+   "gsolv_sd": 7.3,
+   "total": -34.82,
+   "total_sd": 14.11
+  },
+  "sem_blocks": 2.585085476652562,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -9.126666666666665,
+   "sd": 0.3595676416043147,
+   "n_frames": 30
+  }
+ },
+ "Dsaccharalis__r3": {
+  "status": "real",
+  "front": "L",
+  "key": "Dsaccharalis__r3",
+  "n_frames": 126,
+  "dG_gb_kcal": -11.7,
+  "components": {
+   "vdw": -27.79,
+   "vdw_sd": 0.96,
+   "eel": -115.15,
+   "eel_sd": 5.67,
+   "egb": 134.95,
+   "egb_sd": 8.69,
+   "esurf": -3.71,
+   "esurf_sd": 0.0,
+   "ggas": -142.94,
+   "ggas_sd": 6.0,
+   "gsolv": 131.24,
+   "gsolv_sd": 8.69,
+   "total": -11.7,
+   "total_sd": 10.56
+  },
+  "sem_blocks": 1.623314308444301,
+  "PRODIGY_md": {
+   "dG_kcal_mean": -7.660000000000001,
+   "sd": 0.2739829678404601,
+   "n_frames": 30
+  }
+ }
+}
