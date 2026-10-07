@@ -34,3 +34,9 @@
 
 ## 5. Pendências
 Mesmas de `docs/RETOMADA_2026-10-07.md`: esperar as 11 MDs restantes, a `energy-queue` (`QUEUE_ENERGY_DONE`) e o `noise`; então 3.6/3.7 definitivos, resumo, 4.1, 4.2, 4.4, 5, Tabela 4, Fig. 6, lista final de peptídeos e decisões do usuário (motivo do pH, MD longa, cortes, autoria).
+
+## 6. Adendo (07/10, 17:58): estado do servidor ao fim da tarde
+- **41 de 48 MDs de pH 8,2 prontas (L 19, M 22)**; em curso `Cincludens__r3` (L, 81%) e `Agemmatalis__r1` (M, recém-iniciada). Ritmo medido de 12:52 a 17:58: 4 MDs em 5,1 h, ≈ 2,5 h por MD por frente (mais lento que os 2,1 h assumidos). GPU 88%, 60 °C.
+- **Previsão (estimativa):** frente M ≈ 22–23 h de 07/10; frente L ≈ 03–05 h de 08/10; `energy-queue` dispara só depois da última MD (manhã de 08/10; log ainda "aguardando"); `noise-L/M` sem saída ainda (nenhum `md82b_*`/`md10b_*`), começa depois, ≈ 09/10 ou mais tarde.
+- **Decisão do usuário:** não reintegrar a análise parcial agora; esperar as 48. A integração vigente no manuscrito, nos dados e nas figuras continua sendo a de 37 pares (`_parcial_2026-10-07`).
+- **Ao retomar:** seguir `docs/RETOMADA_2026-10-07.md` (seções 1, 2 e 4). Conferir `ls outputs | grep DONE` (`MD82ALL_L_DONE`, `MD82ALL_M_DONE`, `QUEUE_ENERGY_DONE`); se a fila de energia não tiver rodado, `outputs/mmgbsa_md82_{L,M}.json` devem ter 24 entradas `real` com `PRODIGY_md` cada.
