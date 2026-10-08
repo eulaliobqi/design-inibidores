@@ -49,45 +49,58 @@ def dumbbell(ax, real, decoy, xlabel, higher_better, show_y=True):
 
 
 def fig1():
+    """Study design. Neutral boxes on purpose: the colours used to encode the execution status of
+    each queue (done/running/pending), which is project bookkeeping and not a result. Fronts L and M
+    keep the blue/teal of the other figures."""
     from matplotlib.patches import FancyBboxPatch
-    fig, ax = plt.subplots(figsize=mm_figsize("double", 100))
+    fig, ax = plt.subplots(figsize=mm_figsize("double", 118))
     ax.set_xlim(0, 100)
-    ax.set_ylim(0, 56)
+    ax.set_ylim(0, 72)
     ax.axis("off")
-    col = {"done": "#b7e4c7", "run": "#ffe066", "pend": "#e9ecef"}
+    PLAIN, L_FILL, M_FILL = "#eef1f4", "#dbe9f5", "#d8ede9"
+    EDGE = "#495057"
 
-    def box(x, y, w, h, text, st):
-        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.8", fc=col[st], ec="#495057", lw=1.2))
+    def box(x, y, w, h, text, fc=PLAIN, ec=EDGE):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.8",
+                                    fc=fc, ec=ec, lw=1.2))
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=8)
 
     def arr(x1, y1, x2, y2):
-        ax.annotate("", xy=(x2, y2), xytext=(x1, y1), arrowprops=dict(arrowstyle="->", color="#495057", lw=1.2))
-    w, h = 22, 11
+        ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle="-|>", color=EDGE, lw=1.2, shrinkA=0, shrinkB=0))
+
+    def elbow(pts):
+        xs_, ys_ = zip(*pts[:-1])
+        ax.plot(xs_, ys_, color=EDGE, lw=1.2, solid_joinstyle="miter")
+        arr(*pts[-2], *pts[-1])
+
+    w, h = 22, 13
     xs = [1, 26, 51, 76]
-    box(xs[0], 42, w, h, "8 receptors\nS1-S3' subsites", "done")
-    box(xs[1], 42, w, h, "calibration\n6 inhibitors +\nshuffled decoys", "done")
-    box(xs[2], 42, w, h, "RFdiffusion +\nProteinMPNN\n22,066 sequences", "done")
-    box(xs[3], 42, w, h, "hard criterion\n(non-cleavable)", "done")
+    box(xs[0], 57, w, h, "8 pest trypsins\nsubsites S4-S3'\n(2PTC, 1SFI)")
+    box(xs[1], 57, w, h, "scoring ladder\ncalibrated\n6 inhibitors\n+ shuffled decoys")
+    box(xs[2], 57, w, h, "RFdiffusion +\nProteinMPNN\n880 backbones\n22,066 sequences")
+    box(xs[3] - 1, 57, w + 2, h, "hard criterion\nno P1 of midgut\ntrypsin, chymotrypsin\nor elastase")
     for i in range(3):
-        arr(xs[i] + w, 47.5, xs[i + 1], 47.5)
-    box(8, 26, 24, h, "front L (linear)\n527 sequences", "done")
-    box(38, 26, 24, h, "front M (macrocycle)\n543 sequences", "done")
-    box(70, 26, 28, h, "Boltz-2 E1-E4\n48 final candidates", "done")
-    arr(87, 42, 22, 37.3)
-    arr(87, 42, 52, 37.3)
-    ax.plot([20, 20, 78], [26, 23.5, 23.5], color="#495057", lw=1.2)
-    arr(78, 23.5, 78, 26)
-    arr(62, 31.5, 70, 31.5)
-    ax.plot([92, 92, 12], [26, 20.5, 20.5], color="#495057", lw=1.2)
-    arr(12, 20.5, 12, 17.2)
-    arr(37, 20.5, 37, 17.2)
-    box(1, 6, 22, h, "10-ns MD\npH 10.0\n48 simulations", "done")
-    box(26, 6, 22, h, "10-ns MD\npH 8.2\n48 + 16 replicates", "run")
-    box(51, 6, 22, h, "energy filter\nPRODIGY\n+ MM-GBSA", "run")
-    box(76, 6, 22, h, "ranking by stage\nshortlist", "pend")
-    arr(48, 11.5, 51, 11.5)
-    arr(73, 11.5, 76, 11.5)
-    ax.text(50, 1.2, "green: done; yellow: running; grey: pending. No enzymatic assay was performed.", ha="center", fontsize=8)
+        arr(xs[i] + w, 63.5, xs[i + 1] - (1 if i == 2 else 0), 63.5)
+
+    box(14, 40, 30, 11, "front L (linear)\n527 sequences", fc=L_FILL)
+    box(56, 40, 30, 11, "front M (macrocycle)\n543 sequences", fc=M_FILL)
+    elbow([(87, 57), (87, 54), (29, 54), (29, 51.4)])
+    elbow([(87, 57), (87, 54), (71, 54), (71, 51.4)])
+
+    box(10, 24, 80, 11, "Boltz-2 E1-E4: co-folding, re-scoring (5 x 3), paired controls, pose QC\n"
+                        "48 candidates (24 linear, 24 macrocyclic; 3 per species and front)")
+    arr(29, 40, 29, 35.4)
+    arr(71, 40, 71, 35.4)
+
+    box(1, 5, 29, 13, "10-ns MD, 48 complexes\npH 10.0 and pH 8.2\n+ 16 repeated runs")
+    box(35.5, 5, 29, 13, "trajectory analysis\nS1 occupancy, RMSD,\nMM-GBSA, PRODIGY")
+    box(70, 5, 29, 13, "ranking by stage\nshortlisted peptides")
+    elbow([(50, 24), (50, 21), (15.5, 21), (15.5, 18.4)])
+    arr(30, 11.5, 35.5, 11.5)
+    arr(64.5, 11.5, 70, 11.5)
+    ax.text(50, 0.8, "No enzymatic assay and no counter-selection against non-target proteases "
+                     "was performed.", ha="center", fontsize=8, style="italic")
     return save_journal(fig, OUT / "Figure1_pipeline")
 
 
@@ -179,7 +192,7 @@ def fig7():
     a.set_xlabel("peptide length (residues)")
     a.set_ylabel("PRODIGY ΔG, initial pose (kcal/mol)")
     a.legend(frameon=False, loc="lower left")
-    letter(a, "A", -0.2)
+    letter(a, "A", -0.22, 1.02)
     b = fig.add_subplot(gs[0, 1])
     stages = ["E2", "E3", "MD", "PRODIGY_pose"] + (["PRODIGY_md", "MMGBSA"] if allstages else [])
     names = {"E2": "Boltz-2\nE2", "E3": "paired\nΔ (E3)", "MD": "MD\nRMSD", "PRODIGY_pose": "PRODIGY\npose", "PRODIGY_md": "PRODIGY\nMD", "MMGBSA": "MM-GBSA"}
@@ -189,7 +202,13 @@ def fig7():
         sel += sub
     mat = np.array([[r.get(f"rank_{s}_{r['front']}") if r.get(f"rank_{s}_{r['front']}") is not None else np.nan for s in stages] +
                     [r[f"agg_{r['front']}"]] for r in sel])
-    im = b.imshow(mat, cmap="viridis_r", aspect="auto", vmin=1, vmax=np.nanmax(mat))
+    # The two fronts are ranked in pools of different size (L and M), so a raw rank of 10 means
+    # "worst" in one block and "middling" in the other. Colour therefore encodes the rank relative
+    # to the pool of its own front; the printed number stays the raw rank.
+    npool = {F: sum(1 for r in rows if r["front"] == F and r.get(f"pos_{F}") is not None) for F in "LM"}
+    rel = np.array([[(v - 1) / (npool[r["front"]] - 1) if not np.isnan(v) else np.nan for v in row]
+                    for r, row in zip(sel, mat)])
+    im = b.imshow(rel, cmap="viridis_r", aspect="auto", vmin=0, vmax=1)
     b.set_xticks(range(len(stages) + 1))
     b.set_xticklabels([names[s] for s in stages] + ["aggregate"], fontsize=8)
     b.xaxis.tick_top()
@@ -198,13 +217,14 @@ def fig7():
     for i in range(mat.shape[0]):
         for j in range(mat.shape[1]):
             if not np.isnan(mat[i, j]):
-                b.text(j, i, f"{mat[i, j]:.0f}" if j < mat.shape[1] - 1 else f"{mat[i, j]:.1f}", ha="center", va="center", color="white", fontsize=8)
+                b.text(j, i, f"{mat[i, j]:.0f}" if j < mat.shape[1] - 1 else f"{mat[i, j]:.1f}", ha="center", va="center",
+                       color="white" if rel[i, j] > 0.45 else "black", fontsize=8)
     b.axhline(len(sel) / 2 - .5, color="white", lw=3)
     cb = fig.colorbar(im, ax=b, shrink=.7, pad=.02)
-    cb.set_label("rank within front (1 = best)")
+    cb.set_label(f"rank relative to its front\n(0 = best; L n = {npool['L']}, M n = {npool['M']})")
     for sp in b.spines.values():
         sp.set_visible(False)
-    letter(b, "B", -0.28, 1.12)
+    letter(b, "B", -0.30, 1.14)
     return save_journal(fig, OUT / "Figure6_energy_ranking"), allstages
 
 
