@@ -169,13 +169,15 @@ def fig5():
 
 
 def fig7():
-    src = ROOT / "outputs/ranking_energy_final_all.json"
+    src = ROOT / "data-e2-results/ranking_energy_final_all.json"
+    if not src.exists():
+        src = ROOT / "outputs/ranking_energy_final_all.json"
     allstages = src.exists()
     rows = json.load(open(src if allstages else ROOT / "outputs/ranking_energy_pre.json"))
     pp = json.load(open(ROOT / "data-e2-results/prodigy_poses.json"))
     rk = {(r["front"], r["key"]): r for r in csv.DictReader(open(ROOT / "manuscript/figures/ranking_final.csv", encoding="utf-8"))}
     fig = plt.figure(figsize=mm_figsize("double", 150), layout="constrained")
-    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.25])
+    gs = fig.add_gridspec(1, 2, width_ratios=[0.8, 1.5])
     a = fig.add_subplot(gs[0, 0])
     for F, c in (("L", BLUE), ("M", TEAL)):
         ks = [k for k in pp if pp[k]["front"] == F]
@@ -195,7 +197,7 @@ def fig7():
     letter(a, "A", -0.22, 1.02)
     b = fig.add_subplot(gs[0, 1])
     stages = ["E2", "E3", "MD", "PRODIGY_pose"] + (["PRODIGY_md", "MMGBSA"] if allstages else [])
-    names = {"E2": "Boltz-2\nE2", "E3": "paired\nΔ (E3)", "MD": "MD\nRMSD", "PRODIGY_pose": "PRODIGY\npose", "PRODIGY_md": "PRODIGY\nMD", "MMGBSA": "MM-GBSA"}
+    names = {"E2": "Boltz-2\nE2", "E3": "paired\nΔ (E3)", "MD": "MD\nRMSD", "PRODIGY_pose": "PRODIGY\npose", "PRODIGY_md": "PRODIGY\nMD", "MMGBSA": "MM-\nGBSA"}
     sel = []
     for F in "LM":
         sub = sorted([r for r in rows if r["front"] == F], key=lambda r: r["pos_" + F])[:10]
@@ -210,7 +212,7 @@ def fig7():
                     for r, row in zip(sel, mat)])
     im = b.imshow(rel, cmap="viridis_r", aspect="auto", vmin=0, vmax=1)
     b.set_xticks(range(len(stages) + 1))
-    b.set_xticklabels([names[s] for s in stages] + ["aggregate"], fontsize=8)
+    b.set_xticklabels([names[s] for s in stages] + ["mean\nrank"], fontsize=7)
     b.xaxis.tick_top()
     b.set_yticks(range(len(sel)))
     b.set_yticklabels([f"{r['sequence']} ({'L' if r['front'] == 'L' else 'M'})" for r in sel], fontsize=8)

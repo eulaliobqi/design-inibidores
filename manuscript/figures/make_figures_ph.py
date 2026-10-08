@@ -1,5 +1,5 @@
 """Figuras que dependem das MDs de pH 8,2 e das energias nas trajetorias (padrao da revista: frontiers_style.py):
-  Figure7_pH_comparison        pH 8,2 x pH 10,0 pareado (PARCIAL: so as MDs de pH 8,2 ja concluidas)
+  Figure7_pH_comparison        pH 8,2 x pH 10,0 pareado (48 pares)
   FigureS10_energy_trajectories MM-GBSA e PRODIGY nas trajetorias de pH 10 (48) contra tamanho, posicao e entre si
 Uso (de manuscript/): python figures/make_figures_ph.py figures/final
 Le data-e2-results/{mmgbsa_md10_{L,M}.json, md10_{L,M}_analysis.json} e, para pH 8,2,
@@ -128,7 +128,7 @@ def fig8():
     key = [Line2D([0], [0], marker="o", ls="", color=BLUE, label="linear"),
            Line2D([0], [0], marker="o", ls="", color=TEAL, label="macrocycle")] + \
           [Line2D([0], [0], marker="o", ls="", color=c, mec="k", label=s) for s, c in FOCUS.items()]
-    ax[1, 2].legend(handles=key, loc="upper left", frameon=False, title=f"n = {n} of 48 pH 8.2 runs\nfinished (one run per pH)")
+    ax[1, 2].legend(handles=key, loc="upper left", frameon=False, title=f"n = {n} paired candidates\n(one run per pH)")
     return save_journal(fig, OUT / "Figure7_pH_comparison"), n
 
 
