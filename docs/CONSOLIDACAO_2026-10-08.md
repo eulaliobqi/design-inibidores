@@ -29,3 +29,10 @@
 ## 4. Próximos passos
 1. Quando `noise-L` terminar: analisar `md82b_*`/`md10b_*`, `python -m scripts.compare_ph` no servidor, copiar `compare_ph.*`, completar o PENDING de 3.7 e o 4.4(vi) (EN e PT), reconstruir e auditar.
 2. Decisões do usuário: motivo do pH 8,2 (candidato: tampão Tris pH 8,2 dos ensaios de Schultz 2026), prioridade para MD longa (NGGRPDAP e GGKPGEP), lista final e cortes.
+
+## 5. Atualização de 08/10 (17:15): piso de ruído com 15 dos 16 pares
+- Analisadas (`analyze_md_top_candidates --md-dir outputs/<pasta>`) as segundas sementes de `md82b_{L,M}` (4+4) e `md10b_M` (4) e `md10b_L` (3; falta NGGRPDAP em pH 10,0, ainda em produção). `compare_ph` refeito e copiado; análises parciais em `data-e2-results/md{82,10}b_{L,M}_analysis_parcial_2026-10-08.json`.
+- Diferença absoluta mediana entre duas execuções do mesmo pH (pH 10,0 / pH 8,2): distância final 0,31 / 1,37 Å; ocupância 0,05 / 0,05; RMSD 0,11 / 0,11 nm. Entre pH (48 pares): 1,36 Å, 0,04, 0,18 nm. O ruído tem o tamanho da diferença entre pH.
+- Ocupância mudou > 0,5 em 3 de 15 pares do mesmo pH (GQNDS pH 8,2: 0,04→0,73; GGHSE pH 8,2: 0,00→0,88; IYPETG pH 8,2: 0,57→0,00); dois cruzaram 0,70. Só NGGRPDAP (0,98 e 1,00, pH 8,2) e GGKPGEP (1,00 em todas) repetiram. A "perda de S1" do GGHSE em pH 8,2 e a ocupância só na 1ª metade do GQNDS não se reproduzem.
+- Texto: 3.7, 3.8, 4.4(vi), 5 e nota 2(b) (EN e PT). Os 8 candidatos repetidos não são amostra aleatória (declarado). Auditoria 187/0. O docx PT foi gravado em `Manuscrito_PT_leitura.docx` (Word fechado; `_novo` removido).
+- Falta: quando `md10b_L/Onubilalis...` terminar, analisar, rodar `compare_ph` e atualizar contagens (15→16 pares; 7→8 em pH 10,0).

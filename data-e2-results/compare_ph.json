@@ -96,6 +96,68 @@
    "median": 1.0,
    "min": 0,
    "max": 3
+  },
+  "noise_floor_same_pH_other_seed": {
+   "pH10": {
+    "d_anchor_asp_fim_A": {
+     "n": 7,
+     "median_abs_diff": 0.31000000000000005
+    },
+    "occ_5A_h2": {
+     "n": 7,
+     "median_abs_diff": 0.052000000000000046
+    },
+    "peptide_rmsd_local_nm_final20pct": {
+     "n": 7,
+     "median_abs_diff": 0.10899999999999999
+    },
+    "contact_any_frac_4.5A": {
+     "n": 7,
+     "median_abs_diff": 0.0
+    },
+    "ser195_contact_frac_4.5A": {
+     "n": 7,
+     "median_abs_diff": 0.05800000000000005
+    },
+    "his57_contact_frac_4.5A": {
+     "n": 7,
+     "median_abs_diff": 0.008000000000000007
+    }
+   },
+   "pH82": {
+    "d_anchor_asp_fim_A": {
+     "n": 8,
+     "median_abs_diff": 1.37
+    },
+    "occ_5A_h2": {
+     "n": 8,
+     "median_abs_diff": 0.045500000000000006
+    },
+    "peptide_rmsd_local_nm_final20pct": {
+     "n": 8,
+     "median_abs_diff": 0.11300000000000002
+    },
+    "contact_any_frac_4.5A": {
+     "n": 8,
+     "median_abs_diff": 0.0
+    },
+    "ser195_contact_frac_4.5A": {
+     "n": 8,
+     "median_abs_diff": 0.1785
+    },
+    "his57_contact_frac_4.5A": {
+     "n": 8,
+     "median_abs_diff": 0.1905
+    }
+   }
+  },
+  "between_pH_median_abs_diff": {
+   "d_anchor_asp_fim_A": 1.3599999999999999,
+   "occ_5A_h2": 0.04000000000000001,
+   "peptide_rmsd_local_nm_final20pct": 0.1805,
+   "contact_any_frac_4.5A": 0.0,
+   "ser195_contact_frac_4.5A": 0.0695,
+   "his57_contact_frac_4.5A": 0.14950000000000002
   }
  },
  "rows": [
