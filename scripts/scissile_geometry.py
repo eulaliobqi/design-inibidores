@@ -10,6 +10,7 @@ a carbonila C-terminal e' excluida), mede:
   NAC      fracao de quadros com d_OG_C < 3,5 A, 90 <= ang <= 125 e d_oxy < 3,5 A (conformacao quase de ataque)
 Descritivo: 10 ns nao medem catalise. Usa md.tpr + md_pbc_sub.xtc (gerado por analyze_md_top_candidates).
 Uso (servidor, a partir de ~/design-inibidores): python -m scripts.scissile_geometry SEQ [SEQ ...] > saida.json
+Controles: passe a sequencia do controle (ex.: PGRGDANP, embaralhado de NGGRPDAP com Arg3-Gly4 desprotegido).
 """
 import json
 import sys
@@ -22,7 +23,13 @@ from MDAnalysis.lib.distances import distance_array, minimize_vectors
 from scripts.analyze_md_top_candidates import _STD_RES, receptor_residues, resnum, std_resname
 
 ROOT = Path(__file__).parent.parent
-RUNS = [("md10", "pH 10.0 run1"), ("md10b", "pH 10.0 run2"), ("md82", "pH 8.2 run1"), ("md82b", "pH 8.2 run2")]
+RUNS = [("md10", "pH 10.0 run1"), ("md10b", "pH 10.0 run2"), ("md82", "pH 8.2 run1"), ("md82b", "pH 8.2 run2"),
+        # Controles ja simulados no mesmo protocolo (10 ns, CHARMM36, pH 10,0). Foram rodados para outra
+        # pergunta (se a ocupancia de S1 separa sequencia de pose) e nao a responderam; aqui servem a uma
+        # pergunta diferente e legitima: o embaralhado de NGGRPDAP (PGRGDANP) poe um Arg na S1 SEM a prolina
+        # protetora (Arg3-Gly4), com a mesma composicao, o mesmo receptor e a mesma ocupancia (1,00).
+        # E' a linha de base que faltava para a geometria de ataque.
+        ("md10_controls", "pH 10.0 shuffled control"), ("md10_negctrl", "pH 10.0 anchor swap")]
 
 
 def find(seq):
