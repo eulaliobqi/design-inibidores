@@ -2,7 +2,7 @@
 
 **`final/` é o diretório oficial**: os arquivos ali têm a numeração citada no texto (Figuras 1–8, S1–S10) e são os que vão para a submissão. Todos saem em 180 mm de largura, 300 dpi, RGB, nos formatos TIF (exigido), PNG e PDF.
 
-Os arquivos soltos neste diretório (`Figure9_E2_rescoring`, `Figure11_MD_screen_10ns`, `Figure12_final_candidates`, …) são as **saídas cruas dos geradores, com a numeração anterior à reescrita de 05/10/2026**. Eles continuam aqui porque `collect_final.py` os usa como origem — não são candidatos à submissão. Há três arquivos chamados `Figure7_*` neste diretório, de versões diferentes do artigo; sempre confira o nome em `final/` antes de anexar uma figura a qualquer coisa.
+As saídas cruas dos geradores, com a numeração anterior à reescrita de 05/10/2026, foram apagadas em 09/10/2026 (continuam no histórico do git); restam só `final/` (EN), `pt/` (PT) e os scripts. `collect_final.py` precisa dessas saídas cruas como origem: para refazer `final/`, use `collect_final.py --run`, que regenera os geradores antes.
 
 ## Como refazer `final/`
 
