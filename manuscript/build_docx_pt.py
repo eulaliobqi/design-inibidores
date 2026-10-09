@@ -89,6 +89,7 @@ FIG = {"1": "figures/final/Figure1_pipeline.png", "2": "figures/final/Figure2_ca
        "5": "figures/pt/fig11_md_triagem_10ns.png", "6": "figures/final/Figure6_energy_ranking.png",
        "7": "figures/final/Figure7_pH_comparison.png", "8": "figures/final/Figure8_candidate_poses.png",
        "S10": "figures/final/FigureS10_energy_trajectories.png",
+       "S11": "figures/final/FigureS11_scissile_protection.png",
        "S1": "figures/pt/fig2_regra_dura.png", "S2": "figures/final/FigureS2_motif_screen.png",
        "S3": "figures/pt/fig6_composicao.png", "S4": "figures/pt/fig9_reescore_e2.png",
        "S5": "figures/pt/fig10_top3_pose.png", "S6": "figures/pt/figS2_anel_ciclico_charmm36.png",

@@ -57,6 +57,12 @@ Adequação à interpretação (Rougier et al. 2014; Weissgerber et al. 2015; St
 
 **Metodologia:** 2.6, 2.7 e 2.8 enxugadas (resultados movidos para Resultados/Discussão; parâmetros mantidos). Corpo em inglês ≈ 10,8 mil palavras no `render.py` (limite 12.000, margem confortável); resumo com 348 palavras (≤ 350).
 
+## 4b. Adendo de 09/10 — a pergunta da clivagem foi respondida com controle interno
+
+A pergunta de revisor "peptídeos com Lys/Arg no meio não são clivados?" passou a ter resposta com dados próprios: o embaralhado PGRGDANP põe um Arg na S1 na mesma profundidade do NGGRPDAP (2,73 contra 2,78 Å; ocupância 1,00 nos dois) **sem** a prolina protetora, e atinge conformação quase de ataque em 8,0% dos quadros, contra 0,0% nas nove execuções com sítio protegido por prolina. Nova Figura S11; Seções 2.7 e 3.8 atualizadas (EN e PT). Detalhe em `docs/LISTA_FINAL_PEPTIDEOS_2026-10-09.md` §3.0.
+
+Com isso, a limitação "a geometria de ataque não tem linha de base" deixa de valer para a rota da tripsina. Continua valendo para as exopeptidases.
+
 ## 5. Pendências que dependem dos autores
 
 - Motivo do pH 8,2 (Seção 2.6): conferido; só falta os autores confirmarem que a intenção era seguir a condição do ensaio.

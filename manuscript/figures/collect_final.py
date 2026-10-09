@@ -11,6 +11,7 @@ Quatro geradores produzem as figuras:
   make_figures_ph.py     -> Figura 7 e S10, gravadas direto em figures/final/
   make_figures_v3.py     -> Figuras 3, 4, S1, S3, S8 e S9, com os nomes antigos em figures/
   make_figure_s2.py      -> Figura S2 (Figure4_motif_screen), redesenhada em 08/10/2026
+  make_figure_s11.py     -> Figura S11 (geometria de ataque: sitio protegido x exposto), 09/10/2026; grava direto em final/
   make_figures_e2_md.py  -> Figuras 5, S4, S5, S6, com os nomes antigos em figures/
   scripts/rank_final_candidates.py -> Figura S7, com o nome antigo em figures/
 

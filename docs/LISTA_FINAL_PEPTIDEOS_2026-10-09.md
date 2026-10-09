@@ -31,7 +31,7 @@ Então a lista final é construída pelo **único observável que sobreviveu ao 
 | F7 | P1 canônico (K/R na S1) | mecanismo dos inibidores canônicos | 2 dos 2 |
 | F8 | K/R seguido de Pro | única configuração que satisfaz F1 e F7 ao mesmo tempo | 2 dos 2 |
 | F9 | rota exopeptidásica fechada (sem extremidades livres) | imunidade estrutural a amino/carboxipeptidases | **1** |
-| F11 | ligação cindível K/R–Pro sem conformação quase de ataque | a Ser195 não se posiciona para atacar o sítio | 2 dos 2 |
+| F11 | ligação cindível K/R–Pro sem conformação quase de ataque | a Ser195 não se posiciona para atacar o sítio; **validado contra controle interno exposto, que dá 8,0%** (§3.0) | 2 dos 2, com 0,0% |
 
 A cascata F1→F6 converge para **exatamente dois peptídeos**, e eles são os mesmos dois que carregam o mecanismo canônico. Não houve ajuste do critério para chegar a esse número.
 
@@ -57,7 +57,7 @@ Conjunto de características que o colocam em primeiro:
 | F8 K/R–Pro | **Lys3–Pro4** |
 | F9 exopeptidases | **fechada por construção** — macrociclo, sem N nem C livre |
 | F10 anel íntegro | C–N ≤ 1,46 Å sempre; ω ≥ 150° em 99,6% dos quadros (mínimo 144,5° em pH 10; 156,7° em pH 8,2) |
-| F11 geometria de ataque | **nenhuma conformação quase de ataque** na Lys3–Pro4 em nenhuma das 4 execuções; Ser195 Oγ–C mediana 5,3–5,4 Å (pH 10) e **6,7–7,6 Å (pH 8,2)** |
+| F11 geometria de ataque | **0,0% de conformação quase de ataque** na Lys3–Pro4 nas 4 execuções, contra **8,0% do controle exposto** (§3.0); Ser195 Oγ–C mediana 5,3–7,6 Å |
 | — distância final âncora–Asp189 | **2,71 Å — a menor das 48** |
 | — MM-GBSA | −35,4 (pH 10) / −27,7 (pH 8,2) kcal/mol |
 
@@ -74,7 +74,7 @@ Conjunto de características que o colocam em primeiro:
 | F7 P1 canônico | **Arg** na S1 |
 | F8 K/R–Pro | **Arg4–Pro5** |
 | F9 exopeptidases | **ABERTA** — N-terminal e C-terminal livres (ver §3) |
-| F11 geometria de ataque | sem conformação quase de ataque na Arg4–Pro5 (mediana 4,7–5,5 Å; mínimo 4,2 Å); **1 execução de 4 com 1,6% de quadros quase de ataque na ligação Gly3–Arg4**, que não é sítio de tripsina |
+| F11 geometria de ataque | **0,0% na Arg4–Pro5 nas 4 execuções**, contra **8,0% do seu próprio embaralhado PGRGDANP**, que tem o Arg na mesma profundidade sem a prolina (§3.0); 1 execução de 4 com 1,6% na Gly3–Arg4, que tem Gly em P1 e não é sítio de tripsina |
 | — ranking agregado | **1.º da frente linear** (posto médio 6,7 de 23) |
 | — MM-GBSA pH 8,2 | **−53,25 kcal/mol — o mais favorável das 48** |
 
@@ -95,7 +95,41 @@ Conjunto de características que o colocam em primeiro:
 
 ## 3. A regra de ouro: há base para afirmar que não serão clivados?
 
-**Resposta direta: não, ainda não.** O que existe hoje é uma regra de motivo e uma geometria de MD sem linha de base. Nenhuma medida de proteólise foi feita. Abaixo, o que a literatura sustenta rota por rota.
+**Resposta, após a análise de 09/10: para a rota da tripsina, sim — com controle interno. Para as exopeptidases, não, e é aí que o peptídeo linear fica exposto.**
+
+### 3.0 O controle interno que responde à pergunta do revisor (resultado novo, 09/10)
+
+A pergunta — *um peptídeo com Lys ou Arg no meio não vai ser clivado?* — foi respondida com dados que já existiam e não tinham sido usados para isso.
+
+Entre os controles embaralhados já simulados (Seção 3.5 do manuscrito), **PGRGDANP** é o embaralhado de NGGRPDAP: mesma composição, mesmo receptor de *A. gemmatalis*, mesmo campo de força, mesmo protocolo de 10 ns em pH 10,0. E, por acaso do embaralhamento, ele põe o **Arg na S1 sem a prolina protetora**: Arg3–Gly4 em vez de Arg4–Pro5. A exposição é idêntica à do candidato:
+
+| | âncora | dist. inicial | dist. final | ocupância S1 |
+|---|---|---|---|---|
+| NGGRPDAP (candidato, Arg4–**Pro**5) | Arg4 | 2,78 Å | 2,74 Å | 1,00 |
+| PGRGDANP (controle, Arg3–**Gly**4) | Arg3 | 2,73 Å | 2,73 Å | 1,00 |
+
+Mesma profundidade no bolso, mesma ocupância, mesma composição. A **única** variável relevante é a prolina. Resultado da geometria de ataque da Ser195 sobre a ligação cindível:
+
+| peptídeo | ligação | P1' | execuções | mediana Oγ–C | mínimo | quadros < 4 Å | **quase de ataque** |
+|---|---|---|---|---|---|---|---|
+| **PGRGDANP** (controle) | Arg3–Gly4 | Gly | 1 | 3,68 Å | 3,03 Å | 75,7% | **8,0%** |
+| NGGRPDAP | Arg4–Pro5 | Pro | 4 | 4,67–5,51 Å | 4,20 Å | 0,0% | **0,0%** |
+| GGKPGEP | Lys3–Pro4 | Pro | 4 | 5,26–7,55 Å | 3,84 Å | ≤ 0,8% | **0,0%** |
+| GGEKPPG (controle) | Lys4–Pro5 | Pro | 1 | 5,57 Å | 4,90 Å | 0,0% | **0,0%** |
+
+**Um sítio exposto: 8,0% dos quadros em conformação quase de ataque. Nove execuções com sítio protegido por prolina: 0,0%, sem exceção.**
+
+Isso é o que faltava. A análise **detecta** a geometria de ataque quando o sítio de tripsina está exposto, e **não detecta nenhuma** quando a prolina está lá — com a ocupância de S1 pareada, o que elimina o confundidor de exposição. Os limiares de NAC deixam de ser arbitrários: estão calibrados contra um controle interno que gerou sinal.
+
+Detalhe mecanístico que reforça: nos peptídeos protegidos, a carbonila que mais se aproxima da Ser195 **não é** a do sítio de tripsina, e sim a da ligação anterior ao resíduo básico (Gly3–Arg4 no NGGRPDAP, mediana 3,53–4,28 Å, até 88% dos quadros < 4 Å). Essa ligação tem **glicina em P1** e não é sítio de tripsina — a enzima exige Lys ou Arg em P1 para catalisar. Ou seja: a carbonila que fica perto da serina é a que a tripsina não corta, e a que a tripsina cortaria fica longe.
+
+**Limites honestos desta análise:** um único sítio exposto, uma execução, um pH; uma fração de quadros não é uma taxa; 10 ns de simulação clássica não medem catálise; e o critério é puramente geométrico, não codifica especificidade. Reforço barato e recomendado: repetir PGRGDANP com segunda semente e em pH 8,2 (2 MDs) e gerar os nocautes da prolina — NGGRGDAP e GGKGGEP — no mesmo protocolo (4 MDs). Daria ao controle o mesmo tratamento de 4 execuções que os candidatos têm.
+
+Está na Figura S11 e nas Seções 2.7 e 3.8 do manuscrito (EN e PT). Dados em `data-e2-results/scissile_geometry_controls.json`.
+
+### O que ainda não está respondido
+
+Abaixo, o que a literatura sustenta rota por rota — e a rota 2 continua aberta para o peptídeo linear.
 
 ### Rota 1 — endopeptidases (tripsina, quimotripsina, elastase): coberta, mas não garantida
 
