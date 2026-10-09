@@ -113,6 +113,10 @@ for fid in ("1", "2", "3", "4", "5", "6", "7", "8"):
     assert f"**Figura {fid}.**" in src, f"figura {fid} nao inserida"
 src = src.rstrip() + "\n\n## Figuras suplementares\n" + "".join(img(k, "13cm") for k in ("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10"))
 
+# tabelas suplementares (ficam depois das legendas e seriam descartadas pelo corte acima)
+sup_tab = leg_block[leg_block.index("**Tabela S1.**"):].split("\n---")[0].strip()
+src = src.rstrip() + "\n\n## Tabelas suplementares\n\n" + sup_tab + "\n"
+
 # marcadores pendentes -> span com estilo
 src = re.sub(r"\[\[(.*?)\]\]", lambda m: '[' + m.group(1).replace("[", "(").replace("]", ")") + ']{custom-style="Pendente"}', src, flags=re.S)
 src = re.sub(r"\[(LISTA DE AUTORES A COMPLETAR|A COMPLETAR|visibilidade do repositório[^\]]*)\]",

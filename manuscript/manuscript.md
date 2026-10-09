@@ -35,7 +35,7 @@ Here we ask how far natural inhibitors can be carried into *de novo* candidate p
 
 ### 2.1 Receptors and catalytic subsites
 
-Digestive trypsin-like proteases of eight pest species (*S. frugiperda*, *S. litura*, *Ostrinia nubilalis*, *Diatraea saccharalis*, *Chrysodeixis includens*, *Heliothis virescens*, *Plutella xylostella*, *A. gemmatalis*) and the references *Manduca sexta* and *Bombyx mori* were modeled with AlphaFold v2 structures (Jumper et al., 2021; Varadi et al., 2024) (Table 1). Only the *M. sexta* entries are reviewed with midgut evidence; for the other species the entries were selected by homology. Sequence identity to *M. sexta* trypsin B (P35046) used a global BLOSUM62 alignment (Cock et al., 2009). The specificity residue was located six residues before the catalytic serine (motif G[DN]SGG[PT]), an offset calibrated on bovine trypsin and chymotrypsinogen A (UniProt Consortium, 2025).
+Digestive trypsin-like proteases of eight pest species (*S. frugiperda*, *S. litura*, *Ostrinia nubilalis*, *Diatraea saccharalis*, *Chrysodeixis includens*, *Heliothis virescens*, *Plutella xylostella*, *A. gemmatalis*) and the references *Manduca sexta* and *Bombyx mori* were modeled with AlphaFold v2 structures (Jumper et al., 2021; Varadi et al., 2024) (Table 1). Only the *M. sexta* entries are reviewed with midgut evidence; for the other species the entries were selected by homology. Sequence identity to *M. sexta* trypsin B (P35046) used a global BLOSUM62 alignment (Cock et al., 2009). The specificity residue was located six residues before the catalytic serine (motif G[DN]SGG[PT]), an offset calibrated on bovine trypsin and chymotrypsinogen A (UniProt Consortium, 2025). Nine of the ten UniProt entries carry the automatic name "Chymotrypsin"; the class was therefore decided by the residue at this position (Asp in trypsin, Ser in chymotrypsin), and the positions of the catalytic triad and of the S1 pocket were checked in every model by global alignment to bovine trypsin and by the hydrogen-bond distances in the AlphaFold coordinates (Table S2).
 
 Subsites S4–S3′ (Schechter and Berger, 1967) were defined from two crystal complexes of bovine trypsin (Berman et al., 2000), 2PTC (BPTI) and 1SFI (SFTI-1; Luckett et al., 1999). P1 was the inhibitor residue whose carbonyl carbon lies closest to the Oγ of the catalytic serine, and a trypsin residue was assigned to a subsite when any of its atoms was within 4.5 Å of the corresponding inhibitor residue. Each trypsin chain was aligned to each receptor with Foldseek in TM-align mode (van Kempen et al., 2024; Zhang and Skolnick, 2005), residues were transferred through the alignment, and a receptor–template pair was accepted with a TM-score of at least 0.5 and an RMSD of at most 3.0 Å.
 
@@ -81,7 +81,7 @@ Calculations ran on one NVIDIA RTX 5070 Ti (16 GB) with 32 CPU cores (Python 3.1
 
 ### 3.1 Receptor panel and subsite transfer
 
-All ten sequences carry the catalytic motif G[DN]SGG[PT] and an aspartate at the specificity position, the residue found for bovine trypsin and not for chymotrypsinogen A (Table 1). Identity to *M. sexta* trypsin B ranged from 44.3% (*P. xylostella*) to 71.0% (*C. includens*) among the pests; mean pLDDT was 89.7–91.0 for the eight pest models and 88.9–92.2 across the ten. The panel is therefore trypsin-type despite the automatic "Chymotrypsin" annotation, but expression of these enzymes in the pest midguts is not documented (Section 2.1). P1 was Lys15 in BPTI and Lys5 in SFTI-1; in both complexes the S1 contact set had 14 trypsin residues, including Asp189, Ser190, Cys191, Gln192, Gly193, Asp194, His57, Ser195, Val213, Ser214, Trp215, Gly216, Gly219 and Gly226 (Table S1). All 20 receptor–template pairs were accepted (TM-score 0.946–0.957; RMSD 1.18–1.41 Å), all subsite residues were transferred (48 of 48 for 2PTC and 49 of 49 for 1SFI, exosite included), and the Asp189 equivalent found by structure matched the one found from sequence in all ten receptors.
+All ten sequences carry the catalytic motif G[DN]SGG[PT] and an aspartate at the specificity position, the residue found for bovine trypsin and not for chymotrypsinogen A (Table 1). Identity to *M. sexta* trypsin B ranged from 44.3% (*P. xylostella*) to 71.0% (*C. includens*) among the pests; mean pLDDT was 89.7–91.0 for the eight pest models and 88.9–92.2 across the ten. In every model the residues equivalent to His57, Asp102 and Ser195 are His, Asp and Ser, and the His–Ser and His–Asp distances (2.92–3.13 Å and 2.70–2.75 Å) are those of an assembled triad; the pocket residues Asp189, Cys191, Gly193, Asp194, Gly216 and Gly226 are conserved, whereas Ser190, Val213, Trp215 and Gly219 vary among species (Table S2). The triad does not separate trypsin from chymotrypsin, which share it; the Asp189 does. The panel is therefore trypsin-type despite the automatic "Chymotrypsin" annotation, but expression of these enzymes in the pest midguts is not documented (Section 2.1). P1 was Lys15 in BPTI and Lys5 in SFTI-1; in both complexes the S1 contact set had 14 trypsin residues, including Asp189, Ser190, Cys191, Gln192, Gly193, Asp194, His57, Ser195, Val213, Ser214, Trp215, Gly216, Gly219 and Gly226 (Table S1). All 20 receptor–template pairs were accepted (TM-score 0.946–0.957; RMSD 1.18–1.41 Å), all subsite residues were transferred (48 of 48 for 2PTC and 49 of 49 for 1SFI, exosite included), and the Asp189 equivalent found by structure matched the one found from sequence in all ten receptors.
 
 **Table 1.** Receptor panel (AlphaFold models). Identity: to *M. sexta* P35046. Numbers of the catalytic serine and of the Asp189 equivalent refer to the numbering of the model.
 
@@ -256,7 +256,7 @@ Not applicable. This is a computational study; it involved no animals, human par
 
 ## Supplementary material
 
-Figures S1–S11 and Table S1 (legends and table below) are supplied as Supplementary Material.
+Figures S1–S11 and Tables S1–S2 (legends and tables below) are supplied as Supplementary Material.
 
 ---
 
@@ -311,6 +311,29 @@ Figures S1–S11 and Table S1 (legends and table below) are supplied as Suppleme
 | S1′ | Ala16 | Cys42, Gln192, Gly193, His57, Phe41, Ser195 | Ser6 | same 6 residues |
 | S2′ | Arg17 | Gln192, Gly193, His40, Phe41, Tyr151, Tyr39 | Ile7 | same 6 residues |
 | S3′ | Ile18 | His57, Phe41, Tyr39 | Pro8 | none |
+
+
+**Table S2.** Catalytic triad and S1 pocket of the ten receptors (AlphaFold models). Positions are given in the numbering of the model; the column of bovine trypsin (P00760) gives the reference numbering. Bold: residue different from bovine trypsin. The S1 pocket is the set of 14 trypsin residues in contact with P1 in 2PTC and 1SFI (Table S1); His57 and Ser195 belong to it and appear once, under the triad. Asp189 is the specificity residue (Ser in chymotrypsinogen A, P00766). Distances: His NE2 to Ser OG and His ND1 to the nearest Asp102 carboxylate oxygen in the model. Data: `data-lepidoptera-panel/triad_s1_by_receptor.csv`; script: `manuscript/make_table_s2.py`.
+
+| Group | Position | Bovine trypsin | *S. frugiperda* | *S. litura* | *O. nubilalis* | *D. saccharalis* | *C. includens* | *H. virescens* | *P. xylostella* | *A. gemmatalis* | *M. sexta* | *B. mori* |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Catalytic triad | His57 | H57 | H69 | H69 | H69 | H69 | H69 | H68 | H70 | H71 | H70 | H70 |
+|  | Asp102 | D102 | D114 | D114 | D114 | D114 | D114 | D113 | D116 | D116 | D115 | D115 |
+|  | Ser195 | S195 | S220 | S211 | S213 | S213 | S212 | S219 | S211 | S217 | S213 | S212 |
+| S1 pocket | Asp189 | D189 | D214 | D205 | D207 | D207 | D206 | D213 | D205 | D211 | D207 | D206 |
+|  | Ser190 | S190 | **A215** | **Q206** | **Q208** | **Q208** | **Q207** | **A214** | **A206** | **Q212** | **Q208** | S207 |
+|  | Cys191 | C191 | C216 | C207 | C209 | C209 | C208 | C215 | C207 | C213 | C209 | C208 |
+|  | Gln192 | Q192 | Q217 | Q208 | Q210 | Q210 | Q209 | Q216 | Q208 | Q214 | Q210 | **T209** |
+|  | Gly193 | G193 | G218 | G209 | G211 | G211 | G210 | G217 | G209 | G215 | G211 | G210 |
+|  | Asp194 | D194 | D219 | D210 | D212 | D212 | D211 | D218 | D210 | D216 | D212 | D211 |
+|  | Val213 | V213 | **T235** | **C225** | **C227** | **C227** | **C226** | V234 | V225 | **C231** | **C227** | **S226** |
+|  | Ser214 | S214 | S236 | S226 | S228 | S228 | S227 | S235 | S226 | S232 | S228 | S227 |
+|  | Trp215 | W215 | W237 | **F227** | W229 | W229 | W228 | W236 | W227 | **F233** | W229 | **F228** |
+|  | Gly216 | G216 | G238 | G228 | G230 | G230 | G229 | G237 | G228 | G234 | G230 | G229 |
+|  | Gly219 | G219 | **E240** | G230 | G232 | G232 | **Q231** | **Q239** | G230 | G236 | **E232** | **N231** |
+|  | Gly226 | G226 | G248 | G238 | G240 | G240 | G239 | G247 | G238 | G244 | G240 | G239 |
+| Geometry | His NE2…Ser OG (Å) | – | 3.12 | 3.00 | 2.95 | 2.92 | 3.00 | 3.13 | 2.98 | 2.95 | 2.95 | 3.00 |
+| | His ND1…Asp102 OD (Å) | – | 2.71 | 2.72 | 2.73 | 2.75 | 2.73 | 2.72 | 2.75 | 2.71 | 2.70 | 2.74 |
 
 ---
 

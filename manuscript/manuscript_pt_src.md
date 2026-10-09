@@ -35,7 +35,7 @@ Perguntamos aqui até onde os inibidores naturais podem ser levados a peptídeos
 
 ### 2.1 Receptores e subsítios catalíticos
 
-Proteases digestivas do tipo tripsina de oito espécies-praga (*S. frugiperda*, *S. litura*, *Ostrinia nubilalis*, *Diatraea saccharalis*, *Chrysodeixis includens*, *Heliothis virescens*, *Plutella xylostella*, *A. gemmatalis*) e das referências *Manduca sexta* e *Bombyx mori* foram modeladas com estruturas do AlphaFold v2 {jumper2021;varadi2024} (Tabela 1). Só as entradas de *M. sexta* são revisadas e têm evidência de expressão no intestino médio; para as demais espécies as entradas foram escolhidas por homologia. A identidade com a tripsina B de *M. sexta* (P35046) usou um alinhamento global BLOSUM62 {cock2009}. O resíduo de especificidade foi localizado seis resíduos antes da serina catalítica (motivo G[DN]SGG[PT]), um deslocamento calibrado com a tripsina bovina e o quimotripsinogênio A {uniprot2025}.
+Proteases digestivas do tipo tripsina de oito espécies-praga (*S. frugiperda*, *S. litura*, *Ostrinia nubilalis*, *Diatraea saccharalis*, *Chrysodeixis includens*, *Heliothis virescens*, *Plutella xylostella*, *A. gemmatalis*) e das referências *Manduca sexta* e *Bombyx mori* foram modeladas com estruturas do AlphaFold v2 {jumper2021;varadi2024} (Tabela 1). Só as entradas de *M. sexta* são revisadas e têm evidência de expressão no intestino médio; para as demais espécies as entradas foram escolhidas por homologia. A identidade com a tripsina B de *M. sexta* (P35046) usou um alinhamento global BLOSUM62 {cock2009}. O resíduo de especificidade foi localizado seis resíduos antes da serina catalítica (motivo G[DN]SGG[PT]), um deslocamento calibrado com a tripsina bovina e o quimotripsinogênio A {uniprot2025}. Nove das dez entradas do UniProt têm o nome automático "Chymotrypsin"; a classe foi, por isso, decidida pelo resíduo nessa posição (Asp na tripsina, Ser na quimotripsina), e as posições da tríade catalítica e do bolsão S1 foram conferidas em cada modelo por alinhamento global com a tripsina bovina e pelas distâncias de ligação de hidrogênio nas coordenadas do AlphaFold (Tabela S2).
 
 Os subsítios S4–S3′ {schechter1967} foram definidos a partir de dois complexos cristalográficos da tripsina bovina {berman2000}, 2PTC (BPTI) e 1SFI (SFTI-1; {#luckett1999}). O P1 foi o resíduo do inibidor cujo carbono carbonílico fica mais perto do Oγ da serina catalítica, e um resíduo da tripsina foi atribuído a um subsítio quando qualquer um de seus átomos estava a até 4,5 Å do resíduo correspondente do inibidor. Cada cadeia de tripsina foi alinhada a cada receptor com o Foldseek em modo TM-align {vankempen2024;zhang2005}, os resíduos foram transferidos pelo alinhamento e um par receptor–molde foi aceito com TM-score de pelo menos 0,5 e RMSD de no máximo 3,0 Å.
 
@@ -82,7 +82,7 @@ Os cálculos rodaram em uma NVIDIA RTX 5070 Ti (16 GB) com 32 núcleos de CPU (P
 
 ### 3.1 Painel de receptores e transferência dos subsítios
 
-As dez sequências têm o motivo catalítico G[DN]SGG[PT] e um aspartato na posição de especificidade, o resíduo encontrado na tripsina bovina e não no quimotripsinogênio A (Tabela 1). A identidade com a tripsina B de *M. sexta* variou de 44,3% (*P. xylostella*) a 71,0% (*C. includens*) entre as pragas; o pLDDT médio foi de 89,7 a 91,0 nos oito modelos de praga e de 88,9 a 92,2 nos dez. O painel é, portanto, do tipo tripsina apesar da anotação automática "Chymotrypsin", mas a expressão dessas enzimas nos intestinos médios das pragas não está documentada (Seção 2.1). O P1 foi a Lys15 no BPTI e a Lys5 no SFTI-1; nos dois complexos o conjunto de contatos de S1 teve 14 resíduos da tripsina, entre eles Asp189, Ser190, Cys191, Gln192, Gly193, Asp194, His57, Ser195, Val213, Ser214, Trp215, Gly216, Gly219 e Gly226 (Tabela S1). Todos os 20 pares receptor–molde foram aceitos (TM-score 0,946–0,957; RMSD 1,18–1,41 Å), todos os resíduos dos subsítios foram transferidos (48 de 48 para o 2PTC e 49 de 49 para o 1SFI, exossítio incluído), e o equivalente do Asp189 achado pela estrutura coincidiu com o achado pela sequência nos dez receptores.
+As dez sequências têm o motivo catalítico G[DN]SGG[PT] e um aspartato na posição de especificidade, o resíduo encontrado na tripsina bovina e não no quimotripsinogênio A (Tabela 1). A identidade com a tripsina B de *M. sexta* variou de 44,3% (*P. xylostella*) a 71,0% (*C. includens*) entre as pragas; o pLDDT médio foi de 89,7 a 91,0 nos oito modelos de praga e de 88,9 a 92,2 nos dez. Em todos os modelos os resíduos equivalentes à His57, ao Asp102 e à Ser195 são His, Asp e Ser, e as distâncias His–Ser e His–Asp (2,92–3,13 Å e 2,70–2,75 Å) são as de uma tríade montada; os resíduos do bolsão Asp189, Cys191, Gly193, Asp194, Gly216 e Gly226 são conservados, ao passo que Ser190, Val213, Trp215 e Gly219 variam entre as espécies (Tabela S2). A tríade não separa a tripsina da quimotripsina, que a compartilham; o Asp189 separa. O painel é, portanto, do tipo tripsina apesar da anotação automática "Chymotrypsin", mas a expressão dessas enzimas nos intestinos médios das pragas não está documentada (Seção 2.1). O P1 foi a Lys15 no BPTI e a Lys5 no SFTI-1; nos dois complexos o conjunto de contatos de S1 teve 14 resíduos da tripsina, entre eles Asp189, Ser190, Cys191, Gln192, Gly193, Asp194, His57, Ser195, Val213, Ser214, Trp215, Gly216, Gly219 e Gly226 (Tabela S1). Todos os 20 pares receptor–molde foram aceitos (TM-score 0,946–0,957; RMSD 1,18–1,41 Å), todos os resíduos dos subsítios foram transferidos (48 de 48 para o 2PTC e 49 de 49 para o 1SFI, exossítio incluído), e o equivalente do Asp189 achado pela estrutura coincidiu com o achado pela sequência nos dez receptores.
 
 **Tabela 1.** Painel de receptores (modelos do AlphaFold). Identidade: com a P35046 de *M. sexta*. Os números da serina catalítica e do equivalente do Asp189 se referem à numeração do modelo.
 
@@ -259,7 +259,7 @@ Não se aplica. É um estudo computacional; não envolveu animais, participantes
 
 ## Material suplementar
 
-As Figuras S1–S11 e a Tabela S1 (legendas e tabela abaixo) são fornecidas como material suplementar.
+As Figuras S1–S11 e as Tabelas S1–S2 (legendas e tabelas abaixo) são fornecidas como material suplementar.
 
 ---
 
@@ -314,3 +314,25 @@ As Figuras S1–S11 e a Tabela S1 (legendas e tabela abaixo) são fornecidas com
 | S1′ | Ala16 | Cys42, Gln192, Gly193, His57, Phe41, Ser195 | Ser6 | os mesmos 6 resíduos |
 | S2′ | Arg17 | Gln192, Gly193, His40, Phe41, Tyr151, Tyr39 | Ile7 | os mesmos 6 resíduos |
 | S3′ | Ile18 | His57, Phe41, Tyr39 | Pro8 | nenhum |
+
+**Tabela S2.** Tríade catalítica e bolsão S1 dos dez receptores (modelos do AlphaFold). As posições estão na numeração do modelo; a coluna da tripsina bovina (P00760) dá a numeração de referência. Negrito: resíduo diferente do da tripsina bovina. O bolsão S1 é o conjunto dos 14 resíduos da tripsina em contato com o P1 em 2PTC e 1SFI (Tabela S1); a His57 e a Ser195 pertencem a ele e aparecem uma só vez, na tríade. O Asp189 é o resíduo de especificidade (Ser no quimotripsinogênio A, P00766). Distâncias: NE2 da His à OG da Ser e ND1 da His ao oxigênio do carboxilato do Asp102 mais próximo, no modelo. Dados: `data-lepidoptera-panel/triad_s1_by_receptor.csv`; script: `manuscript/make_table_s2.py`.
+
+| Grupo | Posição | Tripsina bovina | *S. frugiperda* | *S. litura* | *O. nubilalis* | *D. saccharalis* | *C. includens* | *H. virescens* | *P. xylostella* | *A. gemmatalis* | *M. sexta* | *B. mori* |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Tríade catalítica | His57 | H57 | H69 | H69 | H69 | H69 | H69 | H68 | H70 | H71 | H70 | H70 |
+|  | Asp102 | D102 | D114 | D114 | D114 | D114 | D114 | D113 | D116 | D116 | D115 | D115 |
+|  | Ser195 | S195 | S220 | S211 | S213 | S213 | S212 | S219 | S211 | S217 | S213 | S212 |
+| Bolsão S1 | Asp189 | D189 | D214 | D205 | D207 | D207 | D206 | D213 | D205 | D211 | D207 | D206 |
+|  | Ser190 | S190 | **A215** | **Q206** | **Q208** | **Q208** | **Q207** | **A214** | **A206** | **Q212** | **Q208** | S207 |
+|  | Cys191 | C191 | C216 | C207 | C209 | C209 | C208 | C215 | C207 | C213 | C209 | C208 |
+|  | Gln192 | Q192 | Q217 | Q208 | Q210 | Q210 | Q209 | Q216 | Q208 | Q214 | Q210 | **T209** |
+|  | Gly193 | G193 | G218 | G209 | G211 | G211 | G210 | G217 | G209 | G215 | G211 | G210 |
+|  | Asp194 | D194 | D219 | D210 | D212 | D212 | D211 | D218 | D210 | D216 | D212 | D211 |
+|  | Val213 | V213 | **T235** | **C225** | **C227** | **C227** | **C226** | V234 | V225 | **C231** | **C227** | **S226** |
+|  | Ser214 | S214 | S236 | S226 | S228 | S228 | S227 | S235 | S226 | S232 | S228 | S227 |
+|  | Trp215 | W215 | W237 | **F227** | W229 | W229 | W228 | W236 | W227 | **F233** | W229 | **F228** |
+|  | Gly216 | G216 | G238 | G228 | G230 | G230 | G229 | G237 | G228 | G234 | G230 | G229 |
+|  | Gly219 | G219 | **E240** | G230 | G232 | G232 | **Q231** | **Q239** | G230 | G236 | **E232** | **N231** |
+|  | Gly226 | G226 | G248 | G238 | G240 | G240 | G239 | G247 | G238 | G244 | G240 | G239 |
+| Geometry | His NE2…Ser OG (Å) | – | 3,12 | 3,00 | 2,95 | 2,92 | 3,00 | 3,13 | 2,98 | 2,95 | 2,95 | 3,00 |
+| | His ND1…Asp102 OD (Å) | – | 2,71 | 2,72 | 2,73 | 2,75 | 2,73 | 2,72 | 2,75 | 2,71 | 2,70 | 2,74 |
