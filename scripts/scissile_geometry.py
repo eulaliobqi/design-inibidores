@@ -79,7 +79,10 @@ def run(tag, F, key, seq, cyclic):
         out.append({"bond": f"{seq[i]}{i+1}-{nxt}{(i+1)%len(seq)+1}", "d_OG_C_median_A": round(float(np.median(dOG[h2, i])), 2),
                     "d_OG_C_min_A": round(float(dOG[h2, i].min()), 2), "frac_d_lt_4A": round(float((dOG[h2, i] < 4.0).mean()), 3),
                     "NAC_frac": round(float(nac[h2, i].mean()), 3), "NAC_frac_all": round(float(nac[:, i].mean()), 3)})
-    return {"gly193_name": g193_name, "bonds": out}
+    # series por quadro da 2a metade, so para ligacoes com K/R em P1 (as cindiveis pela tripsina):
+    # alimentam a figura que compara sitio protegido por Pro x sitio exposto.
+    series = {out[i]["bond"]: [round(float(x), 2) for x in dOG[h2, i]] for i in range(n_b) if seq[i] in "KR"}
+    return {"gly193_name": g193_name, "bonds": out, "d_OG_C_h2_by_frame": series}
 
 
 if __name__ == "__main__":
