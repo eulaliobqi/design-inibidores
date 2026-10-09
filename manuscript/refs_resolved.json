@@ -75,5 +75,10 @@
  "miller2012": "Miller BR, McGee TD, Swails JM, Homeyer N, Gohlke H, Roitberg AE (2012). MMPBSA.py: An Efficient Program for End-State Free Energy Calculations. Journal of Chemical Theory and Computation 8, 3314-3321. doi: 10.1021/ct300418h",
  "wan2026": "Wan S, Zhang X, Xue X, Coveney PV (2026). Reliability of AI methods in drug discovery: evaluation of Boltz-2 for structure and binding affinity prediction. Journal of Chemical Theory and Computation 22, 7811-7824. doi: 10.1021/acs.jctc.6c01334",
  "li2026": "Li Z, Yuan Y, Hu K, Pan P, He F (2026). Benchmarking confidence estimation and rescoring for cyclic peptide–protein complex predictions. bioRxiv. doi: 10.64898/2026.08.20.746104",
- "knapp2018": "Knapp B, Ospina L, Deane CM (2018). Avoiding false positive conclusions in molecular simulation: the importance of replicas. Journal of Chemical Theory and Computation 14, 6127-6138. doi: 10.1021/acs.jctc.8b00391"
+ "knapp2018": "Knapp B, Ospina L, Deane CM (2018). Avoiding false positive conclusions in molecular simulation: the importance of replicas. Journal of Chemical Theory and Computation 14, 6127-6138. doi: 10.1021/acs.jctc.8b00391",
+ "rodriguez2008": "Rodriguez J, Gupta N, Smith RD, Pevzner PA (2008). Does Trypsin Cut Before Proline? Journal of Proteome Research 7, 300-305. doi: 10.1021/pr0705035",
+ "pan2014": "Pan Y, Cheng K, Mao J, Liu F, Liu J, Ye M, et al. (2014). Quantitative proteomics reveals the kinetics of trypsin-catalyzed protein digestion. Analytical and Bioanalytical Chemistry 406, 6247-6256. doi: 10.1007/s00216-014-8071-6",
+ "songmarkley2003": "Song J, Markley JL (2003). Protein Inhibitors of Serine Proteinases: Role of Backbone Structure and Dynamics in Controlling the Hydrolysis Constant. Biochemistry 42, 5186-5194. doi: 10.1021/bi034041u",
+ "karna2015": "Karna N, Łęgowska A, Malicki S, Dębowski D, Golik P, Gitlin A, et al. (2015). Investigation of Serine-Proteinase-Catalyzed Peptide Splicing in Analogues of Sunflower Trypsin Inhibitor 1 (SFTI-1). ChemBioChem 16, 2036-2045. doi: 10.1002/cbic.201500296",
+ "wei2019": "Wei W, Ma J, Xie D, Zhou Y (2019). Linking inhibitor motions to proteolytic stability of sunflower trypsin inhibitor-1. RSC Advances 9, 13776-13786. doi: 10.1039/c9ra02114k"
 }

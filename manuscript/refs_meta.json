@@ -608,5 +608,45 @@
   ],
   "n": 3,
   "year": 2018
+ },
+ "rodriguez2008": {
+  "fam": [
+   "Rodriguez",
+   "Gupta"
+  ],
+  "n": 4,
+  "year": 2008
+ },
+ "pan2014": {
+  "fam": [
+   "Pan",
+   "Cheng"
+  ],
+  "n": 7,
+  "year": 2014
+ },
+ "songmarkley2003": {
+  "fam": [
+   "Song",
+   "Markley"
+  ],
+  "n": 2,
+  "year": 2003
+ },
+ "karna2015": {
+  "fam": [
+   "Karna",
+   "Łęgowska"
+  ],
+  "n": 11,
+  "year": 2015
+ },
+ "wei2019": {
+  "fam": [
+   "Wei",
+   "Ma"
+  ],
+  "n": 4,
+  "year": 2019
  }
 }
