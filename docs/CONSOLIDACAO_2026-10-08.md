@@ -36,3 +36,6 @@
 - Ocupância mudou > 0,5 em 3 de 15 pares do mesmo pH (GQNDS pH 8,2: 0,04→0,73; GGHSE pH 8,2: 0,00→0,88; IYPETG pH 8,2: 0,57→0,00); dois cruzaram 0,70. Só NGGRPDAP (0,98 e 1,00, pH 8,2) e GGKPGEP (1,00 em todas) repetiram. A "perda de S1" do GGHSE em pH 8,2 e a ocupância só na 1ª metade do GQNDS não se reproduzem.
 - Texto: 3.7, 3.8, 4.4(vi), 5 e nota 2(b) (EN e PT). Os 8 candidatos repetidos não são amostra aleatória (declarado). Auditoria 187/0. O docx PT foi gravado em `Manuscrito_PT_leitura.docx` (Word fechado; `_novo` removido).
 - Falta: quando `md10b_L/Onubilalis...` terminar, analisar, rodar `compare_ph` e atualizar contagens (15→16 pares; 7→8 em pH 10,0).
+
+## 6. Atualização de 08/10 (21:15): piso de ruído completo (16 de 16)
+- `noise-L` terminou às 17:26 (`NOISE_L_DONE`). Última MD analisada (NGGRPDAP, pH 10,0: ocupância 1,00 e 1,00; distância final 2,74 e 2,76 Å), `compare_ph` refeito. Medianas no pH 10,0 com n = 8: distância 0,31 Å, ocupância 0,03, RMSD 0,11 nm; pH 8,2 inalterado. Contagens no texto: 16 pares (8 por pH); 3 de 16 mudaram a ocupância em > 0,5. NGGRPDAP repete nos dois pH, GGKPGEP idem.

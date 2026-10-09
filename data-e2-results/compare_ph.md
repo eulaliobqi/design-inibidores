@@ -30,28 +30,28 @@
  "noise_floor_same_pH_other_seed": {
   "pH10": {
    "d_anchor_asp_fim_A": {
-    "n": 7,
-    "median_abs_diff": 0.31000000000000005
+    "n": 8,
+    "median_abs_diff": 0.30999999999999983
    },
    "occ_5A_h2": {
-    "n": 7,
-    "median_abs_diff": 0.052000000000000046
+    "n": 8,
+    "median_abs_diff": 0.03200000000000003
    },
    "peptide_rmsd_local_nm_final20pct": {
-    "n": 7,
-    "median_abs_diff": 0.10899999999999999
+    "n": 8,
+    "median_abs_diff": 0.11449999999999999
    },
    "contact_any_frac_4.5A": {
-    "n": 7,
+    "n": 8,
     "median_abs_diff": 0.0
    },
    "ser195_contact_frac_4.5A": {
-    "n": 7,
-    "median_abs_diff": 0.05800000000000005
+    "n": 8,
+    "median_abs_diff": 0.038000000000000034
    },
    "his57_contact_frac_4.5A": {
-    "n": 7,
-    "median_abs_diff": 0.008000000000000007
+    "n": 8,
+    "median_abs_diff": 0.007000000000000006
    }
   },
   "pH82": {

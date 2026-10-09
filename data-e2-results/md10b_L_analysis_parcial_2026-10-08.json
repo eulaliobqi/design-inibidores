@@ -118,5 +118,45 @@
     "occ_6A_h1": 0.436,
     "occ_6A_h2": 0.47,
     "passes_screen": false
+  },
+  "Agemmatalis__r2": {
+    "sequence": "NGGRPDAP",
+    "cyclic": false,
+    "n_frames": 501,
+    "receptor_residues": 260,
+    "s1_asp": "ASP211",
+    "anchor_idx": 3,
+    "anchor_aa": "R",
+    "d_anchor_asp_mean_A": 2.76,
+    "d_anchor_asp_ini_A": 2.8,
+    "d_anchor_asp_fim_A": 2.76,
+    "com_dist_pep_rec_A_median": 13.0,
+    "n_frames_image_jump_gt30A": 0,
+    "peptide_rmsd_local_nm_mean": 0.322,
+    "peptide_rmsd_local_nm_final20pct": 0.349,
+    "window_early_ns": [
+      0.0,
+      0.4
+    ],
+    "window_late_ns": [
+      8.0,
+      10.0
+    ],
+    "contact_any_frac_4.5A": 1.0,
+    "ser195_contact_frac_4.5A": 1.0,
+    "his57_contact_frac_4.5A": 0.998,
+    "anchor_idx_h1": 3,
+    "anchor_idx_h2": 3,
+    "anchor_same_in_halves": true,
+    "occ_4A": 1.0,
+    "occ_4A_h1": 1.0,
+    "occ_4A_h2": 1.0,
+    "occ_5A": 1.0,
+    "occ_5A_h1": 1.0,
+    "occ_5A_h2": 1.0,
+    "occ_6A": 1.0,
+    "occ_6A_h1": 1.0,
+    "occ_6A_h2": 1.0,
+    "passes_screen": true
   }
 }
