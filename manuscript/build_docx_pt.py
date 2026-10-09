@@ -75,7 +75,7 @@ def sub(mo):
 
 
 src = re.sub(r"\{([@#]?[a-z0-9]+(?:;[a-z0-9 ]+)*)\}", sub, src)
-cited = sorted(set(used), key=lambda k: (meta[k]["fam"][0].lower(), meta[k]["year"]))
+cited = sorted(set(used), key=lambda k: (meta[k]["fam"][0].lower(), str(meta[k]["year"])))
 unused = sorted(set(meta) - set(used))
 if unused:
     raise SystemExit(f"referencias nao citadas: {unused}")
@@ -176,29 +176,31 @@ panel = f"""
 
 **Fonte e certeza dos limites.** Conferidos em 30/09/2026 nas páginas oficiais da Frontiers: extensão máxima de 12.000 palavras para *Original Research* na *Frontiers in Natural Products*; 5–8 palavras-chave; figuras a 300 dpi no tamanho final em TIFF, JPEG ou EPS; referências autor-ano com os seis primeiros autores; uso de IA generativa a ser reconhecido. **Não especificados nessas páginas:** limite de palavras do resumo (350 é a convenção da Frontiers, vista em outras revistas do grupo), limite de caracteres do título, número máximo de figuras/tabelas para *Original Research* e o tamanho do título curto. Confirme esses quatro pontos no sistema de submissão antes de enviar.
 
-## Estado dos cálculos (06/10/2026, manhã)
+## Estado dos cálculos (08/10/2026, revisão final)
 
-| Etapa | Estado | Resultado até aqui |
+Todas as análises computacionais previstas estão concluídas e integradas; nenhum job está rodando no servidor.
+
+| Etapa | Estado | Resultado |
 |---|---|---|
 | Painel de 8 espécies e subsítios | concluído | TM-score 0,946–0,957 nos 20 pares (Seção 3.1) |
 | Calibração da escada de escores | concluída | Boltz-2 10/10; RMSD do ligante 9/10; MM-GBSA 4/10; PRODIGY 2/10; os dois últimos acompanham o tamanho da interface (Seção 3.2, Figura 2) |
 | Geração e critério duro | concluídos | 22.066 sequências; 527 lineares e 543 cíclicas (Seção 3.3) |
 | E1–E4 · Boltz-2, reescore, controles pareados, QC de pose, matriz 8 × 8 | concluídos | 48 candidatos finais; Δ positivo em 63/78 (L) e 60/79 (M), da ordem do ruído (Seção 3.4) |
 | MD de 10 ns em pH 10,0 | concluída (48/48) | a ocupância de S1 acompanha a pose inicial (Seção 3.5, Figura 5) |
+| MD de 10 ns em pH 8,2 | concluída (48/48) | nenhuma métrica pareada difere de pH 10,0 (distância final P = 0,16; ocupância P = 0,88); só NGGRPDAP e GGKPGEP repetem S1 nos dois pH (Seção 3.7, Figura 7) |
+| Execuções repetidas (16 pares) | concluídas | o ruído entre execuções do mesmo pH é da ordem da diferença entre pH (Seção 3.7) |
+| MM-GBSA e PRODIGY nas trajetórias (pH 8,2 e 10,0) e classificação final | concluídos | Seções 3.6 e 3.7, Figuras 6, 7 e S10 |
+| Geometria de ataque da Ser195 | concluída | 1 de 20 execuções com algum quadro quase de ataque; sem linha de base com substrato conhecido (Seção 3.8) |
 | Controles em MD (7 embaralhados; 8 de troca de âncora) | simulados e retirados do artigo (05/10) | a distância inicial explica o resultado; uma frase de divulgação em 3.5 |
-| PRODIGY nas 48 poses | concluído | ΔG −12,2 a −7,1 kcal/mol; acompanha o comprimento (Seção 3.6, Figura 6) |
-| MD de 10 ns em pH 8,2 (48) e execuções repetidas (16) | **em curso** (`md82-*`, `md82rest-*`, `noise-*`); 17 das 48 concluídas em 06/10, 17:15 (8 L e 9 M; as frentes terminam o 1º lote em horários diferentes) | 48 MDs: fim previsto entre a noite de 07/10 e a manhã de 08/10; repetidas: ≈ 09/10 (extrapolação do ritmo medido) |
-| MM-GBSA e PRODIGY nas trajetórias (pH 8,2 e pH 10,0) e classificação final | **em curso** (`energy-queue`, `mmgbsa-md10`) | pendente (Seções 3.6 e 3.7) |
 | Contrasseleção frente a proteases não alvo | não construída | sem ela, nenhuma seletividade é afirmada |
-
-**Fila de cálculo:** o ritmo medido em 06/10 é de 1,3 a 2,7 h por MD (média ≈ 2,1 h) com as duas frentes juntas e a GPU compartilhada; a previsão do conjunto é extrapolação, não medida (a estimativa anterior, de 75 min por MD, vinha dos primeiros 14 min e estava otimista).
 
 ## Pendências antes da submissão
 
-1. Resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 7); depois ajustar resumo, 4.1, 4.4 e 5.
-2. Motivo do pH 8,2 (Seção 2.6) e lista de peptídeos recomendados.
+1. **Resolvido:** resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 7), com resumo, 4.1, 4.4 e 5 ajustados.
+2. **Em aberto (decisão dos autores):** (a) motivo do pH 8,2 na Seção 2.6; o candidato é que os ensaios cinéticos com os peptídeos usaram Tris-HCl 0,1 M, CaCl~2~ 20 mM em pH 8,2 (Schultz et al., 2026), mas isso não foi conferido no texto completo; (b) lista de peptídeos recomendados: o manuscrito apresenta quatro peptídeos selecionados por critérios declarados (Seção 3.8, Tabela 4), e a lista final e os cortes dependem dos autores.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Revisar a auditoria metodológica e de código (`docs/AUDITORIA_2026-10-05.md`).
+5. Opcional: linha de base da geometria de ataque com um inibidor-substrato conhecido (SFTI-1).
 """
 
 full = panel + "\n" + src + "\n\n## Referências\n\n" + "\n\n".join(refs[k] for k in cited) + "\n"

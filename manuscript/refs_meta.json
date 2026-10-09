@@ -92,7 +92,7 @@
    "de Oliveira Mendes"
   ],
   "n": 6,
-  "year": 2020
+  "year": "2020a"
  },
  "merino2020rational": {
   "fam": [
@@ -100,7 +100,7 @@
    "Severiche Castro"
   ],
   "n": 6,
-  "year": 2020
+  "year": "2020b"
  },
  "merino2022": {
   "fam": [
@@ -116,7 +116,7 @@
    "Meriño-Cabrera"
   ],
   "n": 9,
-  "year": 2022
+  "year": "2022a"
  },
  "almeida2022tri": {
   "fam": [
@@ -124,7 +124,7 @@
    "Meriño-Cabrera"
   ],
   "n": 9,
-  "year": 2022
+  "year": "2022b"
  },
  "saikhedkar2018": {
   "fam": [
@@ -487,7 +487,7 @@
    "Zhu"
   ],
   "n": 8,
-  "year": 2012
+  "year": 2013
  },
  "zhan2010": {
   "fam": [
@@ -495,7 +495,7 @@
    "Zheng"
   ],
   "n": 4,
-  "year": 2010
+  "year": 2011
  },
  "nakonieczny2007": {
   "fam": [
@@ -648,5 +648,21 @@
   ],
   "n": 4,
   "year": 2019
+ },
+ "mariano2026": {
+  "fam": [
+   "Mariano",
+   "de Oliveira"
+  ],
+  "n": 13,
+  "year": 2026
+ },
+ "junior2026": {
+  "fam": [
+   "Júnior",
+   "Santos"
+  ],
+  "n": 14,
+  "year": 2026
  }
 }

@@ -65,14 +65,14 @@ def fig_e2():
     stats = {}
     for F in "LM":
         x = np.array([r["confidence_E1"] for r in rows[F]]); y = np.array([r["confidence_score"] for r in rows[F]])
-        ax[0].scatter(x, y, s=14, alpha=.65, color=CF[F], edgecolor="none", label=FNAME[F])
         stats[F] = (spearmanr(x, y)[0], float((y - x).mean()), len(x))
+        ax[0].scatter(x, y, s=14, alpha=.65, color=CF[F], edgecolor="none",
+                      label=f"{FNAME[F]}\nρ = {stats[F][0]:.2f}, Δ = {stats[F][1]:+.3f}")
     ax[0].plot([.8, 1], [.8, 1], ls=":", c="gray", lw=1)
     ax[0].set_xlim(.8, 1); ax[0].set_ylim(.8, 1)
     ax[0].set_xlabel(T("E1 confidence (1 sample)", "Confiança E1 (1 amostra)"))
     ax[0].set_ylabel(T("E2 confidence (mean of 15)", "Confiança E2 (média de 15)"))
-    ax[0].legend(frameon=False, loc="upper left")
-    ax[0].text(.995, .815, "\n".join(f"{FNAME[F]}: ρ = {stats[F][0]:.2f}, Δ = {stats[F][1]:+.3f}" for F in "LM"), ha="right")
+    ax[0].legend(frameon=False, loc="upper left", borderaxespad=.3, labelspacing=.6)
     
     # b) por especie: media E2 de cada candidato, L x M
     for i, sp in enumerate(SP):
@@ -86,9 +86,9 @@ def fig_e2():
     # c) fracao das 15 amostras que passam o QC de pose
     for F in "LM":
         q = np.array([r["n_samples_qc_pass"] / r["n_samples"] for r in rows[F]])
-        ax[2].hist(q, bins=np.linspace(0, 1.0001, 16), alpha=.6, color=CF[F], label=f"{FNAME[F]} (n = {len(q)})")
+        ax[2].hist(q, bins=np.linspace(0, 1.0001, 16), alpha=.6, color=CF[F], label=f"{FNAME[F]}\n(n = {len(q)})")
     ax[2].set_xlabel(T("fraction passing pose QC", "fração aprovada no QC"))
-    ax[2].set_ylabel(T("candidates", "candidatos")); ax[2].legend(frameon=False, loc="upper left")
+    ax[2].set_ylabel(T("candidates", "candidatos")); ax[2].legend(frameon=False, loc="center left")
     
     letters(ax)
     save(fig, "Figure9_E2_rescoring", "fig9_reescore_e2")
@@ -149,7 +149,8 @@ def fig_md():
     a1.axhline(5, ls="--", c="gray", lw=.8)
     a1.set_xlabel(T("time (ns)", "tempo (ns)")); a1.set_ylabel(T("anchor–Asp189 (Å)", "âncora–Asp189 (Å)"))
 
-    a1.legend(frameon=False, ncol=1, loc="upper left", handlelength=1.4)
+    h1_, l1_ = a1.get_legend_handles_labels()
+    fig.legend(h1_, l1_, loc="outside upper center", ncol=3, frameon=False, handlelength=1.8)
     a2.set_xlabel(T("time (ns)", "tempo (ns)")); a2.set_ylabel(T("peptide RMSD, Cα (nm)", "RMSD do peptídeo, Cα (nm)"))
 
     # (c) ocupancia do S1 a 5 A: 1a x 2a metade
@@ -158,14 +159,16 @@ def fig_md():
             mk = "o" if v["passes_screen"] else "x"
             a3.scatter(v["occ_5A_h1"], v["occ_5A_h2"], s=34, marker=mk, color=CF[F], alpha=.85, label=None)
     a3.plot([0, 1], [0, 1], ls=":", c="gray", lw=1); a3.axhline(.7, ls="--", c="gray", lw=.8)
-    a3.text(.02, .72, "70%", color="gray")
+    a3.text(.98, .72, "70%", color="gray", ha="right")
     a3.set_xlim(-.03, 1.03); a3.set_ylim(-.03, 1.03)
     a3.set_xlabel(T("S1 occupancy, first half", "ocupância de S1, 1ª metade"))
     a3.set_ylabel(T("S1 occupancy, second half", "ocupância de S1, 2ª metade"))
 
-    for F in "LM":
-        a3.scatter([], [], color=CF[F], label=FNAME[F])
-    a3.legend(frameon=False, loc="lower right")
+    from matplotlib.lines import Line2D
+    a3.legend(handles=[Line2D([], [], ls="", marker="s", color=CF[F], label=FNAME[F]) for F in "LM"] +
+              [Line2D([], [], ls="", marker="o", color="gray", label=T("passes", "passa")),
+               Line2D([], [], ls="", marker="x", color="gray", label=T("fails", "não passa"))],
+              frameon=False, loc="upper left", ncol=2, handletextpad=.3, columnspacing=.6, borderaxespad=.2)
     # (d) painel inferior: uma linha por frente (ocupancia 5 A 2a metade + Ser195 + qualquer contato)
     from matplotlib.patches import Patch
     bs = [fig.add_subplot(gs[1 + i, :]) for i in range(2)]

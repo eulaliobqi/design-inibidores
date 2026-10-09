@@ -147,10 +147,10 @@ def fig_funnel():
     ax[0].bar(x, [len(HL[s]) for s in SP], w, color="#457b9d", label=T("hard criterion, linear (front L)", "critério duro, linear (frente L)"))
     ax[0].bar(x + w, [len(HM[s]) for s in SP], w, color="#2a9d8f", label=T("hard criterion, circular (front M)", "critério duro, circular (frente M)"))
     for i, s in enumerate(SP):
-        ax[0].text(i, len(HL[s]) + 4, len(HL[s]), ha="center", fontsize=8)
-        ax[0].text(i + w, len(HM[s]) + 4, len(HM[s]), ha="center", fontsize=8)
+        ax[0].text(i, len(HL[s]) + 5, len(HL[s]), ha="center", va="bottom", fontsize=8, rotation=90)
+        ax[0].text(i + w, len(HM[s]) + 5, len(HM[s]), ha="center", va="bottom", fontsize=8, rotation=90)
     ax[0].set_xticks(x); ax[0].set_xticklabels(SHORT, rotation=35, ha="right", style="italic")
-    ax[0].set_ylabel(T("resistant-like sequences", "sequências RESISTENTE")); ax[0].set_ylim(0, 350); ax[0].legend(frameon=False, fontsize=8.5)
+    ax[0].set_ylabel(T("resistant-like sequences", "sequências RESISTENTE")); ax[0].set_ylim(0, 450); ax[0].legend(frameon=False, fontsize=8.5, loc="upper left")
     ax[0].set_title(T("Candidates surviving each screen", "Candidatos que sobrevivem a cada filtro"))
     tot = [sum(soft), len(AL), len(AM)]
     ax[1].bar(range(3), tot, color=["#e9c46a", "#457b9d", "#2a9d8f"])
@@ -175,7 +175,7 @@ def fig_comp():
     for off, rs, c, l in ((-.2, ALL, "#b0b0b0", T("all", "todas")), (.2, AL, "#457b9d", T("hard L", "duro L"))):
         cnt = collections.Counter(r["length"] for r in rs); tt = sum(cnt.values())
         ax[1].bar(xs + off, [cnt[k] / tt * 100 for k in lens], .4, color=c, label=l)
-    ax[1].set_xticks(xs); ax[1].set_xticklabels(lens, fontsize=8); ax[1].set_xlabel(T("length (residues)", "comprimento (aa)"))
+    ax[1].set_xticks(xs); ax[1].set_xticklabels(lens, fontsize=8, rotation=90); ax[1].set_xlabel(T("length (residues)", "comprimento (aa)"))
     ax[1].set_ylabel(T("% of sequences", "% das sequências")); ax[1].legend(frameon=False, fontsize=8.5); ax[1].set_title(T("Length", "Comprimento"))
     fig.tight_layout()
     fig.savefig(O / T("Figure6_hard_composition.png", "fig6_composicao.png")); fig.savefig(O / T("Figure6_hard_composition.pdf", "fig6_composicao.pdf")); plt.close()
@@ -192,7 +192,7 @@ def fig_boltz():
                   boxprops=dict(facecolor="#9bc4e2"), medianprops=dict(color="k"))
         a.set_title(t); a.tick_params(axis="x", rotation=40)
         for lab in a.get_xticklabels():
-            lab.set_style("italic")
+            lab.set_style("italic"); lab.set_ha("right"); lab.set_rotation_mode("anchor")
     allr = [r for v in sub.values() for r in v]
     Ls = sorted({r["length"] for r in allr})
     m = [np.mean([r["iptm"] for r in allr if r["length"] == l]) for l in Ls]
@@ -253,7 +253,7 @@ def fig_s1():
         for i in x:
             ax.text(i + off, 101, lab[:3], ha="center", fontsize=8)
     ax.set_xticks(x); ax.set_xticklabels(SHORT, rotation=35, ha="right", style="italic"); ax.set_ylabel(T("% of sequences", "% das sequências")); ax.set_ylim(0, 108)
-    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=3)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(.5, -.42), ncol=3)
     ax.set_title(T("Motif-score screen, linear-strict vs circular rule", "Filtro por escore de motivo, regra linear-estrita vs circular"))
     fig.tight_layout(); fig.savefig(O / T("FigureS1_motif_screen_rules.png", "figS1_regras_motivo.png")); plt.close()
 

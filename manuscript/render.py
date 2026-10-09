@@ -30,7 +30,7 @@ def sub(mo):
 out = re.sub(r"\{([@#]?[a-z0-9]+(?:;[a-z0-9 ]+)*)\}", sub, src)
 left = re.findall(r"\{[^}]*\}", out)
 if left: print("AVISO chaves restantes:", left[:5])
-cited = sorted(set(used), key=lambda k: (meta[k]["fam"][0].lower(), meta[k]["year"]))
+cited = sorted(set(used), key=lambda k: (meta[k]["fam"][0].lower(), str(meta[k]["year"])))
 unused = sorted(set(meta) - set(used))
 lst = "\n\n".join(refs[k] for k in cited)
 out = out.replace("## Drafting notes (remove before submission)", "## References\n\n" + lst + "\n\n---\n\n## Drafting notes (remove before submission)")

@@ -187,7 +187,12 @@ def fig7():
     for k, v in pp.items():
         seq = rk[(v["front"], v["key"])]["sequence"]
         if (v["front"], seq) in short:
-            a.annotate(seq, (len(seq), v["dG_kcal"]), xytext=(6, 5), textcoords="offset points")
+            if seq == "NGGRPDAP":
+                a.annotate(seq, (len(seq), v["dG_kcal"]), xytext=(6, 5), textcoords="offset points")
+            else:
+                yt = {"GGHSE": -8.0, "GQNDS": -8.5, "GGKPGEP": -9.0}[seq]
+                a.annotate(seq, (len(seq), v["dG_kcal"]), xytext=(8.3, yt), textcoords="data", va="center",
+                           arrowprops=dict(arrowstyle="-", color="0.4", lw=.6, shrinkA=0, shrinkB=2))
     n = [len(rk[(v["front"], v["key"])]["sequence"]) for v in pp.values()]
     g = [v["dG_kcal"] for v in pp.values()]
     a.text(0.97, 0.96, f"ρ = {spearmanr(n, g).statistic:.2f}", transform=a.transAxes, ha="right", va="top", fontweight="bold")
@@ -212,7 +217,8 @@ def fig7():
                     for r, row in zip(sel, mat)])
     im = b.imshow(rel, cmap="viridis_r", aspect="auto", vmin=0, vmax=1)
     b.set_xticks(range(len(stages) + 1))
-    b.set_xticklabels([names[s] for s in stages] + ["mean\nrank"], fontsize=7)
+    b.set_xticklabels([names[s].replace("-
+", "-").replace(chr(10), " ") for s in stages] + ["mean rank"], fontsize=8, rotation=35, ha="left", rotation_mode="anchor")
     b.xaxis.tick_top()
     b.set_yticks(range(len(sel)))
     b.set_yticklabels([f"{r['sequence']} ({'L' if r['front'] == 'L' else 'M'})" for r in sel], fontsize=8)
@@ -226,7 +232,7 @@ def fig7():
     cb.set_label(f"rank relative to its front\n(0 = best; L n = {npool['L']}, M n = {npool['M']})")
     for sp in b.spines.values():
         sp.set_visible(False)
-    letter(b, "B", -0.30, 1.14)
+    letter(b, "B", -0.30, 1.22)
     return save_journal(fig, OUT / "Figure6_energy_ranking"), allstages
 
 

@@ -13,8 +13,8 @@ from scipy.stats import spearmanr
 ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
 BLUE, ORANGE, GREEN, RED, GREY = "#0072B2", "#E69F00", "#009E73", "#D55E00", "#7f7f7f"
-plt.rcParams.update({"font.size": 7, "axes.labelsize": 7, "axes.titlesize": 7.5, "xtick.labelsize": 6.5,
-                     "ytick.labelsize": 6.5, "legend.fontsize": 6.5, "axes.spines.top": False,
+plt.rcParams.update({"font.size": 8, "axes.labelsize": 8, "axes.titlesize": 8, "xtick.labelsize": 8,
+                     "ytick.labelsize": 8, "legend.fontsize": 8, "axes.spines.top": False,
                      "axes.spines.right": False, "font.family": "DejaVu Sans", "pdf.fonttype": 42})
 MM = 1 / 25.4
 
@@ -83,15 +83,15 @@ for i, c in enumerate(cls):
     h = fc[c]["length_hist"]; tot = fc[c]["n"]
     ax.bar(np.arange(len(lens)) + (i - 1) * w, [100 * h.get(str(L), 0) / tot for L in lens], w, color=col[c], label=f"{name[c]} (n = {tot:,})")
 ax.set_xticks(range(len(lens))); ax.set_xticklabels(lens); ax.set_xlabel("Peptide length (residues)"); ax.set_ylabel("Sequences in class (%)")
-ax.set_title("A", loc="left", fontweight="bold"); ax.set_ylim(0, 33); ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.02), fontsize=6)
+ax.set_title("A", loc="left", fontweight="bold"); ax.set_ylim(0, 33); ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.02), fontsize=8)
 ax = axs[1]
 vals = [[100 * fc[c]["any_KR_frac"] for c in cls], [100 * fc[c]["geometric_P1_is_KR_frac"] for c in cls]]
 xx = np.arange(3)
 ax.bar(xx - 0.19, vals[0], 0.36, color=BLUE, label="contains K or R"); ax.bar(xx + 0.19, vals[1], 0.36, color=GREY, label="geometric P1 proxy is K/R")
-for xi, v in zip(xx - 0.19, vals[0]): ax.text(xi, v + 1.5, f"{v:.1f}", ha="center", fontsize=6)
-for xi, v in zip(xx + 0.19, vals[1]): ax.text(xi, v + 1.5, f"{v:.1f}", ha="center", fontsize=6)
+for xi, v in zip(xx - 0.19, vals[0]): ax.text(xi, v + 1.5, f"{v:.1f}", ha="center", fontsize=8)
+for xi, v in zip(xx + 0.19, vals[1]): ax.text(xi, v + 1.5, f"{v:.1f}", ha="center", fontsize=8)
 ax.set_xticks(xx); ax.set_xticklabels([name[c] for c in cls]); ax.set_ylabel("Sequences in class (%)"); ax.set_ylim(0, 118)
-ax.set_title("B", loc="left", fontweight="bold"); ax.legend(frameon=False, loc="upper left", fontsize=6)
+ax.set_title("B", loc="left", fontweight="bold"); ax.legend(frameon=False, loc="upper left", fontsize=8)
 ax = axs[2]
 aa = "GTPSDANLEVIKRFYHMQWC"; aa = "".join(sorted("ACDEFGHIKLMNPQRSTVW Y".replace(" ", ""), key=lambda a: -fc["RESISTENTE"]["aa_composition_pct"][a]))
 xx = np.arange(len(aa))

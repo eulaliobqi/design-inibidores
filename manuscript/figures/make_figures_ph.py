@@ -4,7 +4,7 @@
 Uso (de manuscript/): python figures/make_figures_ph.py figures/final
 Le data-e2-results/{mmgbsa_md10_{L,M}.json, md10_{L,M}_analysis.json} e, para pH 8,2,
 data-e2-results/{mmgbsa_md82_{L,M}, md82_{L,M}_analysis}_parcial_2026-10-07.json.
-Quando as 48 MDs de pH 8,2 terminarem, apontar --final para os arquivos completos e retirar a legenda 'partial'."""
+As 48 MDs de pH 8,2 estao completas (arquivos md82_{L,M}_analysis.json); os parciais so valem como reserva."""
 import json
 import sys
 from pathlib import Path
@@ -72,20 +72,29 @@ def rows():
 
 def paired(ax, R, key, ylabel, hline=None):
     for r in R:
-        c = FOCUS.get(r["seq"], GREY if r["F"] == "L" else TEAL)
+        c = FOCUS.get(r["seq"], BLUE if r["F"] == "L" else TEAL)
         lw = 1.8 if r["seq"] in FOCUS else 0.9
         ax.plot([0, 1], [r[key + "10"], r[key + "8"]], color=c, lw=lw, alpha=1 if r["seq"] in FOCUS else .6, marker="o", ms=3.5)
+    items = []
     for s, c in FOCUS.items():
         for r in R:
             if r["seq"] == s and (s != "GQNDS" or r["F"] == "L"):
-                dy = {"GQNDS": 6, "GGHSE": -6}.get(s, 0) if key == "occ" else ({"NGGRPDAP": 7, "GGKPGEP": -7}.get(s, 0) if key == "fim" else 0)
-                if key == "occ" and s == "GGKPGEP":
-                    dy = -10
-                ax.annotate(s, (1, r[key + "8"]), xytext=(5, dy), textcoords="offset points", color=c, va="center", fontsize=8)
+                items.append([s, c, r[key + "8"]])
                 break
+    lo, hi = (-0.1, 1.08) if key == "occ" else (min(r[key + "8"] for r in R), max(r[key + "8"] for r in R))
+    gap = 0.07 * (hi - lo) if key == "occ" else 3.2
+    items.sort(key=lambda t: t[2])
+    pos = [t[2] for t in items]
+    for i in range(1, len(pos)):
+        pos[i] = max(pos[i], pos[i - 1] + gap)
+    shift = (sum(pos) - sum(t[2] for t in items)) / len(pos)
+    pos = [q - shift for q in pos]
+    for (s, c, y), yt in zip(items, pos):
+        ax.annotate(s, (1, y), xytext=(1.12, yt), textcoords="data", color=c, va="center", fontsize=8,
+                    arrowprops=dict(arrowstyle="-", color=c, lw=.6, shrinkA=0, shrinkB=2))
     ax.set_xticks([0, 1])
     ax.set_xticklabels(["pH 10.0", "pH 8.2"])
-    ax.set_xlim(-.25, 1.75)
+    ax.set_xlim(-.25, 1.95)
     if key == "occ":
         ax.set_ylim(-0.1, 1.08)
     ax.set_ylabel(ylabel)
@@ -154,14 +163,16 @@ def figS10():
         a_.set_xlabel(xl)
         a_.set_ylabel(yl)
         letter(a_, L_)
+    ypos = {"GQNDS": -12, "GGHSE": -20, "GGKPGEP": -28, "NGGRPDAP": -52}
     for s, c in FOCUS.items():
         for i, q in enumerate(seq):
             if q == s:
-                ax[0].annotate(s, (L[i], dg[i]), xytext=(5, -2), textcoords="offset points", color=c, fontsize=8)
+                ax[0].annotate(s, (L[i], dg[i]), xytext=(8.6, ypos[s]), textcoords="data", color=c, fontsize=8, va="center",
+                               arrowprops=dict(arrowstyle="-", color=c, lw=.6, shrinkA=0, shrinkB=2))
                 break
-    ax[0].scatter([], [], c=BLUE, label="linear")
-    ax[0].scatter([], [], c=TEAL, label="macrocycle")
-    ax[0].legend(frameon=False, loc="lower right")
+    ax[2].scatter([], [], c=BLUE, label="linear")
+    ax[2].scatter([], [], c=TEAL, label="macrocycle")
+    ax[2].legend(frameon=False, loc="lower right")
     return save_journal(fig, OUT / "FigureS10_energy_trajectories"), len(X)
 
 

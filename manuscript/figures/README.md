@@ -20,3 +20,9 @@ python figures/collect_final.py                      # renomeia as demais para f
 `frontiers_style.py` codifica as exigências da *Frontiers* conferidas nas diretrizes oficiais: largura de 85 mm (uma coluna) ou 180 mm (duas), 300 dpi **no tamanho final**, texto nunca abaixo de 8 pt, altura máxima de uma página, TIF/JPEG/EPS em RGB. `apply_style()` recusa fonte menor que 8 pt em vez de encolher a figura em silêncio, e `save_journal()` devolve a largura e a altura medidas para conferência.
 
 A paleta é Okabe–Ito (segura para daltonismo) e é a mesma em todos os geradores: azul `#0072B2` = frente L (linear), verde-azulado `#2a9d8f` = frente M (macrociclo).
+
+## Revisão de 08/10/2026
+
+- Gerador novo: `make_figure_s2.py` (Figura S2, redesenhada a 8 pt). `make_figures.py` (antigo) não é mais origem da S2.
+- Boas práticas conferidas na literatura (DOI verificados no Crossref): Rougier et al. 2014, *Ten simple rules for better figures* (10.1371/journal.pcbi.1003833); Weissgerber et al. 2015, *Beyond bar and line graphs* (10.1371/journal.pbio.1002128); Streit e Gehlenborg 2014, *Bar charts and box plots* (10.1038/nmeth.2807); Wong 2011, *Color blindness* (10.1038/nmeth.1618). Dados pareados em halteres/linhas, dispersão com identidade, paleta Okabe–Ito.
+- Avaliação figura a figura e correções: `docs/REVISAO_FINAL_2026-10-08.md`, seção 3.

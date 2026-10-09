@@ -147,7 +147,7 @@ def main():
     sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
     from frontiers_style import apply_style, mm_figsize, save_journal
     apply_style()
-    fig, axes = plt.subplots(1, 2, figsize=mm_figsize("double", 125), gridspec_kw={"wspace": .62})
+    fig, axes = plt.subplots(2, 1, figsize=mm_figsize("double", 200), gridspec_kw={"hspace": .22})
     TC = {"A": "#2a9d8f", "B": "#e9c46a", "C": "#c8553d", "P": "#bdbdbd"}
     for ax, front, nm in zip(axes, "LM", (T("Linear front", "Frente linear"), T("Macrocycle front", "Frente macrocíclica"))):
         rr = [r for r in rows if r["front"] == front]
@@ -179,7 +179,7 @@ def main():
             lab.set_color(TC[r["tier"]] if r["tier"] != "P" else "gray")
             lab.set_fontweight("bold" if r["tier"] in "AB" else "normal")
         ax.set_title(nm)
-    fig.subplots_adjust(top=.95, left=.21, right=.98, bottom=.12)
+    fig.subplots_adjust(top=.97, left=.27, right=.98, bottom=.07)
     name = "Figure12_final_candidates" if EN else "fig12_candidatos_finais"
     save_journal(fig, out / name)
     cnt = {f: {t: sum(1 for r in rows if r["front"] == f and r["tier"] == t) for t in "ABCP"} for f in "LM"}
