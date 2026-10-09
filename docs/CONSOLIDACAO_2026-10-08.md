@@ -39,3 +39,4 @@
 
 ## 6. Atualização de 08/10 (21:15): piso de ruído completo (16 de 16)
 - `noise-L` terminou às 17:26 (`NOISE_L_DONE`). Última MD analisada (NGGRPDAP, pH 10,0: ocupância 1,00 e 1,00; distância final 2,74 e 2,76 Å), `compare_ph` refeito. Medianas no pH 10,0 com n = 8: distância 0,31 Å, ocupância 0,03, RMSD 0,11 nm; pH 8,2 inalterado. Contagens no texto: 16 pares (8 por pH); 3 de 16 mudaram a ocupância em > 0,5. NGGRPDAP repete nos dois pH, GGKPGEP idem.
+- 08/10 noite: arquivos `*_parcial_*` apagados; análises de segunda semente renomeadas para `md{82,10}b_{L,M}_analysis.json`.

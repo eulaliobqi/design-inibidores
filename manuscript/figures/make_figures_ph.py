@@ -3,7 +3,7 @@
   FigureS10_energy_trajectories MM-GBSA e PRODIGY nas trajetorias de pH 10 (48) contra tamanho, posicao e entre si
 Uso (de manuscript/): python figures/make_figures_ph.py figures/final
 Le data-e2-results/{mmgbsa_md10_{L,M}.json, md10_{L,M}_analysis.json} e, para pH 8,2,
-data-e2-results/{mmgbsa_md82_{L,M}, md82_{L,M}_analysis}_parcial_2026-10-07.json (ou os arquivos finais sem o sufixo, se existirem).
+data-e2-results/{mmgbsa_md82_{L,M}, md82_{L,M}_analysis}_parcial_2026-10-07.json.
 Quando as 48 MDs de pH 8,2 terminarem, apontar --final para os arquivos completos e retirar a legenda 'partial'."""
 import json
 import sys
