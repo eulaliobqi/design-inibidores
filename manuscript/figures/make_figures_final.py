@@ -1,5 +1,5 @@
 """Figuras novas do manuscrito (numeracao final), no padrao da revista (180 mm, 300 dpi, texto >= 8 pt; frontiers_style.py):
-  Figure2_calibration     calibracao da escada de escores, agora com o PRODIGY
+  Figure2_calibration     calibracao da escada de escores (so os escores em que o inibidor real superou a isca)
   Figure6_energy_ranking  PRODIGY nas 48 poses e classificacao por etapa
   Figure8_candidate_poses paineis estruturais (PyMOL) dos quatro candidatos da lista curta
 Uso (de manuscript/): python figures/make_figures_final.py figures
@@ -105,40 +105,16 @@ def fig1():
 
 
 def fig2():
+    """Calibracao: so os escores em que o inibidor real superou a isca (confianca, ipTM, pLDDT do complexo e RMSD do ligante).
+    MM-GBSA e PRODIGY nao discriminaram os pares e deixaram de fazer parte da calibracao (Secao 2.2)."""
     boltz = json.load(open(ROOT / "data-calibration-b05/boltz_calibration_summary.json"))
     md = json.load(open(ROOT / "data-calibration-b05/md_metrics_pbc_corrected.json"))["systems"]
-    gb = json.load(open(ROOT / "data-calibration-b05/mmpbsa_calib_results.json"))
-    pr = json.load(open(ROOT / "data-e2-results/prodigy_calib.json"))
-    fig, ax = plt.subplots(2, 3, figsize=mm_figsize("double", 130), layout="constrained")
-    dumbbell(ax[0, 0], [boltz[f"{r}__{k}"]["confidence"] for r, k in pairs], [boltz[f"{r}__{k}_decoy"]["confidence"] for r, k in pairs], "Boltz-2 confidence", True)
-    dumbbell(ax[0, 1], [md[f"{r}__{k}"]["ligand_rmsd_nm_last_third"] for r, k in pairs], [md[f"{r}__{k}_decoy"]["ligand_rmsd_nm_last_third"] for r, k in pairs], "ligand RMSD (nm)", False, False)
-    dumbbell(ax[0, 2], [gb[f"{r}__{k}"]["delta_g_total_kcal"] for r, k in pairs], [gb[f"{r}__{k}_decoy"]["delta_g_total_kcal"] for r, k in pairs], "MM-GBSA ΔG (kcal/mol)", False, False)
-    dumbbell(ax[1, 0], [pr[f"{r}__{k}"]["dG_kcal_mean"] for r, k in pairs], [pr[f"{r}__{k}_decoy"]["dG_kcal_mean"] for r, k in pairs], "PRODIGY ΔG (kcal/mol)", False)
-    tags = [t for t in md if t in gb]
-    x = np.array([md[t]["receptor_residues_in_contact_mean"] for t in tags])
-    yv = np.array([gb[t]["delta_g_total_kcal"] for t in tags])
-    isd = np.array(["decoy" in t for t in tags])
-    isb = np.array([t.startswith("bovine") for t in tags])
-    for dec, fc, ec in [(False, BLUE, BLUE), (True, "white", ORANGE)]:
-        for b, mk in [(True, "o"), (False, "s")]:
-            s = (isd == dec) & (isb == b)
-            ax[1, 1].scatter(x[s], yv[s], s=26, marker=mk, facecolors=fc, edgecolors=ec, linewidths=1.4)
-    ax[1, 1].set_xlabel("receptor residues within 4.5 Å")
-    ax[1, 1].set_ylabel("MM-GBSA ΔG (kcal/mol)")
-    ax[1, 1].text(0.04, 0.06, f"ρ = {spearmanr(x, yv).statistic:.2f}", transform=ax[1, 1].transAxes, fontweight="bold")
-    t2 = [t for t in pr if t in md]
-    xp = np.array([pr[t]["ic_total_mean"] for t in t2])
-    yp = np.array([pr[t]["dG_kcal_mean"] for t in t2])
-    isd2 = np.array(["decoy" in t for t in t2])
-    isb2 = np.array([t.startswith("bovine") for t in t2])
-    for dec, fc, ec in [(False, BLUE, BLUE), (True, "white", ORANGE)]:
-        for b, mk in [(True, "o"), (False, "s")]:
-            s = (isd2 == dec) & (isb2 == b)
-            ax[1, 2].scatter(xp[s], yp[s], s=26, marker=mk, facecolors=fc, edgecolors=ec, linewidths=1.4)
-    ax[1, 2].set_xlabel("PRODIGY contacts")
-    ax[1, 2].set_ylabel("PRODIGY ΔG (kcal/mol)")
-    ax[1, 2].text(0.96, 0.94, f"ρ = {spearmanr(xp, yp).statistic:.2f}", transform=ax[1, 2].transAxes, fontweight="bold", ha="right", va="top")
-    for a, L in zip(ax.flat, "ABCDEF"):
+    fig, ax = plt.subplots(2, 2, figsize=mm_figsize("double", 120), layout="constrained")
+    for a, key, lab in ((ax[0, 0], "confidence", "Boltz-2 confidence"), (ax[0, 1], "iptm", "Boltz-2 ipTM"), (ax[1, 0], "plddt", "complex pLDDT")):
+        dumbbell(a, [boltz[f"{r}__{k}"][key] for r, k in pairs], [boltz[f"{r}__{k}_decoy"][key] for r, k in pairs], lab, True, a is not ax[0, 1])
+    dumbbell(ax[1, 1], [md[f"{r}__{k}"]["ligand_rmsd_nm_last_third"] for r, k in pairs], [md[f"{r}__{k}_decoy"]["ligand_rmsd_nm_last_third"] for r, k in pairs], "ligand RMSD (nm)", False, False)
+    ax[0, 1].set_yticklabels([])
+    for a, L in zip(ax.flat, "ABCD"):
         letter(a, L)
     h, l = ax[0, 0].get_legend_handles_labels()
     fig.legend(h, l, loc="outside upper center", ncol=2, frameon=False)
@@ -217,8 +193,7 @@ def fig7():
                     for r, row in zip(sel, mat)])
     im = b.imshow(rel, cmap="viridis_r", aspect="auto", vmin=0, vmax=1)
     b.set_xticks(range(len(stages) + 1))
-    b.set_xticklabels([names[s].replace("-
-", "-").replace(chr(10), " ") for s in stages] + ["mean rank"], fontsize=8, rotation=35, ha="left", rotation_mode="anchor")
+    b.set_xticklabels([names[s].replace("-\n", "-").replace(chr(10), " ") for s in stages] + ["mean rank"], fontsize=8, rotation=35, ha="left", rotation_mode="anchor")
     b.xaxis.tick_top()
     b.set_yticks(range(len(sel)))
     b.set_yticklabels([f"{r['sequence']} ({'L' if r['front'] == 'L' else 'M'})" for r in sel], fontsize=8)
