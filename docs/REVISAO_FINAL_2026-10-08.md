@@ -9,7 +9,7 @@ Escopo pedido: acertar o layout das figuras, conferir se a informação é real,
 - **Ambiguidade autor-ano resolvida:** Meriño-Cabrera et al. 2020a (ApTI) / 2020b (peptídeos miméticos); de Almeida Barros et al. 2022a (BPTI × SKTI) / 2022b (tripeptídeos). Antes, duas referências distintas apareciam como "2020" e "2022" no texto.
 - **Afirmações conferidas contra os resumos (Europe PMC/Crossref):** GORE1/GORE2 Ki 0,49 e 0,10 mM; tripeptídeos Pin-II em pH alcalino; peptídeos bicíclicos 10× mais potentes; extratos de intestino de *H. virescens* pH 9,56–10,0 (a frase agora diz que é *H. virescens*); SBBI × SKTI em *A. gemmatalis* (Ki 1,4 nM × 0,25 nM); ApTI inibição tight-binding não competitiva; Kelly 2005 (cerca de seis ordens de grandeza); Wei 2019 (mobilidade × hidrólise); Xu 2025 (amostragem do MM/PBSA); Wan 2026 (Boltz-2: correlações fracas a moderadas com ESMACS) — a introdução dizia "a confiança não é afinidade" citando Wan, que avaliou a saída de **afinidade**; frase corrigida; Li 2026 (111 complexos cíclicos); Severiche-Castro 2026 (PEP-11, 100 ns em triplicata); Rettie 2025 (RFpeptides).
 - **Referências novas e verificadas (DOI, Crossref/Europe PMC):** Mariano et al. 2026 (peptídeos da região pró do tripsinogênio contra *A. gemmatalis*; Ki 0,78–1,80 mM) e Júnior et al. 2026 (resposta transcricional de *A. gemmatalis* a SKTI e GORE-2). Ambas do mesmo grupo e muito próximas do tema.
-- **Não verificado:** o motivo do pH 8,2 (Schultz et al. 2026, Tris-HCl pH 8,2) — o resumo não traz a condição do ensaio; a conferência exige o texto completo.
+- **Motivo do pH 8,2 confirmado no texto completo** (Schultz et al. 2026, PMC12999070, Materiais e Métodos): todos os ensaios cinéticos com GORE1/GORE2 usaram Tris-HCl 0,1 M, CaCl2 20 mM, pH 8,2. O artigo não justifica a escolha; a Seção 2.6 agora registra que as simulações seguem a condição do ensaio.
 - **RAG `eulalio-pos-doc-rag`:** não consultado nesta sessão (fica no servidor, exige a VPN). A busca de literatura foi feita por Crossref, Europe PMC e OpenAlex.
 
 ## 2. Informação real (números conferidos)
@@ -59,7 +59,7 @@ Adequação à interpretação (Rougier et al. 2014; Weissgerber et al. 2015; St
 
 ## 5. Pendências que dependem dos autores
 
-- Motivo do pH 8,2 (Seção 2.6): o candidato é Tris-HCl pH 8,2 (Schultz et al. 2026); confirmar no texto completo.
+- Motivo do pH 8,2 (Seção 2.6): conferido; só falta os autores confirmarem que a intenção era seguir a condição do ensaio.
 - Lista final de peptídeos recomendados e cortes: o manuscrito apresenta quatro selecionados (3.8, Tabela 4); a recomendação final é decisão dos autores.
 - Autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA, DOI de arquivamento do código.
 - Opcional: linha de base da geometria de ataque com SFTI-1; ensaio de Ki com GORE2 como controle positivo.

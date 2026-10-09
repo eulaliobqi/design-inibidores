@@ -197,7 +197,7 @@ Todas as análises computacionais previstas estão concluídas e integradas; nen
 ## Pendências antes da submissão
 
 1. **Resolvido:** resultados de pH 8,2, MM-GBSA e comparação com pH 10,0 (Seções 3.6 e 3.7, Figura 7), com resumo, 4.1, 4.4 e 5 ajustados.
-2. **Em aberto (decisão dos autores):** (a) motivo do pH 8,2 na Seção 2.6; o candidato é que os ensaios cinéticos com os peptídeos usaram Tris-HCl 0,1 M, CaCl~2~ 20 mM em pH 8,2 (Schultz et al., 2026), mas isso não foi conferido no texto completo; (b) lista de peptídeos recomendados: o manuscrito apresenta quatro peptídeos selecionados por critérios declarados (Seção 3.8, Tabela 4), e a lista final e os cortes dependem dos autores.
+2. **Parcialmente resolvido:** (a) motivo do pH 8,2 (Seção 2.6) conferido no texto completo de Schultz et al. (2026): todos os ensaios cinéticos com os peptídeos usaram Tris-HCl 0,1 M, CaCl~2~ 20 mM, pH 8,2; o artigo não justifica a escolha, e a frase da Seção 2.6 apenas registra que as simulações seguem essa condição, cabendo aos autores confirmar se era a intenção; (b) **em aberto (decisão dos autores):** lista de peptídeos recomendados: o manuscrito apresenta quatro peptídeos selecionados por critérios declarados (Seção 3.8, Tabela 4), e a lista final e os cortes dependem dos autores.
 3. Lista de autores, afiliações, contribuições, financiamento, conflito de interesses, declaração de IA generativa e DOI de arquivamento do código.
 4. Revisar a auditoria metodológica e de código (`docs/AUDITORIA_2026-10-05.md`).
 5. Opcional: linha de base da geometria de ataque com um inibidor-substrato conhecido (SFTI-1).
