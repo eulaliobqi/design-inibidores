@@ -40,3 +40,10 @@
 ## 6. Atualização de 08/10 (21:15): piso de ruído completo (16 de 16)
 - `noise-L` terminou às 17:26 (`NOISE_L_DONE`). Última MD analisada (NGGRPDAP, pH 10,0: ocupância 1,00 e 1,00; distância final 2,74 e 2,76 Å), `compare_ph` refeito. Medianas no pH 10,0 com n = 8: distância 0,31 Å, ocupância 0,03, RMSD 0,11 nm; pH 8,2 inalterado. Contagens no texto: 16 pares (8 por pH); 3 de 16 mudaram a ocupância em > 0,5. NGGRPDAP repete nos dois pH, GGKPGEP idem.
 - 08/10 noite: arquivos `*_parcial_*` apagados; análises de segunda semente renomeadas para `md{82,10}b_{L,M}_analysis.json`.
+
+## 7. Fechamento de 08/10 (noite)
+- Piso de ruído completo (16/16 pares): ruído entre execuções do mesmo pH ≈ diferença entre pH; 3/16 repetições mudaram a ocupância em > 0,5; só NGGRPDAP e GGKPGEP repetem S1.
+- Arquivos `*_parcial_*` apagados; análises de segunda semente em `data-e2-results/md{82,10}b_{L,M}_analysis.json`.
+- Risco de clivagem: `scripts/scissile_geometry.py`, `data-e2-results/scissile_geometry.json`, `docs/RISCO_CLIVAGEM_2026-10-08.md`; 1 de 20 execuções com algum quadro quase de ataque (1,6%); parágrafo na 2.7/3.8/4.1 e 5 referências novas (82 no total; `build_refs.py` apaga as refs inseridas à mão, não rodar sem restaurar).
+- Estado: GitHub e servidor em 7b5bcd9, nenhum job rodando, auditoria 187/0, docx PT regenerado.
+- Próximos passos: (1) decisões suas: motivo do pH 8,2 (candidato: Tris pH 8,2, Schultz 2026), prioridade da MD longa (NGGRPDAP, GGKPGEP), lista final e cortes (limite 12.000 palavras; EN ≈ 7,6 mil no corpo pelo build), autores/financiamento/CoI/IA/DOI; (2) linha de base da geometria de ataque com o SFTI-1 ou um substrato nas MDs de controle; (3) ensaio de estabilidade (tripsina bovina e extrato do intestino médio, MS) como teste decisivo.
