@@ -78,18 +78,18 @@ def fig1():
     xs = [1, 26, 51, 76]
     box(xs[0], 57, w, h, "8 pest trypsins\nsubsites S4-S3'\n(2PTC, 1SFI)")
     box(xs[1], 57, w, h, "scoring ladder\ncalibrated\n6 inhibitors\n+ shuffled decoys")
-    box(xs[2], 57, w, h, "RFdiffusion +\nProteinMPNN\ncyclic mode\n880 backbones\n22,066 sequences")
+    box(xs[2], 57, w, h, "RFdiffusion +\nProteinMPNN\n880 backbones\n22,066 sequences")
     box(xs[3] - 1, 57, w + 2, h, "hard criterion\nno P1 of midgut\ntrypsin, chymotrypsin\nor elastase")
     for i in range(3):
         arr(xs[i] + w, 63.5, xs[i + 1] - (1 if i == 2 else 0), 63.5)
 
-    box(14, 40, 30, 11, "front L: same sequences\nread as linear, 527", fc=L_FILL)
-    box(56, 40, 30, 11, "front M: as designed,\nmacrocycle, 543", fc=M_FILL)
+    box(14, 40, 30, 11, "front L: same sequences\nevaluated as linear, 527", fc=L_FILL)
+    box(56, 40, 30, 11, "front M: same sequences\nevaluated as cyclic, 543", fc=M_FILL)
     elbow([(87, 57), (87, 54), (29, 54), (29, 51.4)])
     elbow([(87, 57), (87, 54), (71, 54), (71, 51.4)])
 
     box(10, 24, 80, 11, "Boltz-2 E1-E4: co-folding, re-scoring (5 x 3), paired controls, pose QC\n"
-                        "48 candidates (24 linear, 24 macrocyclic; 3 per species and front)")
+                        "48 candidates (24 per front; 3 per species and front)")
     arr(29, 40, 29, 35.4)
     arr(71, 40, 71, 35.4)
 

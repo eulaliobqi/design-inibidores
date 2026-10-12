@@ -91,7 +91,7 @@ def fig_pipeline(status_e1="run"):
 
     # as duas frentes
     box(14, 20, 28, 11, T("FRONT L  linear\n527 candidates", "FRENTE L  linear\n527 candidatos"), "done")
-    box(56, 20, 28, 11, T("FRONT M  macrocycle\n543 candidates", "FRENTE M  macrociclo\n543 candidatos"), "done")
+    box(56, 20, 28, 11, T("FRONT M  cyclic\n543 candidates", "FRENTE M  cíclica\n543 candidatos"), "done")
     arr(83, 38, 40, 32)
     arr(83, 38, 68, 32)
 
@@ -143,9 +143,9 @@ def fig_funnel():
     fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 66.9), gridspec_kw={"width_ratios": [3, 1.4]})
     x = np.arange(len(SP)); w = .27
     soft = [cir_s["by_species"][s]["summary"]["RESISTENTE"] for s in SP]
-    ax[0].bar(x - w, soft, w, color="#e9c46a", label=T("motif score, circular (first round)", "escore por motivo, circular (1ª rodada)"))
-    ax[0].bar(x, [len(HL[s]) for s in SP], w, color="#457b9d", label=T("hard criterion, linear (front L)", "critério duro, linear (frente L)"))
-    ax[0].bar(x + w, [len(HM[s]) for s in SP], w, color="#2a9d8f", label=T("hard criterion, circular (front M)", "critério duro, circular (frente M)"))
+    ax[0].bar(x - w, soft, w, color="#e9c46a", label=T("motif score (first round)", "escore por motivo (1ª rodada)"))
+    ax[0].bar(x, [len(HL[s]) for s in SP], w, color="#457b9d", label=T("hard criterion, front L", "critério duro, frente L"))
+    ax[0].bar(x + w, [len(HM[s]) for s in SP], w, color="#2a9d8f", label=T("hard criterion, front M", "critério duro, frente M"))
     for i, s in enumerate(SP):
         ax[0].text(i, len(HL[s]) + 5, len(HL[s]), ha="center", va="bottom", fontsize=8, rotation=90)
         ax[0].text(i + w, len(HM[s]) + 5, len(HM[s]), ha="center", va="bottom", fontsize=8, rotation=90)
@@ -203,8 +203,8 @@ def fig_boltz():
     ax[2].set_xticks(range(len(Ls))); ax[2].set_xticklabels(Ls, fontsize=8)
     ax[2].set_xlabel(T("length (residues)", "comprimento (aa)")); ax[2].set_ylabel(T("mean ipTM", "ipTM médio")); ax[2].set_ylim(0, 1.15)
     ax[2].set_title(T("ipTM by length", "ipTM por comprimento"))
-    fig.suptitle(T(f"Boltz-2 co-folding of the {num(n)} resistant-like macrocycles of the first round (1 sample each)",
-                   f"Boltz-2 dos {num(n)} macrociclos resistentes da 1ª rodada (1 amostra cada)"), fontsize=9)
+    fig.suptitle(T(f"Boltz-2 co-folding of the {num(n)} resistant-like sequences of the first round (1 sample each)",
+                   f"Boltz-2 das {num(n)} sequências resistentes da 1ª rodada (1 amostra cada)"), fontsize=9)
     fig.tight_layout()
     fig.savefig(O / T("Figure7_boltz2_first_round.png", "fig7_boltz2_1a_rodada.png")); fig.savefig(O / T("Figure7_boltz2_first_round.pdf", "fig7_boltz2_1a_rodada.pdf")); plt.close()
     return n, float(np.mean([r["confidence_score"] for r in allr]))
@@ -228,8 +228,8 @@ def fig_e1():
         lm += [(Mk[sp][k], Lk[sp][k]) for k in rl[sp] & rm[sp] if k in Mk.get(sp, {}) and k in Lk.get(sp, {})]
     fig, ax = plt.subplots(1, 2, figsize=mm_figsize("double", 81.5))
     for a, pairs, xl, yl, ttl, c in (
-            (ax[0], rep, T("cyclic, first round", "cíclico, 1ª rodada"), T("cyclic, repeated", "cíclico, repetido"), T("Same input, two runs", "Mesma entrada, duas rodadas"), "#2a9d8f"),
-            (ax[1], lm, T("cyclic", "cíclico"), T("linear", "linear"), T("Same sequence, two modalities", "Mesma sequência, duas modalidades"), "#457b9d")):
+            (ax[0], rep, T("first round", "1ª rodada"), T("repeated run", "rodada repetida"), T("Same input, two runs", "Mesma entrada, duas rodadas"), "#2a9d8f"),
+            (ax[1], lm, T("front M", "frente M"), T("front L", "frente L"), T("Same sequence, two fronts", "Mesma sequência, duas frentes"), "#457b9d")):
         x, y = zip(*pairs)
         a.scatter(x, y, s=9, alpha=.5, color=c, edgecolor="none")
         a.plot([.6, 1], [.6, 1], ls=":", c="gray", lw=1)
