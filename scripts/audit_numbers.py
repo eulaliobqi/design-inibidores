@@ -2,8 +2,9 @@
 audit_numbers.py -- recalcula, a partir dos arquivos de dados do repositorio, os numeros que o manuscrito (EN) afirma nas
 Secoes 3.2, 3.3, 3.4, 3.5, 3.6 e 3.8, e imprime AFIRMADO x RECALCULADO. Nao altera nada.
 Uso: python -m scripts.audit_numbers  ->  docs/dados/audit_numbers_2026-10-05.json e tabela no terminal.
-O que NAO se recalcula aqui (dado so no servidor): reprodutibilidade E1 (rho 0,57 / 0,50), contagens 527/543 do criterio duro
-e a composicao do conjunto duro; ficam na lista de pendencias da auditoria.
+Desde 12/10/2026 as contagens 527/543, as sequencias distintas, a composicao do conjunto duro e a sensibilidade da fronteira
+(proibir tambem I, G, S, T) sao recalculadas aqui a partir de data-e2-results/E1_b23_boltz2_{L,M}_scores.json.
+O que NAO se recalcula aqui (dado so no servidor): reprodutibilidade E1 (rho 0,57 / 0,50).
 """
 import csv
 import json
@@ -84,6 +85,56 @@ chk("3.3 comprimento medio RESISTENTE", 7.05, fc["RESISTENTE"]["length_mean"], 0
 chk("3.3 RESISTENTE <=10 res (%)", 95.6, round(100 * fc["RESISTENTE"]["length_le_10_frac"], 1), 0.05)
 chk("3.3 SUSCEPTIVEL comprimento medio", 15.74, fc["SUSCEPTIVEL"]["length_mean"], 0.005)
 chk("3.3 SUSCEPTIVEL <=10 res (%)", 12.7, round(100 * fc["SUSCEPTIVEL"]["length_le_10_frac"], 1), 0.05)
+
+# --- conjunto duro: recalculado dos escores E1 (sequencia por especie), nao mais so do servidor
+E1 = {F: json.load(open(D / f"E1_b23_boltz2_{F}_scores.json")) for F in "LM"}
+hard = {F: [(sp, r["sequence"], r["susceptibility_score"]) for sp in E1[F] for r in E1[F][sp]] for F in "LM"}
+chk("3.3 criterio duro L (pares sequencia-alvo)", 527, len(hard["L"]))
+chk("3.3 criterio duro M (pares sequencia-alvo)", 543, len(hard["M"]))
+chk("3.3 sequencias distintas L", 445, len({s for _, s, _ in hard["L"]}))
+chk("3.3 sequencias distintas M", 461, len({s for _, s, _ in hard["M"]}))
+setL, setM = {(sp, s) for sp, s, _ in hard["L"]}, {(sp, s) for sp, s, _ in hard["M"]}
+chk("3.3 L contido em M", True, setL <= setM)
+only = sorted(setM - setL)
+FORB = set("KRFYWLMAV")
+chk("3.3 so-ciclicas", 16, len(only))
+chk("3.3 so-ciclicas com C-term proibido e Pro inicial", 14, sum(1 for _, s in only if s[-1] in FORB and s[0] == "P"))
+chk("3.3 so-ciclicas terminadas em Ile", 2, sum(1 for _, s in only if s[-1] == "I"))
+res_m = [x for x in hard["M"] if x[2] < 0.3]
+chk("3.3 duro M tambem RESISTENTE", 396, len(res_m))
+nao = [x for x in hard["M"] if x[2] >= 0.3]
+chk("3.3 duro M nao-RESISTENTE", 147, len(nao))
+glyf = lambda xs: round(100 * sum(s.count("G") for _, s, _ in xs) / sum(len(s) for _, s, _ in xs), 1)
+lenf = lambda xs: round(sum(len(s) for _, s, _ in xs) / len(xs), 1)
+chk("3.3 nao-RESISTENTE: glicina (%)", 85.9, glyf(nao), 0.05)
+chk("3.3 nao-RESISTENTE: comprimento medio", 10.1, lenf(nao), 0.05)
+chk("3.3 duro+RESISTENTE: glicina (%)", 27.9, glyf(res_m), 0.05)
+chk("3.3 duro+RESISTENTE: comprimento medio", 6.8, lenf(res_m), 0.05)
+seqL = [s for _, s, _ in hard["L"]]
+chk("3.3 comprimento medio do conjunto duro", 7.7, round(sum(map(len, seqL)) / len(seqL), 1), 0.05)
+chk("3.3 lineares com <=8 residuos", 430, sum(1 for s in seqL if len(s) <= 8))
+tot = sum(map(len, seqL))
+chk("3.3 residuos do conjunto duro L", 4060, tot)
+for aa, pct in (("G", 49.4), ("S", 11.7), ("P", 9.8), ("T", 9.0), ("D", 5.8)):
+    chk(f"3.3 composicao {aa} (%)", pct, round(100 * sum(s.count(aa) for s in seqL) / tot, 1), 0.05)
+
+
+def hard_ok(seq, circ, forbid):
+    """Regra da Secao 2.4, reimplementada aqui para a analise de sensibilidade da fronteira."""
+    n = len(seq)
+    for i in range(n):
+        nxt = seq[(i + 1) % n] if (circ or i < n - 1) else None
+        if seq[i] in forbid:
+            if nxt is None or nxt != "P":
+                return False
+    return not (not circ and (seq[-1] in forbid or seq[-1] == "I"))
+
+
+seqM = [s for _, s, _ in hard["M"]]
+for extra, aL in (("", 527), ("I", 393), ("G", 49), ("GS", 13), ("GST", 4)):
+    f = FORB | set(extra)
+    chk(f"3.3 sensibilidade: proibir tambem '{extra}' (L)", aL, sum(1 for s in seqL if hard_ok(s, False, f)))
+chk("3.3 sensibilidade: proibir tambem 'GS' (M)", 14, sum(1 for s in seqM if hard_ok(s, True, FORB | set("GS"))))
 
 # ---------------------------------------------------------------- 3.4 E2/E3/QC/matriz
 E2 = {F: json.load(open(D / f"b23_boltz2_E2_{F}_scores.json")) for F in "LM"}

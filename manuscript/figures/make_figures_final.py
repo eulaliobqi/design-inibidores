@@ -78,13 +78,13 @@ def fig1():
     xs = [1, 26, 51, 76]
     box(xs[0], 57, w, h, "8 pest trypsins\nsubsites S4-S3'\n(2PTC, 1SFI)")
     box(xs[1], 57, w, h, "scoring ladder\ncalibrated\n6 inhibitors\n+ shuffled decoys")
-    box(xs[2], 57, w, h, "RFdiffusion +\nProteinMPNN\n880 backbones\n22,066 sequences")
+    box(xs[2], 57, w, h, "RFdiffusion +\nProteinMPNN\ncyclic mode\n880 backbones\n22,066 sequences")
     box(xs[3] - 1, 57, w + 2, h, "hard criterion\nno P1 of midgut\ntrypsin, chymotrypsin\nor elastase")
     for i in range(3):
         arr(xs[i] + w, 63.5, xs[i + 1] - (1 if i == 2 else 0), 63.5)
 
-    box(14, 40, 30, 11, "front L (linear)\n527 sequences", fc=L_FILL)
-    box(56, 40, 30, 11, "front M (macrocycle)\n543 sequences", fc=M_FILL)
+    box(14, 40, 30, 11, "front L: same sequences\nread as linear, 527", fc=L_FILL)
+    box(56, 40, 30, 11, "front M: as designed,\nmacrocycle, 543", fc=M_FILL)
     elbow([(87, 57), (87, 54), (29, 54), (29, 51.4)])
     elbow([(87, 57), (87, 54), (71, 54), (71, 51.4)])
 

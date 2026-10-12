@@ -664,5 +664,61 @@
   ],
   "n": 14,
   "year": 2026
+ },
+ "appel1990": {
+  "fam": [
+   "Appel",
+   "Martin"
+  ],
+  "n": 2,
+  "year": 1990
+ },
+ "johnson1996": {
+  "fam": [
+   "Johnson",
+   "Felton"
+  ],
+  "n": 2,
+  "year": 1996
+ },
+ "bown1998": {
+  "fam": [
+   "Bown",
+   "Wilkinson"
+  ],
+  "n": 3,
+  "year": 1998
+ },
+ "rawlings2018": {
+  "fam": [
+   "Rawlings",
+   "Barrett"
+  ],
+  "n": 6,
+  "year": 2018
+ },
+ "xu2010": {
+  "fam": [
+   "Xu",
+   "Zhang"
+  ],
+  "n": 2,
+  "year": 2010
+ },
+ "hur2003": {
+  "fam": [
+   "Hur",
+   "Bruice"
+  ],
+  "n": 2,
+  "year": 2003
+ },
+ "burgi1973": {
+  "fam": [
+   "Bürgi",
+   "Dunitz"
+  ],
+  "n": 3,
+  "year": 1973
  }
 }

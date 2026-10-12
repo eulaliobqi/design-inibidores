@@ -189,6 +189,202 @@
   "nota": ""
  },
  {
+  "secao": "3.3 criterio duro L (pares sequencia-alvo)",
+  "afirmado": "527",
+  "recalculado": "527",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 criterio duro M (pares sequencia-alvo)",
+  "afirmado": "543",
+  "recalculado": "543",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sequencias distintas L",
+  "afirmado": "445",
+  "recalculado": "445",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sequencias distintas M",
+  "afirmado": "461",
+  "recalculado": "461",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 L contido em M",
+  "afirmado": "True",
+  "recalculado": "True",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 so-ciclicas",
+  "afirmado": "16",
+  "recalculado": "16",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 so-ciclicas com C-term proibido e Pro inicial",
+  "afirmado": "14",
+  "recalculado": "14",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 so-ciclicas terminadas em Ile",
+  "afirmado": "2",
+  "recalculado": "2",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 duro M tambem RESISTENTE",
+  "afirmado": "396",
+  "recalculado": "396",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 duro M nao-RESISTENTE",
+  "afirmado": "147",
+  "recalculado": "147",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 nao-RESISTENTE: glicina (%)",
+  "afirmado": "85.9",
+  "recalculado": "85.9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 nao-RESISTENTE: comprimento medio",
+  "afirmado": "10.1",
+  "recalculado": "10.1",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 duro+RESISTENTE: glicina (%)",
+  "afirmado": "27.9",
+  "recalculado": "27.9",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 duro+RESISTENTE: comprimento medio",
+  "afirmado": "6.8",
+  "recalculado": "6.8",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 comprimento medio do conjunto duro",
+  "afirmado": "7.7",
+  "recalculado": "7.7",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 lineares com <=8 residuos",
+  "afirmado": "430",
+  "recalculado": "430",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 residuos do conjunto duro L",
+  "afirmado": "4060",
+  "recalculado": "4060",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 composicao G (%)",
+  "afirmado": "49.4",
+  "recalculado": "49.4",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 composicao S (%)",
+  "afirmado": "11.7",
+  "recalculado": "11.7",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 composicao P (%)",
+  "afirmado": "9.8",
+  "recalculado": "9.8",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 composicao T (%)",
+  "afirmado": "9.0",
+  "recalculado": "9.0",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 composicao D (%)",
+  "afirmado": "5.8",
+  "recalculado": "5.8",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem '' (L)",
+  "afirmado": "527",
+  "recalculado": "527",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem 'I' (L)",
+  "afirmado": "393",
+  "recalculado": "393",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem 'G' (L)",
+  "afirmado": "49",
+  "recalculado": "49",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem 'GS' (L)",
+  "afirmado": "13",
+  "recalculado": "13",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem 'GST' (L)",
+  "afirmado": "4",
+  "recalculado": "4",
+  "ok": true,
+  "nota": ""
+ },
+ {
+  "secao": "3.3 sensibilidade: proibir tambem 'GS' (M)",
+  "afirmado": "14",
+  "recalculado": "14",
+  "ok": true,
+  "nota": ""
+ },
+ {
   "secao": "3.4 E2 n candidatos L",
   "afirmado": "80",
   "recalculado": "80",
