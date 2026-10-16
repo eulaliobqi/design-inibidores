@@ -54,3 +54,6 @@ manuscript/exemplos-papers/
 
 # Credenciais locais (API keys) - nunca versionar
 .env
+
+# Arquivos de bloqueio do Office
+~$*
