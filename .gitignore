@@ -51,3 +51,6 @@ data-figuras-base/
 
 # PDFs de artigos de terceiros (exemplos de formato da revista) -- nao redistribuir
 manuscript/exemplos-papers/
+
+# Credenciais locais (API keys) - nunca versionar
+.env
