@@ -323,22 +323,6 @@
   "n": 7,
   "year": 2007
  },
- "michaud2011": {
-  "fam": [
-   "Michaud-Agrawal",
-   "Denning"
-  ],
-  "n": 4,
-  "year": 2011
- },
- "gowers2016": {
-  "fam": [
-   "Gowers",
-   "Linke"
-  ],
-  "n": 11,
-  "year": 2016
- },
  "valdes2021": {
   "fam": [
    "Valdés-Tresanco",
@@ -346,46 +330,6 @@
   ],
   "n": 4,
   "year": 2021
- },
- "cock2009": {
-  "fam": [
-   "Cock",
-   "Antao"
-  ],
-  "n": 11,
-  "year": 2009
- },
- "mirdita2022": {
-  "fam": [
-   "Mirdita",
-   "Schütze"
-  ],
-  "n": 6,
-  "year": 2022
- },
- "bussi2007": {
-  "fam": [
-   "Bussi",
-   "Donadio"
-  ],
-  "n": 3,
-  "year": 2007
- },
- "parrinello1981": {
-  "fam": [
-   "Parrinello",
-   "Rahman"
-  ],
-  "n": 2,
-  "year": 1981
- },
- "essmann1995": {
-  "fam": [
-   "Essmann",
-   "Perera"
-  ],
-  "n": 6,
-  "year": 1995
  },
  "berman2000": {
   "fam": [
@@ -537,14 +481,6 @@
   "n": 2,
   "year": 2013
  },
- "wacha2023": {
-  "fam": [
-   "Wacha",
-   "Lemkul"
-  ],
-  "n": 2,
-  "year": 2023
- },
  "helland1999": {
   "fam": [
    "Helland",
@@ -568,22 +504,6 @@
   ],
   "n": 2,
   "year": 2015
- },
- "onufriev2004": {
-  "fam": [
-   "Onufriev",
-   "Bashford"
-  ],
-  "n": 3,
-  "year": 2004
- },
- "miller2012": {
-  "fam": [
-   "Miller",
-   "McGee"
-  ],
-  "n": 6,
-  "year": 2012
  },
  "wan2026": {
   "fam": [
