@@ -57,3 +57,8 @@ manuscript/exemplos-papers/
 
 # Arquivos de bloqueio do Office
 ~$*
+
+# apresentacao_congresso: copias de seguranca e GIFs grandes (o .mp4 equivalente vai no repositorio)
+apresentacao_congresso/*_antes_*.pptx
+apresentacao_congresso/imagens/*.gif
+apresentacao_congresso/_frames_*/
